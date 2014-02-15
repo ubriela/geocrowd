@@ -14,22 +14,18 @@ import org.junit.Test;
 
 public class PreProcessTest extends PreProcess {
 
-	@Test
-	public void testExtractCoords() {
-		PreProcess prep = new PreProcess();
-		prep.extractCoords();
-	}
 
 	@Test
 	public void testFilterInput() {
 		PreProcess prep = new PreProcess();
 		prep.DATA_SET = 0;
 
-		prep.filterInput();
+//		prep.filterInput();
 
 		prep.computeBoundary();
+		
 		// prep.readBoundary(Constants.gowallaBoundary);
-		prep.createGrid();
+//		prep.createGrid();
 //
 //		// generating workers from Gowalla
 //		Hashtable<Date, ArrayList<Worker>> hashTable = prep
@@ -42,6 +38,19 @@ public class PreProcessTest extends PreProcess {
 //		prep.computeLocationEntropy(hashTable1);
 //		Hashtable<Integer, Coord> hashTable2 = prep.readCoordInfo();
 //		prep.saveLocationEntropy(hashTable2);
+	}
+	
+
+	@Test
+	public void testExtractCoords() {
+		PreProcess prep = new PreProcess();
+		prep.DATA_SET = 0;
+		
+		// Los Angeles: 33.699476,-118.570633, 34.319887,-118.192978
+		// San Francisco: 37.711049,-122.51524, 37.832899,-122.360744
+		prep.filterInput("dataset/real/gowalla_SF", 37.711049,-122.51524, 37.832899,-122.360744);
+		prep.computeBoundary();
+		prep.extractCoords("dataset/real/gowalla_SF");
 	}
 
 	@Test

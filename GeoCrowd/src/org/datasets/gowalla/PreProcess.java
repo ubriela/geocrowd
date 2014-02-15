@@ -39,9 +39,9 @@ public class PreProcess {
 	}
 
 	
-	public void extractCoords() {
+	public void extractCoords(String filename) {
 		try {
-			FileReader reader = new FileReader(Constants.gowallaFileName3);
+			FileReader reader = new FileReader(filename);
 			BufferedReader in = new BufferedReader(reader);
 			StringBuffer sb = new StringBuffer();
 			int cnt = 0;
@@ -54,7 +54,7 @@ public class PreProcess {
 				cnt++;
 			}
 
-			FileWriter writer = new FileWriter(Constants.gowallaFileName3 + ".dat");
+			FileWriter writer = new FileWriter(filename + ".dat");
 			BufferedWriter out = new BufferedWriter(writer);
 			out.write(sb.toString());
 			out.close();
@@ -228,12 +228,12 @@ public class PreProcess {
 	/**
 	 * Get subset of the gowalla dataset, within a rectangle
 	 */
-	public void filterInput() {
+	public void filterInput(String filename, double min_x, double min_y, double max_x, double max_y) {
 		System.out.println("Filtering location data...");
 		try {
 			FileReader reader = new FileReader(Constants.gowallaFileName);
 			BufferedReader in = new BufferedReader(reader);
-			FileWriter writer = new FileWriter(Constants.gowallaFileName3);
+			FileWriter writer = new FileWriter(filename);
 			BufferedWriter out = new BufferedWriter(writer);
 
 			int cnt = 0;
@@ -246,8 +246,8 @@ public class PreProcess {
 				Integer pointID = Integer.parseInt(parts[4]);
 				// 114° 8' W to 124° 24' W
 				// Latitude: 32° 30' N to 42° N
-				if ((lat < -84.897502) || (lat > 13.578036) || (lng > (-25.013863))
-						|| (lng < (-177.240425)))
+
+				if ((lat < min_x) || (lat > max_x) || (lng < (min_y) || (lng > (max_y))))
 					continue;
 				
 				out.write(line + "\n");

@@ -5,5 +5,5 @@
 package org.geocrowd;
 
 public enum AlgoEnums {
-	GR, LLEP, NNP
+	BASIC, LLEP, NNP
 };

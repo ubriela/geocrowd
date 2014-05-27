@@ -13,7 +13,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
+
+import org.datasets.gowalla.Point;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
@@ -166,7 +169,7 @@ public class ProcessDataSet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // System.out.println("Total user reviewed: " + Review.size());
+        System.out.println("Total user reviewed: " + Review.size());
 
     }
 
@@ -395,6 +398,73 @@ public class ProcessDataSet {
 
 
     }
+    
+    public static void saveTaskWorkers() {
+    	// Tasks
+        Iterator Business = Business_Location.keySet().iterator();
+        StringBuffer sb = new StringBuffer();
+		
+        while (Business.hasNext()) {
+            String BusinessID = Business.next().toString();
+            Double lat = Business_Location.get(BusinessID).get("lat");
+            Double lng = Business_Location.get(BusinessID).get("lng");
+            sb.append(lat + "\t" + lng + "\n");
+        }
+        
+		FileWriter writer;
+		try {
+			writer = new FileWriter(constant.tasks_loc);
+			BufferedWriter out = new BufferedWriter(writer);
+			out = new BufferedWriter(writer);
+			out.write(sb.toString());
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Workers
+		
+		
+    }
+    
+    public static void saveWorkersMCD(String filename) {
+    	Iterator users = Review.keySet().iterator();
+        StringBuffer sb = new StringBuffer();
+        
+        while(users.hasNext()) {
+        	String u_id = (String) users.next();
+            
+            Iterator businesses = Review.get(u_id).keySet().iterator();
+            ArrayList<Point> points = new ArrayList<Point>();
+            while (businesses.hasNext()) {
+                int col = (Integer) businesses.next();
+                String x = Review.get(u_id).get(col).toString();
+                if (Business_Location.get(x) == null)
+                	continue;
+                double lat = Business_Location.get(x).get("lat");
+                double lng = Business_Location.get(
+                        Review.get(u_id).get(col).toString()).get("lng");
+                points.add(new Point(lat, lng));
+            }
+            
+            // compute MCD
+            double mcd = org.geocrowd.Utils.MCD(points.get(0), points);
+            sb.append(mcd + "\n");
+        }
+        
+		FileWriter writer;
+		try {
+			writer = new FileWriter(filename);
+			BufferedWriter out = new BufferedWriter(writer);
+			out.write(sb.toString());
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }
 
     public static void saveUser_Worker() {
 
@@ -405,8 +475,9 @@ public class ProcessDataSet {
         StringBuilder sb = new StringBuilder();
 
         while (users.hasNext()) {
+        	String u_id = (String) users.next();
             StringBuilder sb_temp = new StringBuilder();
-            if (c >= constant.WorkerPerFile) {
+            if (c >= constant.WorkerPerFile || !users.hasNext()) {
                 System.out.println("Worker instance: " + file_i);
                 Utils.writefile2(sb.toString(), constant.SaveWorker + file_i
                         + constant.suffix);
@@ -415,7 +486,7 @@ public class ProcessDataSet {
                 sb.delete(0, sb.length());
             }
 
-            String u_id = (String) users.next();
+            
             ArrayList tempal = new ArrayList();
             if (!User_Categories.keySet().contains(u_id)) {
                 User_Categories.put(u_id, tempal);
@@ -428,8 +499,11 @@ public class ProcessDataSet {
             double maxLongitude = (-1) * Double.MAX_VALUE;
             while (businesses.hasNext()) {
                 int col = (Integer) businesses.next();
-                double temp_lat = Business_Location.get(
-                        Review.get(u_id).get(col).toString()).get("lat");
+                String x = Review.get(u_id).get(col).toString();
+                if (Business_Location.get(x) == null)
+                	continue;
+                double temp_lat = Business_Location.get(x).get("lat");
+                
                 double temp_lng = Business_Location.get(
                         Review.get(u_id).get(col).toString()).get("lng");
 

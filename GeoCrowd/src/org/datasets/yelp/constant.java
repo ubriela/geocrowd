@@ -9,7 +9,9 @@ package org.datasets.yelp;
  * @author dkh
  */
 public class constant {
-
+	public static String tasks_loc = "dataset/real/yelp/yelp_task.dat";
+	public static String workers_loc = "dataset/real/yelp/yelp.dat";
+	
 	public static String business = "dataset/real/yelp/business.json";
 	public static String review = "dataset/real/yelp/review.json";
 	public static String user = "dataset/real/yelp/user.json";
@@ -26,7 +28,7 @@ public class constant {
 
 	public static int MaxReview = 20;
 	public static double realResolution = 0.001;
-	public static int WorkerPerFile = 500;
-	public static int TaskPerFile = 500;
+	public static int WorkerPerFile = 70817;
+	public static int TaskPerFile = 15585;
 
 }

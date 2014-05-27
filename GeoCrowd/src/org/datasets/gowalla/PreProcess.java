@@ -7,6 +7,7 @@ package org.datasets.gowalla;
 import java.io.*;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.geocrowd.Expertise;
 import org.geocrowd.MBR;
 import org.geocrowd.Observation;
 import org.geocrowd.Task;
+import org.geocrowd.Utils;
 import org.geocrowd.Worker;
 
 /**
@@ -38,7 +40,10 @@ public class PreProcess {
 	public PreProcess() {
 	}
 
-	
+	/**
+	 * Extract coordinate from datafile
+	 * @param filename
+	 */
 	public void extractCoords(String filename) {
 		try {
 			FileReader reader = new FileReader(filename);
@@ -59,19 +64,95 @@ public class PreProcess {
 			out.write(sb.toString());
 			out.close();
 
-			System.out.println("Number of point: " + cnt);
+			System.out.println("Number of checkins: " + cnt);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Extract MBR of the workers from datafile
+	 * Export recent location of each user to a file
+	 * @param filename
+	 */
+	public void extractMBRs(String filename) {
+		try {
+			FileReader reader = new FileReader(filename);
+			BufferedReader in = new BufferedReader(reader);
+			StringBuffer sb = new StringBuffer();
+			HashMap<Integer, ArrayList<Point>> data = new HashMap<Integer, ArrayList<Point>>();
+			ArrayList<Point> points = new ArrayList<Point>();
+			Integer prev_id = -1;
+			while (in.ready()) {
+				String line = in.readLine();
+				String[] parts = line.split("\\s");
+				Integer id = Integer.parseInt(parts[0]);
+				Double lat = Double.parseDouble(parts[2]);
+				Double lng = Double.parseDouble(parts[3]);
+				if (id.equals(prev_id)) {	// add to current list
+					points.add(new Point(lat, lng));
+				} else {
+					// create new list
+					points = new ArrayList<Point>();
+					points.add(new Point(lat, lng));
+					
+					// add current list to data
+					data.put(prev_id, points);
+					
+					sb.append(lat + "\t" + lng + "\n");
+				}
+				
+				prev_id = id;
+			}
+			data.put(prev_id, points);
+			
+			FileWriter writer = new FileWriter(filename + ".dat");
+			BufferedWriter out = new BufferedWriter(writer);
+			out.write(sb.toString());
+			out.close();
+			sb.delete(0,  sb.length());
+			
+
+			// iterate through HashMap keys Enumeration
+			double sum = 0;
+			int count = 0;
+			double maxMBR = 0;
+			Iterator<Integer> it = data.keySet().iterator();
+			while (it.hasNext()) {
+				Integer t = (Integer) it.next();
+				ArrayList<Point> pts = data.get(t);
+				MBR mbr = Utils.computeMBR(pts);
+				double d = mbr.diagonalLength();
+				sum += d;
+				count ++;
+				if (d > maxMBR)
+					maxMBR = d;
+				double mcd = Utils.MCD(pts.get(0), pts);
+				sb.append(t.toString() + "\t" + mbr.getMinLat() + "\t" + mbr.getMinLng() + "\t" + mbr.getMaxLat() + "\t" + mbr.getMaxLng() + "\t" + d + "\t" + mcd +  "\n");
+			}
+			
+			writer = new FileWriter(filename + ".mbr.txt");
+			out = new BufferedWriter(writer);
+			out.write(sb.toString());
+			out.close();
+
+			System.out.println("Number of users: " + data.keySet().size());
+			System.out.println("Average users' MBR size: " + sum / count);
+			System.out.println("Max users' MBR size: " + maxMBR);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	
 	/**
 	 * Giving a set of points, compute the MBR covering all the points
 	 */
-	public void computeBoundary() {
+	public void computeBoundary(String datafile) {
 		switch (DATA_SET) {
 		case 0:// real
 			try {
-				FileReader reader = new FileReader(Constants.gowallaFileName2);
+				FileReader reader = new FileReader(datafile);
 				BufferedReader in = new BufferedReader(reader);
 				int cnt = 0;
 				while (in.ready()) {
@@ -91,16 +172,15 @@ public class PreProcess {
 					cnt++;
 				}
 
-				FileWriter writer = new FileWriter(Constants.gowallaBoundary);
+				FileWriter writer = new FileWriter(datafile + "_boundary.txt");
 				BufferedWriter out = new BufferedWriter(writer);
 				out.write(minLatitude + " " + minLongitude + " " + maxLatitude
 						+ " " + maxLongitude);
 				out.close();
 
-				System.out.println("Number of checkins: " + cnt);
 				System.out.println("Boundary [minLat:" + minLatitude
 						+ "   maxLat:" + maxLatitude + "   minLng:"
-						+ minLongitude + "   maxLng]" + maxLongitude);
+						+ minLongitude + "   maxLng:" + maxLongitude + "]");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -110,7 +190,7 @@ public class PreProcess {
 			for (int i = 0; i < Constants.RoundCnt; i++) {
 				try {
 					FileReader reader = new FileReader(
-							Constants.syncMatlabWorkerFilePath + i + ".txt");
+							Constants.skewedMatlabWorkerFilePath + i + ".txt");
 					BufferedReader in = new BufferedReader(reader);
 					while (in.ready()) {
 						String line = in.readLine();
@@ -129,7 +209,7 @@ public class PreProcess {
 						cnt++;
 					}
 
-					FileWriter writer = new FileWriter(Constants.syncBoundary);
+					FileWriter writer = new FileWriter(Constants.skewedBoundary);
 					BufferedWriter out = new BufferedWriter(writer);
 					out.write(minLatitude + " " + minLongitude + " "
 							+ maxLatitude + " " + maxLongitude);
@@ -139,7 +219,6 @@ public class PreProcess {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Number of checkins: " + cnt);
 			System.out.println("Boundary [minLat:" + minLatitude + "   maxLat:"
 					+ maxLatitude + "   minLng:" + minLongitude + "   maxLng:"
 					+ maxLongitude + "]");
@@ -179,25 +258,31 @@ public class PreProcess {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Number of checkins: " + cnt);
 			System.out.println("Boundary [minLat:" + minLatitude + "   maxLat:"
 					+ maxLatitude + "   minLng:" + minLongitude + "   maxLng:"
 					+ maxLongitude + "]");
 			break;
 		}
+		
+		MBR mbr = new MBR(minLatitude, minLongitude, maxLatitude, maxLongitude);
+		double x = Utils.distance(minLatitude, minLongitude, maxLatitude, minLongitude);
+		double y = Utils.distance(minLatitude, minLongitude, minLatitude, maxLongitude);
+		System.out.println("Area: " + x*y);
+		System.out.println("Region MBR size: " + mbr.diagonalLength());
+
 	}
 
 	/**
 	 * Read boundary from file
 	 */
-	public void readBoundary() {
+	public void readBoundary(int dataset) {
 		String boundaryFile = "";
-		switch (DATA_SET) {
+		switch (dataset) {
 		case 0:
 			boundaryFile = Constants.gowallaBoundary;
 			break;
 		case 1:
-			boundaryFile = Constants.syncBoundary;
+			boundaryFile = Constants.skewedBoundary;
 			break;
 		case 2:
 			boundaryFile = Constants.uniBoundary;
@@ -255,10 +340,7 @@ public class PreProcess {
 				cnt++;
 			}
 			out.close();
-			System.out.println("number of checkins: " + cnt);
-			System.out.println("minLat:" + minLatitude + "   maxLat:"
-					+ maxLatitude + "   minLng:" + minLongitude + "   maxLng:"
-					+ maxLongitude);
+		
 		}
 
 		catch (Exception e) {
@@ -266,14 +348,18 @@ public class PreProcess {
 		}
 	}
 
-	public void createGrid() {
+	/**
+	 * compute grid granularity
+	 * @param dataset
+	 */
+	public void createGrid(int dataset) {
 		resolution = 0;
-		switch (DATA_SET) {
+		switch (dataset) {
 		case 0:
 			resolution = Constants.gowallaResolution;
 			break;
 		case 1:
-			resolution = Constants.syncResolution;
+			resolution = Constants.skewedResolution;
 			break;
 		case 2:
 			resolution = Constants.uniResolution;
@@ -290,14 +376,14 @@ public class PreProcess {
 	}
 
 	/**
-	 * Read gowalla data
+	 * Read data, e.g., gowalla file
 	 * 
-	 * @return location id with corresponding occurrences of each user
+	 * @return a hashtable <location id, occurrences>
 	 */
-	public Hashtable<Integer, ArrayList<Observation>> readRealEntropyData() {
+	public Hashtable<Integer, ArrayList<Observation>> readRealEntropyData(String datasetfile) {
 		Hashtable hashTable = new Hashtable();
 		try {
-			FileReader reader = new FileReader(Constants.gowallaFileName2);
+			FileReader reader = new FileReader(datasetfile);
 			BufferedReader in = new BufferedReader(reader);
 			int cnt = 0;
 			while (in.ready()) {
@@ -330,7 +416,7 @@ public class PreProcess {
 				}
 				cnt++;
 			}
-			System.out.println("<location, occurrences> size: "
+			System.out.println("Hashtable <location, occurrences> size: "
 					+ hashTable.size());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -344,11 +430,13 @@ public class PreProcess {
 	 * hashtable <day, workers>
 	 * 
 	 * This function is used as an input for saveWorkers()
+	 * @param datasetfile
+	 * @return
 	 */
-	public Hashtable<Date, ArrayList<Worker>> generateRealWorkers() {
+	public Hashtable<Date, ArrayList<Worker>> generateRealWorkers(String datasetfile) {
 		Hashtable<Date, ArrayList<Worker>> hashTable = new Hashtable();
 		try {
-			FileReader reader = new FileReader(Constants.gowallaFileName2);
+			FileReader reader = new FileReader(Constants.gowallaFileName_CA);
 			BufferedReader in = new BufferedReader(reader);
 			int cnt = 0;
 			while (in.ready()) {
@@ -422,14 +510,14 @@ public class PreProcess {
 	 * @param isConstantMBR
 	 * @param isConstantMaxT
 	 */
-	public void generateSyncWorkers(boolean isConstantMBR,
+	public void generateSynWorkers(boolean isConstantMBR,
 			boolean isConstantMaxT) {
 		switch (DATA_SET) {
 		case 1:
 			for (int i = 0; i < Constants.RoundCnt; i++) {
 				generateSyncWorkersFromMatlab(
-						Constants.syncWorkerFileNamePrefix + i + ".txt",
-						Constants.syncMatlabWorkerFilePath + i + ".txt",
+						Constants.skewedWorkerFileNamePrefix + i + ".txt",
+						Constants.skewedMatlabWorkerFilePath + i + ".txt",
 						isConstantMBR, isConstantMaxT);
 			}
 			break;
@@ -505,12 +593,12 @@ public class PreProcess {
 		System.out.println("Sum of all maxTask:" + maxSumTaskWorkers);
 	}
 
-	public void generateSyncTasks() {
+	public void generateSynTasks() {
 		timeCounter = 0;
 		String outputFileFrefix = "";
 		switch (DATA_SET) {
 		case 1:
-			outputFileFrefix = Constants.syncTaskFileNamePrefix;
+			outputFileFrefix = Constants.skewedTaskFileNamePrefix;
 			break;
 		case 2:
 			outputFileFrefix = Constants.uniTaskFileNamePrefix;
@@ -561,13 +649,13 @@ public class PreProcess {
 	/**
 	 * Used as an input for saveLocationEntropy
 	 * 
-	 * @return which location belongs to which grid
+	 * @return which location belongs to which grid cell
 	 * 
 	 */
-	public Hashtable<Integer, Coord> readCoordInfo() {
+	public Hashtable<Integer, Coord> locIdToCellIndices() {
 		Hashtable hashTable = new Hashtable();
 		try {
-			FileReader reader = new FileReader(Constants.gowallaFileName2);
+			FileReader reader = new FileReader(Constants.gowallaFileName_CA);
 			BufferedReader in = new BufferedReader(reader);
 			int cnt = 0;
 			while (in.ready()) {
@@ -586,7 +674,7 @@ public class PreProcess {
 
 				cnt++;
 			}
-			System.out.println("<location, grid> size: " + hashTable.size());
+			System.out.println("Hashtable<location, grid> size: " + hashTable.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -597,8 +685,7 @@ public class PreProcess {
 	 * Compute location entropy for each location and save into a file
 	 * 
 	 * @param hashTable
-	 *            a list of locations with corresponding occurrences of each
-	 *            user
+	 *            a list of locations with corresponding entropy
 	 */
 	public void computeLocationEntropy(
 			Hashtable<Integer, ArrayList<Observation>> hashTable) {
@@ -663,7 +750,7 @@ public class PreProcess {
 		String matlabWorkerFilePath = "";
 		switch (DATA_SET) {
 		case 1:
-			matlabWorkerFilePath = Constants.syncMatlabWorkerFilePath;
+			matlabWorkerFilePath = Constants.skewedMatlabWorkerFilePath;
 			break;
 		case 2:
 			matlabWorkerFilePath = Constants.uniMatlabWorkerFilePath;
@@ -705,12 +792,12 @@ public class PreProcess {
 		return densities;
 	}
 
-	public void saveSyncLocationDensity(
+	public void saveSynLocationDensity(
 			Hashtable<Integer, Hashtable<Integer, Integer>> densities) {
 		String locationDensityFileName = "";
 		switch (DATA_SET) {
 		case 1:
-			locationDensityFileName = Constants.syncLocationDensityFileName;
+			locationDensityFileName = Constants.skewedLocationDensityFileName;
 			break;
 		case 2:
 			locationDensityFileName = Constants.uniLocationDensityFileName;

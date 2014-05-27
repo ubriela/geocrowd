@@ -41,7 +41,7 @@ public class FordFulkerson {
 			throw new RuntimeException("Initial flow is infeasible");
 		}
 
-		if (assign_type == AlgoEnums.GR) {
+		if (assign_type == AlgoEnums.BASIC) {
 			// while there exists an augmenting path, use it
 			while (hasAugmentingPath(G, s, t)) {
 

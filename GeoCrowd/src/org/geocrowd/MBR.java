@@ -74,8 +74,19 @@ public class MBR {
 		return mbr;
 	}
 	
+	public double diagonalLength() {
+		return Utils.distance(minLat, minLng, maxLat, maxLng);
+	}
+	
 	public void print() {
 		System.out.println("minLat:" + minLat + "   maxLat:" + maxLat
 				+ "   minLng:" + minLng + "   maxLng:" + maxLng);
+	}
+	
+	public double area() {
+		MBR mbr = new MBR(minLat, minLng, maxLat, maxLng);
+		double x = Utils.distance(minLat, minLng, maxLat, minLng);
+		double y = Utils.distance(minLat, minLng, minLat, maxLng);
+		return x*y;
 	}
 }

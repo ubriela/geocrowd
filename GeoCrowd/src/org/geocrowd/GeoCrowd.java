@@ -12,8 +12,8 @@ import java.util.List;
 import org.datasets.gowalla.PreProcess;
 import org.datasets.gowalla.Range;
 import org.datasets.gowalla.UniformGenerator;
-import org.geocrowd.maxmatching.BPWMatching.HungarianAlgorithm;
-import org.geocrowd.maxmatching.BPWMatching.Utility;
+import org.geocrowd.matching.HungarianAlgorithm;
+import org.geocrowd.matching.Utility;
 
 import cplex.BPMatchingCplex;
 
@@ -46,7 +46,7 @@ public class GeoCrowd {
 	public int sumMaxT = 0;
 	public double TotalScore = 0;
 	public int TotalTasksAssigned = 0; // number of assigned tasks
-	public int TotalTasksExactMatch = 0; // number of assigned tasks, from exact
+	public int TotalTasksExpertiseMatch = 0; // number of assigned tasks, from exact
 											// match
 	public double TotalTravelDistance = 0;
 	public int sumEntropy = 0;
@@ -68,7 +68,7 @@ public class GeoCrowd {
 	public double varTW = 0;
 	public double resolution = 0;
 	public static int DATA_SET;
-	public static AlgoEnums algorithm = AlgoEnums.GR;
+	public static AlgoEnums algorithm = AlgoEnums.BASIC;
 
 	private int totalExpiredTask = 0;
 
@@ -79,7 +79,7 @@ public class GeoCrowd {
 			boundaryFile = Constants.gowallaBoundary;
 			break;
 		case 1:
-			boundaryFile = Constants.syncBoundary;
+			boundaryFile = Constants.skewedBoundary;
 			break;
 		case 2:
 			boundaryFile = Constants.uniBoundary;
@@ -94,7 +94,7 @@ public class GeoCrowd {
 
 		PreProcess prep = new PreProcess();
 		prep.DATA_SET = DATA_SET;
-		prep.readBoundary();
+		prep.readBoundary(prep.DATA_SET);
 		minLatitude = prep.minLatitude;
 		maxLatitude = prep.maxLatitude;
 		minLongitude = prep.minLongitude;
@@ -113,7 +113,7 @@ public class GeoCrowd {
 			resolution = Constants.gowallaResolution;
 			break;
 		case 1:
-			resolution = Constants.syncResolution;
+			resolution = Constants.skewedResolution;
 			break;
 		case 2:
 			resolution = Constants.uniResolution;
@@ -141,7 +141,7 @@ public class GeoCrowd {
 			filePath = Constants.gowallaLocationEntropyFileName;
 			break;
 		case 1:
-			filePath = Constants.syncLocationDensityFileName;
+			filePath = Constants.skewedLocationDensityFileName;
 			break;
 		case 2:
 			filePath = Constants.uniLocationDensityFileName;
@@ -237,7 +237,7 @@ public class GeoCrowd {
 		try {
 			allTasks = new ArrayList();
 			HashMap HashMap = new HashMap();
-			FileReader reader = new FileReader(Constants.gowallaFileName2);
+			FileReader reader = new FileReader(Constants.gowallaFileName_CA);
 			BufferedReader in = new BufferedReader(reader);
 			int cnt = 0;
 			while (in.ready()) {
@@ -743,7 +743,7 @@ public class GeoCrowd {
 				sum += origin[i][r[i]];
 				totalTasksAssigned++;
 				// exact match?
-				if (origin[i][r[i]] == Constants.EXACT_MATCH_SCORE)
+				if (origin[i][r[i]] == Constants.EXPERTISE_MATCH_SCORE)
 					totalTasksExactMatch++;
 
 				solvedTasks.add(r[i]);
@@ -762,7 +762,7 @@ public class GeoCrowd {
 		System.out.printf("\nMaximum score: %.2f\n", sum);
 		TotalScore += sum;
 		TotalTasksAssigned += totalTasksAssigned;
-		TotalTasksExactMatch += totalTasksExactMatch;
+		TotalTasksExpertiseMatch += totalTasksExactMatch;
 		return sum;
 	}
 
@@ -944,7 +944,7 @@ public class GeoCrowd {
 															// in
 															// candidateTasks
 
-		if (algorithm == AlgoEnums.GR) {
+		if (algorithm == AlgoEnums.BASIC) {
 			// remove the assigned task
 			for (int i = r.length - 1; i >= 0; i--) {
 				if (origin[i][r[i]] > 0) {
@@ -996,7 +996,7 @@ public class GeoCrowd {
 
 		TotalScore += totalScore;
 		TotalTasksAssigned += totalTasksAssigned;
-		TotalTasksExactMatch += totalTasksExactMatch;
+		TotalTasksExpertiseMatch += totalTasksExactMatch;
 		TotalTravelDistance += totalDistance;
 
 		System.out.printf("Maximum score: %.2f\n", totalScore);
@@ -1036,9 +1036,9 @@ public class GeoCrowd {
 	// compute score of a tuple <w,t>
 	private double computeScore(Worker w, Task t) {
 		if (w.isExactMatch(t))
-			return Constants.EXACT_MATCH_SCORE;
+			return Constants.EXPERTISE_MATCH_SCORE;
 		else
-			return Constants.NONEXACT_MATCH_SCORE;
+			return Constants.NON_EXPERTISE_MATCH_SCORE;
 	}
 
 	private double computeCost(Task t) {

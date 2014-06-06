@@ -12,7 +12,7 @@ import java.util.List;
 import org.datasets.gowalla.PreProcess;
 import org.datasets.gowalla.Range;
 import org.datasets.gowalla.UniformGenerator;
-import org.geocrowd.matching.HungarianAlgorithm;
+import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.Utility;
 
 import cplex.BPMatchingCplex;
@@ -727,7 +727,7 @@ public class GeoCrowd {
 		}
 
 		// Utility.print2(origin);
-		HungarianAlgorithm HA = new HungarianAlgorithm(array);
+		Hungarian HA = new Hungarian(array);
 		int[] r = HA.execute(array);
 		double sum = 0;
 
@@ -851,7 +851,7 @@ public class GeoCrowd {
 			}
 		}
 
-		HungarianAlgorithm HA = new HungarianAlgorithm(array);
+		Hungarian HA = new Hungarian(array);
 		int[] r = HA.execute(array);
 
 		// COMPUTE

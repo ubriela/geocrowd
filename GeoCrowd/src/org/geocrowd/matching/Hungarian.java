@@ -10,7 +10,7 @@ package org.geocrowd.matching;
  */
 import java.util.Arrays;
 
-public class HungarianAlgorithm {
+public class Hungarian {
 
     
    
@@ -33,7 +33,7 @@ public class HungarianAlgorithm {
          */
         
 
-        public HungarianAlgorithm(double[][] costMatrix) {
+        public Hungarian(double[][] costMatrix) {
 
             this.dim = costMatrix.length;
             this.rows = costMatrix.length;

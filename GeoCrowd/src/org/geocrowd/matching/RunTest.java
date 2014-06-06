@@ -92,7 +92,7 @@ public class RunTest {
 		double LB = 50;
 		double UB = 0;
 
-		HungarianAlgorithm HA = new HungarianAlgorithm(cost);
+		Hungarian HA = new Hungarian(cost);
 		int[] r = HA.execute(cost);
 
 		for (int i = 0; i < array.length; i++) {

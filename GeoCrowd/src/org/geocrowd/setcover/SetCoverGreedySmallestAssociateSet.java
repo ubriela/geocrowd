@@ -37,6 +37,28 @@ public class SetCoverGreedySmallestAssociateSet {
     }
 
     /**
+     * Compute associates sets for uncovered elements in a set
+     *
+     * @param S
+     * @param s
+     * @param C
+     * @return
+     */
+    public int computeAssociateSets(ArrayList<HashSet<Integer>> S, HashSet<Integer> s, HashSet<Integer> C) {
+        int numAssociateSet = 0;
+        for (Integer i : s) {
+            if (!C.contains(i)) {
+                for (HashSet<Integer> s2 : S) {
+                    if (s2.contains(i)) {
+                        numAssociateSet++;
+                    }
+                }
+            }
+        }
+        return numAssociateSet;
+    }
+
+    /**
      * Greedy algorithm
      */
     public int minSetCover() {
@@ -49,10 +71,12 @@ public class SetCoverGreedySmallestAssociateSet {
         while (!Q.isEmpty()) {
             HashSet<Integer> maxSet = null;
             int maxElem = 0;
+            int numAssociateSet = 0;
             for (HashSet<Integer> s : S) {
-		// select the item set that maximize coverage
+                // select the item set that maximize coverage
                 // how many elements in s that are not in C
                 int newElem = 0;
+                
                 for (Integer i : s) {
                     if (!C.contains(i)) {
                         newElem++;
@@ -61,6 +85,15 @@ public class SetCoverGreedySmallestAssociateSet {
                 if (newElem > maxElem) {
                     maxElem = newElem;
                     maxSet = s;
+                    numAssociateSet = computeAssociateSets(S, s, C);
+                } else if (newElem == maxElem) //compare associate sets 
+                {
+                    int n = computeAssociateSets(S, s, C);
+                    if (n < numAssociateSet) {
+                        maxElem = newElem;
+                        maxSet = s;
+                        numAssociateSet = n;
+                    }
                 }
             }
 

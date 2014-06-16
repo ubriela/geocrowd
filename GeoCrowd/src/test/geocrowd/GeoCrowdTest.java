@@ -111,7 +111,7 @@ public class GeoCrowdTest {
 		double totalAvgWT = 0;
 		double totalVARWT = 0;
 
-		for (int k = 0; k < 20; k++) {
+		for (int k = 0; k < 20; k++) {	// k is the number of time instance
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
 			GeoCrowd.DATA_SET = 2;

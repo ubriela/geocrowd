@@ -11,7 +11,7 @@ public class SetCoverGreedy {
 	
 	/**
 	 * Initialize variables
-	 * @param container
+	 * @param container: a set of set
 	 */
 	public SetCoverGreedy(ArrayList<ArrayList> container) {
 		setOfSets = new ArrayList<>();

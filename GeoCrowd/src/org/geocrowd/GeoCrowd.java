@@ -578,9 +578,10 @@ public class GeoCrowd {
 	 */
 	public void matchingTasksWorkers() {
 		invertedTable = new HashMap<Integer, ArrayList>();
-		container = new ArrayList[workerList.size()];
 		candidateTasks = new ArrayList();
 		setTasks = new HashSet<Integer>();
+		
+		container = new ArrayList[workerList.size()];
 
 		// remove expired task from tasklist
 		for (int i = taskList.size() - 1; i >= 0; i--) {

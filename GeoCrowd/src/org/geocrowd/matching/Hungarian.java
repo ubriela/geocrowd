@@ -12,9 +12,6 @@ import java.util.Arrays;
 
 public class Hungarian {
 
-    
-   
-
         //private final double[][] costMatrix;
         private final int rows, cols, dim;
         private final double[] labelByWorker, labelByJob;

@@ -4,29 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class SetCoverGreedy {
-	ArrayList<HashSet<Integer>> setOfSets = null;
-	HashSet<Integer> universe = null;
+public class SetCoverGreedy extends SetCover {
 	
 	
-	/**
-	 * Initialize variables
-	 * @param container: a set of set
-	 */
 	public SetCoverGreedy(ArrayList<ArrayList> container) {
-		setOfSets = new ArrayList<>();
-		universe = new HashSet<>();
-		
-		for (int i = 0; i < container.size(); i++) {
-			ArrayList<Integer> items = container.get(i);
-			if (items != null) {
-				HashSet<Integer> itemSet = new HashSet<Integer>(items);
-				setOfSets.add(itemSet);
-				universe.addAll(itemSet);
-			}
-		}
+		super(container);
 	}
-	
 	
 	/**
 	 * Greedy algorithm

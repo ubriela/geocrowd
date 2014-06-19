@@ -12,29 +12,11 @@ import java.util.HashSet;
  *
  * @author Luan
  */
-public class SetCoverGreedySmallestAssociateSet {
+public class SetCoverGreedySmallestAssociateSet extends SetCover {
 
-    ArrayList<HashSet<Integer>> setOfSets = null;
-    HashSet<Integer> universe = null;
-
-    /**
-     * Initialize variables
-     *
-     * @param container
-     */
-    public SetCoverGreedySmallestAssociateSet(ArrayList<ArrayList> container) {
-        setOfSets = new ArrayList<>();
-        universe = new HashSet<>();
-
-        for (int i = 0; i < container.size(); i++) {
-            ArrayList<Integer> items = container.get(i);
-            if (items != null) {
-                HashSet<Integer> itemSet = new HashSet<Integer>(items);
-                setOfSets.add(itemSet);
-                universe.addAll(itemSet);
-            }
-        }
-    }
+	public SetCoverGreedySmallestAssociateSet(ArrayList<ArrayList> container) {
+		super(container);
+	}
 
     /**
      * Compute associates sets for uncovered elements in a set

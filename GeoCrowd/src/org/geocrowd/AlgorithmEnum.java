@@ -4,6 +4,6 @@
  */
 package org.geocrowd;
 
-public enum AlgoEnums {
-	BASIC, LLEP, NNP
+public enum AlgorithmEnum {
+	BASIC, LLEP, NNP,
 };

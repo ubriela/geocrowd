@@ -1,4 +1,4 @@
-package org.geocrowd;
+package org.geocrowd.util;
 
 public class Constants {
 
@@ -8,7 +8,7 @@ public class Constants {
 	public static final double NON_EXPERTISE_MATCH_SCORE = 1;
 
 	public static int TaskNo = 1000; // 200; // number of tasks
-	public static int RoundCnt = 20; // number of instance times
+	public static int TIME_INSTANCE = 20;
 	public static int TaskDuration = 10;// 20000; //duration of all tasks before
 										// they expire are fixed to 1000ms
 	public static int MaxTasksPerWorker = 20; // maximum # of tasks that a
@@ -68,5 +68,11 @@ public class Constants {
 	public static String uniTaskFileNamePrefix = "dataset/uni/task/uni_tasks";
 	public static String uniWorkerFileNamePrefix = "dataset/uni/worker/uni_workers";
 	public static String uniBoundary = "dataset/uni/uni_boundary.txt";
+	
+	
+	
+	
+	// ------------------------------------------------------------
+	public static double radius = 2;		// task circle radius
 
 }

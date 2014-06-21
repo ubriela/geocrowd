@@ -46,5 +46,4 @@ public class SetCoverGreedy extends SetCover {
 		
 		return set_size - S.size();
 	}
-	
 }

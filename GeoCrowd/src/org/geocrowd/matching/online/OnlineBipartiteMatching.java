@@ -12,7 +12,7 @@ public class OnlineBipartiteMatching {
 	
 	/**
 	 * Initialize variables
-	 * @param container
+	 * @param container2
 	 */
 	public OnlineBipartiteMatching(ArrayList<Integer> _workers) {
 		java.util.Collections.shuffle(_workers); // permute workers

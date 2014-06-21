@@ -1,23 +1,23 @@
-package org.geocrowd;
+package org.geocrowd.common.entropy;
 
 /**
  * 
- * @author Leyla
+ * @author Leyla & Hien To
+ * 
+ * location entropy for each grid cell
  */
 public class EntropyRecord {
 	private double entropy;
-	private int rowIdx;
-	private int colIdx;
+	private Coord coord;
 	private int workerNo; // number of people chosen as workers; starts with 0
 							// and is density as max
 
 	public EntropyRecord() {
 	}
 
-	public EntropyRecord(double d, int r, int c) {
+	public EntropyRecord(double d, Coord coord) {
 		entropy = d;
-		rowIdx = r;
-		colIdx = c;
+		this.coord = coord;
 		workerNo = 0;
 	}
 
@@ -29,17 +29,12 @@ public class EntropyRecord {
 		return entropy;
 	}
 
-	public void setRowIdx(int row, int col) {
-		rowIdx = row;
-		colIdx = col;
+	public Coord getCoord() {
+		return coord;
 	}
 
-	public int getRowIdx() {
-		return rowIdx;
-	}
-
-	public int getColIdx() {
-		return colIdx;
+	public void setCoord(Coord coord) {
+		this.coord = coord;
 	}
 
 	public int getWorkerNo() {

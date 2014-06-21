@@ -449,7 +449,7 @@ public class ProcessDataSet {
             }
             
             // compute MCD
-            double mcd = org.geocrowd.Utils.MCD(points.get(0), points);
+            double mcd = org.geocrowd.util.Utils.MCD(points.get(0), points);
             sb.append(mcd + "\n");
         }
         

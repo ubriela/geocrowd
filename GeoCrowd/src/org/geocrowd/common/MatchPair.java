@@ -1,5 +1,12 @@
-package org.geocrowd;
+package org.geocrowd.common;
 
+/**
+ * 
+ * @author HT186011
+ * 
+ * A workerid is matched with a taskid
+ *
+ */
 public class MatchPair {
 	int w;
 	int t;

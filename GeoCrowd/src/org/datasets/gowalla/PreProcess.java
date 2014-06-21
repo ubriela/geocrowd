@@ -12,30 +12,31 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.geocrowd.Constants;
-import org.geocrowd.Coord;
-import org.geocrowd.Expertise;
-import org.geocrowd.MBR;
-import org.geocrowd.Observation;
-import org.geocrowd.Task;
-import org.geocrowd.Utils;
-import org.geocrowd.Worker;
+import org.geocrowd.DatasetEnum;
+import org.geocrowd.common.Expertise;
+import org.geocrowd.common.MBR;
+import org.geocrowd.common.SpecializedTask;
+import org.geocrowd.common.SpecializedWorker;
+import org.geocrowd.common.entropy.Coord;
+import org.geocrowd.common.entropy.Observation;
+import org.geocrowd.util.Constants;
+import org.geocrowd.util.Utils;
 
 /**
  * 
  * @author Leyla & Hien To
  */
 public class PreProcess {
-	public static double minLatitude = Double.MAX_VALUE;
-	public static double maxLatitude = (-1) * Double.MAX_VALUE;
-	public static double minLongitude = Double.MAX_VALUE;
-	public static double maxLongitude = (-1) * Double.MAX_VALUE;
+	public static double minLat = Double.MAX_VALUE;
+	public static double maxLat = (-1) * Double.MAX_VALUE;
+	public static double minLng = Double.MAX_VALUE;
+	public static double maxLng = (-1) * Double.MAX_VALUE;
 
 	public static int rowCount = 0; // number of rows for the grid
 	public static int colCount = 0; // number of cols for the grid
 	public static int timeCounter = 0; // works as the clock for task generation
 	public double resolution = 0;
-	public static int DATA_SET = 0;
+	public static DatasetEnum DATA_SET;
 
 	public PreProcess() {
 	}
@@ -150,7 +151,7 @@ public class PreProcess {
 	 */
 	public void computeBoundary(String datafile) {
 		switch (DATA_SET) {
-		case 0:// real
+		case GOWALLA:
 			try {
 				FileReader reader = new FileReader(datafile);
 				BufferedReader in = new BufferedReader(reader);
@@ -161,33 +162,33 @@ public class PreProcess {
 					Double lat = Double.parseDouble(parts[2]);
 					Double lng = Double.parseDouble(parts[3]);
 
-					if (lat < minLatitude)
-						minLatitude = lat;
-					if (lat > maxLatitude)
-						maxLatitude = lat;
-					if (lng < minLongitude)
-						minLongitude = lng;
-					if (lng > maxLongitude)
-						maxLongitude = lng;
+					if (lat < minLat)
+						minLat = lat;
+					if (lat > maxLat)
+						maxLat = lat;
+					if (lng < minLng)
+						minLng = lng;
+					if (lng > maxLng)
+						maxLng = lng;
 					cnt++;
 				}
 
 				FileWriter writer = new FileWriter(datafile + "_boundary.txt");
 				BufferedWriter out = new BufferedWriter(writer);
-				out.write(minLatitude + " " + minLongitude + " " + maxLatitude
-						+ " " + maxLongitude);
+				out.write(minLat + " " + minLng + " " + maxLat
+						+ " " + maxLng);
 				out.close();
 
-				System.out.println("Boundary [minLat:" + minLatitude
-						+ "   maxLat:" + maxLatitude + "   minLng:"
-						+ minLongitude + "   maxLng:" + maxLongitude + "]");
+				System.out.println("Boundary [minLat:" + minLat
+						+ "   maxLat:" + maxLat + "   minLng:"
+						+ minLng + "   maxLng:" + maxLng + "]");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			break;
-		case 1:// sync
+		case SKEWED:
 			int cnt = 0;
-			for (int i = 0; i < Constants.RoundCnt; i++) {
+			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				try {
 					FileReader reader = new FileReader(
 							Constants.skewedMatlabWorkerFilePath + i + ".txt");
@@ -198,35 +199,35 @@ public class PreProcess {
 						Double lat = Double.parseDouble(parts[0]);
 						Double lng = Double.parseDouble(parts[1]);
 
-						if (lat < minLatitude)
-							minLatitude = lat;
-						if (lat > maxLatitude)
-							maxLatitude = lat;
-						if (lng < minLongitude)
-							minLongitude = lng;
-						if (lng > maxLongitude)
-							maxLongitude = lng;
+						if (lat < minLat)
+							minLat = lat;
+						if (lat > maxLat)
+							maxLat = lat;
+						if (lng < minLng)
+							minLng = lng;
+						if (lng > maxLng)
+							maxLng = lng;
 						cnt++;
 					}
 
 					FileWriter writer = new FileWriter(Constants.skewedBoundary);
 					BufferedWriter out = new BufferedWriter(writer);
-					out.write(minLatitude + " " + minLongitude + " "
-							+ maxLatitude + " " + maxLongitude);
+					out.write(minLat + " " + minLng + " "
+							+ maxLat + " " + maxLng);
 					out.close();
 
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Boundary [minLat:" + minLatitude + "   maxLat:"
-					+ maxLatitude + "   minLng:" + minLongitude + "   maxLng:"
-					+ maxLongitude + "]");
+			System.out.println("Boundary [minLat:" + minLat + "   maxLat:"
+					+ maxLat + "   minLng:" + minLng + "   maxLng:"
+					+ maxLng + "]");
 			break;
 
-		case 2:// uniform
+		case UNIFORM:
 			cnt = 0;
-			for (int i = 0; i < Constants.RoundCnt; i++) {
+			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				try {
 					FileReader reader = new FileReader(
 							Constants.uniMatlabWorkerFilePath + i + ".txt");
@@ -237,36 +238,36 @@ public class PreProcess {
 						Double lat = Double.parseDouble(parts[0]);
 						Double lng = Double.parseDouble(parts[1]);
 
-						if (lat < minLatitude)
-							minLatitude = lat;
-						if (lat > maxLatitude)
-							maxLatitude = lat;
-						if (lng < minLongitude)
-							minLongitude = lng;
-						if (lng > maxLongitude)
-							maxLongitude = lng;
+						if (lat < minLat)
+							minLat = lat;
+						if (lat > maxLat)
+							maxLat = lat;
+						if (lng < minLng)
+							minLng = lng;
+						if (lng > maxLng)
+							maxLng = lng;
 						cnt++;
 					}
 
 					FileWriter writer = new FileWriter(Constants.uniBoundary);
 					BufferedWriter out = new BufferedWriter(writer);
-					out.write(minLatitude + " " + minLongitude + " "
-							+ maxLatitude + " " + maxLongitude);
+					out.write(minLat + " " + minLng + " "
+							+ maxLat + " " + maxLng);
 					out.close();
 
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Boundary [minLat:" + minLatitude + "   maxLat:"
-					+ maxLatitude + "   minLng:" + minLongitude + "   maxLng:"
-					+ maxLongitude + "]");
+			System.out.println("Boundary [minLat:" + minLat + "   maxLat:"
+					+ maxLat + "   minLng:" + minLng + "   maxLng:"
+					+ maxLng + "]");
 			break;
 		}
 		
-		MBR mbr = new MBR(minLatitude, minLongitude, maxLatitude, maxLongitude);
-		double x = Utils.distance(minLatitude, minLongitude, maxLatitude, minLongitude);
-		double y = Utils.distance(minLatitude, minLongitude, minLatitude, maxLongitude);
+		MBR mbr = new MBR(minLat, minLng, maxLat, maxLng);
+		double x = Utils.distance(minLat, minLng, maxLat, minLng);
+		double y = Utils.distance(minLat, minLng, minLat, maxLng);
 		System.out.println("Area: " + x*y);
 		System.out.println("Region MBR size: " + mbr.diagonalLength());
 
@@ -275,22 +276,22 @@ public class PreProcess {
 	/**
 	 * Read boundary from file
 	 */
-	public void readBoundary(int dataset) {
+	public void readBoundary(DatasetEnum dataset) {
 		String boundaryFile = "";
 		switch (dataset) {
-		case 0:
+		case GOWALLA:
 			boundaryFile = Constants.gowallaBoundary;
 			break;
-		case 1:
+		case SKEWED:
 			boundaryFile = Constants.skewedBoundary;
 			break;
-		case 2:
+		case UNIFORM:
 			boundaryFile = Constants.uniBoundary;
 			break;
-		case 3:
+		case SMALL:
 			boundaryFile = Constants.smallBoundary;
 			break;
-		case 4:
+		case YELP:
 			boundaryFile = Constants.yelpBoundary;
 			break;
 		}
@@ -300,10 +301,10 @@ public class PreProcess {
 			if (in.ready()) {
 				String line = in.readLine();
 				String[] parts = line.split(" ");
-				minLatitude = Double.valueOf(parts[0]);
-				minLongitude = Double.valueOf(parts[1]);
-				maxLatitude = Double.valueOf(parts[2]);
-				maxLongitude = Double.valueOf(parts[3]);
+				minLat = Double.valueOf(parts[0]);
+				minLng = Double.valueOf(parts[1]);
+				maxLat = Double.valueOf(parts[2]);
+				maxLng = Double.valueOf(parts[3]);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -352,25 +353,25 @@ public class PreProcess {
 	 * compute grid granularity
 	 * @param dataset
 	 */
-	public void createGrid(int dataset) {
+	public void createGrid(DatasetEnum dataset) {
 		resolution = 0;
 		switch (dataset) {
-		case 0:
+		case GOWALLA:
 			resolution = Constants.gowallaResolution;
 			break;
-		case 1:
+		case SKEWED:
 			resolution = Constants.skewedResolution;
 			break;
-		case 2:
+		case UNIFORM:
 			resolution = Constants.uniResolution;
 			break;
-		case 3:
+		case SMALL:
 			resolution = Constants.smallResolution;
-		case 4:
+		case YELP:
 			resolution = Constants.yelpResolution;
 		}
-		rowCount = (int) ((maxLatitude - minLatitude) / resolution);
-		colCount = (int) ((maxLongitude - minLongitude) / resolution);
+		rowCount = (int) ((maxLat - minLat) / resolution);
+		colCount = (int) ((maxLng - minLng) / resolution);
 		System.out
 				.println("rowcount: " + rowCount + "    colCount:" + colCount);
 	}
@@ -433,8 +434,8 @@ public class PreProcess {
 	 * @param datasetfile
 	 * @return
 	 */
-	public Hashtable<Date, ArrayList<Worker>> generateRealWorkers(String datasetfile) {
-		Hashtable<Date, ArrayList<Worker>> hashTable = new Hashtable();
+	public Hashtable<Date, ArrayList<SpecializedWorker>> generateRealWorkers(String datasetfile) {
+		Hashtable<Date, ArrayList<SpecializedWorker>> hashTable = new Hashtable();
 		try {
 			FileReader reader = new FileReader(Constants.gowallaFileName_CA);
 			BufferedReader in = new BufferedReader(reader);
@@ -453,29 +454,29 @@ public class PreProcess {
 						lat + 2 * resolution, lng + 2 * resolution);
 
 				// make sure the MBR is within the boundary
-				if (mbr.minLat < minLatitude)
-					mbr.minLat = minLatitude;
-				if (mbr.maxLat > maxLatitude)
-					mbr.maxLat = maxLatitude;
-				if (mbr.minLng < minLongitude)
-					mbr.minLng = minLongitude;
-				if (mbr.maxLng > maxLongitude)
-					mbr.maxLng = maxLongitude;
+				if (mbr.minLat < minLat)
+					mbr.minLat = minLat;
+				if (mbr.maxLat > maxLat)
+					mbr.maxLat = maxLat;
+				if (mbr.minLng < minLng)
+					mbr.minLng = minLng;
+				if (mbr.maxLng > maxLng)
+					mbr.maxLng = maxLng;
 				Integer pointID = Integer.parseInt(parts[4]);
 				int exp = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				Worker w = new Worker(userID, lat, lng, mbr);
+				SpecializedWorker w = new SpecializedWorker(userID, lat, lng, 0, mbr);
 				w.addExpertise(exp);
 				if (!hashTable.containsKey(date)) {
-					ArrayList<Worker> workers = new ArrayList<Worker>();
+					ArrayList<SpecializedWorker> workers = new ArrayList<SpecializedWorker>();
 					workers.add(w);
 					hashTable.put(date, workers);
 				} else {
-					ArrayList<Worker> workers = hashTable.get(date);
+					ArrayList<SpecializedWorker> workers = hashTable.get(date);
 					boolean found = false; // check if the worker is already in
 											// the worker list, if yes -->
 											// update his maxTass and R
-					for (Worker o : workers) {
+					for (SpecializedWorker o : workers) {
 						if (o.getUserID() == userID) {
 							o.incMaxTaskNo(); // set maxTask as the number of
 												// check-ins
@@ -513,16 +514,16 @@ public class PreProcess {
 	public void generateSynWorkers(boolean isConstantMBR,
 			boolean isConstantMaxT) {
 		switch (DATA_SET) {
-		case 1:
-			for (int i = 0; i < Constants.RoundCnt; i++) {
+		case SKEWED:
+			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				generateSyncWorkersFromMatlab(
 						Constants.skewedWorkerFileNamePrefix + i + ".txt",
 						Constants.skewedMatlabWorkerFilePath + i + ".txt",
 						isConstantMBR, isConstantMaxT);
 			}
 			break;
-		case 2:
-			for (int i = 0; i < Constants.RoundCnt; i++) {
+		case UNIFORM:
+			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				generateSyncWorkersFromMatlab(Constants.uniWorkerFileNamePrefix
 						+ i + ".txt", Constants.uniMatlabWorkerFilePath + i
 						+ ".txt", isConstantMBR, isConstantMaxT);
@@ -544,9 +545,9 @@ public class PreProcess {
 			String matlabFile, boolean isConstantMBR, boolean isConstantMaxT) {
 		int maxSumTaskWorkers = 0;
 		System.out.println("Workers:");
-		double maxRangeX = (maxLatitude - minLatitude)
+		double maxRangeX = (maxLat - minLat)
 				* (Constants.MaxRangePerc);
-		double maxRangeY = (maxLongitude - minLongitude)
+		double maxRangeY = (maxLng - minLng)
 				* Constants.MaxRangePerc;
 		try {
 			FileWriter writer = new FileWriter(fileName);
@@ -580,7 +581,7 @@ public class PreProcess {
 				checkBoundaryMBR(mbr);
 				int exp = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				Worker w = new Worker(lat, lng, maxT, mbr);
+				SpecializedWorker w = new SpecializedWorker("dump", lat, lng, maxT, mbr);
 				w.addExpertise(exp);
 				out.write(-1 + "," + lat + "," + lng + "," + maxT
 						+ "," + "[" + mbr.getMinLat() + "," + mbr.getMinLng()
@@ -597,14 +598,14 @@ public class PreProcess {
 		timeCounter = 0;
 		String outputFileFrefix = "";
 		switch (DATA_SET) {
-		case 1:
+		case SKEWED:
 			outputFileFrefix = Constants.skewedTaskFileNamePrefix;
 			break;
-		case 2:
+		case UNIFORM:
 			outputFileFrefix = Constants.uniTaskFileNamePrefix;
 			break;
 		}
-		for (int i = 0; i < Constants.RoundCnt; i++) {
+		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			generateSyncTasksFromMatlab(outputFileFrefix + i + ".txt",
 					Constants.matlabTaskFilePath + i + ".txt");
 			timeCounter++;
@@ -635,7 +636,7 @@ public class PreProcess {
 				int time = timeCounter;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				Task t = new Task(lat, lng, time, -1, taskType);
+				SpecializedTask t = new SpecializedTask(lat, lng, time, -1, taskType);
 				out.write(lat + "," + lng + "," + time + "," + -1 + ","
 						+ taskType + "\n");
 				countTask++;
@@ -749,19 +750,19 @@ public class PreProcess {
 	public Hashtable<Integer, Hashtable<Integer, Integer>> computeSyncLocationDensity() {
 		String matlabWorkerFilePath = "";
 		switch (DATA_SET) {
-		case 1:
+		case SKEWED:
 			matlabWorkerFilePath = Constants.skewedMatlabWorkerFilePath;
 			break;
-		case 2:
+		case UNIFORM:
 			matlabWorkerFilePath = Constants.uniMatlabWorkerFilePath;
 			break;
-		case 3:
+		case SMALL:
 			matlabWorkerFilePath = Constants.smallWorkerFilePath;
 		}
 
 		Hashtable<Integer, Hashtable<Integer, Integer>> densities = new Hashtable<Integer, Hashtable<Integer, Integer>>();
 		int locId = 0;
-		for (int i = 0; i < Constants.RoundCnt; i++) {
+		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			try {
 				FileReader file = new FileReader(matlabWorkerFilePath + i
 						+ ".txt");
@@ -796,13 +797,13 @@ public class PreProcess {
 			Hashtable<Integer, Hashtable<Integer, Integer>> densities) {
 		String locationDensityFileName = "";
 		switch (DATA_SET) {
-		case 1:
+		case SKEWED:
 			locationDensityFileName = Constants.skewedLocationDensityFileName;
 			break;
-		case 2:
+		case UNIFORM:
 			locationDensityFileName = Constants.uniLocationDensityFileName;
 			break;
-		case 3:
+		case SMALL:
 			locationDensityFileName = Constants.smallLocationDensityFileName;
 			break;
 		}
@@ -827,7 +828,7 @@ public class PreProcess {
 		}
 	}
 
-	public void saveRealWorkers(Hashtable<Date, ArrayList<Worker>> hashTable) {
+	public void saveRealWorkers(Hashtable<Date, ArrayList<SpecializedWorker>> hashTable) {
 		try {
 			Set<Date> set = hashTable.keySet();
 
@@ -840,8 +841,8 @@ public class PreProcess {
 				BufferedWriter out = new BufferedWriter(writer);
 
 				Date date = itr.next();
-				ArrayList<Worker> workers = hashTable.get(date);
-				for (Worker o : workers) {
+				ArrayList<SpecializedWorker> workers = hashTable.get(date);
+				for (SpecializedWorker o : workers) {
 					out.write(o.toStr() + "\n");
 				}
 
@@ -855,21 +856,21 @@ public class PreProcess {
 	}
 
 	public int getRowIdx(double lat) {
-		return (int) ((lat - minLatitude) / resolution);
+		return (int) ((lat - minLat) / resolution);
 	}
 
 	public int getColIdx(double lng) {
-		return (int) ((lng - minLongitude) / resolution);
+		return (int) ((lng - minLng) / resolution);
 	}
 
 	private void checkBoundaryMBR(MBR mbr) {
-		if (mbr.getMinLat() < minLatitude)
-			mbr.setMinLat(minLatitude);
-		if (mbr.getMaxLat() > maxLatitude)
-			mbr.setMaxLat(maxLatitude);
-		if (mbr.getMinLng() < minLongitude)
-			mbr.setMinLng(minLongitude);
-		if (mbr.getMaxLng() > maxLongitude)
-			mbr.setMaxLng(maxLongitude);
+		if (mbr.getMinLat() < minLat)
+			mbr.setMinLat(minLat);
+		if (mbr.getMaxLat() > maxLat)
+			mbr.setMaxLat(maxLat);
+		if (mbr.getMinLng() < minLng)
+			mbr.setMinLng(minLng);
+		if (mbr.getMaxLng() > maxLng)
+			mbr.setMaxLng(maxLng);
 	}
 }

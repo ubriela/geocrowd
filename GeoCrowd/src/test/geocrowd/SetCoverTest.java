@@ -30,5 +30,4 @@ public class SetCoverTest {
 		int no_set = scg.minSetCover();
 		System.out.println(no_set);
 	}
-
 }

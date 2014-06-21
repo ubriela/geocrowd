@@ -3,9 +3,9 @@ package org.geocrowd.maxflow;
 import java.io.*;
 import java.util.*;
 
-import org.geocrowd.Task;
-import org.geocrowd.Worker;
-import org.geocrowd.AlgoEnums;
+import org.geocrowd.AlgorithmEnum;
+import org.geocrowd.common.SpecializedTask;
+import org.geocrowd.common.SpecializedWorker;
 
 /*************************************************************************
  * Compilation: javac FlowNetwork.java Execution: java FlowNetwork V E
@@ -30,8 +30,8 @@ public class FlowNetwork {
 	}
 
 	// random graph with V vertices and E edges
-	public FlowNetwork(int V, ArrayList[] List, ArrayList<Worker> workerList,
-			ArrayList<Task> taskList, AlgoEnums assign_type) {
+	public FlowNetwork(int V, ArrayList[] List, ArrayList<SpecializedWorker> workerList,
+			ArrayList<SpecializedTask> taskList, AlgorithmEnum assign_type) {
 		this(V + 2);
 		double capacity = 1;
 		for (int i = 0; i < List.length; i++) {
@@ -42,17 +42,17 @@ public class FlowNetwork {
 			if (tasks != null) {
 				for (int j = 0; j < tasks.size(); j++) {
 					int t = (Integer) tasks.get(j);
-					Task task = taskList.get(t);
+					SpecializedTask task = taskList.get(t);
 					double taskLat = task.getLat();
 					double taskLng = task.getLng();
 					double dist = Math
 							.sqrt(((workerLat - taskLat) * (workerLat - taskLat))
 									+ ((workerLng - taskLng) * (workerLng - taskLng)));
 
-					if (assign_type == AlgoEnums.LLEP)
+					if (assign_type == AlgorithmEnum.LLEP)
 						addEdge(new FlowEdge(i, List.length + t, capacity,
 								task.getEntropy(), dist));
-					else if (assign_type == AlgoEnums.NNP)
+					else if (assign_type == AlgorithmEnum.NNP)
 						addEdge(new FlowEdge(i, List.length + t, capacity,
 								dist, dist));
 					else
@@ -65,7 +65,7 @@ public class FlowNetwork {
 														// all points
 		}
 		for (int i = 0; i < taskList.size(); i++) {
-			Task task = taskList.get(i);
+			SpecializedTask task = taskList.get(i);
 			addEdge(new FlowEdge(List.length + i, V + 1, capacity, 0, 0));
 		}
 	}

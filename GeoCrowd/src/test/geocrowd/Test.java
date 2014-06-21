@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.geocrowd.Task;
+import org.geocrowd.common.SpecializedTask;
 
 public class Test {
 	public static void main(String[] args) {
@@ -12,12 +12,12 @@ public class Test {
 	}
 	
 	public void test1() {
-		ArrayList<Task> taskList = new ArrayList<Task>();
-		Task t1 = new Task();
-		Task t2 = new Task();
+		ArrayList<SpecializedTask> taskList = new ArrayList<SpecializedTask>();
+		SpecializedTask t1 = new SpecializedTask();
+		SpecializedTask t2 = new SpecializedTask();
 		t2.setExpired();
-		Task t3 = new Task();
-		Task t4 = new Task();
+		SpecializedTask t3 = new SpecializedTask();
+		SpecializedTask t4 = new SpecializedTask();
 		t4.setExpired();
 
 		taskList.add(0,t1);
@@ -25,7 +25,7 @@ public class Test {
 		taskList.add(2,t3);
 		taskList.add(3,t4);
 		
-		for (Task t : taskList)
+		for (SpecializedTask t : taskList)
 			System.out.println(t.toString());
 		
 		for (int i = taskList.size() - 1; i >= 0; i--) {
@@ -35,7 +35,7 @@ public class Test {
 			}
 		}
 		
-		for (Task t : taskList)
+		for (SpecializedTask t : taskList)
 			System.out.println(t.toString());
 	}
 	

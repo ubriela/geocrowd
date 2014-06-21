@@ -1,9 +1,14 @@
-package org.geocrowd;
+package org.geocrowd.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.datasets.gowalla.Point;
+import org.geocrowd.common.GenericTask;
+import org.geocrowd.common.GenericWorker;
+import org.geocrowd.common.MBR;
+import org.geocrowd.common.SpecializedTask;
+import org.geocrowd.common.SpecializedWorker;
 
 
 public class Utils {
@@ -14,7 +19,7 @@ public class Utils {
 	 * @param task
 	 * @return
 	 */
-	public static double computeDistance(Worker worker, Task task) {
+	public static double computeDistance(GenericWorker worker, GenericTask task) {
 		return distance(worker.getLatitude(),worker.getLongitude(),task.getLat(),task.getLng());
 	}
 	

@@ -12,8 +12,19 @@ import java.util.List;
 import org.datasets.gowalla.PreProcess;
 import org.datasets.gowalla.Range;
 import org.datasets.gowalla.UniformGenerator;
+import org.geocrowd.common.Cell;
+import org.geocrowd.common.GenericTask;
+import org.geocrowd.common.GenericWorker;
+import org.geocrowd.common.MBR;
+import org.geocrowd.common.MatchPair;
+import org.geocrowd.common.SpecializedTask;
+import org.geocrowd.common.SpecializedWorker;
+import org.geocrowd.common.entropy.Coord;
+import org.geocrowd.common.entropy.EntropyRecord;
 import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.Utility;
+import org.geocrowd.util.Constants;
+import org.geocrowd.util.Utils;
 
 import cplex.BPMatchingCplex;
 
@@ -21,13 +32,12 @@ import cplex.BPMatchingCplex;
  * 
  * @author Leyla
  */
-public class GeoCrowd {
+public class Geocrowd extends GenericCrowd {
 	public double minLatitude = Double.MAX_VALUE;
 	public double maxLatitude = -Double.MAX_VALUE;
 	public double minLongitude = Double.MAX_VALUE;
 	public double maxLongitude = -Double.MAX_VALUE;
-	public int TaskCount = 0; // number of tasks generated so far
-	public int WorkerCount = 0; // number of workers generated so far
+
 
 	public int workerNo = 100; // 100 // number of workers when workers are to
 								// be generated #
@@ -39,66 +49,45 @@ public class GeoCrowd {
 	public int colCount = 0; // number of cols for the grid
 
 	public ArrayList<EntropyRecord> entropyList = new ArrayList();
-	public ArrayList<Worker> workerList = new ArrayList();
-	public ArrayList<Integer> candidateTasks = null;
-	public HashSet<Integer> setTasks = null;
-	public ArrayList<Task> taskList = new ArrayList();
 	public int sumMaxT = 0;
 	public double TotalScore = 0;
-	public int TotalTasksAssigned = 0; // number of assigned tasks
 	public int TotalTasksExpertiseMatch = 0; // number of assigned tasks, from exact
 											// match
-	public double TotalTravelDistance = 0;
 	public int sumEntropy = 0;
-	public int timeCounter = 0; // works as the clock for task generation
 	public int taskExpiredNo = 0;
-	ArrayList<ArrayList> _container; // for the mbr of every user, tells which
-										// tasks lay
-	ArrayList[] container;
-	// inside
 
-	HashMap<Integer, ArrayList> invertedTable; // is used to compute average
-												// worker/task
 
 	public ArrayList<double[]> allTasks = new ArrayList();
 
-	public double avgWT = 0;
-	public double varWT = 0;
-	public double avgTW = 0;
-	public double varTW = 0;
 	public double resolution = 0;
-	public static int DATA_SET;
-	public static AlgoEnums algorithm = AlgoEnums.BASIC;
 
-	private int totalExpiredTask = 0;
-
-	public GeoCrowd() {
+	public Geocrowd() {
 		String boundaryFile = "";
 		switch (DATA_SET) {
-		case 0:
-			boundaryFile = Constants.gowallaBoundary;
-			break;
-		case 1:
-			boundaryFile = Constants.skewedBoundary;
-			break;
-		case 2:
-			boundaryFile = Constants.uniBoundary;
-			break;
-		case 3:
-			boundaryFile = Constants.smallBoundary;
-			break;
-		case 4:
-			boundaryFile = Constants.yelpBoundary;
-			break;
+			case GOWALLA:
+				boundaryFile = Constants.gowallaBoundary;
+				break;
+			case SKEWED:
+				boundaryFile = Constants.skewedBoundary;
+				break;
+			case UNIFORM:
+				boundaryFile = Constants.uniBoundary;
+				break;
+			case SMALL:
+				boundaryFile = Constants.smallBoundary;
+				break;
+			case YELP:
+				boundaryFile = Constants.yelpBoundary;
+				break;
 		}
 
 		PreProcess prep = new PreProcess();
 		prep.DATA_SET = DATA_SET;
 		prep.readBoundary(prep.DATA_SET);
-		minLatitude = prep.minLatitude;
-		maxLatitude = prep.maxLatitude;
-		minLongitude = prep.minLongitude;
-		maxLongitude = prep.maxLongitude;
+		minLatitude = prep.minLat;
+		maxLatitude = prep.maxLat;
+		minLongitude = prep.minLng;
+		maxLongitude = prep.maxLng;
 	}
 
 	public void printBoundaries() {
@@ -109,19 +98,19 @@ public class GeoCrowd {
 	public void createGrid() {
 		resolution = 0;
 		switch (DATA_SET) {
-		case 0:
+		case GOWALLA:
 			resolution = Constants.gowallaResolution;
 			break;
-		case 1:
+		case SKEWED:
 			resolution = Constants.skewedResolution;
 			break;
-		case 2:
+		case UNIFORM:
 			resolution = Constants.uniResolution;
 			break;
-		case 3:
+		case SMALL:
 			resolution = Constants.smallResolution;
 			break;
-		case 4:
+		case YELP:
 			resolution = Constants.yelpResolution;
 			break;
 		}
@@ -137,19 +126,19 @@ public class GeoCrowd {
 	public void readEntropy() {
 		String filePath = "";
 		switch (DATA_SET) {
-		case 0:
+		case GOWALLA:
 			filePath = Constants.gowallaLocationEntropyFileName;
 			break;
-		case 1:
+		case SKEWED:
 			filePath = Constants.skewedLocationDensityFileName;
 			break;
-		case 2:
+		case UNIFORM:
 			filePath = Constants.uniLocationDensityFileName;
 			break;
-		case 3:
+		case SMALL:
 			filePath = Constants.smallLocationDensityFileName;
 			break;
-		case 4:
+		case YELP:
 			filePath = Constants.yelpLocationEntropyFileName;
 			break;
 		}
@@ -174,7 +163,7 @@ public class GeoCrowd {
 					rows.put(col, entropy);
 					entropies.put(row, rows);
 				}
-				EntropyRecord dR = new EntropyRecord(entropy, row, col);
+				EntropyRecord dR = new EntropyRecord(entropy, new Coord(row, col));
 				entropyList.add(dR);
 				sumEntropy += entropy;
 			}
@@ -185,21 +174,29 @@ public class GeoCrowd {
 		}
 	}
 
-	public double convertToLat(int row) { // for a given row , converts it back
-											// to latitude
+	/**
+	 * for a given row , converts it back to latitude
+	 * @param row
+	 * @return
+	 */
+	public double rowToLat(int row) { 
 		return (((double) row) * resolution) + minLatitude;
 	}
 
-	public double convertToLng(int col) { // for a given col , converts it back
-											// to longitude
+	/**
+	 * for a given col , converts it back to longitude
+	 * @param col
+	 * @return
+	 */
+	public double colToLng(int col) {
 		return (((double) col) * resolution) + minLongitude;
 	}
 
-	public int getRowIdx(double lat) {
+	public int latToRowIdx(double lat) {
 		return (int) ((lat - minLatitude) / resolution);
 	}
 
-	public int getColIdx(double lng) {
+	public int lngToColIdx(double lng) {
 		return (int) ((lng - minLongitude) / resolution);
 	}
 
@@ -228,6 +225,89 @@ public class GeoCrowd {
 
 	public void printStatus() {
 		System.out.println("#Tasks remained: " + taskList.size());
+	}
+	
+	/**
+	 * Read workers from file
+	 * Working region of each worker is computed from his past history
+	 * 
+	 * @param fileName
+	 */
+	public void readWorkers(String fileName) {
+		workerList = new ArrayList();
+		int cnt = 0;
+		try {
+			FileReader reader = new FileReader(fileName);
+			BufferedReader in = new BufferedReader(reader);
+
+			while (in.ready()) {
+				String line = in.readLine();
+				line = line.replace("],[", ";");
+				String[] parts = line.split(";");
+				parts[0] = parts[0].replace(",[", ";");
+				String[] parts1 = parts[0].split(";");
+
+				String[] coords = parts1[0].split(",");
+
+				String[] boundary = parts1[1].split(",");
+				String userId = coords[0];
+				double lat = Double.parseDouble(coords[1]);
+				double lng = Double.parseDouble(coords[2]);
+				int maxT = Integer.parseInt(coords[3]);
+
+				double mbr_minLat = Double.parseDouble(boundary[0]);
+				double mbr_minLng = Double.parseDouble(boundary[1]);
+				double mbr_maxLat = Double.parseDouble(boundary[2]);
+				double mbr_maxLng = Double.parseDouble(boundary[3]);
+				MBR mbr = new MBR(mbr_minLat, mbr_minLng, mbr_maxLat,
+						mbr_maxLng);
+
+				SpecializedWorker w = new SpecializedWorker(userId, lat, lng, maxT, mbr);
+
+				String experts = parts[1].substring(0, parts[1].length() - 1);
+				String[] exps = experts.split(",");
+				for (int i = 0; i < exps.length; i++) {
+					w.addExpertise(Integer.parseInt(exps[i]));
+				}
+
+				workerList.add(w);
+				cnt++;
+			}
+
+			in.close();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		WorkerCount += cnt;
+	}
+	
+	
+	/**
+	 * Read tasks from file
+	 * @param fileName
+	 */
+	public void readTasks(String fileName) {
+		int listCount = taskList.size();
+		try {
+			FileReader reader = new FileReader(fileName);
+			BufferedReader in = new BufferedReader(reader);
+			while (in.ready()) {
+				String line = in.readLine();
+				String[] parts = line.split(",");
+				double lat = Double.parseDouble(parts[0]);
+				double lng = Double.parseDouble(parts[1]);
+				int time = Integer.parseInt(parts[2]);
+				Double entropy = Double.parseDouble(parts[3]);
+				int type = Integer.parseInt(parts[4]);
+				SpecializedTask t = new SpecializedTask(lat, lng, time, entropy, type);
+				taskList.add(listCount, t);
+				listCount++;
+				TaskCount++;
+			}
+			in.close();
+		} catch (Exception e) {
+		}
 	}
 
 	/**
@@ -263,29 +343,7 @@ public class GeoCrowd {
 		System.out.println("No of tasks in total: " + allTasks.size());
 	}
 
-	public void readTasks(String fileName) {
-		int listCount = taskList.size();
-		int cnt = 0;
-		try {
-			FileReader reader = new FileReader(fileName);
-			BufferedReader in = new BufferedReader(reader);
-			while (in.ready()) {
-				String line = in.readLine();
-				String[] parts = line.split(",");
-				double lat = Double.parseDouble(parts[0]);
-				double lng = Double.parseDouble(parts[1]);
-				int time = Integer.parseInt(parts[2]);
-				Double entropy = Double.parseDouble(parts[3]);
-				int type = Integer.parseInt(parts[4]);
-				Task t = new Task(lat, lng, time, entropy, type);
-				taskList.add(listCount, t);
-				listCount++;
-				TaskCount++;
-			}
-			in.close();
-		} catch (Exception e) {
-		}
-	}
+
 
 	/**
 	 * spatial tasks are randomly generated for the given spots in the area
@@ -304,21 +362,21 @@ public class GeoCrowd {
 						entropyList.size()), true);
 				EntropyRecord dR = entropyList.get(randomIdx);
 				// generate a task inside this cell
-				int row = dR.getRowIdx();
-				double startLat = convertToLat(row);
-				double endLat = convertToLat(row + 1);
+				int row = dR.getCoord().getRowId();
+				double startLat = rowToLat(row);
+				double endLat = rowToLat(row + 1);
 				double lat = UniformGenerator.randomValue(new Range(startLat,
 						endLat), false);
-				int col = dR.getColIdx();
-				double startLng = convertToLng(col);
-				double endLng = convertToLng(col + 1);
+				int col = dR.getCoord().getColId();
+				double startLng = colToLng(col);
+				double endLng = colToLng(col + 1);
 				double lng = UniformGenerator.randomValue(new Range(startLng,
 						endLng), false);
 				double entropy = dR.getEntropy();
-				int time = timeCounter;
+				int time = time_instance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				Task t = new Task(lat, lng, time, entropy, taskType);
+				SpecializedTask t = new SpecializedTask(lat, lng, time, entropy, taskType);
 				out.write(lat + "," + lng + "," + time + "," + entropy + ","
 						+ taskType + "\n");
 				taskList.add(listCount, t);
@@ -348,10 +406,10 @@ public class GeoCrowd {
 						minLongitude, maxLongitude), false);
 				// printBoundaries();
 				// System.out.println(lat + " " + lng);
-				int time = timeCounter;
+				int time = time_instance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				Task t = new Task(lat, lng, time, -1, taskType);
+				SpecializedTask t = new SpecializedTask(lat, lng, time, -1, taskType);
 				out.write(lat + "," + lng + "," + time + "," + (-1) + "\n");
 				taskList.add(listCount, t);
 				listCount++;
@@ -379,10 +437,10 @@ public class GeoCrowd {
 				double[] loc = allTasks.get(i);
 				double lat = loc[0];
 				double lng = loc[1];
-				int time = timeCounter;
+				int time = time_instance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				Task t = new Task(lat, lng, time, -1, taskType);
+				SpecializedTask t = new SpecializedTask(lat, lng, time, -1, taskType);
 				out.write(lat + "," + lng + "," + time + "," + (-1) + ","
 						+ "\n");
 				taskList.add(listCount, t);
@@ -427,14 +485,14 @@ public class GeoCrowd {
 					sum += dR.getEntropy();
 				}
 				EntropyRecord dR = entropyList.get(randomIdx);
-				int row = dR.getRowIdx();
-				double startLat = convertToLat(row);
-				double endLat = convertToLat(row + 1);
+				int row = dR.getCoord().getRowId();
+				double startLat = rowToLat(row);
+				double endLat = rowToLat(row + 1);
 				double lat = UniformGenerator.randomValue(new Range(startLat,
 						endLat), false);
-				int col = dR.getColIdx();
-				double startLng = convertToLng(col);
-				double endLng = convertToLng(col + 1);
+				int col = dR.getCoord().getColId();
+				double startLng = colToLng(col);
+				double endLng = colToLng(col + 1);
 				double lng = UniformGenerator.randomValue(new Range(startLng,
 						endLng), false);
 				int maxT = (int) UniformGenerator.randomValue(new Range(0,
@@ -447,7 +505,7 @@ public class GeoCrowd {
 				checkBoundaryMBR(mbr);
 				int exp = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				Worker w = new Worker(lat, lng, maxT, mbr);
+				SpecializedWorker w = new SpecializedWorker("dump", lat, lng, maxT, mbr);
 				w.addExpertise(exp);
 				out.write(randomIdx + ",time" + "," + lat + "," + lng + ","
 						+ maxT + "," + "[" + mbr.getMinLat() + ","
@@ -462,59 +520,7 @@ public class GeoCrowd {
 		}
 	}
 
-	/**
-	 * Working region of each worker is computed from his past history
-	 * 
-	 * @param fileName
-	 */
-	public void readWorkers(String fileName) {
-		workerList = new ArrayList();
-		int cnt = 0;
-		try {
-			FileReader reader = new FileReader(fileName);
-			BufferedReader in = new BufferedReader(reader);
 
-			while (in.ready()) {
-				String line = in.readLine();
-				line = line.replace("],[", ";");
-				String[] parts = line.split(";");
-				parts[0] = parts[0].replace(",[", ";");
-				String[] parts1 = parts[0].split(";");
-
-				String[] coords = parts1[0].split(",");
-
-				String[] boundary = parts1[1].split(",");
-				String userId = coords[0];
-				double lat = Double.parseDouble(coords[1]);
-				double lng = Double.parseDouble(coords[2]);
-				int maxT = Integer.parseInt(coords[3]);
-
-				double mbr_minLat = Double.parseDouble(boundary[0]);
-				double mbr_minLng = Double.parseDouble(boundary[1]);
-				double mbr_maxLat = Double.parseDouble(boundary[2]);
-				double mbr_maxLng = Double.parseDouble(boundary[3]);
-				MBR mbr = new MBR(mbr_minLat, mbr_minLng, mbr_maxLat,
-						mbr_maxLng);
-
-				Worker w = new Worker(userId, lat, lng, maxT, mbr);
-
-				String experts = parts[1].substring(0, parts[1].length() - 1);
-				String[] exps = experts.split(",");
-				for (int i = 0; i < exps.length; i++) {
-					w.addExpertise(Integer.parseInt(exps[i]));
-				}
-
-				workerList.add(w);
-				cnt++;
-			}
-
-			in.close();
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		WorkerCount += cnt;
-	}
 
 	/**
 	 * Working region of each worker is computed randomly
@@ -549,7 +555,7 @@ public class GeoCrowd {
 				MBR mbr = MBR.createMBR(lat, lng, rangeX, rangeY);
 				checkBoundaryMBR(mbr);
 				int exp = Integer.parseInt(parts[4]);
-				Worker w = new Worker(userId, lat, lng, maxT, mbr);
+				SpecializedWorker w = new SpecializedWorker(userId, lat, lng, maxT, mbr);
 				w.addExpertise(exp);
 				workerList.add(w);
 				cnt++;
@@ -579,36 +585,29 @@ public class GeoCrowd {
 	public void matchingTasksWorkers() {
 		invertedTable = new HashMap<Integer, ArrayList>();
 		candidateTasks = new ArrayList();
-		setTasks = new HashSet<Integer>();
 		
-		container = new ArrayList[workerList.size()];
+		container2 = new ArrayList[workerList.size()];
 
 		// remove expired task from tasklist
-		for (int i = taskList.size() - 1; i >= 0; i--) {
-			// remove the solved task from task list
-			if (taskList.get(i).isExpired()) {
-				taskList.remove(i);
-				totalExpiredTask++;
-			}
-		}
+		pruneExpiredTasks();
 
-		for (int i = 0; i < workerList.size(); i++) {
-			Worker w = workerList.get(i);
-			rangeQuery(i, w.getMBR());
+		for (int idx = 0; idx < workerList.size(); idx++) {
+			SpecializedWorker w = (SpecializedWorker) workerList.get(idx);
+			rangeQuery(idx, w.getMBR());
 		}
 
 		// remove workers with no tasks
 		sumMaxT = 0;
-		_container = new ArrayList<ArrayList>();
-		for (int i = container.length - 1; i >= 0; i--) {
-			if (container[i] == null || container[i].size() == 0) {
+		container = new ArrayList<ArrayList>();
+		for (int i = container2.length - 1; i >= 0; i--) {
+			if (container2[i] == null || container2[i].size() == 0) {
 				workerList.remove(i);
 			} else
 				sumMaxT += workerList.get(i).getMaxTaskNo();
 		}
-		for (int i = 0; i < container.length; i++) {
-			if (container[i] != null && container[i].size() > 0) {
-				_container.add(container[i]);
+		for (int i = 0; i < container2.length; i++) {
+			if (container2[i] != null && container2[i].size() > 0) {
+				container.add(container2[i]);
 			}
 		}
 
@@ -625,25 +624,28 @@ public class GeoCrowd {
 			// task.print();
 			// mbr.print();
 			// System.out.println(timeCounter);
-			Task task = taskList.get(i);
+			SpecializedTask task = (SpecializedTask) taskList.get(i);
 
 			// tick expired task
-			if ((timeCounter - task.getEntryTime()) >= Constants.TaskDuration) {
+			if ((time_instance - task.getEntryTime()) >= Constants.TaskDuration) {
 				task.setExpired();
 			} else
 
 			// if the task is not assigned and in the worker's working region
 			// AND not assigned
-			if (task.isCoveredBy(mbr.minLat, mbr.minLng, mbr.maxLat, mbr.maxLng)) {
-				if (container[workerIdx] == null) {
-					container[workerIdx] = new ArrayList();
+			if (task.isCoveredBy(mbr)) {
+				if (container2[workerIdx] == null) {
+					container2[workerIdx] = new ArrayList();
 				}
 
-				if (!setTasks.contains(t)) {
+				if (taskSet == null)
+					taskSet = new HashSet<Integer>();
+				
+				if (!taskSet.contains(t)) {
 					candidateTasks.add(t);
-					setTasks.add(t);
+					taskSet.add(t);
 				}
-				container[workerIdx].add(candidateTasks.indexOf(t));
+				container2[workerIdx].add(candidateTasks.indexOf(t));
 
 				if (!invertedTable.containsKey(t)) {
 					ArrayList arr = new ArrayList();
@@ -661,52 +663,23 @@ public class GeoCrowd {
 		}// for loop
 	}
 
-	// public void calculateFlow() {
-	// // if (container.length != invertedTable.size())
-	// // System.out.println("the two sets are not of equal size!!!!");
-	// int V = container.length + taskList.size();
-	// int s = V, t = V + 1;
-	//
-	// FlowNetwork G = new FlowNetwork(V, container, workerList, taskList,
-	// assign_type);
-	//
-	// // compute maximum flow and minimum cut
-	// long time1 = System.currentTimeMillis();
-	// FordFulkerson maxflow = new FordFulkerson(G, s, t, assign_type,
-	// workerList.size(), taskList);
-	// long time2 = System.currentTimeMillis();
-	// totalTime += (time2 - time1);
-	// System.out.println("Max flow from " + s + " to " + t);
-	//
-	// // print min-cut
-	// System.out.print("Min cut: ");
-	// System.out.println();
-	// TotalAssignedTasks += maxflow.value();
-	// SumDistanceTotal += maxflow.sumDist;
-	// System.out.println("Max flow value = " + maxflow.value()
-	// + "    with min cost: " + maxflow.minCost()
-	// + "     with mincost2: " + maxflow.minCost2
-	// + "       with sum disntace: " + maxflow.sumDist);
-	// System.out.println("Total number of assigned tasks:"
-	// + TotalAssignedTasks);
-	// }
 
 	// this methods compute max weighted matching using the second Hungarian
 	// algorithm with heuristics, thus faster than the other one
 	// assuming maxT = 1 for all workers
 	public double maxWeightedMatching2() {
-		double[][] array = new double[_container.size()][taskList.size()]; // row
+		double[][] array = new double[container.size()][taskList.size()]; // row
 																			// represents
 																			// workers,
 																			// column
 																			// represents
 																			// tasks
-		for (int i = 0; i < _container.size(); i++) {
-			ArrayList<Integer> tasks = _container.get(i);
+		for (int i = 0; i < container.size(); i++) {
+			ArrayList<Integer> tasks = container.get(i);
 			if (tasks != null)
 				for (int j : tasks) {
-					array[i][j] = computeScore(workerList.get(i),
-							taskList.get(j));
+					array[i][j] = computeScore((SpecializedWorker)workerList.get(i),
+							(SpecializedTask)taskList.get(j));
 					// if (array[i][j] != 0)
 					// System.out.println(array[i][j]);
 				}
@@ -782,17 +755,17 @@ public class GeoCrowd {
 																		// tasks
 		HashMap<Integer, Integer> logicalWorkerToWorker = new HashMap<Integer, Integer>();
 		int row = 0;
-		for (int i = 0; i < _container.size(); i++) {
-			ArrayList<Integer> tasks = _container.get(i);
+		for (int i = 0; i < container.size(); i++) {
+			ArrayList<Integer> tasks = container.get(i);
 			if (tasks != null)
 				for (int j : tasks) {
-					array[row][j] = computeScore(workerList.get(i),
-							taskList.get(candidateTasks.get(j)));
+					array[row][j] = computeScore((SpecializedWorker)workerList.get(i),
+							(SpecializedTask)taskList.get(candidateTasks.get(j)));
 				}
 			logicalWorkerToWorker.put(row, i);
 			row++;
 			// create logical workers
-			Worker w = workerList.get(i);
+			SpecializedWorker w = (SpecializedWorker) workerList.get(i);
 			for (int j = 0; j < w.getMaxTaskNo() - 1; j++) {
 				array[row] = Arrays.copyOf(array[row - 1],
 						array[row - 1].length);
@@ -868,7 +841,7 @@ public class GeoCrowd {
 		// find max matching with minimum cost (if possible)
 		ArrayList<MatchPair> taskAssigned = null;
 
-		if (algorithm == AlgoEnums.LLEP || algorithm == AlgoEnums.NNP) {
+		if (algorithm == AlgorithmEnum.LLEP || algorithm == AlgorithmEnum.NNP) {
 			// coefficient values are generated from entropies or distance
 			List<Double> objectiveCoeff = new ArrayList<Double>();
 			// generated from scores<worker,task>
@@ -882,8 +855,8 @@ public class GeoCrowd {
 			int var = 0;
 			int w = 0; // physical worker
 			int numWorker = 0; // logical worker
-			for (ArrayList<Integer> tasks : _container) {
-				Worker worker = workerList.get(w);
+			for (ArrayList<Integer> tasks : container) {
+				SpecializedWorker worker = (SpecializedWorker) workerList.get(w);
 				if (tasks != null) {
 					for (int i = 0; i < worker.getMaxTaskNo(); i++) {
 						for (int t : tasks) {
@@ -895,12 +868,12 @@ public class GeoCrowd {
 										.get(candidateTasks.get(t))));
 								break;
 							case NNP:
-								objectiveCoeff.add(computeDistance(worker,
+								objectiveCoeff.add(distanceWorkerTask(worker,
 										taskList.get(candidateTasks.get(t))));
 								break;
 							}
-							matchingCoeff.add(computeScore(worker,
-									taskList.get(candidateTasks.get(t))));
+							matchingCoeff.add(computeScore((SpecializedWorker)worker,
+									(SpecializedTask)taskList.get(candidateTasks.get(t))));
 						}
 						// logicalWorkerToWorker.put(numWorker, w);
 						numWorker++;
@@ -920,11 +893,11 @@ public class GeoCrowd {
 			Iterator<MatchPair> it = taskAssigned.iterator();
 			while (it.hasNext()) {
 				MatchPair pair = it.next();
-				Worker worker = workerList.get(logicalWorkerToWorker.get(pair
+				SpecializedWorker worker = (SpecializedWorker) workerList.get(logicalWorkerToWorker.get(pair
 						.getW()));
-				Task task = taskList.get(candidateTasks.get(pair.getT()));
+				SpecializedTask task = (SpecializedTask) taskList.get(candidateTasks.get(pair.getT()));
 				double score = computeScore(worker, task);
-				totalDistance += computeDistance(worker, task);
+				totalDistance += distanceWorkerTask(worker, task);
 				_totalScore += score;
 				// if (score == Constants.EXACT_MATCH_SCORE)
 				// totalTasksExactMatch++;
@@ -945,7 +918,7 @@ public class GeoCrowd {
 															// in
 															// candidateTasks
 
-		if (algorithm == AlgoEnums.BASIC) {
+		if (algorithm == AlgorithmEnum.BASIC) {
 			// remove the assigned task
 			for (int i = r.length - 1; i >= 0; i--) {
 				if (origin[i][r[i]] > 0) {
@@ -958,19 +931,19 @@ public class GeoCrowd {
 
 					if (isTranpose) {
 						solvedTasks.add(candidateTasks.get(i));
-						Worker worker = workerList.get(logicalWorkerToWorker
+						SpecializedWorker worker = (SpecializedWorker) workerList.get(logicalWorkerToWorker
 								.get(r[i]));
-						Task task = taskList.get(candidateTasks.get(i));
-						totalDistance += computeDistance(worker, task);
+						SpecializedTask task = (SpecializedTask) taskList.get(candidateTasks.get(i));
+						totalDistance += distanceWorkerTask(worker, task);
 						// exact match?
 						if (worker.isExactMatch(task))
 							totalTasksExactMatch++;
 					} else {
 						solvedTasks.add(candidateTasks.get(r[i]));
-						Worker worker = workerList.get(logicalWorkerToWorker
+						SpecializedWorker worker = (SpecializedWorker) workerList.get(logicalWorkerToWorker
 								.get(i));
-						Task task = taskList.get(candidateTasks.get(r[i]));
-						totalDistance += computeDistance(worker, task);
+						SpecializedTask task = (SpecializedTask) taskList.get(candidateTasks.get(r[i]));
+						totalDistance += distanceWorkerTask(worker, task);
 						// exact match?
 						if (worker.isExactMatch(task))
 							totalTasksExactMatch++;
@@ -982,7 +955,7 @@ public class GeoCrowd {
 			for (int i = solvedTasks.size() - 1; i >= 0; i--) {
 				taskList.remove((int) solvedTasks.get(i));
 			}
-		} else if (algorithm == AlgoEnums.LLEP || algorithm == AlgoEnums.NNP) {
+		} else if (algorithm == AlgorithmEnum.LLEP || algorithm == AlgorithmEnum.NNP) {
 			if (taskAssigned != null) {
 				for (int i = 0; i < taskAssigned.size(); i++) {
 					MatchPair pair = taskAssigned.get(i);
@@ -1006,9 +979,9 @@ public class GeoCrowd {
 		System.out.println("#Travel distance: " + totalDistance);
 
 		// check correctness
-		if (totalExpiredTask + taskList.size() + TotalTasksAssigned != TaskCount) {
+		if (TotalExpiredTask + taskList.size() + TotalTasksAssigned != TaskCount) {
 			System.out.println("Logic error!!!");
-			System.out.println("#Expired tasks: " + totalExpiredTask);
+			System.out.println("#Expired tasks: " + TotalExpiredTask);
 			System.out.println("#Remained tasks: " + taskList.size());
 			System.out.println("#Assigned tasks: " + taskList.size());
 			System.out.println("#Task count: " + TaskCount);
@@ -1017,34 +990,17 @@ public class GeoCrowd {
 		return totalScore;
 	}
 
-	/**
-	 * Euclidean distance between worker and task
-	 * 
-	 * @param worker
-	 * @param task
-	 * @return
-	 */
-	private double computeDistance(Worker worker, Task task) {
-		if (DATA_SET == 0 || DATA_SET == 4 || DATA_SET == 1)
-			return Utils.computeDistance(worker, task);
-		double distance = Math.sqrt((worker.getLatitude() - task.getLat())
-				* (worker.getLatitude() - task.getLat())
-				+ (worker.getLongitude() - task.getLng())
-				* (worker.getLongitude() - task.getLng()));
-		return distance;
-	}
-
 	// compute score of a tuple <w,t>
-	private double computeScore(Worker w, Task t) {
+	private double computeScore(SpecializedWorker w, SpecializedTask t) {
 		if (w.isExactMatch(t))
 			return Constants.EXPERTISE_MATCH_SCORE;
 		else
 			return Constants.NON_EXPERTISE_MATCH_SCORE;
 	}
 
-	private double computeCost(Task t) {
-		int row = getRowIdx(t.getLat());
-		int col = getColIdx(t.getLng());
+	private double computeCost(GenericTask t) {
+		int row = latToRowIdx(t.getLat());
+		int col = lngToColIdx(t.getLng());
 		// System.out.println(row + " " + col);
 		double entropy = 0;
 		if (entropies.containsKey(row)) {
@@ -1062,49 +1018,6 @@ public class GeoCrowd {
 		}
 		// System.out.println(score / (1.0 + entropy));
 		return entropy;
-	}
-
-	/**
-	 * Compute average number of spatial task which are inside the spatial
-	 * region of a given worker. This method computes both avgTW and varTW;
-	 */
-	public void computeAverageTaskPerWorker() {
-		double totalNoTasks = 0;
-		double sum_sqr = 0;
-		for (ArrayList T : _container) {
-			if (T != null) {
-				int size = T.size();
-				totalNoTasks += size;
-				sum_sqr += size * size;
-			}
-		}
-		avgTW = totalNoTasks / _container.size();
-		varTW = (sum_sqr - ((totalNoTasks * totalNoTasks) / _container.size()))
-				/ (_container.size());
-	}
-
-	/**
-	 * Compute average number of worker whose spatial region contain a given
-	 * spatial task. This function returns avgWT and varWT
-	 */
-	public void computeAverageWorkerPerTask() {
-		double totalNoTasks = 0;
-		double sum_sqr = 0;
-		Iterator<Integer> it = invertedTable.keySet().iterator();
-
-		// iterate through HashMap keys Enumeration
-		while (it.hasNext()) {
-			Integer t = (Integer) it.next();
-			Task task = taskList.get(t);
-			ArrayList W = invertedTable.get(t);
-			int size = W.size();
-			totalNoTasks += size;
-			sum_sqr += size * size;
-		}
-
-		avgWT = totalNoTasks / taskList.size();
-		varWT = (sum_sqr - ((totalNoTasks * totalNoTasks) / taskList.size()))
-				/ (taskList.size());
 	}
 
 }

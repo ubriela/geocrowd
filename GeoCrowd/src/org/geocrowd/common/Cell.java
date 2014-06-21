@@ -1,4 +1,4 @@
-package org.geocrowd;
+package org.geocrowd.common;
 
 import java.util.ArrayList;
 

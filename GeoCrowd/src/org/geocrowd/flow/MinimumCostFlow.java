@@ -1,4 +1,4 @@
-package org.geocrowd;
+package org.geocrowd.flow;
 
 import java.util.Arrays;
 import java.util.LinkedList;

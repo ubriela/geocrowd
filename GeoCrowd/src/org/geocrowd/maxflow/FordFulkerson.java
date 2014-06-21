@@ -5,8 +5,8 @@ package org.geocrowd.maxflow;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.geocrowd.Task;
-import org.geocrowd.AlgoEnums;
+import org.geocrowd.AlgorithmEnum;
+import org.geocrowd.common.SpecializedTask;
 
 /*************************************************************************
  * Compilation: javac FordFulkerson.java Execution: java FordFulkerson V E
@@ -33,15 +33,15 @@ public class FordFulkerson {
 
 	// private boolean[] taskAssigned;
 	// max flow in flow network G from s to t
-	public FordFulkerson(FlowNetwork G, int s, int t, AlgoEnums assign_type,
-			int workerNo, ArrayList<Task> taskList) {
+	public FordFulkerson(FlowNetwork G, int s, int t, AlgorithmEnum assign_type,
+			int workerNo, ArrayList<SpecializedTask> taskList) {
 		best = new double[G.V()];
 		value = excess(G, t);
 		if (!isFeasible(G, s, t)) {
 			throw new RuntimeException("Initial flow is infeasible");
 		}
 
-		if (assign_type == AlgoEnums.BASIC) {
+		if (assign_type == AlgorithmEnum.BASIC) {
 			// while there exists an augmenting path, use it
 			while (hasAugmentingPath(G, s, t)) {
 
@@ -58,7 +58,7 @@ public class FordFulkerson {
 					edgeTo[v].addResidualFlowTo(v, bottle);
 					if ((v >= workerNo) && (v != t)) {
 						// System.out.print(v+" ");
-						Task task = taskList.get(v - workerNo);
+						SpecializedTask task = taskList.get(v - workerNo);
 						task.incAssigned();
 					}
 				}
@@ -86,7 +86,7 @@ public class FordFulkerson {
 					sumDist += edgeTo[v].distance;
 					if ((v >= workerNo) && (v != t)) {
 						// System.out.print(v+" ");
-						Task task = taskList.get(v - workerNo);
+						SpecializedTask task = taskList.get(v - workerNo);
 						task.incAssigned();// .setAssigned();
 					}
 				}

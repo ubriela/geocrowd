@@ -2,11 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.geocrowd;
+package org.geocrowd.common.entropy;
 
 /**
  * 
  * @author Leyla
+ * 
+ * Coordinate of a grid cell
  */
 public class Coord {
 

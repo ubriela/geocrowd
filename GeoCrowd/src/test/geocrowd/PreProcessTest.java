@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.datasets.gowalla.PreProcess;
-import org.geocrowd.Constants;
-import org.geocrowd.Coord;
-import org.geocrowd.Observation;
-import org.geocrowd.Worker;
+import org.geocrowd.DatasetEnum;
+import org.geocrowd.common.SpecializedWorker;
+import org.geocrowd.common.entropy.Coord;
+import org.geocrowd.common.entropy.Observation;
+import org.geocrowd.util.Constants;
 import org.junit.Test;
 
 public class PreProcessTest extends PreProcess {
@@ -27,13 +28,13 @@ public class PreProcessTest extends PreProcess {
 	@Test
 	public void generateWorkers() {
 		PreProcess prep = new PreProcess();
-		prep.DATA_SET = 0;
+		prep.DATA_SET = DatasetEnum.SKEWED;
 		
 		prep.readBoundary(prep.DATA_SET);
 		prep.createGrid(prep.DATA_SET);
 
 		// generating workers from Gowalla
-		Hashtable<Date, ArrayList<Worker>> hashTable = prep
+		Hashtable<Date, ArrayList<SpecializedWorker>> hashTable = prep
 				.generateRealWorkers(Constants.gowallaFileName_CA);
 		prep.saveRealWorkers(hashTable);
 	}
@@ -60,7 +61,7 @@ public class PreProcessTest extends PreProcess {
 	@Test
 	public void testExtractCoords() {
 		PreProcess prep = new PreProcess();
-		prep.DATA_SET = 0;
+		prep.DATA_SET = DatasetEnum.GOWALLA;
 		
 		// CA: 32.1713906, -124.3041035, 41.998434033, -114.0043464333
 		// Los Angeles: 33.699476,-118.570633, 34.319887,-118.192978
@@ -78,7 +79,7 @@ public class PreProcessTest extends PreProcess {
 	public void testGenerateSynWorkersTasks() {
 
 		PreProcess prep = new PreProcess();
-		prep.DATA_SET = 2;
+		prep.DATA_SET = DatasetEnum.SKEWED;
 		
 		prep.computeBoundary(Constants.skewedBoundary);
 		prep.readBoundary(prep.DATA_SET);

@@ -62,6 +62,9 @@ Step 2: Run GeoCrowd.java	testGeoCrowd().
 
 Note that we need to set DATA_SET = 1 for SYN-SKEWED and DATASET = 2 for SYN-UNIFORM
 
+
+
+
 ---------------------- gowalla_totalCheckins_CA ----------------------
 Extract data from Gowalla dataset. This is an intermediate input file
 ******

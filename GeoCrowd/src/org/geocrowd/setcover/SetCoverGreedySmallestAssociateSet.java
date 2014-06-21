@@ -19,17 +19,18 @@ public class SetCoverGreedySmallestAssociateSet extends SetCover {
 	}
 
     /**
-     * Compute associates sets for uncovered elements in a set
+     * Compute number of sets associates with uncovered elements in a set
      *
-     * @param S
-     * @param s
-     * @param C
+     * @param S: set of sets
+     * @param s: current set
+     * @param C: set of covered element
      * @return
      */
     public int computeAssociateSets(ArrayList<HashSet<Integer>> S, HashSet<Integer> s, HashSet<Integer> C) {
-        int numAssociateSet = 0;
+        int numAssociateSet = 0; //initialize  varibale
+        //loop for uncovered elements
         for (Integer i : s) {
-            if (!C.contains(i)) {
+            if (!C.contains(i)) { //check uncovered condition. 
                 for (HashSet<Integer> s2 : S) {
                     if (s2.contains(i)) {
                         numAssociateSet++;
@@ -53,7 +54,7 @@ public class SetCoverGreedySmallestAssociateSet extends SetCover {
         while (!Q.isEmpty()) {
             HashSet<Integer> maxSet = null;
             int maxElem = 0;
-            int numAssociateSet = 0;
+            int numAssociateSet = 0; // number of sets associates with maxSet.
             for (HashSet<Integer> s : S) {
                 // select the item set that maximize coverage
                 // how many elements in s that are not in C
@@ -68,7 +69,7 @@ public class SetCoverGreedySmallestAssociateSet extends SetCover {
                     maxElem = newElem;
                     maxSet = s;
                     numAssociateSet = computeAssociateSets(S, s, C);
-                } else if (newElem == maxElem) //compare associate sets 
+                } else if (newElem == maxElem) //compare associate sets , choose the smaller
                 {
                     int n = computeAssociateSets(S, s, C);
                     if (n < numAssociateSet) {

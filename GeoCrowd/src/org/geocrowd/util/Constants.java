@@ -73,6 +73,6 @@ public class Constants {
 	
 	
 	// ------------------------------------------------------------
-	public static double radius = 2;		// task circle radius
+	public static double radius = 10;		// task circle radius
 
 }

@@ -9,7 +9,9 @@ import java.util.HashSet;
 import org.geocrowd.common.GenericWorker;
 import org.geocrowd.common.MBR;
 import org.geocrowd.common.SensingTask;
+import org.geocrowd.setcover.SetCover;
 import org.geocrowd.setcover.SetCoverGreedy;
+import org.geocrowd.setcover.SetCoverGreedySmallestAssociateSet;
 import org.geocrowd.util.Constants;
 
 public class Crowdsensing extends GenericCrowd {
@@ -164,9 +166,24 @@ public class Crowdsensing extends GenericCrowd {
 	 * Select minimum number of workers that cover maximum number of tasks
 	 */
 	public void maxTasksMinimumWorkers() {
-		SetCoverGreedy scg = new SetCoverGreedy(container);
-		int assignedWorkers = scg.minSetCover();
-		System.out.println(assignedWorkers);
-		TotalAssignedWorkers += assignedWorkers;
+		
+		SetCover sc = null;
+		int assignedWorkers = 0;
+		
+		switch (algorithm){
+			case GREEDY1:
+				sc = new SetCoverGreedy(container);
+				assignedWorkers = sc.minSetCover();
+				TotalAssignedWorkers += assignedWorkers;
+				break;
+			case GREEDY2:
+				sc = new SetCoverGreedySmallestAssociateSet(container);
+				assignedWorkers = sc.minSetCover();
+				TotalAssignedWorkers += assignedWorkers;
+				break;
+				
+			
+		}
+		//System.out.println(assignedWorkers);
 	}
 }

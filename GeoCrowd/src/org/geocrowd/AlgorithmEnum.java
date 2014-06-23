@@ -5,5 +5,8 @@
 package org.geocrowd;
 
 public enum AlgorithmEnum {
-	BASIC, LLEP, NNP,
+	BASIC, LLEP, NNP,	// geocrowd journal
+	
+	GREEDY1,	//	Set Cover Greedy
+	GREEDY2		//	Smallest associated set
 };

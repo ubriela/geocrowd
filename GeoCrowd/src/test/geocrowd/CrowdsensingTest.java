@@ -22,11 +22,11 @@ public class CrowdsensingTest {
 		for (int k = 0; k < 1; k++) {
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
-			Crowdsensing.DATA_SET = DatasetEnum.SMALL;
-			Crowdsensing.algorithm = AlgorithmEnum.BASIC;
+			Crowdsensing.DATA_SET = DatasetEnum.GOWALLA;
+			Crowdsensing.algorithm = AlgorithmEnum.GREEDY1;
 			Crowdsensing crowdsensing = new Crowdsensing();
 			//for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			for (int i = 1; i < 2; i++) {
+			for (int i = 0; i < 20; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
 
 				switch (Crowdsensing.DATA_SET) {
@@ -36,6 +36,24 @@ public class CrowdsensingTest {
 					crowdsensing.readWorkers(Constants.gowallaWorkerFileNamePrefix
 							+ i + ".txt");
 					break;
+				case YELP:
+					crowdsensing.readTasks(Constants.yelpTaskFileNamePrefix + i
+							+ ".txt");
+					crowdsensing.readWorkers(Constants.yelpWorkerFileNamePrefix
+							+ i + ".txt");
+					break;
+				case UNIFORM:
+					crowdsensing.readTasks(Constants.uniTaskFileNamePrefix + i
+							+ ".txt");
+					crowdsensing.readWorkers(Constants.uniWorkerFileNamePrefix
+							+ i + ".txt");
+					break;					
+				case SKEWED:
+					crowdsensing.readTasks(Constants.skewedTaskFileNamePrefix + i
+							+ ".txt");
+					crowdsensing.readWorkers(Constants.skewedWorkerFileNamePrefix
+							+ i + ".txt");
+					break;					
 				case SMALL:
 					crowdsensing.readTasks(Constants.smallTaskFileNamePrefix + i
 							+ ".txt");

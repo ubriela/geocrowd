@@ -26,7 +26,7 @@ public class SetCoverGreedySmallestAssociateSet extends SetCover {
      * @param C: set of covered element
      * @return
      */
-    public int computeAssociateSets(ArrayList<HashSet<Integer>> S, HashSet<Integer> s, HashSet<Integer> C) {
+    private int computeAssociateSets(ArrayList<HashSet<Integer>> S, HashSet<Integer> s, HashSet<Integer> C) {
         int numAssociateSet = 0; //initialize  varibale
         //loop for uncovered elements
         for (Integer i : s) {

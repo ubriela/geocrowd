@@ -31,7 +31,8 @@ public abstract class GenericCrowd {
 	
 	ArrayList<ArrayList> container; // for every worker, maintain a set of taskid that he can perform
 	ArrayList[] container2;
-	
+        ArrayList<HashMap<Integer, Integer>> container3;
+	HashMap<Integer, Integer>[] container4;
 	HashMap<Integer, ArrayList> invertedTable; // is used to compute average worker/task
 	
 	public HashSet<Integer> taskSet = null;

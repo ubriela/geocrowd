@@ -5,8 +5,10 @@
 package org.geocrowd;
 
 public enum AlgorithmEnum {
-	BASIC, LLEP, NNP,	// geocrowd journal
+	BASIC, LLEP, NNP, ONLINE,	// geocrowd journal
 	
 	GREEDY1,	//	Set Cover Greedy
-	GREEDY2		//	Smallest associated set
+	GREEDY2,		//	Smallest associated set
+	GREEDY3,	//	wait till deadline
+	GREEDY4		// combine deadline and number of covered tasks
 };

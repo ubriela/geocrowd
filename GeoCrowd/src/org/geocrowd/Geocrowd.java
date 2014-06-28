@@ -23,6 +23,7 @@ import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.EntropyRecord;
 import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.Utility;
+import org.geocrowd.matching.online.OnlineBipartiteMatching;
 import org.geocrowd.util.Constants;
 import org.geocrowd.util.Utils;
 
@@ -742,6 +743,10 @@ public class Geocrowd extends GenericCrowd {
 
 	// any number of maxT
 	public double maxWeightedMatching() {
+		
+		if (algorithm == AlgorithmEnum.ONLINE)
+			return onlineMatching();
+					
 		if (sumMaxT == 0 || candidateTasks.size() == 0) {
 			System.out.println("No scheduling");
 			return 0;
@@ -988,6 +993,31 @@ public class Geocrowd extends GenericCrowd {
 		}
 
 		return totalScore;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public double onlineMatching() {
+		// replicates workers based on their maxT
+		
+		// apply online bipartite matching
+		ArrayList<Integer> workers = new ArrayList<>();
+		
+		Iterator it = container.iterator();
+		int id = 0;
+		while (it.hasNext()) {
+			workers.add(new Integer(id));
+			id ++;
+		}
+		
+		OnlineBipartiteMatching obm = new OnlineBipartiteMatching(workers);
+		
+		int assignedTasks = obm.onlineMatching(container);
+		System.out.println(assignedTasks);
+		
+		return assignedTasks;
 	}
 
 	// compute score of a tuple <w,t>

@@ -22,7 +22,7 @@ public class OnlineBipartiteMatchingTest {
 		
 		OnlineBipartiteMatching obm = new OnlineBipartiteMatching(workers);
 		
-		ArrayList<ArrayList<Integer>> container = new ArrayList<>();
+		ArrayList<ArrayList> container = new ArrayList<>();
 		container.add(new ArrayList<Integer>(Arrays.asList(10)));
 		container.add(new ArrayList<Integer>(Arrays.asList(10)));
 		container.add(new ArrayList<Integer>(Arrays.asList(11, 12)));

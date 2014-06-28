@@ -164,7 +164,10 @@ public class GeocrowdTest {
 				System.out.println("#Workers: " + geoCrowd.workerList.size());
 				System.out.println("scheduling...");
 				double startTime = System.nanoTime();
-				geoCrowd.maxWeightedMatching();
+				if (Geocrowd.algorithm == AlgorithmEnum.ONLINE)
+					geoCrowd.onlineMatching();
+				else
+					geoCrowd.maxWeightedMatching();
 				double runtime = (System.nanoTime() - startTime) / 1000000000.0;
 				totalTime += runtime;
 				System.out.println("Time: " + runtime);

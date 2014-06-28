@@ -49,7 +49,7 @@ public class OnlineBipartiteMatching {
 	 * @param container: an array of workerids
 	 * @return the number of assigned tasks
 	 */
-	public int onlineMatching(ArrayList<ArrayList<Integer>> container) {
+	public int onlineMatching(ArrayList<ArrayList> container) {
 		int assignedTasks = 0;
 		Iterator it = container.iterator();
 		

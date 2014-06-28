@@ -17,13 +17,14 @@ public class CrowdsensingTest {
 		long totalTime = 0;
 		double avgAvgWT = 0;
 		double avgVarWT = 0;
+                double avgAvgTW = 0;
 		double totalAvgWT = 0;
 		double totalVARWT = 0;
 		for (int k = 0; k < 1; k++) {
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
 			Crowdsensing.DATA_SET = DatasetEnum.GOWALLA;
-			Crowdsensing.algorithm = AlgorithmEnum.GREEDY1;
+			Crowdsensing.algorithm = AlgorithmEnum.GREEDY4;
 			Crowdsensing crowdsensing = new Crowdsensing();
 			//for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			for (int i = 0; i < 20; i++) {
@@ -83,23 +84,31 @@ public class CrowdsensingTest {
 			System.out.println("#Total workers: " + crowdsensing.WorkerCount);
 			System.out.println("#Total tasks: " + crowdsensing.TaskCount);
 			totalAssignedWorkers += crowdsensing.TotalAssignedWorkers;
+                        totalAssignedTasks += crowdsensing.TotalTasksAssigned;
 
 			double avgAssignedWorkers = ((double) totalAssignedWorkers)
 					/ ((k + 1) * Constants.TIME_INSTANCE);
-
+                        double avgAssignedTasks = ((double) totalAssignedTasks)
+					/ ((k + 1) * Constants.TIME_INSTANCE);
 			long avgTime = ((long) totalTime) / ((k + 1) * Constants.TIME_INSTANCE);
 
 			System.out.println("Total assigned workers: " + totalAssignedWorkers
 					+ "   # of rounds:" + (k + 1) + "  avg: "
 					+ avgAssignedWorkers);
+                        System.out.println("Total assigned tasks: " + totalAssignedTasks
+					+ "   # of rounds:" + (k + 1) + "  avg: "
+					+ avgAssignedTasks);
 			System.out.println("Total time: " + totalTime + "   # of rounds: "
 					+ (k + 1) + "  avg time:" + avgTime);
 
 
 			avgAvgWT = totalAvgWT / ((k + 1) * Constants.TIME_INSTANCE);
 			avgVarWT = totalVARWT / ((k + 1) * Constants.TIME_INSTANCE);
-			System.out.println("Average worker per task: " + avgAvgWT
-					+ "   with variance: " + avgVarWT);
+//			System.out.println("Average worker per task: " + avgAvgWT
+//					+ "   with variance: " + avgVarWT);
+                        
+                        avgAvgTW = crowdsensing.avgTW/ ((k + 1) * Constants.TIME_INSTANCE);
+                        System.out.println("Average task per worker: " + avgAvgTW);
 		} // end of for loop
 	}
 

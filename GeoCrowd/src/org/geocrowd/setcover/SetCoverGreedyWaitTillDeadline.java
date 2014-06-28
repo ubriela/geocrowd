@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
+import org.geocrowd.util.Constants;
 
 /**
  *
@@ -16,12 +17,13 @@ import java.util.Objects;
  */
 public class SetCoverGreedyWaitTillDeadline {
 
-    // hashmap<task, deadline of task>
+    // hashmap<task, deadline of task >
     ArrayList<HashMap<Integer, Integer>> setOfSets = null;
 
     HashSet<Integer> universe = null;
     Integer currentTimeInstance = 0;
-    Integer k = 2;
+    Integer k = 3;
+    public int assignedTasks = 0;
 
     /**
      * Initialize variables
@@ -52,21 +54,18 @@ public class SetCoverGreedyWaitTillDeadline {
      */
     private boolean containElementDeadAtNextTime(HashMap<Integer, Integer> s,
             int current_time_instance) {
-        if (s.values().contains(current_time_instance)) {
-            return true;
-        }
-
-        return false;
+        return s.values().contains(current_time_instance) || (current_time_instance == Constants.TIME_INSTANCE-1);
     }
 
     /**
      * Greedy algorithm
+     * @return number of assigned workers 
      */
     public int minSetCover() {
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) setOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         HashSet<Integer> C = new HashSet<Integer>();
-
+       
         int set_size = S.size();
 
         while (!Q.isEmpty()) {
@@ -84,19 +83,22 @@ public class SetCoverGreedyWaitTillDeadline {
                     }
                 }
                 if (newElem > maxElem
-                        && (newElem > k || containElementDeadAtNextTime(s, currentTimeInstance))) // check condition: only select workers that either cover at least K (e.g., k=2,3..)
+                        && (newElem > 1 || containElementDeadAtNextTime(s, currentTimeInstance))) // check condition: only select workers that either cover at least K (e.g., k=2,3..)
                 //tasks or cover any task that will not available in the next time instance
                 {
                     maxElem = newElem;
                     maxSet = s;
                 }
             }
+            if(maxSet == null)
+                break;
 
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
             C.addAll(maxSet.keySet());
         }
-
+        
+        assignedTasks = C.size();
         return set_size - S.size();
     }
 }

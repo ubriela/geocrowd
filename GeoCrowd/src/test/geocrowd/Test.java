@@ -8,7 +8,8 @@ import org.geocrowd.common.SpecializedTask;
 
 public class Test {
 	public static void main(String[] args) {
-		test3();
+		//test3();//
+                (new CrowdsensingTest()).test();
 	}
 	
 	public void test1() {

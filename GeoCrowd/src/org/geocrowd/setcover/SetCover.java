@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 public abstract class SetCover {
 	ArrayList<HashSet<Integer>> setOfSets = null;
-	HashSet<Integer> universe = null;
+	public HashSet<Integer> universe = null;
 	
 	
 	/**

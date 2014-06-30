@@ -428,6 +428,12 @@ public class ProcessDataSet {
 		
     }
     
+    
+    /**
+     * Compute mean contribution distance
+     * 
+     * @param filename
+     */
     public static void saveWorkersMCD(String filename) {
     	Iterator users = Review.keySet().iterator();
         StringBuffer sb = new StringBuffer();

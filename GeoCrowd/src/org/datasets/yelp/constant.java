@@ -28,7 +28,7 @@ public class constant {
 
 	public static int MaxReview = 20;
 	public static double realResolution = 0.001;
-	public static int WorkerPerFile = 70817;
-	public static int TaskPerFile = 15585;
+	public static int WorkerPerFile = 1000;
+	public static int TaskPerFile = 500;
 
 }

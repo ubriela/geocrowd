@@ -6,6 +6,9 @@ import java.util.HashSet;
 public abstract class SetCover {
 	ArrayList<HashSet<Integer>> setOfSets = null;
 	public HashSet<Integer> universe = null;
+        
+        public double averageTasksPerWorker;
+        public double averageWorkersPerTask;
 	
 	
 	/**

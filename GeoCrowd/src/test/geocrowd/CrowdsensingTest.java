@@ -24,7 +24,7 @@ public class CrowdsensingTest {
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
 			Crowdsensing.DATA_SET = DatasetEnum.GOWALLA;
-			Crowdsensing.algorithm = AlgorithmEnum.GREEDY4;
+			Crowdsensing.algorithm = AlgorithmEnum.GREEDY3;
 			Crowdsensing crowdsensing = new Crowdsensing();
 			//for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			for (int i = 0; i < 20; i++) {
@@ -102,13 +102,15 @@ public class CrowdsensingTest {
 					+ (k + 1) + "  avg time:" + avgTime);
 
 
-			avgAvgWT = totalAvgWT / ((k + 1) * Constants.TIME_INSTANCE);
-			avgVarWT = totalVARWT / ((k + 1) * Constants.TIME_INSTANCE);
+//			avgAvgWT = totalAvgWT / ((k + 1) * Constants.TIME_INSTANCE);
+//			avgVarWT = totalVARWT / ((k + 1) * Constants.TIME_INSTANCE);
 //			System.out.println("Average worker per task: " + avgAvgWT
 //					+ "   with variance: " + avgVarWT);
                         
                         avgAvgTW = crowdsensing.avgTW/ ((k + 1) * Constants.TIME_INSTANCE);
                         System.out.println("Average task per worker: " + avgAvgTW);
+                        avgAvgWT = crowdsensing.avgWT/ ((k + 1) * Constants.TIME_INSTANCE);
+                        System.out.println("Average worker per task: " + avgAvgWT);
 		} // end of for loop
 	}
 

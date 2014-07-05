@@ -25,6 +25,9 @@ public class SetCoverGreedyWaitTillDeadline {
     Integer k = 3;
     public int assignedTasks = 0;
 
+    public double averageTasksPerWorker;
+    public double averageWorkersPerTask;
+
     /**
      * Initialize variables
      *
@@ -54,18 +57,23 @@ public class SetCoverGreedyWaitTillDeadline {
      */
     private boolean containElementDeadAtNextTime(HashMap<Integer, Integer> s,
             int current_time_instance) {
-        return s.values().contains(current_time_instance) || (current_time_instance == Constants.TIME_INSTANCE-1);
+        return s.values().contains(current_time_instance) || (current_time_instance == Constants.TIME_INSTANCE - 1);
     }
 
     /**
      * Greedy algorithm
-     * @return number of assigned workers 
+     *
+     * @return number of assigned workers
      */
     public int minSetCover() {
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) setOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         HashSet<Integer> C = new HashSet<Integer>();
-       
+
+        ArrayList<HashMap<Integer, Integer>> AW = new ArrayList<>();
+        int totalTasks = 0;
+        int totalAssignedWorkers = 0;
+
         int set_size = S.size();
 
         while (!Q.isEmpty()) {
@@ -83,22 +91,47 @@ public class SetCoverGreedyWaitTillDeadline {
                     }
                 }
                 if (newElem > maxElem
-                        && (newElem > 1 || containElementDeadAtNextTime(s, currentTimeInstance))) // check condition: only select workers that either cover at least K (e.g., k=2,3..)
+                        && (newElem >= k || containElementDeadAtNextTime(s, currentTimeInstance))) // check condition: only select workers that either cover at least K (e.g., k=2,3..)
                 //tasks or cover any task that will not available in the next time instance
                 {
                     maxElem = newElem;
                     maxSet = s;
                 }
             }
-            if(maxSet == null)
+            if (maxSet == null) {
                 break;
+            }
+
+            //update total task 
+            totalTasks += maxSet.size();
+            AW.add(maxSet);
 
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
             C.addAll(maxSet.keySet());
         }
-        
+
         assignedTasks = C.size();
+
+        //compute tasks per worker
+        totalAssignedWorkers = set_size - S.size();
+        if (totalAssignedWorkers > 0) {
+            averageTasksPerWorker = totalTasks * 1.0 / totalAssignedWorkers;
+        }
+        //compute workers per task
+        int totalWorkers = 0;
+        for (Integer indexTid : C) {
+            int numWorkerCoverTask = 0;
+            for (Object set : AW) {
+                if (((HashMap) set).containsKey(indexTid)) {
+                    numWorkerCoverTask += 1;
+                }
+            }
+            totalWorkers += numWorkerCoverTask;
+        }
+        if (!C.isEmpty()) {
+            averageWorkersPerTask = totalWorkers * 1.0 / C.size();
+        }
         return set_size - S.size();
     }
 }

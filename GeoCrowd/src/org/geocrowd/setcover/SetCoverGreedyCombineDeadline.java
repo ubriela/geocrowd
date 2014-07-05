@@ -34,7 +34,7 @@ public class SetCoverGreedyCombineDeadline extends SetCoverGreedyWaitTillDeadlin
                 d += s.get(t)-current_time_instance;
             }
         }
-        return numElem*1.0/(d+1);
+        return numElem*1.0/((d+1)*(d+1));
     }
     
     @Override

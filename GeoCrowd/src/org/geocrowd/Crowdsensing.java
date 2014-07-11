@@ -210,24 +210,21 @@ public class Crowdsensing extends GenericCrowd {
                 assignedWorkers = sc.minSetCover();
                 TotalAssignedWorkers += assignedWorkers;
                 TotalTasksAssigned += sc.universe.size();
-                avgTW += sc.averageTasksPerWorker;
-                avgWT += sc.averageWorkersPerTask;
+                
                 break;
             case GREEDY2:
                 sc = new SetCoverGreedySmallestAssociateSet(container);
                 assignedWorkers = sc.minSetCover();
                 TotalAssignedWorkers += assignedWorkers;
                 TotalTasksAssigned += sc.universe.size();
-                avgTW += sc.averageTasksPerWorker;
-                avgWT += sc.averageWorkersPerTask;
+                
                 break;
             case GREEDY3:
                 SetCoverGreedyWaitTillDeadline sc2 = new SetCoverGreedyWaitTillDeadline(container3, time_instance);
                 assignedWorkers = sc2.minSetCover();
                 TotalAssignedWorkers += assignedWorkers;
                 TotalTasksAssigned += sc2.assignedTasks;
-                avgTW += sc2.averageTasksPerWorker;
-                avgWT += sc2.averageWorkersPerTask;
+                
                 break;
             case GREEDY4:
                 SetCoverGreedyCombineDeadline sc3= new SetCoverGreedyCombineDeadline(container3, time_instance);

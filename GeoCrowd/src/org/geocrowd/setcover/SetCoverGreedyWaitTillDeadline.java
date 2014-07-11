@@ -70,9 +70,9 @@ public class SetCoverGreedyWaitTillDeadline {
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         HashSet<Integer> C = new HashSet<Integer>();
 
-        ArrayList<HashMap<Integer, Integer>> AW = new ArrayList<>();
-        int totalTasks = 0;
-        int totalAssignedWorkers = 0;
+//        ArrayList<HashMap<Integer, Integer>> AW = new ArrayList<>();
+//        int totalTasks = 0;
+//        int totalAssignedWorkers = 0;
 
         int set_size = S.size();
 
@@ -103,16 +103,16 @@ public class SetCoverGreedyWaitTillDeadline {
             }
 
             //update total task 
-            totalTasks += maxSet.size();
-            AW.add(maxSet);
+//            totalTasks += maxSet.size();
+//            AW.add(maxSet);
 
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
             C.addAll(maxSet.keySet());
         }
-
+        /*
         assignedTasks = C.size();
-
+        
         //compute tasks per worker
         totalAssignedWorkers = set_size - S.size();
         if (totalAssignedWorkers > 0) {
@@ -132,6 +132,7 @@ public class SetCoverGreedyWaitTillDeadline {
         if (!C.isEmpty()) {
             averageWorkersPerTask = totalWorkers * 1.0 / C.size();
         }
+        */
         return set_size - S.size();
     }
 }

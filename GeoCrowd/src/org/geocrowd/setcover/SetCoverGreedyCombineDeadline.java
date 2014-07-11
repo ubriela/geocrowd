@@ -65,7 +65,6 @@ public class SetCoverGreedyCombineDeadline extends SetCoverGreedyWaitTillDeadlin
             C.addAll(maxSet.keySet());
         }
         
-        assignedTasks = C.size();
         return set_size - S.size();
     }
     

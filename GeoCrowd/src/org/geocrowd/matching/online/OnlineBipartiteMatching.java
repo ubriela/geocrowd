@@ -1,3 +1,15 @@
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package org.geocrowd.matching.online;
 
 import java.util.ArrayList;
@@ -5,14 +17,23 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class OnlineBipartiteMatching.
+ */
 public class OnlineBipartiteMatching {
+	
+	/** The workers. */
 	public HashMap<Integer, Integer> workers = null;		// <order id, worker idx>
 	
+	/** The ranks. */
 	public ArrayList<Integer> ranks;		// point to order id. the smaller index (index in workers), the higher rank
 	
 	/**
-	 * Initialize variables
-	 * @param workers
+	 * Initialize variables.
+	 * 
+	 * @param _workers
+	 *            the _workers
 	 */
 	public OnlineBipartiteMatching(ArrayList<Integer> _workers) {
 		java.util.Collections.shuffle(_workers); // permute workers
@@ -32,21 +53,10 @@ public class OnlineBipartiteMatching {
 	}
 	
 	/**
-	 * Rank the workers
-	 */
-	public void ranking() {
-		ranks = new ArrayList<Integer>();
-		 for (int i = 0; i < workers.size(); i++) {
-			 ranks.add(new Integer(i));
-		 }
-		 
-		 java.util.Collections.shuffle(ranks);
-	}
-	
-
-	/**
-	 * Online algorithm
-	 * @param container: an array of worker ids
+	 * Online algorithm.
+	 * 
+	 * @param invertedContainer
+	 *            the inverted container
 	 * @return the number of assigned tasks
 	 */
 	public ArrayList<Integer> onlineMatching(HashMap<Integer, ArrayList> invertedContainer) {
@@ -78,6 +88,19 @@ public class OnlineBipartiteMatching {
 		}
 		
 		return assignedTasks;
+	}
+	
+
+	/**
+	 * Rank the workers.
+	 */
+	public void ranking() {
+		ranks = new ArrayList<Integer>();
+		 for (int i = 0; i < workers.size(); i++) {
+			 ranks.add(new Integer(i));
+		 }
+		 
+		 java.util.Collections.shuffle(ranks);
 	}
 	
 }

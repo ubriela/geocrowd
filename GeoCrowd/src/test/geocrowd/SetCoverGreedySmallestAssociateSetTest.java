@@ -1,21 +1,33 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 
 package test.geocrowd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.geocrowd.setcover.SetCoverGreedy;
-import org.geocrowd.setcover.SetCoverGreedySmallestAssociateSet;
+import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
 
+// TODO: Auto-generated Javadoc
 /**
- *
+ * The Class SetCoverGreedySmallestAssociateSetTest.
+ * 
  * @author Luan
  */
 public class SetCoverGreedySmallestAssociateSetTest {
+    
+    /**
+	 * Test.
+	 */
     @org.junit.Test
 	public void test() {
 		ArrayList<ArrayList> container = new ArrayList<>();
@@ -26,7 +38,7 @@ public class SetCoverGreedySmallestAssociateSetTest {
 		container.add(new ArrayList<Integer>(Arrays.asList(4, 5)));
 		container.add(new ArrayList<Integer>(Arrays.asList(3, 5)));
 		
-		SetCoverGreedySmallestAssociateSet scg = new SetCoverGreedySmallestAssociateSet(container);
+		SetCoverGreedy_LowWorkerCoverage scg = new SetCoverGreedy_LowWorkerCoverage(container);
 		int no_set = scg.minSetCover();
 		System.out.println(no_set);
 	}

@@ -1,17 +1,33 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package org.geocrowd.matching;
 
 import java.util.Arrays;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class RunTest.
  * 
  * @author dkh
  */
 public class RunTest {
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String[] args) {
 		// Below enter "max" or "min" to find maximum sum or minimum sum
 		// assignment.

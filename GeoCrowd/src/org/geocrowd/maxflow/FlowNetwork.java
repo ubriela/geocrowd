@@ -1,12 +1,24 @@
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package org.geocrowd.maxflow;
 
-import java.io.*;
 import java.util.*;
 
 import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.common.SpecializedTask;
 import org.geocrowd.common.SpecializedWorker;
 
+// TODO: Auto-generated Javadoc
 /*************************************************************************
  * Compilation: javac FlowNetwork.java Execution: java FlowNetwork V E
  * Dependencies: Bag.java FlowEdge.java
@@ -16,11 +28,23 @@ import org.geocrowd.common.SpecializedWorker;
  *************************************************************************/
 
 public class FlowNetwork {
+	
+	/** The v. */
 	private final int V;
+	
+	/** The e. */
 	private int E;
+	
+	/** The adj. */
 	private ArrayList<FlowEdge>[] adj;
 
 	// empty graph with V vertices
+	/**
+	 * Instantiates a new flow network.
+	 * 
+	 * @param V
+	 *            the v
+	 */
 	public FlowNetwork(int V) {
 		this.V = V;
 		this.E = 0;
@@ -30,6 +54,20 @@ public class FlowNetwork {
 	}
 
 	// random graph with V vertices and E edges
+	/**
+	 * Instantiates a new flow network.
+	 * 
+	 * @param V
+	 *            the v
+	 * @param List
+	 *            the list
+	 * @param workerList
+	 *            the worker list
+	 * @param taskList
+	 *            the task list
+	 * @param assign_type
+	 *            the assign_type
+	 */
 	public FlowNetwork(int V, ArrayList[] List, ArrayList<SpecializedWorker> workerList,
 			ArrayList<SpecializedTask> taskList, AlgorithmEnum assign_type) {
 		this(V + 2);
@@ -38,7 +76,7 @@ public class FlowNetwork {
 			int maxTask = workerList.get(i).getMaxTaskNo();
 			double workerLat = workerList.get(i).getLatitude();
 			double workerLng = workerList.get(i).getLongitude();
-			ArrayList tasks = (ArrayList) List[i];
+			ArrayList tasks = List[i];
 			if (tasks != null) {
 				for (int j = 0; j < tasks.size(); j++) {
 					int t = (Integer) tasks.get(j);
@@ -71,16 +109,13 @@ public class FlowNetwork {
 	}
 
 
-	// number of vertices and edges
-	public int V() {
-		return V;
-	}
-
-	public int E() {
-		return E;
-	}
-
 	// add edge e in both v's and w's adjacency lists
+	/**
+	 * Adds the edge.
+	 * 
+	 * @param e
+	 *            the e
+	 */
 	public void addEdge(FlowEdge e) {
 		E++;
 		int v = e.from();
@@ -90,11 +125,32 @@ public class FlowNetwork {
 	}
 
 	// return list of edges incident to v
+	/**
+	 * Adj.
+	 * 
+	 * @param v
+	 *            the v
+	 * @return the array list
+	 */
 	public ArrayList<FlowEdge> adj(int v) {
 		return adj[v];
 	}
 
+	/**
+	 * E.
+	 * 
+	 * @return the int
+	 */
+	public int E() {
+		return E;
+	}
+
 	// return list of all edges
+	/**
+	 * Edges.
+	 * 
+	 * @return the iterable
+	 */
 	public Iterable<FlowEdge> edges() {
 		ArrayList<FlowEdge> list = new ArrayList<FlowEdge>();
 		for (int v = 0; v < V; v++)
@@ -104,6 +160,10 @@ public class FlowNetwork {
 	}
 
 	// string representation of Graph - takes quadratic time
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
 	public String toString() {
 		String NEWLINE = System.getProperty("line.separator");
 		StringBuilder s = new StringBuilder();
@@ -116,5 +176,15 @@ public class FlowNetwork {
 			s.append(NEWLINE);
 		}
 		return s.toString();
+	}
+
+	// number of vertices and edges
+	/**
+	 * V.
+	 * 
+	 * @return the int
+	 */
+	public int V() {
+		return V;
 	}
 }

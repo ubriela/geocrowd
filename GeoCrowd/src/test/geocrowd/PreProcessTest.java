@@ -1,6 +1,16 @@
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package test.geocrowd;
-
-import static org.junit.Assert.*;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -14,31 +24,15 @@ import org.geocrowd.common.entropy.Observation;
 import org.geocrowd.util.Constants;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PreProcessTest.
+ */
 public class PreProcessTest extends PreProcess {
 
-	@Test
-	public void testFilterInput() {
-		PreProcess prep = new PreProcess();
-
-		prep.filterInput(Constants.gowallaFileName_CA, 32.1713906, -124.3041035, 41.998434033, -114.0043464333);
-
-		prep.computeBoundary(Constants.gowallaFileName_CA);
-	}
-
-	@Test
-	public void generateWorkers() {
-		PreProcess prep = new PreProcess();
-		prep.DATA_SET = DatasetEnum.SKEWED;
-		
-		prep.readBoundary(prep.DATA_SET);
-		prep.createGrid(prep.DATA_SET);
-
-		// generating workers from Gowalla
-		Hashtable<Date, ArrayList<SpecializedWorker>> hashTable = prep
-				.generateRealWorkers(Constants.gowallaFileName_CA);
-		prep.saveRealWorkers(hashTable);
-	}
-	
+	/**
+	 * Compute location entropy.
+	 */
 	@Test
 	public void computeLocationEntropy() {
 		PreProcess prep = new PreProcess();
@@ -55,13 +49,32 @@ public class PreProcessTest extends PreProcess {
 		Hashtable<Integer, Coord> gridIndices = prep.locIdToCellIndices();
 		prep.saveLocationEntropy(gridIndices);
 	}
-	
 
+	/**
+	 * Generate workers.
+	 */
+	@Test
+	public void generateWorkers() {
+		PreProcess prep = new PreProcess();
+		PreProcess.DATA_SET = DatasetEnum.SKEWED;
+		
+		prep.readBoundary(PreProcess.DATA_SET);
+		prep.createGrid(PreProcess.DATA_SET);
+
+		// generating workers from Gowalla
+		Hashtable<Date, ArrayList<SpecializedWorker>> hashTable = prep
+				.generateRealWorkers(Constants.gowallaFileName_CA);
+		prep.saveRealWorkers(hashTable);
+	}
+	
 	// ------------------------------------------------------------
+	/**
+	 * Test extract coords.
+	 */
 	@Test
 	public void testExtractCoords() {
 		PreProcess prep = new PreProcess();
-		prep.DATA_SET = DatasetEnum.GOWALLA;
+		PreProcess.DATA_SET = DatasetEnum.GOWALLA;
 		
 		// CA: 32.1713906, -124.3041035, 41.998434033, -114.0043464333
 		// Los Angeles: 33.699476,-118.570633, 34.319887,-118.192978
@@ -74,16 +87,32 @@ public class PreProcessTest extends PreProcess {
 		prep.extractMBRs("dataset/real/gowalla_LA");
 		
 	}
+	
 
+	/**
+	 * Test filter input.
+	 */
+	@Test
+	public void testFilterInput() {
+		PreProcess prep = new PreProcess();
+
+		prep.filterInput(Constants.gowallaFileName_CA, 32.1713906, -124.3041035, 41.998434033, -114.0043464333);
+
+		prep.computeBoundary(Constants.gowallaFileName_CA);
+	}
+
+	/**
+	 * Test generate syn workers tasks.
+	 */
 	@Test
 	public void testGenerateSynWorkersTasks() {
 
 		PreProcess prep = new PreProcess();
-		prep.DATA_SET = DatasetEnum.SKEWED;
+		PreProcess.DATA_SET = DatasetEnum.SKEWED;
 		
 		prep.computeBoundary(Constants.skewedBoundary);
-		prep.readBoundary(prep.DATA_SET);
-		prep.createGrid(prep.DATA_SET);
+		prep.readBoundary(PreProcess.DATA_SET);
+		prep.createGrid(PreProcess.DATA_SET);
 
 		// generating workers
 		prep.generateSynWorkers(true, true);

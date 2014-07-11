@@ -1,31 +1,49 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package org.geocrowd.setcover;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
+// TODO: Auto-generated Javadoc
 /**
- *
+ * The Class SetCoverGreedySmallestAssociateSet.
+ * 
  * @author Luan
  */
-public class SetCoverGreedySmallestAssociateSet extends SetCover {
+public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
 
-	public SetCoverGreedySmallestAssociateSet(ArrayList<ArrayList> container) {
+	/**
+	 * Instantiates a new sets the cover greedy smallest associate set.
+	 * 
+	 * @param container
+	 *            the container
+	 */
+	public SetCoverGreedy_LowWorkerCoverage(ArrayList<ArrayList> container) {
 		super(container);
 	}
 
     /**
-     * Compute number of sets associates with uncovered elements in a set
-     *
-     * @param S: set of sets
-     * @param s: current set
-     * @param C: set of covered element
-     * @return
-     */
+	 * Compute number of sets associates with uncovered elements in a set.
+	 * 
+	 * @param S
+	 *            the s
+	 * @param s
+	 *            the s
+	 * @param C
+	 *            the c
+	 * @return the int
+	 */
     private int computeAssociateSets(ArrayList<HashSet<Integer>> S, HashSet<Integer> s, HashSet<Integer> C) {
         int numAssociateSet = 0; //initialize  varibale
         //loop for uncovered elements
@@ -42,10 +60,13 @@ public class SetCoverGreedySmallestAssociateSet extends SetCover {
     }
 
     /**
-     * Greedy algorithm
-     */
-    public int minSetCover() {
-        ArrayList<HashSet<Integer>> S = (ArrayList<HashSet<Integer>>) setOfSets.clone();
+	 * Greedy algorithm.
+	 * 
+	 * @return the int
+	 */
+    @Override
+	public int minSetCover() {
+        ArrayList<HashSet<Integer>> S = (ArrayList<HashSet<Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         HashSet<Integer> C = new HashSet<Integer>();
         
@@ -95,10 +116,7 @@ public class SetCoverGreedySmallestAssociateSet extends SetCover {
             Q.removeAll(maxSet);
             C.addAll(maxSet);
         }
-        
-        //compute tasks per worker
-        totalAssignedWorkers = set_size - S.size();
-        averageTasksPerWorker = totalTasks * 1.0 / totalAssignedWorkers;
+
         //compute workers per task
         int totalWorkers = 0;
         for (Integer indexTid : C) {
@@ -110,10 +128,6 @@ public class SetCoverGreedySmallestAssociateSet extends SetCover {
             }
             totalWorkers += numWorkerCoverTask;
         }
-        if (!C.isEmpty()) {
-            averageWorkersPerTask =  totalWorkers * 1.0 /C.size();
-        }
-        
         
         return set_size - S.size();
     }

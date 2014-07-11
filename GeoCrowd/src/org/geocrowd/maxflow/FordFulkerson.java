@@ -1,4 +1,15 @@
-// http://algs4.cs.princeton.edu/64maxflow/
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 
 package org.geocrowd.maxflow;
 
@@ -8,6 +19,7 @@ import java.util.Arrays;
 import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.common.SpecializedTask;
 
+// TODO: Auto-generated Javadoc
 /*************************************************************************
  * Compilation: javac FordFulkerson.java Execution: java FordFulkerson V E
  * Dependencies: FlowNetwork.java FlowEdge.java Queue.java
@@ -18,22 +30,51 @@ import org.geocrowd.common.SpecializedTask;
  *********************************************************************/
 
 public class FordFulkerson {
+	
+	/** The marked. */
 	private boolean[] marked; // marked[v] = true iff s->v path in residual
 								// graph
-	private FlowEdge[] edgeTo; // edgeTo[v] = last edge on shortest residual
+	/** The edge to. */
+								private FlowEdge[] edgeTo; // edgeTo[v] = last edge on shortest residual
 								// s->v path
-	private double value; // current value of max flow
+	/** The value. */
+								private double value; // current value of max flow
+	
+	/** The best. */
 	private double[] best;
+	
+	/** The min cost. */
 	public double minCost = 0; // minimum cost of the maximum flow
+	
+	/** The min cost2. */
 	public double minCost2 = 0; // minimum cost of the maximum flow
+	
+	/** The sum dist. */
 	public double sumDist = 0;// sum of the distances
 	// public static int minCap; //minimum augmented capacity
+	/** The aug cost. */
 	private double augCost = 0;// minimum augmented cost during every
 								// augmentation;
 
 	// private boolean[] taskAssigned;
 	// max flow in flow network G from s to t
-	public FordFulkerson(FlowNetwork G, int s, int t, AlgorithmEnum assign_type,
+	/**
+								 * Instantiates a new ford fulkerson.
+								 * 
+								 * @param G
+								 *            the g
+								 * @param s
+								 *            the s
+								 * @param t
+								 *            the t
+								 * @param assign_type
+								 *            the assign_type
+								 * @param workerNo
+								 *            the worker no
+								 * @param taskList
+								 *            the task list
+								 */
+								public FordFulkerson(FlowNetwork G, int s, int t, AlgorithmEnum assign_type,
 			int workerNo, ArrayList<SpecializedTask> taskList) {
 		best = new double[G.V()];
 		value = excess(G, t);
@@ -100,22 +141,90 @@ public class FordFulkerson {
 		}
 	}
 
-	// return value of max flow
-	public double value() {
-		return value;
+	// check optimality conditions
+	/**
+	 * Check.
+	 * 
+	 * @param G
+	 *            the g
+	 * @param s
+	 *            the s
+	 * @param t
+	 *            the t
+	 * @return true, if successful
+	 */
+	private boolean check(FlowNetwork G, int s, int t) {
+
+		// check that flow is feasible
+		if (!isFeasible(G, s, t)) {
+			System.err.println("Flow is infeasible");
+			return false;
+		}
+
+		// check that s is on the source side of min cut and that t is not on
+		// source side
+		if (!inCut(s)) {
+			System.err.println("source " + s
+					+ " is not on source side of min cut");
+			return false;
+		}
+		if (inCut(t)) {
+			System.err.println("sink " + t + " is on source side of min cut");
+			return false;
+		}
+
+		// check that value of min cut = value of max flow
+		double mincutValue = 0.0;
+		for (int v = 0; v < G.V(); v++) {
+			for (FlowEdge e : G.adj(v)) {
+				if ((v == e.from()) && inCut(e.from()) && !inCut(e.to()))
+					mincutValue += e.capacity();
+			}
+		}
+
+		double EPSILON = 1E-11;
+		if (Math.abs(mincutValue - value) > EPSILON) {
+			System.err.println("Max flow value = " + value
+					+ ", min cut value = " + mincutValue);
+			return false;
+		}
+
+		return true;
 	}
 
-	// return cost of max flow
-	public double minCost() {
-		return minCost;
-	}
-
-	// is v in the s side of the min s-t cut?
-	public boolean inCut(int v) {
-		return marked[v];
+	// return excess flow at vertex v
+	/**
+	 * Excess.
+	 * 
+	 * @param G
+	 *            the g
+	 * @param v
+	 *            the v
+	 * @return the double
+	 */
+	private double excess(FlowNetwork G, int v) {
+		double excess = 0.0;
+		for (FlowEdge e : G.adj(v)) {
+			if (v == e.from())
+				excess -= e.flow();
+			else
+				excess += e.flow();
+		}
+		return excess;
 	}
 
 	// return an augmenting path if one exists, otherwise return null
+	/**
+	 * Checks for augmenting path.
+	 * 
+	 * @param G
+	 *            the g
+	 * @param s
+	 *            the s
+	 * @param t
+	 *            the t
+	 * @return true, if successful
+	 */
 	private boolean hasAugmentingPath(FlowNetwork G, int s, int t) {
 		edgeTo = new FlowEdge[G.V()];
 		marked = new boolean[G.V()];
@@ -151,6 +260,17 @@ public class FordFulkerson {
 	}
 
 	// return an augmenting path if one exists, otherwise return null
+	/**
+	 * Checks for augmenting path min cost.
+	 * 
+	 * @param G
+	 *            the g
+	 * @param s
+	 *            the s
+	 * @param t
+	 *            the t
+	 * @return true, if successful
+	 */
 	private boolean hasAugmentingPathMinCost(FlowNetwork G, int s, int t) {
 		edgeTo = new FlowEdge[G.V()];
 		marked = new boolean[G.V()];
@@ -190,19 +310,30 @@ public class FordFulkerson {
 		return marked[t];
 	}
 
-	// return excess flow at vertex v
-	private double excess(FlowNetwork G, int v) {
-		double excess = 0.0;
-		for (FlowEdge e : G.adj(v)) {
-			if (v == e.from())
-				excess -= e.flow();
-			else
-				excess += e.flow();
-		}
-		return excess;
+	// is v in the s side of the min s-t cut?
+	/**
+	 * In cut.
+	 * 
+	 * @param v
+	 *            the v
+	 * @return true, if successful
+	 */
+	public boolean inCut(int v) {
+		return marked[v];
 	}
 
 	// return excess flow at vertex v
+	/**
+	 * Checks if is feasible.
+	 * 
+	 * @param G
+	 *            the g
+	 * @param s
+	 *            the s
+	 * @param t
+	 *            the t
+	 * @return true, if is feasible
+	 */
 	private boolean isFeasible(FlowNetwork G, int s, int t) {
 		double EPSILON = 1E-11;
 
@@ -242,43 +373,23 @@ public class FordFulkerson {
 		return true;
 	}
 
-	// check optimality conditions
-	private boolean check(FlowNetwork G, int s, int t) {
+	// return cost of max flow
+	/**
+	 * Min cost.
+	 * 
+	 * @return the double
+	 */
+	public double minCost() {
+		return minCost;
+	}
 
-		// check that flow is feasible
-		if (!isFeasible(G, s, t)) {
-			System.err.println("Flow is infeasible");
-			return false;
-		}
-
-		// check that s is on the source side of min cut and that t is not on
-		// source side
-		if (!inCut(s)) {
-			System.err.println("source " + s
-					+ " is not on source side of min cut");
-			return false;
-		}
-		if (inCut(t)) {
-			System.err.println("sink " + t + " is on source side of min cut");
-			return false;
-		}
-
-		// check that value of min cut = value of max flow
-		double mincutValue = 0.0;
-		for (int v = 0; v < G.V(); v++) {
-			for (FlowEdge e : G.adj(v)) {
-				if ((v == e.from()) && inCut(e.from()) && !inCut(e.to()))
-					mincutValue += e.capacity();
-			}
-		}
-
-		double EPSILON = 1E-11;
-		if (Math.abs(mincutValue - value) > EPSILON) {
-			System.err.println("Max flow value = " + value
-					+ ", min cut value = " + mincutValue);
-			return false;
-		}
-
-		return true;
+	// return value of max flow
+	/**
+	 * Value.
+	 * 
+	 * @return the double
+	 */
+	public double value() {
+		return value;
 	}
 }

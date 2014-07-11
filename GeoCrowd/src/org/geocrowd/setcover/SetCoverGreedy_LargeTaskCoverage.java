@@ -1,41 +1,61 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package org.geocrowd.setcover;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
 import org.geocrowd.util.Constants;
 
+// TODO: Auto-generated Javadoc
 /**
- *
+ * The Class SetCoverGreedyWaitTillDeadline.
+ * 
  * @author Luan
  */
-public class SetCoverGreedyWaitTillDeadline {
+public class SetCoverGreedy_LargeTaskCoverage {
 
     // hashmap<task, deadline of task >
+    /** The set of sets. */
     ArrayList<HashMap<Integer, Integer>> setOfSets = null;
 
+    /** The universe. */
     HashSet<Integer> universe = null;
+    
+    /** The current time instance. */
     Integer currentTimeInstance = 0;
+    
+    /** The k. */
     Integer k = 3;
+    
+    /** The assigned tasks. */
     public int assignedTasks = 0;
 
+    /** The average tasks per worker. */
     public double averageTasksPerWorker;
+    
+    /** The average workers per task. */
     public double averageWorkersPerTask;
 
     /**
-     * Initialize variables
-     *
-     * @param container
-     * @param deadAtTime
-     * @param current_time_instance
-     */
-    public SetCoverGreedyWaitTillDeadline(ArrayList<HashMap<Integer, Integer>> container,
+	 * Initialize variables.
+	 * 
+	 * @param container
+	 *            the container
+	 * @param current_time_instance
+	 *            the current_time_instance
+	 */
+    public SetCoverGreedy_LargeTaskCoverage(ArrayList<HashMap<Integer, Integer>> container,
             Integer current_time_instance) {
         currentTimeInstance = current_time_instance;
         universe = new HashSet<>();
@@ -55,16 +75,25 @@ public class SetCoverGreedyWaitTillDeadline {
     /*
      Check worker contain elemenst will not available at next time
      */
+    /**
+	 * Contain element dead at next time.
+	 * 
+	 * @param s
+	 *            the s
+	 * @param current_time_instance
+	 *            the current_time_instance
+	 * @return true, if successful
+	 */
     private boolean containElementDeadAtNextTime(HashMap<Integer, Integer> s,
             int current_time_instance) {
         return s.values().contains(current_time_instance) || (current_time_instance == Constants.TIME_INSTANCE - 1);
     }
 
     /**
-     * Greedy algorithm
-     *
-     * @return number of assigned workers
-     */
+	 * Greedy algorithm.
+	 * 
+	 * @return number of assigned workers
+	 */
     public int minSetCover() {
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) setOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();

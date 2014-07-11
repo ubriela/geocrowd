@@ -1,24 +1,47 @@
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package org.geocrowd.setcover;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SetCoverGreedy.
+ */
 public class SetCoverGreedy extends SetCover {
 
+    /**
+	 * Instantiates a new sets the cover greedy.
+	 * 
+	 * @param container
+	 *            the container
+	 */
     public SetCoverGreedy(ArrayList<ArrayList> container) {
         super(container);
     }
 
     /**
-     * Greedy algorithm
-     */
-    public int minSetCover() {
-        ArrayList<HashSet<Integer>> S = (ArrayList<HashSet<Integer>>) setOfSets.clone();
+	 * Greedy algorithm.
+	 * 
+	 * @return the number of assigned workers
+	 */
+    @Override
+	public int minSetCover() {
+        ArrayList<HashSet<Integer>> S = (ArrayList<HashSet<Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         HashSet<Integer> C = new HashSet<Integer>();
         
-
         int set_size = S.size();
 
         while (!Q.isEmpty()) {

@@ -1,3 +1,15 @@
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package org.datasets.gowalla;
 
 import java.util.HashSet;
@@ -5,24 +17,48 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+// TODO: Auto-generated Javadoc
 /**
- * Provide various of methods for generating uniform datasets as well as queries
+ * Provide various of methods for generating uniform datasets as well as
+ * queries.
  * 
  * @author HT186010
- * 
  */
 public class UniformGenerator {
 
 	/**
-	 * Generate a one-dimensional random range query
+	 * Generate a list of random distinct values.
+	 * 
+	 * @param n
+	 *            the n
+	 * @param boundary
+	 *            the boundary
+	 * @param isInteger
+	 *            the is integer
+	 * @return the hash set
+	 */
+	public static HashSet<Double> randomDistinctValues(int n, Range boundary, boolean isInteger) {
+		HashSet<Double> values = new HashSet<Double>();
+		while (values.size() < n) {
+			values.add(randomValue(boundary, isInteger));
+		}
+		return values;
+	}
+
+	/**
+	 * Generate a one-dimensional random range query.
 	 * 
 	 * @param number
+	 *            the number
 	 * @param offset
+	 *            the offset
 	 * @param isFixOffset
-	 * @param points
-	 * @param min
-	 * @param max
-	 * @return
+	 *            the is fix offset
+	 * @param values
+	 *            the values
+	 * @param boundary
+	 *            the boundary
+	 * @return the vector
 	 */
 	public static Vector<Range> randomRangesWithOffsets(int number,
 			double offset, boolean isFixOffset, List<Double> values,
@@ -51,11 +87,13 @@ public class UniformGenerator {
 
 	/**
 	 * generate random rectangles such that their the lower-left points and
-	 * high-right points are from the data points
+	 * high-right points are from the data points.
 	 * 
 	 * @param number
+	 *            the number
 	 * @param points
-	 * @return
+	 *            the points
+	 * @return the vector
 	 */
 	public static Vector<Rectangle> randomRectanglesWithinDataPoints(
 			int number, Vector<Point> points) {
@@ -86,13 +124,17 @@ public class UniformGenerator {
 	}
 
 	/**
-	 * Generate a random list of values
+	 * Generate a random list of values.
 	 * 
 	 * @param n
+	 *            the n
 	 * @param min_x
+	 *            the min_x
 	 * @param max_x
+	 *            the max_x
 	 * @param isInteger
-	 * @return
+	 *            the is integer
+	 * @return the vector
 	 */
 	public static Vector<Double> randomSequence(int n, double min_x,
 			double max_x, boolean isInteger) {
@@ -109,11 +151,13 @@ public class UniformGenerator {
 	}
 
 	/**
-	 * Generate a random value between min, max
+	 * Generate a random value between min, max.
 	 * 
 	 * @param boundary
+	 *            the boundary
 	 * @param isInteger
-	 * @return
+	 *            the is integer
+	 * @return the double
 	 */
 	public static double randomValue(Range boundary, boolean isInteger) {
 		Random r = new Random();
@@ -124,13 +168,15 @@ public class UniformGenerator {
 		else
 			return (r.nextDouble() * boundary.delta() + boundary.getStart());
 	}
-
+	
 	/**
-	 * Generate a list of random value in a list, the values can be overlapped
+	 * Generate a list of random value in a list, the values can be overlapped.
 	 * 
 	 * @param test_size
+	 *            the test_size
 	 * @param values
-	 * @return
+	 *            the values
+	 * @return the vector
 	 */
 	public static Vector<Double> randomValues(int test_size, List<Double> values) {
 		// TODO Auto-generated method stub
@@ -141,20 +187,5 @@ public class UniformGenerator {
 			list.add(values.get(r.nextInt(values.size())));
 		}
 		return list;
-	}
-	
-	/**
-	 * Generate a list of random distinct values
-	 * @param n
-	 * @param boundary
-	 * @param isInteger
-	 * @return
-	 */
-	public static HashSet<Double> randomDistinctValues(int n, Range boundary, boolean isInteger) {
-		HashSet<Double> values = new HashSet<Double>();
-		while (values.size() < n) {
-			values.add(randomValue(boundary, isInteger));
-		}
-		return values;
 	}
 }

@@ -1,10 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 
 package org.geocrowd.maxflow;
 
+// TODO: Auto-generated Javadoc
 /*************************************************************************
  *  Compilation:  javac FlowEdge.java
  *  Execution:    java Flow
@@ -22,14 +31,39 @@ package org.geocrowd.maxflow;
  */
 
 public class FlowEdge {
+	
+	/** The v. */
 	private final int v; // from
+	
+	/** The w. */
 	private final int w; // to
+	
+	/** The capacity. */
 	private final double capacity; // capacity
+	
+	/** The distance. */
 	public double distance;// the spatial distance between the two worker and
 							// task
-	private double flow; // flow
+	/** The flow. */
+							private double flow; // flow
+	
+	/** The cost. */
 	private double cost; // this is the entry time for a given task
 
+	/**
+	 * Instantiates a new flow edge.
+	 * 
+	 * @param v
+	 *            the v
+	 * @param w
+	 *            the w
+	 * @param capacity
+	 *            the capacity
+	 * @param c
+	 *            the c
+	 * @param dist
+	 *            the dist
+	 */
 	public FlowEdge(int v, int w, double capacity, double c, double dist) {
 		this.v = v;
 		this.w = w;
@@ -39,49 +73,14 @@ public class FlowEdge {
 		this.distance = dist;
 	}
 
-	/*
-	 * public FlowEdge(int v, int w, double capacity, double flow) { this.v = v;
-	 * this.w = w; this.capacity = capacity; this.flow = flow; }
+	/**
+	 * Adds the residual flow to.
+	 * 
+	 * @param vertex
+	 *            the vertex
+	 * @param delta
+	 *            the delta
 	 */
-	// accessor methods
-	public int from() {
-		return v;
-	}
-
-	public int to() {
-		return w;
-	}
-
-	public double capacity() {
-		return capacity;
-	}
-
-	public double flow() {
-		return flow;
-	}
-
-	public double getCost() {
-		return cost;
-	}
-
-	public int other(int vertex) {
-		if (vertex == v)
-			return w;
-		else if (vertex == w)
-			return v;
-		else
-			throw new RuntimeException("Illegal endpoint");
-	}
-
-	public double residualCapacityTo(int vertex) {
-		if (vertex == v)
-			return flow;
-		else if (vertex == w)
-			return capacity - flow;
-		else
-			throw new RuntimeException("Illegal endpoint");
-	}
-
 	public void addResidualFlowTo(int vertex, double delta) {
 		if (vertex == v)
 			flow -= delta;
@@ -91,6 +90,92 @@ public class FlowEdge {
 			throw new RuntimeException("Illegal endpoint");
 	}
 
+	/**
+	 * Capacity.
+	 * 
+	 * @return the double
+	 */
+	public double capacity() {
+		return capacity;
+	}
+
+	/**
+	 * Flow.
+	 * 
+	 * @return the double
+	 */
+	public double flow() {
+		return flow;
+	}
+
+	/*
+	 * public FlowEdge(int v, int w, double capacity, double flow) { this.v = v;
+	 * this.w = w; this.capacity = capacity; this.flow = flow; }
+	 */
+	// accessor methods
+	/**
+	 * From.
+	 * 
+	 * @return the int
+	 */
+	public int from() {
+		return v;
+	}
+
+	/**
+	 * Gets the cost.
+	 * 
+	 * @return the cost
+	 */
+	public double getCost() {
+		return cost;
+	}
+
+	/**
+	 * Other.
+	 * 
+	 * @param vertex
+	 *            the vertex
+	 * @return the int
+	 */
+	public int other(int vertex) {
+		if (vertex == v)
+			return w;
+		else if (vertex == w)
+			return v;
+		else
+			throw new RuntimeException("Illegal endpoint");
+	}
+
+	/**
+	 * Residual capacity to.
+	 * 
+	 * @param vertex
+	 *            the vertex
+	 * @return the double
+	 */
+	public double residualCapacityTo(int vertex) {
+		if (vertex == v)
+			return flow;
+		else if (vertex == w)
+			return capacity - flow;
+		else
+			throw new RuntimeException("Illegal endpoint");
+	}
+
+	/**
+	 * To.
+	 * 
+	 * @return the int
+	 */
+	public int to() {
+		return w;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
 	public String toString() {
 		if (v == 196)
 			return "s ->" + w + " " + flow + "/" + capacity;

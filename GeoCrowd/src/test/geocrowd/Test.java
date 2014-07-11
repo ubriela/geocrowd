@@ -1,3 +1,15 @@
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package test.geocrowd;
 
 import java.util.ArrayList;
@@ -6,12 +18,60 @@ import java.util.HashSet;
 
 import org.geocrowd.common.SpecializedTask;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Test.
+ */
 public class Test {
+	
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String[] args) {
 		//test3();//
                 (new CrowdsensingTest()).test();
 	}
 	
+	/**
+	 * Test2.
+	 */
+	public static void test2() {
+		int[][] M = new int[4][4];
+		int[] m1 = {1,2,3,4};
+		int[] m2 = {1,2,3,4};
+		M[0] = m1;
+		M[2] = Arrays.copyOf(m1, m1.length);
+		M[0][0] = 5;
+		for (int i = 0; i < M.length; i++) {
+			for (int j = 0; j < M[0].length; j++)
+				System.out.print(M[i][j] + "\t");
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * Test3.
+	 */
+	public static void test3() {
+		HashSet<Integer> hs = new HashSet<Integer>();
+		hs.add(1);
+		hs.add(2);
+		hs.add(3);
+		hs.add(4);
+		
+		Integer i = 1;
+		if (hs.contains(i))
+			System.out.println(i);
+		if (hs.contains(5))
+			System.out.println(5);
+	}
+	
+	/**
+	 * Test1.
+	 */
 	public void test1() {
 		ArrayList<SpecializedTask> taskList = new ArrayList<SpecializedTask>();
 		SpecializedTask t1 = new SpecializedTask();
@@ -38,33 +98,5 @@ public class Test {
 		
 		for (SpecializedTask t : taskList)
 			System.out.println(t.toString());
-	}
-	
-	public static void test2() {
-		int[][] M = new int[4][4];
-		int[] m1 = {1,2,3,4};
-		int[] m2 = {1,2,3,4};
-		M[0] = m1;
-		M[2] = Arrays.copyOf(m1, m1.length);
-		M[0][0] = 5;
-		for (int i = 0; i < M.length; i++) {
-			for (int j = 0; j < M[0].length; j++)
-				System.out.print(M[i][j] + "\t");
-			System.out.println();
-		}
-	}
-	
-	public static void test3() {
-		HashSet<Integer> hs = new HashSet<Integer>();
-		hs.add(1);
-		hs.add(2);
-		hs.add(3);
-		hs.add(4);
-		
-		Integer i = 1;
-		if (hs.contains(i))
-			System.out.println(i);
-		if (hs.contains(5))
-			System.out.println(5);
 	}
 }

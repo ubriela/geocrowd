@@ -1,3 +1,15 @@
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package test.geocrowd;
 
 import java.io.BufferedWriter;
@@ -5,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.geocrowd.DatasetEnum;
+import org.geocrowd.GenericCrowd;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.common.MBR;
@@ -12,41 +25,20 @@ import org.geocrowd.common.SpecializedWorker;
 import org.geocrowd.util.Constants;
 import org.junit.Test;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GeocrowdTest.
+ */
 public class GeocrowdTest {
 
-	@Test
-	public void testGeoCrowd_Small() {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-		Geocrowd.algorithm = AlgorithmEnum.BASIC;
-		Geocrowd geoCrowd = new Geocrowd();
-		geoCrowd.printBoundaries();
-		geoCrowd.createGrid();
-		// geoCrowd.readEntropy();
-
-		geoCrowd.readWorkers(Constants.smallWorkerFileNamePrefix + "0.txt");
-		geoCrowd.readTasks(Constants.smallTaskFileNamePrefix + "0.txt");
-		geoCrowd.matchingTasksWorkers();
-		geoCrowd.computeAverageTaskPerWorker();
-		System.out.println("avgTW " + geoCrowd.avgTW);
-		System.out.println("varTW " + geoCrowd.varTW);
-
-		geoCrowd.computeAverageWorkerPerTask();
-		System.out.println("avgWT " + geoCrowd.avgWT);
-		System.out.println("varWT " + geoCrowd.varWT);
-
-		geoCrowd.maxWeightedMatching();
-
-		System.out.println("Score: " + geoCrowd.TotalScore);
-		System.out.println("Assigned task: " + geoCrowd.TotalTasksAssigned);
-		System.out.println("Exact assigned task: "
-				+ geoCrowd.TotalTasksExpertiseMatch);
-	}
-
+	/**
+	 * Test generate gowalla tasks.
+	 */
 	@Test
 	public void testGenerateGowallaTasks() {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		GenericCrowd.DATA_SET = DatasetEnum.GOWALLA;
 		Geocrowd geoCrowd = new Geocrowd();
-		System.out.println(geoCrowd.algorithm + "  assignment    with "
+		System.out.println(GenericCrowd.algorithm + "  assignment    with "
 				+ Constants.TaskDuration + "  task duration");
 		geoCrowd.printBoundaries();
 		geoCrowd.createGrid();
@@ -55,13 +47,16 @@ public class GeocrowdTest {
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			geoCrowd.readTasksWithEntropy(Constants.gowallaTaskFileNamePrefix
 					+ i + ".txt");
-			geoCrowd.time_instance++;
+			geoCrowd.TimeInstance++;
 		}
 	}
 
+	/**
+	 * Test generate yelp workers.
+	 */
 	@Test
 	public void testGenerateYelpWorkers() {
-		Geocrowd.DATA_SET = DatasetEnum.YELP;
+		GenericCrowd.DATA_SET = DatasetEnum.YELP;
 		Geocrowd geoCrowd = new Geocrowd();
 		geoCrowd.printBoundaries();
 		geoCrowd.readWorkers("dataset/real/yelp/worker/yelp_workers0.txt");
@@ -100,6 +95,9 @@ public class GeocrowdTest {
 		}
 	}
 
+	/**
+	 * Test geo crowd.
+	 */
 	@Test
 	public void testGeoCrowd() {
 		int totalScore = 0;
@@ -115,8 +113,8 @@ public class GeocrowdTest {
 		for (int k = 0; k < 20; k++) {	// k is the number of time instance
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
-			Geocrowd.DATA_SET = DatasetEnum.SKEWED;
-			Geocrowd.algorithm = AlgorithmEnum.ONLINE;
+			GenericCrowd.DATA_SET = DatasetEnum.SKEWED;
+			GenericCrowd.algorithm = AlgorithmEnum.ONLINE;
 			Geocrowd geoCrowd = new Geocrowd();
 			geoCrowd.printBoundaries();
 			geoCrowd.createGrid();
@@ -124,7 +122,7 @@ public class GeocrowdTest {
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
 
-				switch (Geocrowd.DATA_SET) {
+				switch (GenericCrowd.DATA_SET) {
 				case GOWALLA:
 					geoCrowd.readTasks(Constants.gowallaTaskFileNamePrefix + i
 							+ ".txt");
@@ -168,7 +166,7 @@ public class GeocrowdTest {
 				double runtime = (System.nanoTime() - startTime) / 1000000000.0;
 				totalTime += runtime;
 				System.out.println("Time: " + runtime);
-				geoCrowd.time_instance++;
+				geoCrowd.TimeInstance++;
 			}
 
 			System.out.println("*************SUMMARY ITERATION " + (k + 1)
@@ -176,16 +174,16 @@ public class GeocrowdTest {
 			System.out.println("#Total workers: " + geoCrowd.WorkerCount);
 			System.out.println("#Total tasks: " + geoCrowd.TaskCount);
 			totalScore += geoCrowd.TotalScore;
-			totalAssignedTasks += geoCrowd.TotalTasksAssigned;
+			totalAssignedTasks += geoCrowd.TotalAssignedTasks;
 			totalExpertiseAssignedTasks += geoCrowd.TotalTasksExpertiseMatch;
 			totalSumDist += geoCrowd.TotalTravelDistance;
 
 			double avgScore = ((double) totalScore) / (k + 1);
-			double avgAssignedTasks = ((double) totalAssignedTasks)
+			double avgAssignedTasks = (totalAssignedTasks)
 					/ ((k + 1) * Constants.TIME_INSTANCE);
-			double avgExpertiseAssignedTasks = ((double) totalExpertiseAssignedTasks)
+			double avgExpertiseAssignedTasks = (totalExpertiseAssignedTasks)
 					/ ((k + 1) * Constants.TIME_INSTANCE);
-			long avgTime = ((long) totalTime) / ((k + 1) * Constants.TIME_INSTANCE);
+			long avgTime = (totalTime) / ((k + 1) * Constants.TIME_INSTANCE);
 			System.out.println("Total score: " + totalScore
 					+ "   # of rounds: " + (k + 1) + "  avg: " + avgScore);
 			System.out.println("Total assigned taskes: " + totalAssignedTasks
@@ -205,5 +203,36 @@ public class GeocrowdTest {
 			System.out.println("Average worker per task: " + avgAvgWT
 					+ "   with variance: " + avgVarWT);
 		} // end of for loop
+	}
+
+	/**
+	 * Test geo crowd_ small.
+	 */
+	@Test
+	public void testGeoCrowd_Small() {
+		GenericCrowd.DATA_SET = DatasetEnum.GOWALLA;
+		GenericCrowd.algorithm = AlgorithmEnum.BASIC;
+		Geocrowd geoCrowd = new Geocrowd();
+		geoCrowd.printBoundaries();
+		geoCrowd.createGrid();
+		// geoCrowd.readEntropy();
+
+		geoCrowd.readWorkers(Constants.smallWorkerFileNamePrefix + "0.txt");
+		geoCrowd.readTasks(Constants.smallTaskFileNamePrefix + "0.txt");
+		geoCrowd.matchingTasksWorkers();
+		geoCrowd.computeAverageTaskPerWorker();
+		System.out.println("avgTW " + geoCrowd.avgTW);
+		System.out.println("varTW " + geoCrowd.varTW);
+
+		geoCrowd.computeAverageWorkerPerTask();
+		System.out.println("avgWT " + geoCrowd.avgWT);
+		System.out.println("varWT " + geoCrowd.varWT);
+
+		geoCrowd.maxWeightedMatching();
+
+		System.out.println("Score: " + geoCrowd.TotalScore);
+		System.out.println("Assigned task: " + geoCrowd.TotalAssignedTasks);
+		System.out.println("Exact assigned task: "
+				+ geoCrowd.TotalTasksExpertiseMatch);
 	}
 }

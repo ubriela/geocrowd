@@ -1,7 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package org.datasets.yelp;
 
 
@@ -20,30 +28,63 @@ import org.datasets.gowalla.Point;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProcessDataSet.
+ */
 public class ProcessDataSet {
 
     /**
-     * @param args the command line arguments
-     */
+	 * The min lat.
+	 * 
+	 */
     public static double minLat = Double.MAX_VALUE;
+    
+    /** The max lat. */
     public static double maxLat = (-1) * Double.MAX_VALUE;
+    
+    /** The min long. */
     public static double minLong = Double.MAX_VALUE;
+    
+    /** The max long. */
     public static double maxLong = (-1) * Double.MAX_VALUE;
+    
+    /** The Business_ location. */
     static Hashtable<String, Hashtable<String, Double>> Business_Location = new Hashtable<>();
+    
+    /** The Review. */
     static Hashtable<String, Hashtable<Integer, String>> Review = new Hashtable<>();
+    
+    /** The Review_ date. */
     static Hashtable<Integer, Hashtable<String, Hashtable<Integer, String>>> Review_Date = new Hashtable<>();
+    
+    /** The Business_ categories. */
     static Hashtable<String, Hashtable<Integer, String>> Business_Categories = new Hashtable<>();
+    
+    /** The User_ categories. */
     static Hashtable<String, ArrayList> User_Categories = new Hashtable<>();
+    
+    /** The User_ review count. */
     static Hashtable<String, Long> User_ReviewCount = new Hashtable<>();
+    
+    /** The parser. */
     static JSONParser parser = new JSONParser();
     // int count = 0;
+    /** The Expertise. */
     static ArrayList Expertise = new ArrayList();
+    
+    /** The type. */
     static String type = "none";
+    
+    /** The total_expertise_user. */
     static int total_expertise_user = 0;
 
+    /**
+	 * Access_ business.
+	 */
     public static void Access_Business() {
         try {
-            FileReader f = new FileReader(constant.business);
+            FileReader f = new FileReader(Constant.business);
             BufferedReader in = new BufferedReader(f);
             while (in.ready()) {
 
@@ -98,33 +139,12 @@ public class ProcessDataSet {
 
     }
 
-    public static void Access_User() {
-        try {
-            FileReader f = new FileReader(constant.user);
-            BufferedReader in = new BufferedReader(f);
-            while (in.ready()) {
-
-                String line = in.readLine();
-                Object obj = parser.parse(line);
-                JSONObject jsonObject = (JSONObject) obj;
-                String user = jsonObject.get("user_id").toString();
-                long review = (long) jsonObject.get("review_count");
-                if (review > constant.MaxReview) {
-                    review = constant.MaxReview;
-                }
-                User_ReviewCount.put(user, review);
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-    }
-
+    /**
+	 * Access_ review.
+	 */
     public static void Access_Review() {
         try {
-            FileReader f = new FileReader(constant.curtail_review);
+            FileReader f = new FileReader(Constant.curtail_review);
             BufferedReader in = new BufferedReader(f);
             while (in.ready()) {
 
@@ -173,6 +193,159 @@ public class ProcessDataSet {
 
     }
 
+    /**
+	 * Access_ user.
+	 */
+    public static void Access_User() {
+        try {
+            FileReader f = new FileReader(Constant.user);
+            BufferedReader in = new BufferedReader(f);
+            while (in.ready()) {
+
+                String line = in.readLine();
+                Object obj = parser.parse(line);
+                JSONObject jsonObject = (JSONObject) obj;
+                String user = jsonObject.get("user_id").toString();
+                long review = (long) jsonObject.get("review_count");
+                if (review > Constant.MaxReview) {
+                    review = Constant.MaxReview;
+                }
+                User_ReviewCount.put(user, review);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    /**
+	 * Compute location density.
+	 * 
+	 * @return the hashtable
+	 */
+    public static Hashtable<Integer, Hashtable<Integer, Integer>> computeLocationDensity() {
+        Hashtable<Integer, Hashtable<Integer, Integer>> Density;
+        Density = new Hashtable<>();
+        Iterator Business = Business_Location.keySet().iterator();
+        while (Business.hasNext()) {
+            String BusinessID = Business.next().toString();
+            Double lat = Business_Location.get(BusinessID).get("lat");
+            Double lng = Business_Location.get(BusinessID).get("lng");
+            int row = getRowIdx(lat);
+            int col = getColIdx(lng);
+            if (Density.containsKey(row)) {
+                if (Density.get(row).containsKey(col)) {
+                    Density.get(row).put(col, Density.get(row).get(col) + 1);
+                } else {
+                    Density.get(row).put(col, 1);
+                }
+            } else {
+                Hashtable<Integer, Integer> rows = new Hashtable<Integer, Integer>();
+                rows.put(col, 1);
+                Density.put(row, rows);
+            }
+
+        }
+
+        return Density;
+
+    }
+
+    /**
+	 * Curtail_ review_ file.
+	 */
+    public static void Curtail_Review_File() {
+        Hashtable<String, Hashtable<Integer, String>> Review = new Hashtable<>();
+        JSONParser parser = new JSONParser();
+        int c = 0;
+
+        try {
+            FileReader f = new FileReader(Constant.review);
+            BufferedReader in = new BufferedReader(f);
+            StringBuffer sb = new StringBuffer();
+            while (in.ready()) {
+                if (c % 1000 == 0) {
+                    System.out.println("Done. # of reviews is:" + c);
+                }
+                String line = in.readLine();
+                Object obj = parser.parse(line);
+                JSONObject jsonObject = (JSONObject) obj;
+                String user = jsonObject.get("user_id").toString();
+                String business = jsonObject.get("business_id").toString();
+                String datereview = jsonObject.get("date").toString();
+                JSONObject obj_towrite = new JSONObject();
+                obj_towrite.put("business_id", business);
+                obj_towrite.put("user_id", user);
+                obj_towrite.put("date", datereview);
+                sb.append(obj_towrite.toJSONString());
+                sb.append("\n");
+                c++;
+            }
+            Utils.writefile2(sb.toString(), Constant.curtail_review);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+	 * Date it.
+	 * 
+	 * @param t
+	 *            the t
+	 * @return the int
+	 */
+    public static int DateIt(String t) {
+        int to_return = 0;
+        String[] temp = t.split("-");
+        int[] number = new int[temp.length];
+        for (int i = 0; i < temp.length; i++) {
+            number[i] = Integer.parseInt(temp[i]);
+        }
+        switch (number[0]) {
+            case 2005:
+                to_return = 0;
+                break;
+            case 2006:
+                to_return = 1;
+                break;
+            case 2013:
+                to_return = 21;
+                break;
+            default:
+                to_return = (number[1] / 4) + ((number[0] - 2007) * 3 + 2);
+                break;
+        }
+        return to_return;
+    }
+
+    /**
+	 * Gets the col idx.
+	 * 
+	 * @param lng
+	 *            the lng
+	 * @return the col idx
+	 */
+    public static int getColIdx(double lng) {
+        return (int) ((lng - minLong) / Constant.realResolution);
+    }
+
+    /**
+	 * Gets the row idx.
+	 * 
+	 * @param lat
+	 *            the lat
+	 * @return the row idx
+	 */
+    public static int getRowIdx(double lat) {
+        return (int) ((lat - minLat) / Constant.realResolution);
+    }
+
+    /**
+	 * Pre process task.
+	 */
     public static void PreProcessTask() {
         JSONParser parser = new JSONParser();
         // int count = 0;
@@ -184,7 +357,7 @@ public class ProcessDataSet {
         // int c = 0;
 
         try {
-            FileReader f = new FileReader(constant.business);
+            FileReader f = new FileReader(Constant.business);
             BufferedReader in = new BufferedReader(f);
             while (in.ready()) {
                 if (k == 500) {
@@ -228,7 +401,10 @@ public class ProcessDataSet {
 
         }
     }
-
+    
+    /**
+	 * Save_ statistic.
+	 */
     public static void save_Statistic() {
         int total_expertise = Expertise.size();
         int total_user_review = Review.size();
@@ -252,39 +428,62 @@ public class ProcessDataSet {
         sb.append("\nAvg rating per user: " + avg_review);
         sb.append("\nTotal Business: " + Business_Location.size());
         sb.append("\nTotal Task requires Expertise: " + Business_Categories.size());
-        Utils.writefile2(sb.toString(), constant.SaveStatistic);
+        Utils.writefile2(sb.toString(), Constant.SaveStatistic);
 
 
     }
+    
+    
+    /**
+	 * Save boundary.
+	 */
+    public static void saveBoundary() {
+        Utils.writefile2(minLat + "," + minLong + "," + maxLat + "," + maxLong,
+                Constant.boundary);
+    }
 
-    public static Hashtable<Integer, Hashtable<Integer, Integer>> computeLocationDensity() {
-        Hashtable<Integer, Hashtable<Integer, Integer>> Density;
-        Density = new Hashtable<>();
-        Iterator Business = Business_Location.keySet().iterator();
-        while (Business.hasNext()) {
-            String BusinessID = Business.next().toString();
+    /**
+	 * Save business_ task.
+	 */
+    public static void saveBusiness_Task() {
+        Hashtable<Integer, Hashtable<Integer, Integer>> Density = computeLocationDensity();
+        Iterator businesses = Business_Categories.keySet().iterator();
+        int c = 0;
+        int time = 0;
+        StringBuilder sb = new StringBuilder();
+        while (businesses.hasNext()) {
+            if (c >= Constant.TaskPerFile) {
+                System.out.println("Task instance: " + time);
+                Utils.writefile2(sb.toString(), Constant.SaveTask + time
+                        + Constant.suffix);
+                c = 0;
+                time++;
+                sb.delete(0, sb.length());
+            }
+            String BusinessID = businesses.next().toString();
             Double lat = Business_Location.get(BusinessID).get("lat");
             Double lng = Business_Location.get(BusinessID).get("lng");
             int row = getRowIdx(lat);
             int col = getColIdx(lng);
-            if (Density.containsKey(row)) {
-                if (Density.get(row).containsKey(col)) {
-                    Density.get(row).put(col, Density.get(row).get(col) + 1);
-                } else {
-                    Density.get(row).put(col, 1);
-                }
-            } else {
-                Hashtable<Integer, Integer> rows = new Hashtable<Integer, Integer>();
-                rows.put(col, 1);
-                Density.put(row, rows);
-            }
-
+            int dens = Density.get(row).get(col);
+            Random generator = new Random();
+            int chosen = generator.nextInt(Business_Categories.get(BusinessID)
+                    .size());
+            String TaskType = Business_Categories.get(BusinessID).get(chosen);
+            int type_chosen = Expertise.indexOf(TaskType);
+            sb.append(lat + "," + lng + "," + time + "," + dens + ","
+                    + type_chosen);
+            sb.append("\n");
+            c++;
         }
-
-        return Density;
-
     }
 
+    /**
+	 * Save location density.
+	 * 
+	 * @param Density
+	 *            the density
+	 */
     public static void saveLocationDensity(
             Hashtable<Integer, Hashtable<Integer, Integer>> Density) {
 
@@ -299,106 +498,12 @@ public class ProcessDataSet {
                 sb.append("\n");
             }
         }
-        Utils.writefile2(sb.toString(), constant.entropy);
+        Utils.writefile2(sb.toString(), Constant.entropy);
     }
 
-    public static void saveBoundary() {
-        Utils.writefile2(minLat + "," + minLong + "," + maxLat + "," + maxLong,
-                constant.boundary);
-    }
-
-    public static void split_Worker_by_time() {
-
-        Random gen = new Random();
-        Iterator time_instance = Review_Date.keySet().iterator();
-        StringBuilder sb = new StringBuilder();
-        while (time_instance.hasNext()) {
-            sb.delete(0, sb.length());
-            int instance = (Integer) time_instance.next();
-            Iterator users = Review_Date.get(instance).keySet().iterator();
-            while (users.hasNext()) {
-                StringBuilder sb_temp = new StringBuilder();
-                String u_id = (String) users.next();
-                Iterator businesses = Review_Date.get(instance).get(u_id).keySet().iterator();
-                int i = gen.nextInt(Review_Date.get(instance).get(u_id).size());
-                double minLatitude = Double.MAX_VALUE;
-                double maxLatitude = (-1) * Double.MAX_VALUE;
-                double minLongitude = Double.MAX_VALUE;
-                double maxLongitude = (-1) * Double.MAX_VALUE;
-                while (businesses.hasNext()) {
-                    int col = (Integer) businesses.next();
-                    double temp_lat = Business_Location.get(
-                            Review_Date.get(instance).get(u_id).get(col).toString()).get("lat");
-                    double temp_lng = Business_Location.get(
-                            Review_Date.get(instance).get(u_id).get(col).toString()).get("lng");
-
-                    if (temp_lat < minLatitude) {
-                        minLatitude = temp_lat;
-                    }
-                    if (temp_lat > maxLatitude) {
-                        maxLatitude = temp_lat;
-                    }
-                    if (temp_lng < minLongitude) {
-                        minLongitude = temp_lng;
-                    }
-                    if (temp_lng > maxLongitude) {
-                        maxLongitude = temp_lng;
-                    }
-
-                    // System.out.print (Review.get(u_id).get(col).toString());
-
-                    if (Business_Categories.keySet().contains(
-                            Review_Date.get(instance).get(u_id).get(col).toString())) {
-                        for (int j = 0; j < Business_Categories.get(
-                                Review_Date.get(instance).get(u_id).get(col).toString()).size(); j++) {
-                            String expertise = Business_Categories
-                                    .get(Review_Date.get(instance).get(u_id).get(col).toString())
-                                    .get(j).toString();
-                            if (!User_Categories.get(u_id).contains(expertise)) {
-                                User_Categories.get(u_id).add(expertise);
-                            }
-                        }
-                    }
-
-                }
-
-                double lat = (minLatitude + maxLatitude) / 2;
-                double lon = (minLongitude + maxLongitude) / 2;
-                sb_temp.append(u_id + "," + lat + "," + lon);
-
-
-                sb_temp.append("," + Review_Date.get(instance).get(u_id).size());
-
-
-                sb_temp.append(",[" + minLatitude + "," + minLongitude + ","
-                        + maxLatitude + "," + maxLongitude + "]");
-
-                if (User_Categories.get(u_id).size() != 0) {
-
-                    sb_temp.append(",[");
-                    for (int j = 0; j < User_Categories.get(u_id).size(); j++) {
-                        if (j > 0 && j < User_Categories.get(u_id).size()) {
-                            sb_temp.append(",");
-                        }
-                        sb_temp.append(String.valueOf(Expertise
-                                .indexOf(User_Categories.get(u_id).get(j))));
-                    }
-
-                    sb_temp.append("]\n");
-
-                    sb.append(sb_temp);
-
-                    //  total_expertise_user++;
-                } else {
-                    // System.out.println(u_id + "-one empty here");
-                }
-            }
-            Utils.writefile2(sb.toString(), constant.SplitWorkerByTime + instance + constant.suffix);
-        }
-
-
-    }
-    
+    /**
+	 * Save task workers.
+	 */
     public static void saveTaskWorkers() {
     	// Tasks
         Iterator Business = Business_Location.keySet().iterator();
@@ -413,7 +518,7 @@ public class ProcessDataSet {
         
 		FileWriter writer;
 		try {
-			writer = new FileWriter(constant.tasks_loc);
+			writer = new FileWriter(Constant.tasks_loc);
 			BufferedWriter out = new BufferedWriter(writer);
 			out = new BufferedWriter(writer);
 			out.write(sb.toString());
@@ -427,51 +532,10 @@ public class ProcessDataSet {
 		
 		
     }
-    
-    
+
     /**
-     * Compute mean contribution distance
-     * 
-     * @param filename
-     */
-    public static void saveWorkersMCD(String filename) {
-    	Iterator users = Review.keySet().iterator();
-        StringBuffer sb = new StringBuffer();
-        
-        while(users.hasNext()) {
-        	String u_id = (String) users.next();
-            
-            Iterator businesses = Review.get(u_id).keySet().iterator();
-            ArrayList<Point> points = new ArrayList<Point>();
-            while (businesses.hasNext()) {
-                int col = (Integer) businesses.next();
-                String x = Review.get(u_id).get(col).toString();
-                if (Business_Location.get(x) == null)
-                	continue;
-                double lat = Business_Location.get(x).get("lat");
-                double lng = Business_Location.get(
-                        Review.get(u_id).get(col).toString()).get("lng");
-                points.add(new Point(lat, lng));
-            }
-            
-            // compute MCD
-            double mcd = org.geocrowd.util.Utils.MCD(points.get(0), points);
-            sb.append(mcd + "\n");
-        }
-        
-		FileWriter writer;
-		try {
-			writer = new FileWriter(filename);
-			BufferedWriter out = new BufferedWriter(writer);
-			out.write(sb.toString());
-			out.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-    }
-
+	 * Save user_ worker.
+	 */
     public static void saveUser_Worker() {
 
         Random gen = new Random();
@@ -483,10 +547,10 @@ public class ProcessDataSet {
         while (users.hasNext()) {
         	String u_id = (String) users.next();
             StringBuilder sb_temp = new StringBuilder();
-            if (c >= constant.WorkerPerFile || !users.hasNext()) {
+            if (c >= Constant.WorkerPerFile || !users.hasNext()) {
                 System.out.println("Worker instance: " + file_i);
-                Utils.writefile2(sb.toString(), constant.SaveWorker + file_i
-                        + constant.suffix);
+                Utils.writefile2(sb.toString(), Constant.SaveWorker + file_i
+                        + Constant.suffix);
                 c = 0;
                 file_i++;
                 sb.delete(0, sb.length());
@@ -581,102 +645,142 @@ public class ProcessDataSet {
 
     }
 
-    public static void saveBusiness_Task() {
-        Hashtable<Integer, Hashtable<Integer, Integer>> Density = computeLocationDensity();
-        Iterator businesses = Business_Categories.keySet().iterator();
-        int c = 0;
-        int time = 0;
+    /**
+	 * Compute mean contribution distance.
+	 * 
+	 * @param filename
+	 *            the filename
+	 */
+    public static void saveWorkersMCD(String filename) {
+    	Iterator users = Review.keySet().iterator();
+        StringBuffer sb = new StringBuffer();
+        
+        while(users.hasNext()) {
+        	String u_id = (String) users.next();
+            
+            Iterator businesses = Review.get(u_id).keySet().iterator();
+            ArrayList<Point> points = new ArrayList<Point>();
+            while (businesses.hasNext()) {
+                int col = (Integer) businesses.next();
+                String x = Review.get(u_id).get(col).toString();
+                if (Business_Location.get(x) == null)
+                	continue;
+                double lat = Business_Location.get(x).get("lat");
+                double lng = Business_Location.get(
+                        Review.get(u_id).get(col).toString()).get("lng");
+                points.add(new Point(lat, lng));
+            }
+            
+            // compute MCD
+            double mcd = org.geocrowd.util.Utils.MCD(points.get(0), points);
+            sb.append(mcd + "\n");
+        }
+        
+		FileWriter writer;
+		try {
+			writer = new FileWriter(filename);
+			BufferedWriter out = new BufferedWriter(writer);
+			out.write(sb.toString());
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }
+
+    /**
+	 * Split_ worker_by_time.
+	 */
+    public static void split_Worker_by_time() {
+
+        Random gen = new Random();
+        Iterator time_instance = Review_Date.keySet().iterator();
         StringBuilder sb = new StringBuilder();
-        while (businesses.hasNext()) {
-            if (c >= constant.TaskPerFile) {
-                System.out.println("Task instance: " + time);
-                Utils.writefile2(sb.toString(), constant.SaveTask + time
-                        + constant.suffix);
-                c = 0;
-                time++;
-                sb.delete(0, sb.length());
-            }
-            String BusinessID = businesses.next().toString();
-            Double lat = Business_Location.get(BusinessID).get("lat");
-            Double lng = Business_Location.get(BusinessID).get("lng");
-            int row = getRowIdx(lat);
-            int col = getColIdx(lng);
-            int dens = Density.get(row).get(col);
-            Random generator = new Random();
-            int chosen = generator.nextInt(Business_Categories.get(BusinessID)
-                    .size());
-            String TaskType = Business_Categories.get(BusinessID).get(chosen);
-            int type_chosen = Expertise.indexOf(TaskType);
-            sb.append(lat + "," + lng + "," + time + "," + dens + ","
-                    + type_chosen);
-            sb.append("\n");
-            c++;
-        }
-    }
+        while (time_instance.hasNext()) {
+            sb.delete(0, sb.length());
+            int instance = (Integer) time_instance.next();
+            Iterator users = Review_Date.get(instance).keySet().iterator();
+            while (users.hasNext()) {
+                StringBuilder sb_temp = new StringBuilder();
+                String u_id = (String) users.next();
+                Iterator businesses = Review_Date.get(instance).get(u_id).keySet().iterator();
+                int i = gen.nextInt(Review_Date.get(instance).get(u_id).size());
+                double minLatitude = Double.MAX_VALUE;
+                double maxLatitude = (-1) * Double.MAX_VALUE;
+                double minLongitude = Double.MAX_VALUE;
+                double maxLongitude = (-1) * Double.MAX_VALUE;
+                while (businesses.hasNext()) {
+                    int col = (Integer) businesses.next();
+                    double temp_lat = Business_Location.get(
+                            Review_Date.get(instance).get(u_id).get(col).toString()).get("lat");
+                    double temp_lng = Business_Location.get(
+                            Review_Date.get(instance).get(u_id).get(col).toString()).get("lng");
 
-    public static int getRowIdx(double lat) {
-        return (int) ((lat - minLat) / constant.realResolution);
-    }
+                    if (temp_lat < minLatitude) {
+                        minLatitude = temp_lat;
+                    }
+                    if (temp_lat > maxLatitude) {
+                        maxLatitude = temp_lat;
+                    }
+                    if (temp_lng < minLongitude) {
+                        minLongitude = temp_lng;
+                    }
+                    if (temp_lng > maxLongitude) {
+                        maxLongitude = temp_lng;
+                    }
 
-    public static int getColIdx(double lng) {
-        return (int) ((lng - minLong) / constant.realResolution);
-    }
+                    // System.out.print (Review.get(u_id).get(col).toString());
 
-    public static void Curtail_Review_File() {
-        Hashtable<String, Hashtable<Integer, String>> Review = new Hashtable<>();
-        JSONParser parser = new JSONParser();
-        int c = 0;
+                    if (Business_Categories.keySet().contains(
+                            Review_Date.get(instance).get(u_id).get(col).toString())) {
+                        for (int j = 0; j < Business_Categories.get(
+                                Review_Date.get(instance).get(u_id).get(col).toString()).size(); j++) {
+                            String expertise = Business_Categories
+                                    .get(Review_Date.get(instance).get(u_id).get(col).toString())
+                                    .get(j).toString();
+                            if (!User_Categories.get(u_id).contains(expertise)) {
+                                User_Categories.get(u_id).add(expertise);
+                            }
+                        }
+                    }
 
-        try {
-            FileReader f = new FileReader(constant.review);
-            BufferedReader in = new BufferedReader(f);
-            StringBuffer sb = new StringBuffer();
-            while (in.ready()) {
-                if (c % 1000 == 0) {
-                    System.out.println("Done. # of reviews is:" + c);
                 }
-                String line = in.readLine();
-                Object obj = parser.parse(line);
-                JSONObject jsonObject = (JSONObject) obj;
-                String user = jsonObject.get("user_id").toString();
-                String business = jsonObject.get("business_id").toString();
-                String datereview = jsonObject.get("date").toString();
-                JSONObject obj_towrite = new JSONObject();
-                obj_towrite.put("business_id", business);
-                obj_towrite.put("user_id", user);
-                obj_towrite.put("date", datereview);
-                sb.append(obj_towrite.toJSONString());
-                sb.append("\n");
-                c++;
+
+                double lat = (minLatitude + maxLatitude) / 2;
+                double lon = (minLongitude + maxLongitude) / 2;
+                sb_temp.append(u_id + "," + lat + "," + lon);
+
+
+                sb_temp.append("," + Review_Date.get(instance).get(u_id).size());
+
+
+                sb_temp.append(",[" + minLatitude + "," + minLongitude + ","
+                        + maxLatitude + "," + maxLongitude + "]");
+
+                if (User_Categories.get(u_id).size() != 0) {
+
+                    sb_temp.append(",[");
+                    for (int j = 0; j < User_Categories.get(u_id).size(); j++) {
+                        if (j > 0 && j < User_Categories.get(u_id).size()) {
+                            sb_temp.append(",");
+                        }
+                        sb_temp.append(String.valueOf(Expertise
+                                .indexOf(User_Categories.get(u_id).get(j))));
+                    }
+
+                    sb_temp.append("]\n");
+
+                    sb.append(sb_temp);
+
+                    //  total_expertise_user++;
+                } else {
+                    // System.out.println(u_id + "-one empty here");
+                }
             }
-            Utils.writefile2(sb.toString(), constant.curtail_review);
-        } catch (Exception e) {
-            e.printStackTrace();
+            Utils.writefile2(sb.toString(), Constant.SplitWorkerByTime + instance + Constant.suffix);
         }
 
-    }
 
-    public static int DateIt(String t) {
-        int to_return = 0;
-        String[] temp = t.split("-");
-        int[] number = new int[temp.length];
-        for (int i = 0; i < temp.length; i++) {
-            number[i] = Integer.parseInt(temp[i]);
-        }
-        switch (number[0]) {
-            case 2005:
-                to_return = 0;
-                break;
-            case 2006:
-                to_return = 1;
-                break;
-            case 2013:
-                to_return = 21;
-                break;
-            default:
-                to_return = (number[1] / 4) + ((number[0] - 2007) * 3 + 2);
-                break;
-        }
-        return to_return;
     }
 }

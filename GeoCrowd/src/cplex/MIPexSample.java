@@ -1,3 +1,15 @@
+/*******************************************************************************
+* @ Year 2013
+* This is the source code of the following papers. 
+* 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+* 
+* 
+* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+*
+* Contributors:
+* Hien To - initial implementation
+*******************************************************************************/
 package cplex;
 
 import ilog.concert.IloException;
@@ -7,7 +19,18 @@ import ilog.concert.IloRange;
 import ilog.cplex.IloCplex;
 import ilog.cplex.IloCplexModeler;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MIPexSample.
+ */
 public class MIPexSample {
+	
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			IloCplex cplex = new IloCplex();
@@ -36,6 +59,18 @@ public class MIPexSample {
 		}
 	}
 
+	/**
+	 * Populate by row.
+	 * 
+	 * @param model
+	 *            the model
+	 * @param var
+	 *            the var
+	 * @param rng
+	 *            the rng
+	 * @throws IloException
+	 *             the ilo exception
+	 */
 	private static void populateByRow(IloCplexModeler model, IloNumVar[][] var,
 			IloRange[][] rng) throws IloException {
 
@@ -69,6 +104,18 @@ public class MIPexSample {
 						model.prod(2, x[4])), 4);
 	}
 
+	/**
+	 * Populated by col.
+	 * 
+	 * @param model
+	 *            the model
+	 * @param var
+	 *            the var
+	 * @param rng
+	 *            the rng
+	 * @throws IloException
+	 *             the ilo exception
+	 */
 	private static void populatedByCol(IloCplexModeler model,
 			IloNumVar[][] var, IloRange[][] rng) throws IloException {
 

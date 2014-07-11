@@ -115,8 +115,8 @@ public class GeocrowdTest {
 		for (int k = 0; k < 20; k++) {	// k is the number of time instance
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
-			Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-			Geocrowd.algorithm = AlgorithmEnum.BASIC;
+			Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+			Geocrowd.algorithm = AlgorithmEnum.ONLINE;
 			Geocrowd geoCrowd = new Geocrowd();
 			geoCrowd.printBoundaries();
 			geoCrowd.createGrid();
@@ -164,10 +164,7 @@ public class GeocrowdTest {
 				System.out.println("#Workers: " + geoCrowd.workerList.size());
 				System.out.println("scheduling...");
 				double startTime = System.nanoTime();
-				if (Geocrowd.algorithm == AlgorithmEnum.ONLINE)
-					geoCrowd.onlineMatching();
-				else
-					geoCrowd.maxWeightedMatching();
+				geoCrowd.maxWeightedMatching();
 				double runtime = (System.nanoTime() - startTime) / 1000000000.0;
 				totalTime += runtime;
 				System.out.println("Time: " + runtime);

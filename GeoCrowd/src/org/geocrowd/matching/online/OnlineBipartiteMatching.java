@@ -12,7 +12,7 @@ public class OnlineBipartiteMatching {
 	
 	/**
 	 * Initialize variables
-	 * @param container2
+	 * @param workers
 	 */
 	public OnlineBipartiteMatching(ArrayList<Integer> _workers) {
 		java.util.Collections.shuffle(_workers); // permute workers
@@ -46,16 +46,17 @@ public class OnlineBipartiteMatching {
 
 	/**
 	 * Online algorithm
-	 * @param container: an array of workerids
+	 * @param container: an array of worker ids
 	 * @return the number of assigned tasks
 	 */
-	public int onlineMatching(ArrayList<ArrayList> container) {
-		int assignedTasks = 0;
-		Iterator it = container.iterator();
+	public ArrayList<Integer> onlineMatching(HashMap<Integer, ArrayList> invertedContainer) {
+		ArrayList<Integer> assignedTasks = new ArrayList<>();
+		Iterator it = invertedContainer.keySet().iterator();
 		
 		// iterate through task list
 		while (it.hasNext() && workers.size() > 0) {
-			ArrayList<Integer> workerids = (ArrayList<Integer>) it.next();	//	list of workers eligible to perform this task
+			Integer taskidx = (Integer) it.next();
+			ArrayList<Integer> workerids = invertedContainer.get(taskidx);	//	list of workers eligible to perform this task
 			
 			// put all workerids into a hashset
 			HashSet<Integer> hashids = new HashSet<Integer>();
@@ -66,7 +67,7 @@ public class OnlineBipartiteMatching {
 			// find the worker of highest rank by iterate through ranks
 			for (int i = 0; i < ranks.size(); i++) {
 				if (hashids.contains(workers.get(ranks.get(i)))) {
-					assignedTasks++;
+					assignedTasks.add(taskidx);
 					
 					// remove the task & rank from workers and ranks
 					workers.remove(ranks.get(i));

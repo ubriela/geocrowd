@@ -60,28 +60,28 @@ public abstract class GenericCrowd {
 	/**
 	 * maintain tasks that participate in one time instance task assignment
 	 * (i.e., at least one worker can perform this task). The values in this
-	 * list point to an index in taskList
+	 * list point to an index in taskList.
 	 */
-	public ArrayList<Integer> candidateTasks = null;
+	public ArrayList<Integer> candidateTaskIndices = null;
 
 	/**
 	 * Each worker has a list of task index that he is eligible to perform. The
-	 * container contains task index of the elements in candidate tasks (not in
-	 * the task list)
+	 * container contains task index of the elements in candidate tasks indices
+	 * (not in the task list)
 	 */
 	ArrayList<ArrayList> containerWorker;
 
 	/**
-	 * for every worker, maintain a set of used to prune workers with no task in
-	 * container. Similar to containerWorker, containerPrune contains task index
-	 * of elements in candidate tasks
+	 * used to prune workers with no task in container. Similar to
+	 * containerWorker, containerPrune contains task index of elements in
+	 * candidate tasks indices (not in the task list)
 	 */
 	ArrayList[] containerPrune = null;
 
 	/** is used to compute average worker/task. */
 	HashMap<Integer, ArrayList> invertedContainer;
 
-	/** 
+	/**
 	 * The task set at one time instance, to quickly find candidate tasks.
 	 * Taskset contains task index of the tasks covered by worker
 	 */

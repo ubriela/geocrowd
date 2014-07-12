@@ -63,8 +63,8 @@ public class Crowdsensing extends GenericCrowd {
 			HashMap<Integer, Integer> taskidsWithDeadline = new HashMap();
 			while (it2.hasNext()) {
 				Integer taskid = (Integer) it2.next();
-				taskidsWithDeadline.put(taskid,
-						taskList.get(candidateTasks.get(taskid)).getEntryTime()
+				taskidsWithDeadline.put(candidateTaskIndices.get(taskid),
+						taskList.get(candidateTaskIndices.get(taskid)).getEntryTime()
 								+ Constants.TaskDuration);
 			}
 			containerWithDeadline.add(taskidsWithDeadline);
@@ -79,7 +79,7 @@ public class Crowdsensing extends GenericCrowd {
 	@Override
 	public void matchingTasksWorkers() {
 		invertedContainer = new HashMap<Integer, ArrayList>();
-		candidateTasks = new ArrayList();
+		candidateTaskIndices = new ArrayList();
 		taskSet = new HashSet<Integer>();
 		containerWorker = new ArrayList<ArrayList>();
 		containerPrune = new ArrayList[workerList.size()];
@@ -169,7 +169,7 @@ public class Crowdsensing extends GenericCrowd {
 		Iterator it = sc.universe.iterator();
 		while (it.hasNext()) {
 			Integer candidateIndex = (Integer) it.next();
-			assignedTasks.add(candidateTasks.get(candidateIndex));
+			assignedTasks.add(candidateTaskIndices.get(candidateIndex));
 		}
 
 		/**
@@ -283,13 +283,13 @@ public class Crowdsensing extends GenericCrowd {
 				/* compute a list of candidate tasks */
 
 				if (!taskSet.contains(tid)) {
-					candidateTasks.add(tid);
+					candidateTaskIndices.add(tid);
 					taskSet.add(tid);
 				}
 
 				if (containerPrune[workerIdx] == null)
 					containerPrune[workerIdx] = new ArrayList();
-				containerPrune[workerIdx].add(candidateTasks.indexOf(tid));
+				containerPrune[workerIdx].add(candidateTaskIndices.indexOf(tid));
 
 				/* inverted container */
 				if (!invertedContainer.containsKey(tid))

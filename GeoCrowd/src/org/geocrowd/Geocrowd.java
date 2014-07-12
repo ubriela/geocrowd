@@ -366,7 +366,7 @@ public class Geocrowd extends GenericCrowd {
 	@Override
 	public void matchingTasksWorkers() {
 		invertedContainer = new HashMap<Integer, ArrayList>();
-		candidateTasks = new ArrayList();
+		candidateTaskIndices = new ArrayList();
 		taskSet = new HashSet<Integer>();
 		containerWorker = new ArrayList<ArrayList>();
 		containerPrune = new ArrayList[workerList.size()];
@@ -406,7 +406,7 @@ public class Geocrowd extends GenericCrowd {
 	 */
 	public double maxWeightedMatching() {
 
-		if (sumMaxT == 0 || candidateTasks.size() == 0) {
+		if (sumMaxT == 0 || candidateTaskIndices.size() == 0) {
 			System.out.println("No scheduling");
 			return 0;
 		}
@@ -415,7 +415,7 @@ public class Geocrowd extends GenericCrowd {
 			return onlineMatching();
 
 		// sumMaxT is the number of logical workers
-		double[][] array = new double[sumMaxT][candidateTasks.size()]; // row
+		double[][] array = new double[sumMaxT][candidateTaskIndices.size()]; // row
 																		// represents
 																		// workers,
 																		// column
@@ -429,7 +429,7 @@ public class Geocrowd extends GenericCrowd {
 				for (int j : tasks) {
 					array[row][j] = computeScore(
 							(SpecializedWorker) workerList.get(i),
-							(SpecializedTask) taskList.get(candidateTasks
+							(SpecializedTask) taskList.get(candidateTaskIndices
 									.get(j)));
 				}
 			logicalWorkerToWorker.put(row, i);
@@ -535,16 +535,16 @@ public class Geocrowd extends GenericCrowd {
 							switch (algorithm) {
 							case LLEP:
 								objectiveCoeff.add(computeCost(taskList
-										.get(candidateTasks.get(t))));
+										.get(candidateTaskIndices.get(t))));
 								break;
 							case NNP:
 								objectiveCoeff.add(distanceWorkerTask(worker,
-										taskList.get(candidateTasks.get(t))));
+										taskList.get(candidateTaskIndices.get(t))));
 								break;
 							}
 							matchingCoeff.add(computeScore(worker,
 									(SpecializedTask) taskList
-											.get(candidateTasks.get(t))));
+											.get(candidateTaskIndices.get(t))));
 						}
 						// logicalWorkerToWorker.put(numWorker, w);
 						numWorker++;
@@ -554,7 +554,7 @@ public class Geocrowd extends GenericCrowd {
 			}
 
 			BPMatchingCplex cplex = new BPMatchingCplex(numWorker,
-					candidateTasks.size(), objectiveCoeff, matchingCoeff,
+					candidateTaskIndices.size(), objectiveCoeff, matchingCoeff,
 					totalScore, mapColToMatch);
 			taskAssigned = cplex.maxMatchingMinCost();
 
@@ -567,7 +567,7 @@ public class Geocrowd extends GenericCrowd {
 				SpecializedWorker worker = (SpecializedWorker) workerList
 						.get(logicalWorkerToWorker.get(pair.getW()));
 				SpecializedTask task = (SpecializedTask) taskList
-						.get(candidateTasks.get(pair.getT()));
+						.get(candidateTaskIndices.get(pair.getT()));
 				double score = computeScore(worker, task);
 				totalDistance += distanceWorkerTask(worker, task);
 				_totalScore += score;
@@ -602,21 +602,21 @@ public class Geocrowd extends GenericCrowd {
 					// totalTasksExactMatch++;
 
 					if (isTranpose) {
-						solvedTasks.add(candidateTasks.get(i));
+						solvedTasks.add(candidateTaskIndices.get(i));
 						SpecializedWorker worker = (SpecializedWorker) workerList
 								.get(logicalWorkerToWorker.get(r[i]));
 						SpecializedTask task = (SpecializedTask) taskList
-								.get(candidateTasks.get(i));
+								.get(candidateTaskIndices.get(i));
 						totalDistance += distanceWorkerTask(worker, task);
 						// exact match?
 						if (worker.isExactMatch(task))
 							totalTasksExactMatch++;
 					} else {
-						solvedTasks.add(candidateTasks.get(r[i]));
+						solvedTasks.add(candidateTaskIndices.get(r[i]));
 						SpecializedWorker worker = (SpecializedWorker) workerList
 								.get(logicalWorkerToWorker.get(i));
 						SpecializedTask task = (SpecializedTask) taskList
-								.get(candidateTasks.get(r[i]));
+								.get(candidateTaskIndices.get(r[i]));
 						totalDistance += distanceWorkerTask(worker, task);
 						// exact match?
 						if (worker.isExactMatch(task))
@@ -634,7 +634,7 @@ public class Geocrowd extends GenericCrowd {
 			if (taskAssigned != null) {
 				for (int i = 0; i < taskAssigned.size(); i++) {
 					MatchPair pair = taskAssigned.get(i);
-					solvedTasks.add(candidateTasks.get(pair.getT()));
+					solvedTasks.add(candidateTaskIndices.get(pair.getT()));
 				}
 				Collections.sort(solvedTasks);
 				for (int i = solvedTasks.size() - 1; i >= 0; i--) {
@@ -877,14 +877,14 @@ public class Geocrowd extends GenericCrowd {
 			if (task.isCoveredBy(mbr)) {
 					
 				if (!taskSet.contains(t)) {
-					candidateTasks.add(t);
+					candidateTaskIndices.add(t);
 					taskSet.add(t);
 				}
 				
 				if (containerPrune[workerIdx] == null)
 					containerPrune[workerIdx] = new ArrayList();
 				/* the container contains task index of elements in candidate tasks */
-				containerPrune[workerIdx].add(candidateTasks.indexOf(t));
+				containerPrune[workerIdx].add(candidateTaskIndices.indexOf(t));
 				
 				if (!invertedContainer.containsKey(t))
 					invertedContainer.put(t, new ArrayList() {

@@ -39,7 +39,7 @@ public class SetCoverTest {
 		container.add(new ArrayList<Integer>(Arrays.asList(3, 4)));
 		container.add(new ArrayList<Integer>(Arrays.asList(4, 5)));
 		
-		SetCoverGreedy scg = new SetCoverGreedy(container);
+		SetCoverGreedy scg = new SetCoverGreedy(container,1);
 		int no_set = scg.minSetCover();
 		System.out.println(no_set);
 	}

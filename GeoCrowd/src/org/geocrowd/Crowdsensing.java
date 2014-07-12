@@ -63,7 +63,7 @@ public class Crowdsensing extends GenericCrowd {
 			HashMap<Integer, Integer> taskidsWithDeadline = new HashMap();
 			while (it2.hasNext()) {
 				Integer taskid = (Integer) it2.next();
-				taskidsWithDeadline.put(candidateTaskIndices.get(taskid),
+                                taskidsWithDeadline.put(taskid,
 						taskList.get(candidateTaskIndices.get(taskid)).getEntryTime()
 								+ Constants.TaskDuration);
 			}
@@ -127,14 +127,14 @@ public class Crowdsensing extends GenericCrowd {
 
 		switch (algorithm) {
 		case GREEDY:
-			sc = new SetCoverGreedy(containerWorker);
+			sc = new SetCoverGreedy(containerWorker, TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
 			TotalAssignedTasks += sc.universe.size();
 
 			break;
 		case GREEDY_LOW_WORKER_COVERAGE:
-			sc = new SetCoverGreedy_LowWorkerCoverage(containerWorker);
+			sc = new SetCoverGreedy_LowWorkerCoverage(containerWorker, TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
 			TotalAssignedTasks += sc.universe.size();
@@ -142,23 +142,21 @@ public class Crowdsensing extends GenericCrowd {
 			break;
 		case GREEDY_HIGH_TASK_COVERAGE:
 
-			SetCoverGreedy_LargeTaskCoverage sc2 = new SetCoverGreedy_LargeTaskCoverage(
+			sc = new SetCoverGreedy_LargeTaskCoverage(
 					getContainerWithDeadline(), TimeInstance);
-			minAssignedWorkers = sc2.minSetCover();
+			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
-			TotalAssignedTasks += sc2.assignedTasks;
+			TotalAssignedTasks += ((SetCoverGreedy_LargeTaskCoverage)sc).assignedTasks;
 
 			break;
 		case GREEDY_HYBRID:
 
-			SetCoverGreedy_Hybrid sc3 = new SetCoverGreedy_Hybrid(
+			sc = new SetCoverGreedy_Hybrid(
 					getContainerWithDeadline(), TimeInstance);
-			minAssignedWorkers = sc3.minSetCover();
+			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
-			TotalAssignedTasks += sc3.assignedTasks;
-			if (minAssignedWorkers != 0)
-				avgTW += sc3.assignedTasks * 1.0 / minAssignedWorkers;
-
+			TotalAssignedTasks += ((SetCoverGreedy_Hybrid)sc).assignedTasks;
+                        break;
 		}
 
 		/**

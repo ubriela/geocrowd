@@ -23,17 +23,13 @@ import org.geocrowd.util.Constants;
  * 
  * @author Luan
  */
-public class SetCoverGreedy_LargeTaskCoverage {
+public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
 
-    // hashmap<task, deadline of task >
-    /** The set of sets. */
-    ArrayList<HashMap<Integer, Integer>> setOfSets = null;
-
-    /** The universe. */
-    HashSet<Integer> universe = null;
     
-    /** The current time instance. */
-    Integer currentTimeInstance = 0;
+
+   
+    
+   
     
     /** The k. */
     Integer k = 3;
@@ -47,30 +43,13 @@ public class SetCoverGreedy_LargeTaskCoverage {
     /** The average workers per task. */
     public double averageWorkersPerTask;
 
-    /**
-	 * Initialize variables.
-	 * 
-	 * @param container
-	 *            the container
-	 * @param current_time_instance
-	 *            the current_time_instance
-	 */
-    public SetCoverGreedy_LargeTaskCoverage(ArrayList<HashMap<Integer, Integer>> container,
-            Integer current_time_instance) {
-        currentTimeInstance = current_time_instance;
-        universe = new HashSet<>();
-        setOfSets = new ArrayList<>();
-        for (int i = 0; i < container.size(); i++) {
-            HashMap<Integer, Integer> item = container.get(i);
-            if (item != null) {
-                HashMap<Integer, Integer> itemSet = new HashMap<>(item);
-                setOfSets.add(itemSet);
-                universe.addAll(item.keySet());
-
-            }
-
-        }
+    public SetCoverGreedy_LargeTaskCoverage(ArrayList container, Integer current_time_instance) {
+        super(container, current_time_instance);
     }
+
+    
+    
+  
 
     /*
      Check worker contain elemenst will not available at next time
@@ -95,7 +74,7 @@ public class SetCoverGreedy_LargeTaskCoverage {
 	 * @return number of assigned workers
 	 */
     public int minSetCover() {
-        ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) setOfSets.clone();
+        ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         HashSet<Integer> C = new HashSet<Integer>();
 
@@ -139,9 +118,9 @@ public class SetCoverGreedy_LargeTaskCoverage {
             Q.removeAll(maxSet.keySet());
             C.addAll(maxSet.keySet());
         }
-        /*
-        assignedTasks = C.size();
         
+        assignedTasks = C.size();
+        /*
         //compute tasks per worker
         totalAssignedWorkers = set_size - S.size();
         if (totalAssignedWorkers > 0) {

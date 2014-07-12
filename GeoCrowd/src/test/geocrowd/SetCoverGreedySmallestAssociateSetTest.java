@@ -38,7 +38,7 @@ public class SetCoverGreedySmallestAssociateSetTest {
 		container.add(new ArrayList<Integer>(Arrays.asList(4, 5)));
 		container.add(new ArrayList<Integer>(Arrays.asList(3, 5)));
 		
-		SetCoverGreedy_LowWorkerCoverage scg = new SetCoverGreedy_LowWorkerCoverage(container);
+		SetCoverGreedy_LowWorkerCoverage scg = new SetCoverGreedy_LowWorkerCoverage(container,1);
 		int no_set = scg.minSetCover();
 		System.out.println(no_set);
 	}

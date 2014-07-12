@@ -13,6 +13,7 @@
 package org.geocrowd.setcover;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 // TODO: Auto-generated Javadoc
@@ -26,29 +27,59 @@ public abstract class SetCover {
 	 * and each worker contains a set of task ids that he is 
 	 * eligible to perform
 	 **/
-	ArrayList<HashSet<Integer>> listOfSets = null;
+	ArrayList listOfSets = null;
 
 	/** All the task index in the candidate tasks (not the task list). */
 	public HashSet<Integer> universe = null;
 
+         /** The current time instance. */
+        Integer currentTimeInstance = 0;
+        /*
 	/**
 	 * Initialize variables.
 	 * 
 	 * @param container
 	 *            the container
 	 */
-	public SetCover(ArrayList<ArrayList> container) {
+//	public SetCover(ArrayList<ArrayList> container) {
+//		listOfSets = new ArrayList<>();
+//		universe = new HashSet<>();
+//
+//		for (int i = 0; i < container.size(); i++) {
+//			ArrayList<Integer> items = container.get(i);
+//			if (items != null) {
+//				HashSet<Integer> itemSet = new HashSet<Integer>(items);
+//				listOfSets.add(itemSet);
+//				universe.addAll(itemSet);
+//			}
+//		}
+//	}
+        
+       public SetCover(ArrayList container ,Integer current_time_instance) {
 		listOfSets = new ArrayList<>();
 		universe = new HashSet<>();
-
-		for (int i = 0; i < container.size(); i++) {
-			ArrayList<Integer> items = container.get(i);
-			if (items != null) {
-				HashSet<Integer> itemSet = new HashSet<Integer>(items);
-				listOfSets.add(itemSet);
-				universe.addAll(itemSet);
-			}
-		}
+                currentTimeInstance = current_time_instance;
+                if(container.get(0).getClass().isInstance(new ArrayList())){
+                    for (int i = 0; i < container.size(); i++) {
+                        
+                        ArrayList<Integer> items = (ArrayList<Integer>) container.get(i);
+                        if (items != null) {
+                            HashSet<Integer> itemSet = new HashSet<Integer>(items);
+                            listOfSets.add(itemSet);
+                            universe.addAll(itemSet);
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < container.size(); i++) {
+                        
+                        HashMap<Integer, Integer> items = (HashMap<Integer, Integer>) container.get(i);
+                        if (items != null) {
+                            HashMap<Integer, Integer> itemSet = new HashMap<>(items);
+                            listOfSets.add(itemSet);
+                            universe.addAll(itemSet.keySet());
+                        }
+                    }
+                }
 	}
 
 	/**

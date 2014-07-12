@@ -21,15 +21,11 @@ import java.util.HashSet;
  */
 public class SetCoverGreedy extends SetCover {
 
-    /**
-	 * Instantiates a new sets the cover greedy.
-	 * 
-	 * @param container
-	 *            the container
-	 */
-    public SetCoverGreedy(ArrayList<ArrayList> container) {
-        super(container);
+    public SetCoverGreedy(ArrayList container, Integer current_time_instance) {
+        super(container, current_time_instance);
     }
+
+   
 
     /**
 	 * Greedy algorithm.

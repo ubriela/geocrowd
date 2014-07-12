@@ -23,8 +23,11 @@ import java.util.HashSet;
  * 
  * @author Luan
  */
-public class SetCoverGreedy_Hybrid extends SetCoverGreedy_LargeTaskCoverage {
+public class SetCoverGreedy_Hybrid extends SetCover {
 
+     
+    /** The assigned tasks. */
+    public int assignedTasks = 0;
     /**
 	 * Instantiates a new sets the cover greedy combine deadline.
 	 * 
@@ -42,7 +45,7 @@ public class SetCoverGreedy_Hybrid extends SetCoverGreedy_LargeTaskCoverage {
      */
     @Override
     public int minSetCover(){
-        ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) setOfSets.clone();
+        ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         HashSet<Integer> C = new HashSet<Integer>();
        
@@ -67,7 +70,7 @@ public class SetCoverGreedy_Hybrid extends SetCoverGreedy_LargeTaskCoverage {
             Q.removeAll(maxSet.keySet());
             C.addAll(maxSet.keySet());
         }
-        
+        assignedTasks = C.size();
         return set_size - S.size();
     }
     

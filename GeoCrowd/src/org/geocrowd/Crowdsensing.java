@@ -45,10 +45,7 @@ import org.geocrowd.util.Constants;
  */
 public class Crowdsensing extends GenericCrowd {
 
-	/** The Total assigned workers. */
-	public int TotalAssignedWorkers = 0; // over all time instance, (the number
-											// of push notification in practice)
-
+	
 	/**
 	 * Gets the container with deadline.
 	 * 
@@ -146,7 +143,7 @@ public class Crowdsensing extends GenericCrowd {
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
-			TotalAssignedTasks += ((SetCoverGreedy_LargeTaskCoverage)sc).assignedTasks;
+			TotalAssignedTasks += sc.assignedTasks;
 
 			break;
 		case GREEDY_HYBRID:
@@ -155,7 +152,7 @@ public class Crowdsensing extends GenericCrowd {
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
-			TotalAssignedTasks += ((SetCoverGreedy_Hybrid)sc).assignedTasks;
+			TotalAssignedTasks += sc.assignedTasks;
                         break;
 		}
 

@@ -32,10 +32,9 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
    
     
     /** The k. */
-    Integer k = 3;
+    Integer k =2 ;
     
-    /** The assigned tasks. */
-    public int assignedTasks = 0;
+    
 
     /** The average tasks per worker. */
     public double averageTasksPerWorker;
@@ -65,7 +64,7 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
 	 */
     private boolean containElementDeadAtNextTime(HashMap<Integer, Integer> s,
             int current_time_instance) {
-        return s.values().contains(current_time_instance) || (current_time_instance == Constants.TIME_INSTANCE - 1);
+        return s.values().contains(current_time_instance+1) || (current_time_instance == Constants.TIME_INSTANCE - 1);
     }
 
     /**

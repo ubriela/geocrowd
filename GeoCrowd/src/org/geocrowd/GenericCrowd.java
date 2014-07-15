@@ -38,10 +38,12 @@ public abstract class GenericCrowd {
 
 	/** number of workers generated so far. */
 	public int WorkerCount = 0;
+        /** number of assigned tasks. */
+	public static int TotalAssignedTasks = 0;
 
-	/** number of assigned tasks. */
-	public int TotalAssignedTasks = 0;
-
+        /** number of assigned tasks. */
+	public static int TotalAssignedWorkers = 0;
+	
 	/** The Total expired task. */
 	public int TotalExpiredTask = 0;
 

@@ -26,8 +26,7 @@ import java.util.HashSet;
 public class SetCoverGreedy_Hybrid extends SetCover {
 
      
-    /** The assigned tasks. */
-    public int assignedTasks = 0;
+   
     /**
 	 * Instantiates a new sets the cover greedy combine deadline.
 	 * 
@@ -99,6 +98,6 @@ public class SetCoverGreedy_Hybrid extends SetCover {
                 d += s.get(t)-current_time_instance;
             }
         }
-        return numElem*1.0/((d+1)*(d+1));
+        return numElem*1.0-(Math.pow((d+1),0.5));
     }
 }

@@ -26,7 +26,7 @@ import org.geocrowd.common.SensingTask;
 import org.geocrowd.common.SpecializedTask;
 import org.geocrowd.setcover.SetCover;
 import org.geocrowd.setcover.SetCoverGreedy;
-import org.geocrowd.setcover.SetCoverGreedy_Hybrid;
+import org.geocrowd.setcover.SetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
 import org.geocrowd.setcover.SetCoverGreedy_LargeTaskCoverage;
 import org.geocrowd.util.Constants;
@@ -148,7 +148,7 @@ public class Crowdsensing extends GenericCrowd {
 			break;
 		case GREEDY_HYBRID:
 
-			sc = new SetCoverGreedy_Hybrid(
+			sc = new SetCoverGreedy_CloseToDeadline(
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;

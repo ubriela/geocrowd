@@ -34,6 +34,6 @@ public enum AlgorithmEnum {
 	GREEDY_LOW_WORKER_COVERAGE,
 	/** High task coverage. */
 	GREEDY_HIGH_TASK_COVERAGE,
-	/** combine Low worker coverage priority and High task coverage. */
-	GREEDY_HYBRID
+	/** combine deadline and High task coverage. */
+	GREEDY_CLOSE_TO_DEADLINE
 };

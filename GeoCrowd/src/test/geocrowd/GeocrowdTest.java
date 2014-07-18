@@ -15,6 +15,9 @@ package test.geocrowd;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.GenericCrowd;
@@ -22,6 +25,7 @@ import org.geocrowd.Geocrowd;
 import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.common.MBR;
 import org.geocrowd.common.SpecializedWorker;
+import org.geocrowd.matching.online.OnlineBipartiteMatching;
 import org.geocrowd.util.Constants;
 import org.junit.Test;
 
@@ -96,6 +100,37 @@ public class GeocrowdTest {
 	}
 
 	/**
+	 * Test.
+	 */
+	@Test
+	public void OnlineBipartiteMatchingTest() {
+		ArrayList<Integer> workers = new ArrayList<>();
+		
+		workers.add(new Integer(10));
+		workers.add(new Integer(11));
+		workers.add(new Integer(12));
+		workers.add(new Integer(13));
+		
+		OnlineBipartiteMatching obm = new OnlineBipartiteMatching(workers);
+		
+		HashMap<Integer, ArrayList> container = new HashMap<>();
+		container.put(0, new ArrayList<Integer>(Arrays.asList(10)));
+		container.put(1, new ArrayList<Integer>(Arrays.asList(10)));
+		container.put(2, new ArrayList<Integer>(Arrays.asList(11, 12)));
+		
+		int assignedTasks = obm.onlineMatching(container).size();
+		System.out.println(assignedTasks);
+		
+		container = new HashMap<>();
+		container.put(0, new ArrayList<Integer>(Arrays.asList(11,12)));
+		container.put(1, new ArrayList<Integer>(Arrays.asList(11,13)));
+		container.put(2, new ArrayList<Integer>(Arrays.asList(10)));
+		
+		assignedTasks = obm.onlineMatching(container).size();
+		System.out.println(assignedTasks);
+	}
+	
+	/**
 	 * Test geo crowd.
 	 */
 	@Test
@@ -110,7 +145,7 @@ public class GeocrowdTest {
 		double totalAvgWT = 0;
 		double totalVARWT = 0;
 
-		for (int k = 0; k < 20; k++) {	// k is the number of time instance
+		for (int k = 0; k < 1; k++) {
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
 			GenericCrowd.DATA_SET = DatasetEnum.SKEWED;
@@ -210,7 +245,7 @@ public class GeocrowdTest {
 	 */
 	@Test
 	public void testGeoCrowd_Small() {
-		GenericCrowd.DATA_SET = DatasetEnum.GOWALLA;
+		GenericCrowd.DATA_SET = DatasetEnum.SMALL;
 		GenericCrowd.algorithm = AlgorithmEnum.BASIC;
 		Geocrowd geoCrowd = new Geocrowd();
 		geoCrowd.printBoundaries();

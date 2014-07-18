@@ -805,7 +805,20 @@ public class Geocrowd extends GenericCrowd {
 															// first
 		}
 
-		System.out.println(assignedTasks);
+		//System.out.println(assignedTasks);
+		
+		TotalAssignedTasks += assignedTasks.size();
+
+		System.out.println("#Assigned tasks: " + TotalAssignedTasks);
+
+		// check correctness
+		if (TotalExpiredTask + taskList.size() + TotalAssignedTasks != TaskCount) {
+			System.out.println("Logic error!!!");
+			System.out.println("#Expired tasks: " + TotalExpiredTask);
+			System.out.println("#Remained tasks: " + taskList.size());
+			System.out.println("#Assigned tasks: " + taskList.size());
+			System.out.println("#Task count: " + TaskCount);
+		}
 
 		return assignedTasks.size();
 	}

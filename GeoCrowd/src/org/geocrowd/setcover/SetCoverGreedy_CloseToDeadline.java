@@ -23,7 +23,7 @@ import java.util.HashSet;
  * 
  * @author Luan
  */
-public class SetCoverGreedy_Hybrid extends SetCover {
+public class SetCoverGreedy_CloseToDeadline extends SetCover {
 
      
    
@@ -35,7 +35,7 @@ public class SetCoverGreedy_Hybrid extends SetCover {
 	 * @param current_time_instance
 	 *            the current_time_instance
 	 */
-    public SetCoverGreedy_Hybrid(ArrayList<HashMap<Integer, Integer>> container, Integer current_time_instance) {
+    public SetCoverGreedy_CloseToDeadline(ArrayList<HashMap<Integer, Integer>> container, Integer current_time_instance) {
         super(container, current_time_instance);
     }
     

@@ -42,7 +42,7 @@ public class CrowdsensingTest {
 
             System.out.println("+++++++ Iteration: " + (k + 1));
             GenericCrowd.DATA_SET = DatasetEnum.GOWALLA;
-            GenericCrowd.algorithm = AlgorithmEnum.GREEDY;
+            GenericCrowd.algorithm = AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE;
             Crowdsensing crowdsensing = new Crowdsensing();
             // for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
             for (int i = 0; i < Constants.TIME_INSTANCE; i++) {

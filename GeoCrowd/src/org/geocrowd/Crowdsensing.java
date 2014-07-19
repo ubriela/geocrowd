@@ -123,7 +123,7 @@ public class Crowdsensing extends GenericCrowd {
 		int minAssignedWorkers = 0;
 
 		switch (algorithm) {
-		case GREEDY:
+		case GREEDY_HIGH_TASK_COVERAGE:
 			sc = new SetCoverGreedy(containerWorker, TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
@@ -137,7 +137,7 @@ public class Crowdsensing extends GenericCrowd {
 			TotalAssignedTasks += sc.universe.size();
 
 			break;
-		case GREEDY_HIGH_TASK_COVERAGE:
+		case GREEDY_LARGE_WORKER_FANOUT_PRIORITY:
 
 			sc = new SetCoverGreedy_LargeTaskCoverage(
 					getContainerWithDeadline(), TimeInstance);
@@ -146,7 +146,7 @@ public class Crowdsensing extends GenericCrowd {
 			TotalAssignedTasks += sc.assignedTasks;
 
 			break;
-		case GREEDY_HYBRID:
+		case GREEDY_CLOSE_TO_DEADLINE:
 
 			sc = new SetCoverGreedy_CloseToDeadline(
 					getContainerWithDeadline(), TimeInstance);

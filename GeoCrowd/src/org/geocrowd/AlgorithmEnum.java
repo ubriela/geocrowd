@@ -29,11 +29,11 @@ public enum AlgorithmEnum {
 	// geocrowd journal
 
 	/** Set Cover Greedy. */
-	GREEDY,
+	GREEDY_HIGH_TASK_COVERAGE,
 	/** Low worker coverage priority. */
 	GREEDY_LOW_WORKER_COVERAGE,
 	/** High task coverage. */
-	GREEDY_HIGH_TASK_COVERAGE,
+	GREEDY_LARGE_WORKER_FANOUT_PRIORITY,
 	/** combine deadline and High task coverage. */
 	GREEDY_CLOSE_TO_DEADLINE
 };

@@ -46,7 +46,7 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
     public int minSetCover(){
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
-        HashSet<Integer> C = new HashSet<Integer>();
+        assignedTaskSet = new HashSet<Integer>();
        
         int set_size = S.size();
 
@@ -55,7 +55,7 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
             double maxElem = 0;
             for (HashMap<Integer, Integer> s : S) {
 
-                double newElem = weight(s, currentTimeInstance, C);
+                double newElem = weight(s, currentTimeInstance, assignedTaskSet);
                 if (newElem > maxElem)
                 {
                     maxElem = newElem;
@@ -67,9 +67,9 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
 
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
-            C.addAll(maxSet.keySet());
+            assignedTaskSet.addAll(maxSet.keySet());
         }
-        assignedTasks = C.size();
+        assignedTasks = assignedTaskSet.size();
         return set_size - S.size();
     }
     

@@ -10,7 +10,7 @@
  * question.
  *
  * Contributors: Hien To - initial implementation
- ******************************************************************************
+ * *****************************************************************************
  */
 package test.geocrowd;
 
@@ -32,13 +32,11 @@ public class CrowdsensingTest {
      */
     @Test
     public void test() {
-        int totalAssignedTasks = 0;
-        int totalAssignedWorkers = 0;
         long totalTime = 0;
         double avgTW = 0.0;
         double avgWT = 0.0;
 
-        for (int k = 0; k < 20; k++) {
+        for (int k = 0; k < 1; k++) {
 
             System.out.println("+++++++ Iteration: " + (k + 1));
             GenericCrowd.DATA_SET = DatasetEnum.GOWALLA;
@@ -108,19 +106,17 @@ public class CrowdsensingTest {
                     + " *************");
             System.out.println("#Total workers: " + crowdsensing.WorkerCount);
             System.out.println("#Total tasks: " + crowdsensing.TaskCount);
-            totalAssignedWorkers += crowdsensing.TotalAssignedWorkers;
-            totalAssignedTasks += crowdsensing.TotalAssignedTasks;
-
-            double avgAssignedWorkers = ((double) totalAssignedWorkers)
+            
+            double avgAssignedWorkers = ((double) Crowdsensing.TotalAssignedWorkers)
                     / ((k + 1) * Constants.TIME_INSTANCE);
-            double avgAssignedTasks = ((double) totalAssignedTasks)
+            double avgAssignedTasks = ((double) Crowdsensing.TotalAssignedTasks)
                     / ((k + 1) * Constants.TIME_INSTANCE);
             long avgTime = (totalTime) / ((k + 1) * Constants.TIME_INSTANCE);
 
             System.out.println("Total assigned workers: "
-                    + totalAssignedWorkers + "   #of rounds:" + (k + 1)
+                    + Crowdsensing.TotalAssignedWorkers + "   #of rounds:" + (k + 1)
                     + "  avg: " + avgAssignedWorkers);
-            System.out.println("Total assigned tasks: " + totalAssignedTasks
+            System.out.println("Total assigned tasks: " + Crowdsensing.TotalAssignedTasks
                     + "   #of rounds:" + (k + 1) + "  avg: "
                     + avgAssignedTasks);
             System.out.println("Total time: " + totalTime + "   # of rounds: "

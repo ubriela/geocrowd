@@ -35,6 +35,7 @@ public abstract class SetCover {
      * All the task index in the candidate tasks (not the task list).
      */
     public HashSet<Integer> universe = null;
+    public HashSet<Integer> assignedTaskSet = null;
 
     /**
      * The assigned tasks.

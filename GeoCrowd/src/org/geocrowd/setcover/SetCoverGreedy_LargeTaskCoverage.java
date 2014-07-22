@@ -75,7 +75,8 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
     public int minSetCover() {
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
-        HashSet<Integer> C = new HashSet<Integer>();
+//        HashSet<Integer> C = new HashSet<Integer>();
+        assignedTaskSet = new HashSet<Integer>();
 
 //        ArrayList<HashMap<Integer, Integer>> AW = new ArrayList<>();
 //        int totalTasks = 0;
@@ -93,7 +94,7 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
                 // how many elements in s that are not in C
                 int newElem = 0;
                 for (Integer i : s.keySet()) {
-                    if (!C.contains(i)) {
+                    if (!assignedTaskSet.contains(i)) {
                         newElem++;
                     }
                 }
@@ -115,31 +116,11 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
 
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
-            C.addAll(maxSet.keySet());
+            assignedTaskSet.addAll(maxSet.keySet());
         }
         
-        assignedTasks = C.size();
-        /*
-        //compute tasks per worker
-        totalAssignedWorkers = set_size - S.size();
-        if (totalAssignedWorkers > 0) {
-            averageTasksPerWorker = totalTasks * 1.0 / totalAssignedWorkers;
-        }
-        //compute workers per task
-        int totalWorkers = 0;
-        for (Integer indexTid : C) {
-            int numWorkerCoverTask = 0;
-            for (Object set : AW) {
-                if (((HashMap) set).containsKey(indexTid)) {
-                    numWorkerCoverTask += 1;
-                }
-            }
-            totalWorkers += numWorkerCoverTask;
-        }
-        if (!C.isEmpty()) {
-            averageWorkersPerTask = totalWorkers * 1.0 / C.size();
-        }
-        */
+        assignedTasks = assignedTaskSet.size();
+        System.out.println("#Task assigned: "+assignedTasks);
         return set_size - S.size();
     }
 }

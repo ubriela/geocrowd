@@ -61,7 +61,7 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
     public int minSetCover() {
         ArrayList<HashSet<Integer>> S = (ArrayList<HashSet<Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
-        HashSet<Integer> C = new HashSet<Integer>();
+        assignedTaskSet = new HashSet<Integer>();
 
         ArrayList<HashSet<Integer>> AW = new ArrayList<>();
 
@@ -77,17 +77,17 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
                 int newElem = 0;
 
                 for (Integer i : s) {
-                    if (!C.contains(i)) {
+                    if (!assignedTaskSet.contains(i)) {
                         newElem++;
                     }
                 }
                 if (newElem > maxElem) {
                     maxElem = newElem;
                     maxSet = s;
-                    numAssociateSet = computeAssociateSets(S, s, C);
+                    numAssociateSet = computeAssociateSets(S, s, assignedTaskSet);
                 } else if (newElem == maxElem) //compare associate sets , choose the smaller
                 {
-                    int n = computeAssociateSets(S, s, C);
+                    int n = computeAssociateSets(S, s, assignedTaskSet);
                     if (n < numAssociateSet) {
                         maxElem = newElem;
                         maxSet = s;
@@ -98,7 +98,8 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
 
             S.remove(maxSet);
             Q.removeAll(maxSet);
-            C.addAll(maxSet);
+            assignedTaskSet.addAll(maxSet);
+            
         }
 
         //compute workers per task

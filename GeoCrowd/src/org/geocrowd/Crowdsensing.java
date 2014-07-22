@@ -161,7 +161,8 @@ public class Crowdsensing extends GenericCrowd {
 		 * them from task list.
 		 */
 		ArrayList<Integer> assignedTasks = new ArrayList<Integer>();
-		Iterator it = sc.universe.iterator();
+//		Iterator it = sc.universe.iterator();
+                Iterator it = sc.assignedTaskSet.iterator();
 		while (it.hasNext()) {
 			Integer candidateIndex = (Integer) it.next();
 			assignedTasks.add(candidateTaskIndices.get(candidateIndex));
@@ -187,6 +188,7 @@ public class Crowdsensing extends GenericCrowd {
 	@Override
 	public void readTasks(String fileName) {
 		int listCount = taskList.size();
+                int numNewTask = 0;
 		try {
 			FileReader reader = new FileReader(fileName);
 			BufferedReader in = new BufferedReader(reader);
@@ -202,10 +204,12 @@ public class Crowdsensing extends GenericCrowd {
 				taskList.add(listCount, t);
 				listCount++;
 				TaskCount++;
+                                numNewTask++;
 			}
 			in.close();
 		} catch (Exception e) {
 		}
+                System.out.println("#new Tasks: "+ numNewTask);
 	}
 
 	/**

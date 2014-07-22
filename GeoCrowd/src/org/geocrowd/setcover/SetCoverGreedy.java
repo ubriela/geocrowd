@@ -36,7 +36,7 @@ public class SetCoverGreedy extends SetCover {
 	public int minSetCover() {
         ArrayList<HashSet<Integer>> S = (ArrayList<HashSet<Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
-        HashSet<Integer> C = new HashSet<Integer>();
+        assignedTaskSet = new HashSet<Integer>();
         
         int set_size = S.size();
 
@@ -48,7 +48,7 @@ public class SetCoverGreedy extends SetCover {
                 // how many elements in s that are not in C
                 int newElem = 0;
                 for (Integer i : s) {
-                    if (!C.contains(i)) {
+                    if (!assignedTaskSet.contains(i)) {
                         newElem++;
                     }
                 }
@@ -61,7 +61,7 @@ public class SetCoverGreedy extends SetCover {
             
             S.remove(maxSet);
             Q.removeAll(maxSet);
-            C.addAll(maxSet);
+            assignedTaskSet.addAll(maxSet);
         }
      
 

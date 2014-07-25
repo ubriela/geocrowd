@@ -763,7 +763,7 @@ public class ProcessDataSet {
                     sb_temp.append(",[");
                     for (int j = 0; j < User_Categories.get(u_id).size(); j++) {
                         if (j > 0 && j < User_Categories.get(u_id).size()) {
-                            sb_temp.append(",");
+                            sb_temp.append(',');
                         }
                         sb_temp.append(String.valueOf(Expertise
                                 .indexOf(User_Categories.get(u_id).get(j))));

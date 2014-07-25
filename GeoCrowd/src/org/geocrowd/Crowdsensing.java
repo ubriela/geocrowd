@@ -22,10 +22,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.geocrowd.common.Constants;
-import org.geocrowd.common.MBR;
 import org.geocrowd.common.crowdsource.GenericWorker;
 import org.geocrowd.common.crowdsource.SensingTask;
-import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.setcover.SetCover;
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy_CloseToDeadline;

@@ -104,7 +104,7 @@ public class SpecializedWorker extends RegionWorker {
 		Iterator<Integer> it = expertise.iterator();
 		while (it.hasNext()) {
 			sb.append(it.next());
-			sb.append(",");
+			sb.append(',');
 		}
 		return sb.substring(0, sb.length() - 1);
 	}

@@ -265,7 +265,8 @@ public class Geocrowd extends GenericCrowd {
 			TaskCount += Constants.TaskNo;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -333,7 +334,8 @@ public class Geocrowd extends GenericCrowd {
 			}
 			WorkerCount += workerNo;
 			out.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1028,7 +1030,8 @@ public class Geocrowd extends GenericCrowd {
 				TaskCount++;
 			}
 			in.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1061,7 +1064,8 @@ public class Geocrowd extends GenericCrowd {
 			TaskCount += allTasks.size();
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1106,7 +1110,8 @@ public class Geocrowd extends GenericCrowd {
 			TaskCount += Constants.TaskNo;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -1209,7 +1214,8 @@ public class Geocrowd extends GenericCrowd {
 			}
 
 			in.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		WorkerCount += cnt;
 		System.out.println("#Total workers: " + WorkerCount);

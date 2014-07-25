@@ -24,7 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-import org.datasets.gowalla.Point;
+import org.geocrowd.common.Point;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
@@ -280,7 +280,7 @@ public class ProcessDataSet {
                 obj_towrite.put("user_id", user);
                 obj_towrite.put("date", datereview);
                 sb.append(obj_towrite.toJSONString());
-                sb.append("\n");
+                sb.append('\n');
                 c++;
             }
             Utils.writefile2(sb.toString(), Constant.curtail_review);
@@ -473,7 +473,7 @@ public class ProcessDataSet {
             int type_chosen = Expertise.indexOf(TaskType);
             sb.append(lat + "," + lng + "," + time + "," + dens + ","
                     + type_chosen);
-            sb.append("\n");
+            sb.append('\n');
             c++;
         }
     }
@@ -495,7 +495,7 @@ public class ProcessDataSet {
             while (col_it.hasNext()) {
                 int col = (Integer) col_it.next();
                 sb.append(row + "," + col + "," + Density.get(row).get(col));
-                sb.append("\n");
+                sb.append('\n');
             }
         }
         Utils.writefile2(sb.toString(), Constant.entropy);
@@ -625,7 +625,7 @@ public class ProcessDataSet {
                 sb_temp.append(",[");
                 for (int j = 0; j < User_Categories.get(u_id).size(); j++) {
                     if (j > 0 && j < User_Categories.get(u_id).size()) {
-                        sb_temp.append(",");
+                        sb_temp.append(',');
                     }
                     sb_temp.append(String.valueOf(Expertise
                             .indexOf(User_Categories.get(u_id).get(j))));
@@ -672,7 +672,7 @@ public class ProcessDataSet {
             }
             
             // compute MCD
-            double mcd = org.geocrowd.util.Utils.MCD(points.get(0), points);
+            double mcd = org.geocrowd.common.Utils.MCD(points.get(0), points);
             sb.append(mcd + "\n");
         }
         

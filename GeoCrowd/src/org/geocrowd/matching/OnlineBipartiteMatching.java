@@ -10,7 +10,7 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.matching.online;
+package org.geocrowd.matching;
 
 import java.util.ArrayList;
 import java.util.HashMap;

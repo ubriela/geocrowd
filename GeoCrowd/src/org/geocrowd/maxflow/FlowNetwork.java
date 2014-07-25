@@ -15,8 +15,8 @@ package org.geocrowd.maxflow;
 import java.util.*;
 
 import org.geocrowd.AlgorithmEnum;
-import org.geocrowd.common.SpecializedTask;
-import org.geocrowd.common.SpecializedWorker;
+import org.geocrowd.common.crowdsource.SpecializedTask;
+import org.geocrowd.common.crowdsource.SpecializedWorker;
 
 // TODO: Auto-generated Javadoc
 /*************************************************************************

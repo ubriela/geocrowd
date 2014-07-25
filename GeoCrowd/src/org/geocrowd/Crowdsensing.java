@@ -14,22 +14,23 @@ package org.geocrowd;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.geocrowd.common.GenericWorker;
+import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
-import org.geocrowd.common.SensingTask;
-import org.geocrowd.common.SpecializedTask;
+import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.crowdsource.SensingTask;
+import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.setcover.SetCover;
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
 import org.geocrowd.setcover.SetCoverGreedy_LargeTaskCoverage;
-import org.geocrowd.util.Constants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -207,7 +208,8 @@ public class Crowdsensing extends GenericCrowd {
                                 numNewTask++;
 			}
 			in.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
                 System.out.println("#new Tasks: "+ numNewTask);
 	}

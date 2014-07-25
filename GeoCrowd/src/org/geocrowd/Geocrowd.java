@@ -21,21 +21,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.datasets.gowalla.PreProcess;
-import org.datasets.gowalla.Range;
-import org.datasets.gowalla.UniformGenerator;
 import org.geocrowd.common.Cell;
-import org.geocrowd.common.GenericTask;
+import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
-import org.geocrowd.common.MatchPair;
-import org.geocrowd.common.SpecializedTask;
-import org.geocrowd.common.SpecializedWorker;
+import org.geocrowd.common.Range;
+import org.geocrowd.common.UniformGenerator;
+import org.geocrowd.common.crowdsource.GenericTask;
+import org.geocrowd.common.crowdsource.MatchPair;
+import org.geocrowd.common.crowdsource.SpecializedTask;
+import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.EntropyRecord;
 import org.geocrowd.matching.Hungarian;
+import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.geocrowd.matching.Utility;
-import org.geocrowd.matching.online.OnlineBipartiteMatching;
-import org.geocrowd.util.Constants;
 
 import cplex.BPMatchingCplex;
 

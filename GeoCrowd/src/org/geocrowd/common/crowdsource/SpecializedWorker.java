@@ -10,11 +10,13 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.common;
+package org.geocrowd.common.crowdsource;
 
 
 import java.util.HashSet;
 import java.util.Iterator;
+
+import org.geocrowd.common.MBR;
 
 // TODO: Auto-generated Javadoc
 /**

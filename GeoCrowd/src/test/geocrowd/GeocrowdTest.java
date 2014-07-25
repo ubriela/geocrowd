@@ -23,10 +23,10 @@ import org.geocrowd.DatasetEnum;
 import org.geocrowd.GenericCrowd;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.AlgorithmEnum;
+import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
-import org.geocrowd.common.SpecializedWorker;
-import org.geocrowd.matching.online.OnlineBipartiteMatching;
-import org.geocrowd.util.Constants;
+import org.geocrowd.common.crowdsource.SpecializedWorker;
+import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.junit.Test;
 
 // TODO: Auto-generated Javadoc

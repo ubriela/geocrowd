@@ -10,7 +10,7 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.datasets.gowalla;
+package org.geocrowd;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -20,14 +20,16 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.geocrowd.DatasetEnum;
+import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
-import org.geocrowd.common.SpecializedTask;
-import org.geocrowd.common.SpecializedWorker;
+import org.geocrowd.common.Point;
+import org.geocrowd.common.Range;
+import org.geocrowd.common.UniformGenerator;
+import org.geocrowd.common.Utils;
+import org.geocrowd.common.crowdsource.SpecializedTask;
+import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.Observation;
-import org.geocrowd.util.Constants;
-import org.geocrowd.util.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -418,7 +420,7 @@ public class PreProcess {
 			while (it.hasNext()) {
 				Integer t = it.next();
 				ArrayList<Point> pts = data.get(t);
-				MBR mbr = Utils.computeMBR(pts);
+				MBR mbr = MBR.computeMBR(pts);
 				double d = mbr.diagonalLength();
 				sum += d;
 				count ++;
@@ -544,7 +546,7 @@ public class PreProcess {
 											// the worker list, if yes -->
 											// update his maxTass and R
 					for (SpecializedWorker o : workers) {
-						if (o.getUserID() == userID) {
+						if (o.getUserID().equals(userID)) {
 							o.incMaxTaskNo(); // set maxTask as the number of
 												// check-ins
 
@@ -670,7 +672,8 @@ public class PreProcess {
 						+ exp + "]\n");
 			}
 			out.close();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		System.out.println("Sum of all maxTask:" + maxSumTaskWorkers);
 	}

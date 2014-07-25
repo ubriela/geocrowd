@@ -18,7 +18,7 @@ import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.Crowdsensing;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.GenericCrowd;
-import org.geocrowd.util.Constants;
+import org.geocrowd.common.Constants;
 import org.junit.Test;
 
 // TODO: Auto-generated Javadoc

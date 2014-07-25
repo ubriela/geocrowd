@@ -17,9 +17,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.geocrowd.common.GenericTask;
-import org.geocrowd.common.GenericWorker;
-import org.geocrowd.util.Utils;
+import org.geocrowd.common.crowdsource.GenericTask;
+import org.geocrowd.common.crowdsource.GenericWorker;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -155,7 +154,7 @@ public abstract class GenericCrowd {
 	 */
 	public double distanceWorkerTask(GenericWorker worker, GenericTask task) {
 		if (DATA_SET == DatasetEnum.GOWALLA || DATA_SET == DatasetEnum.YELP)
-			return Utils.computeDistance(worker, task);
+			return worker.distanceToTask(task);
 
 		// not geographical coordinates
 		double distance = Math.sqrt((worker.getLatitude() - task.getLat())

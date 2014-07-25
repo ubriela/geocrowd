@@ -25,7 +25,7 @@ import java.util.HashSet;
  */
 public class SetCoverGreedy_CloseToDeadline extends SetCover {
 
-     
+     private int k=-4;
    
     /**
 	 * Instantiates a new sets the cover greedy combine deadline.
@@ -52,11 +52,11 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
 
         while (!Q.isEmpty()) {
             HashMap<Integer, Integer> maxSet = null;
-            double maxElem = 0;
+            double maxElem = -10000000;
             for (HashMap<Integer, Integer> s : S) {
 
                 double newElem = weight(s, currentTimeInstance, assignedTaskSet);
-                if (newElem > maxElem)
+                if (newElem > maxElem && newElem >=k)
                 {
                     maxElem = newElem;
                     maxSet = s;
@@ -94,10 +94,12 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
         {
             if(!C.contains(t))
             {
+                if(s.get(t)-current_time_instance ==1)
+                    return -1;
                 numElem ++;
                 d += s.get(t)-current_time_instance;
             }
         }
-        return numElem*1.0-(Math.pow((d+1),0.5));
+        return -d/numElem;
     }
 }

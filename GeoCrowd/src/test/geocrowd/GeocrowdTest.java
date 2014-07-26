@@ -167,7 +167,7 @@ public class GeocrowdTest {
 				System.out.println("---------- Time instance: " + (i + 1));
 
 				switch (Geocrowd.DATA_SET) {
-				case GOWALLA:
+				case GOWALLA: 
 					geoCrowd.readTasks(Constants.gowallaTaskFileNamePrefix + i
 							+ ".txt");
 					break;
@@ -196,7 +196,9 @@ public class GeocrowdTest {
 				System.out.println("#Workers: " + geoCrowd.workerList.size());
 				System.out.println("scheduling...");
 				double startTime = System.nanoTime();
+				
 				geoCrowd.onlineMatching();
+				
 				double runtime = (System.nanoTime() - startTime) / 1000000000.0;
 				totalTime += runtime;
 				System.out.println("Time: " + runtime);

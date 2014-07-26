@@ -42,7 +42,7 @@ public class Constants {
 	// worker want to get
 
 	/** The Max range perc. */
-	public static double MaxRangePerc = 0.05; // maximum range of an mbr is 5%
+	public static double MaxRangePerc = 0.2; // maximum range of an mbr is 5%
 	// of the entire x or y
 	// dimensionF
 

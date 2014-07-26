@@ -74,8 +74,6 @@ public class GeocrowdOnline extends Geocrowd {
 					array[row][j] = -1;
 			row++;
 		}
-		
-		Utility.print(array);
 
 		double[][] origin = Utility.copyOf(array);
 
@@ -94,13 +92,25 @@ public class GeocrowdOnline extends Geocrowd {
 		Hungarian HA = new Hungarian(array);
 		int[] r = HA.execute(array);
 
+		
 		ArrayList<Integer> assignedTasks = new ArrayList<Integer>();
+		ArrayList<Integer> assignedWorkers = new ArrayList<Integer>();
+		
 		/* remove the solved task from task list */
-		for (int i = r.length - 1; i >= 0; i--)
-			if (origin[i][r[i]] < 0)
-				assignedTasks.add(r[i]);
+		for (int i = r.length - 1; i >= 0; i--) {
+			if (origin[i][r[i]] == -1) {
+				if (isTranpose) {
+					assignedTasks.add(candidateTaskIndices.get(r[i]));
+					assignedWorkers.add(i);
+				} else {
+					assignedTasks.add(candidateTaskIndices.get(i));
+					assignedWorkers.add(r[i]);
+				}
+			}
+		}
 
 		removeAssignedTasks(assignedTasks);
+		removeAssignedWorkers(assignedWorkers);
 
 		TotalAssignedTasks += assignedTasks.size();
 
@@ -108,6 +118,8 @@ public class GeocrowdOnline extends Geocrowd {
 		System.out.println("#Remained workers: " + workerList.size());
 		System.out.println("#Expired tasks: " + TotalExpiredTask);
 
+		checkCorrectness();
+		
 		return assignedTasks.size();
 	}
 
@@ -134,6 +146,11 @@ public class GeocrowdOnline extends Geocrowd {
 		System.out.println("#Remained workers: " + workerList.size());
 		System.out.println("#Expired tasks: " + TotalExpiredTask);
 
+		checkCorrectness();
+		return assignedTasks.size();
+	}
+
+	private void checkCorrectness() {
 		// check correctness
 		if (TotalExpiredTask + taskList.size() + TotalAssignedTasks != TaskCount) {
 			System.out.println("Logic error!!!");
@@ -141,8 +158,7 @@ public class GeocrowdOnline extends Geocrowd {
 			System.out.println("#Remained tasks: " + taskList.size());
 			System.out.println("#Task count: " + TaskCount);
 		}
-
-		return assignedTasks.size();
+		
 	}
 
 	private void removeAssignedWorkers(ArrayList<Integer> assignedWorkers) {
@@ -177,14 +193,6 @@ public class GeocrowdOnline extends Geocrowd {
 		for (int idx = 0; idx < workerList.size(); idx++) {
 			SpecializedWorker w = (SpecializedWorker) workerList.get(idx);
 			rangeQuery(idx, w);
-		}
-		
-		// remove workers with no tasks
-		for (int i = containerPrune.length - 1; i >= 0; i--) {
-			if (containerPrune[i] == null || containerPrune[i].size() == 0) {
-				/* remove from worker list */
-				workerList.remove(i);
-			}
 		}
 		
 		for (int i = 0; i < containerPrune.length; i++) {

@@ -10,7 +10,7 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.util;
+package org.geocrowd.common;
 
 // TODO: Auto-generated Javadoc
 /**

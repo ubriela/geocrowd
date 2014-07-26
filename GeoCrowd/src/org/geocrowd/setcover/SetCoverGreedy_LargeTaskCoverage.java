@@ -15,7 +15,8 @@ package org.geocrowd.setcover;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import org.geocrowd.util.Constants;
+
+import org.geocrowd.common.Constants;
 
 // TODO: Auto-generated Javadoc
 /**

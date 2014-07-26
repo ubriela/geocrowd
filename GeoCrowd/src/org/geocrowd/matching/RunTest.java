@@ -125,7 +125,7 @@ public class RunTest {
 
 		double endTime = System.nanoTime();
 
-		System.out.println(" ");
+		System.out.println(' ');
 		System.out.println("sum is: " + sum);
 		System.out.println("The range of weight is [" + smallest + "->"
 				+ largest + "]");

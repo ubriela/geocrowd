@@ -10,7 +10,9 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.common;
+package org.geocrowd.common.crowdsource;
+
+import org.geocrowd.common.MBR;
 
 
 // TODO: Auto-generated Javadoc

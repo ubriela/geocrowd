@@ -10,11 +10,13 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.common;
+package org.geocrowd.common.crowdsource;
 
 
 import java.util.HashSet;
 import java.util.Iterator;
+
+import org.geocrowd.common.MBR;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -102,7 +104,7 @@ public class SpecializedWorker extends RegionWorker {
 		Iterator<Integer> it = expertise.iterator();
 		while (it.hasNext()) {
 			sb.append(it.next());
-			sb.append(",");
+			sb.append(',');
 		}
 		return sb.substring(0, sb.length() - 1);
 	}

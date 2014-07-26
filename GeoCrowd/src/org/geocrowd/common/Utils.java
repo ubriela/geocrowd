@@ -10,15 +10,10 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.util;
+package org.geocrowd.common;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import org.datasets.gowalla.Point;
-import org.geocrowd.common.GenericTask;
-import org.geocrowd.common.GenericWorker;
-import org.geocrowd.common.MBR;
 
 
 // TODO: Auto-generated Javadoc
@@ -27,49 +22,6 @@ import org.geocrowd.common.MBR;
  */
 public class Utils {
 
-	/**
-	 * distance bwn two geographical coord in km.
-	 * 
-	 * @param worker
-	 *            the worker
-	 * @param task
-	 *            the task
-	 * @return the double
-	 */
-	public static double computeDistance(GenericWorker worker, GenericTask task) {
-		return distance(worker.getLatitude(),worker.getLongitude(),task.getLat(),task.getLng());
-	}
-	
-	/**
-	 * Compute mbr.
-	 * 
-	 * @param points
-	 *            the points
-	 * @return the mbr
-	 */
-	public static MBR computeMBR(ArrayList<Point> points) {
-		double minLat = Double.MAX_VALUE;
-		double maxLat = (-1) * Double.MAX_VALUE;
-		double minLng = Double.MAX_VALUE;
-		double maxLng = (-1) * Double.MAX_VALUE;
-		Iterator<Point> it = points.iterator();
-		while (it.hasNext()) {
-			Point pt = it.next();
-			Double lat = pt.getX();
-			Double lng = pt.getY();
-
-			if (lat < minLat)
-				minLat = lat;
-			if (lat > maxLat)
-				maxLat = lat;
-			if (lng < minLng)
-				minLng = lng;
-			if (lng > maxLng)
-				maxLng = lng;
-		}
-
-		return new MBR(minLat, minLng, maxLat, maxLng);
-	}
 	
 	/**
 	 * Distance.

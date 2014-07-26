@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.geocrowd.AlgorithmEnum;
-import org.geocrowd.common.SpecializedTask;
+import org.geocrowd.common.crowdsource.SpecializedTask;
 
 // TODO: Auto-generated Javadoc
 /*************************************************************************

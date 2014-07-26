@@ -16,12 +16,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import org.datasets.gowalla.PreProcess;
 import org.geocrowd.DatasetEnum;
-import org.geocrowd.common.SpecializedWorker;
+import org.geocrowd.PreProcess;
+import org.geocrowd.common.Constants;
+import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.Observation;
-import org.geocrowd.util.Constants;
 import org.junit.Test;
 
 // TODO: Auto-generated Javadoc

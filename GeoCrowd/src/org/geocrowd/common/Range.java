@@ -10,7 +10,7 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.datasets.gowalla;
+package org.geocrowd.common;
 
 // TODO: Auto-generated Javadoc
 /**

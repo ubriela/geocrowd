@@ -10,7 +10,9 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.common;
+package org.geocrowd.common.crowdsource;
+
+import org.geocrowd.common.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -58,6 +60,19 @@ public class GenericWorker {
 		this.lat = lat;
 		this.lng = lng;
 		this.maxTaskNo = maxTaskNo;
+	}
+	
+	/**
+	 * distance to a task in km.
+	 * 
+	 * @param worker
+	 *            the worker
+	 * @param task
+	 *            the task
+	 * @return the double
+	 */
+	public double distanceToTask(GenericTask task) {
+		return Utils.distance(lat,lng,task.getLat(),task.getLng());
 	}
 
 	/**

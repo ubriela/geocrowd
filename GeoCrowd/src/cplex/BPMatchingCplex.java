@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.geocrowd.common.MatchPair;
+import org.geocrowd.common.crowdsource.MatchPair;
 
 import ilog.concert.IloException;
 import ilog.concert.IloNumVar;

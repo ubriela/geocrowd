@@ -12,7 +12,9 @@
 *******************************************************************************/
 package org.geocrowd.common;
 
-import org.geocrowd.util.Utils;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -21,6 +23,37 @@ import org.geocrowd.util.Utils;
  * @author Leyla
  */
 public class MBR {
+	
+	/**
+	 * Compute mbr.
+	 * 
+	 * @param points
+	 *            the points
+	 * @return the mbr
+	 */
+	public static MBR computeMBR(ArrayList<Point> points) {
+		double minLat = Double.MAX_VALUE;
+		double maxLat = (-1) * Double.MAX_VALUE;
+		double minLng = Double.MAX_VALUE;
+		double maxLng = (-1) * Double.MAX_VALUE;
+		Iterator<Point> it = points.iterator();
+		while (it.hasNext()) {
+			Point pt = it.next();
+			Double lat = pt.getX();
+			Double lng = pt.getY();
+
+			if (lat < minLat)
+				minLat = lat;
+			if (lat > maxLat)
+				maxLat = lat;
+			if (lng < minLng)
+				minLng = lng;
+			if (lng > maxLng)
+				maxLng = lng;
+		}
+
+		return new MBR(minLat, minLng, maxLat, maxLng);
+	}
 	
 	/**
 	 * Creates the mbr.

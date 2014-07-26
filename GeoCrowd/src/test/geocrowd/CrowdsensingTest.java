@@ -15,9 +15,9 @@
 package test.geocrowd;
 
 import org.geocrowd.AlgorithmEnum;
-import org.geocrowd.Crowdsensing;
+import org.geocrowd.GeocrowdSensing;
 import org.geocrowd.DatasetEnum;
-import org.geocrowd.GenericCrowd;
+import org.geocrowd.Geocrowd;
 import org.geocrowd.common.Constants;
 import org.junit.Test;
 
@@ -39,14 +39,14 @@ public class CrowdsensingTest {
         for (int k = 0; k < 1; k++) {
 
             System.out.println("+++++++ Iteration: " + (k + 1));
-            GenericCrowd.DATA_SET = DatasetEnum.GOWALLA;
-            GenericCrowd.algorithm = AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE;
-            Crowdsensing crowdsensing = new Crowdsensing();
+            Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+            Geocrowd.algorithm = AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE;
+            GeocrowdSensing crowdsensing = new GeocrowdSensing();
             // for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
             for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
                 System.out.println("---------- Time instance: " + (i + 1));
 
-                switch (GenericCrowd.DATA_SET) {
+                switch (Geocrowd.DATA_SET) {
                     case GOWALLA:
                         crowdsensing.readTasks(Constants.gowallaTaskFileNamePrefix
                                 + i + ".txt");
@@ -107,16 +107,16 @@ public class CrowdsensingTest {
             System.out.println("#Total workers: " + crowdsensing.WorkerCount);
             System.out.println("#Total tasks: " + crowdsensing.TaskCount);
             
-            double avgAssignedWorkers = ((double) Crowdsensing.TotalAssignedWorkers)
+            double avgAssignedWorkers = ((double) GeocrowdSensing.TotalAssignedWorkers)
                     / ((k + 1) * Constants.TIME_INSTANCE);
-            double avgAssignedTasks = ((double) Crowdsensing.TotalAssignedTasks)
+            double avgAssignedTasks = ((double) GeocrowdSensing.TotalAssignedTasks)
                     / ((k + 1) * Constants.TIME_INSTANCE);
             long avgTime = (totalTime) / ((k + 1) * Constants.TIME_INSTANCE);
 
             System.out.println("Total assigned workers: "
-                    + Crowdsensing.TotalAssignedWorkers + "   #of rounds:" + (k + 1)
+                    + GeocrowdSensing.TotalAssignedWorkers + "   #of rounds:" + (k + 1)
                     + "  avg: " + avgAssignedWorkers);
-            System.out.println("Total assigned tasks: " + Crowdsensing.TotalAssignedTasks
+            System.out.println("Total assigned tasks: " + GeocrowdSensing.TotalAssignedTasks
                     + "   #of rounds:" + (k + 1) + "  avg: "
                     + avgAssignedTasks);
             System.out.println("Total time: " + totalTime + "   # of rounds: "

@@ -42,9 +42,8 @@ import org.geocrowd.setcover.SetCoverGreedy_LargeTaskCoverage;
  * The main function minimizeWorkersMaximumTaskCoverage compute maximum
  * 
  */
-public class Crowdsensing extends GenericCrowd {
+public class GeocrowdSensing extends Geocrowd {
 
-	
 	/**
 	 * Gets the container with deadline.
 	 * 
@@ -59,9 +58,9 @@ public class Crowdsensing extends GenericCrowd {
 			HashMap<Integer, Integer> taskidsWithDeadline = new HashMap();
 			while (it2.hasNext()) {
 				Integer taskid = (Integer) it2.next();
-                                taskidsWithDeadline.put(taskid,
-						taskList.get(candidateTaskIndices.get(taskid)).getEntryTime()
-								+ Constants.TaskDuration);
+				taskidsWithDeadline.put(taskid,
+						taskList.get(candidateTaskIndices.get(taskid))
+								.getEntryTime() + Constants.TaskDuration);
 			}
 			containerWithDeadline.add(taskidsWithDeadline);
 		}
@@ -130,7 +129,8 @@ public class Crowdsensing extends GenericCrowd {
 
 			break;
 		case GREEDY_LOW_WORKER_COVERAGE:
-			sc = new SetCoverGreedy_LowWorkerCoverage(containerWorker, TimeInstance);
+			sc = new SetCoverGreedy_LowWorkerCoverage(containerWorker,
+					TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
 			TotalAssignedTasks += sc.universe.size();
@@ -147,12 +147,12 @@ public class Crowdsensing extends GenericCrowd {
 			break;
 		case GREEDY_CLOSE_TO_DEADLINE:
 
-			sc = new SetCoverGreedy_CloseToDeadline(
-					getContainerWithDeadline(), TimeInstance);
+			sc = new SetCoverGreedy_CloseToDeadline(getContainerWithDeadline(),
+					TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
 			TotalAssignedTasks += sc.assignedTasks;
-                        break;
+			break;
 		}
 
 		/**
@@ -160,8 +160,8 @@ public class Crowdsensing extends GenericCrowd {
 		 * them from task list.
 		 */
 		ArrayList<Integer> assignedTasks = new ArrayList<Integer>();
-//		Iterator it = sc.universe.iterator();
-                Iterator it = sc.assignedTaskSet.iterator();
+		// Iterator it = sc.universe.iterator();
+		Iterator it = sc.assignedTaskSet.iterator();
 		while (it.hasNext()) {
 			Integer candidateIndex = (Integer) it.next();
 			assignedTasks.add(candidateTaskIndices.get(candidateIndex));
@@ -186,30 +186,7 @@ public class Crowdsensing extends GenericCrowd {
 	 */
 	@Override
 	public void readTasks(String fileName) {
-		int listCount = taskList.size();
-                int numNewTask = 0;
-		try {
-			FileReader reader = new FileReader(fileName);
-			BufferedReader in = new BufferedReader(reader);
-			while (in.ready()) {
-				String line = in.readLine();
-				String[] parts = line.split(",");
-				double lat = Double.parseDouble(parts[0]);
-				double lng = Double.parseDouble(parts[1]);
-				int time = Integer.parseInt(parts[2]);
-				Double entropy = Double.parseDouble(parts[3]);
-				SensingTask t = new SensingTask(lat, lng, time, entropy);
-				t.setRadius(Constants.radius);
-				taskList.add(listCount, t);
-				listCount++;
-				TaskCount++;
-                                numNewTask++;
-			}
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-                System.out.println("#new Tasks: "+ numNewTask);
+		TaskCount += Parser.parseSensingTasks(fileName, taskList);
 	}
 
 	/**
@@ -221,38 +198,7 @@ public class Crowdsensing extends GenericCrowd {
 	 */
 	@Override
 	public void readWorkers(String fileName) {
-		workerList = new ArrayList();
-		int cnt = 0;
-		try {
-			FileReader reader = new FileReader(fileName);
-			BufferedReader in = new BufferedReader(reader);
-
-			while (in.ready()) {
-				String line = in.readLine();
-				line = line.replace("],[", ";");
-				String[] parts = line.split(";");
-				parts[0] = parts[0].replace(",[", ";");
-				String[] parts1 = parts[0].split(";");
-
-				String[] coords = parts1[0].split(",");
-
-				String userId = coords[0];
-				double lat = Double.parseDouble(coords[1]);
-				double lng = Double.parseDouble(coords[2]);
-				int maxT = Integer.parseInt(coords[3]);
-
-				GenericWorker w = new GenericWorker(userId, lat, lng, maxT);
-
-				workerList.add(w);
-				cnt++;
-			}
-
-			in.close();
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		WorkerCount += cnt;
+		WorkerCount += Parser.parseGenericWorkers(fileName, workerList);
 	}
 
 	/**
@@ -288,7 +234,8 @@ public class Crowdsensing extends GenericCrowd {
 
 				if (containerPrune[workerIdx] == null)
 					containerPrune[workerIdx] = new ArrayList();
-				containerPrune[workerIdx].add(candidateTaskIndices.indexOf(tid));
+				containerPrune[workerIdx]
+						.add(candidateTaskIndices.indexOf(tid));
 
 				/* inverted container */
 				if (!invertedContainer.containsKey(tid))

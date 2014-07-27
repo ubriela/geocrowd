@@ -66,7 +66,7 @@ public class Constant {
 	public static double realResolution = 0.001;
 	
 	/** The Worker per file. */
-	public static int WorkerPerFile = 1000;
+	public static int WorkerPerFile = 10000;
 	
 	/** The Task per file. */
 	public static int TaskPerFile = 500;

@@ -58,8 +58,64 @@ public class GeocrowdOnline extends Geocrowd {
 	}
 
 	private double llep() {
-		// TODO Auto-generated method stub
-		return 0;
+		/* rows represent workers, columns represent tasks */
+		double[][] array = new double[containerWorker.size()][candidateTaskIndices
+				.size()];
+		int row = 0;
+		for (int i = 0; i < containerWorker.size(); i++) {
+			ArrayList<Integer> tasks = containerWorker.get(i);
+			if (tasks != null)
+				for (int j : tasks)
+					array[row][j] = -1;
+			row++;
+		}
+
+		double[][] origin = Utility.copyOf(array);
+
+		/*
+		 * transpose the matrix if #workers < #tasks (because
+		 * rows(worker)>columns(task))
+		 */
+		boolean isTranpose = false;
+		if (array.length > array[0].length) {
+			array = Utility.transpose(array);
+			origin = Utility.transpose(origin);
+			isTranpose = true;
+			System.out.println("transpose!");
+		}
+
+		Hungarian HA = new Hungarian(array);
+		int[] r = HA.execute(array);
+
+		
+		ArrayList<Integer> assignedTasks = new ArrayList<Integer>();
+		ArrayList<Integer> assignedWorkers = new ArrayList<Integer>();
+		
+		/* remove the solved task from task list */
+		for (int i = r.length - 1; i >= 0; i--) {
+			if (origin[i][r[i]] == -1) {
+				if (isTranpose) {
+					assignedTasks.add(candidateTaskIndices.get(r[i]));
+					assignedWorkers.add(i);
+				} else {
+					assignedTasks.add(candidateTaskIndices.get(i));
+					assignedWorkers.add(r[i]);
+				}
+			}
+		}
+
+		removeAssignedTasks(assignedTasks);
+		removeAssignedWorkers(assignedWorkers);
+
+		TotalAssignedTasks += assignedTasks.size();
+
+		System.out.println("#Total assigned tasks: " + TotalAssignedTasks);
+		System.out.println("#Remained workers: " + workerList.size());
+		System.out.println("#Expired tasks: " + TotalExpiredTask);
+
+		checkCorrectness();
+		
+		return assignedTasks.size();
 	}
 
 	private double basic() {

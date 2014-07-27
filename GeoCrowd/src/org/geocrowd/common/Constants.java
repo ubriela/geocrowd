@@ -35,14 +35,14 @@ public class Constants {
 	public static int TIME_INSTANCE = 20;
 	
 	/** The Task duration. */
-	public static int TaskDuration = 10;// 20000; //duration of all tasks before
+	public static int TaskDuration = 5;// 20000; //duration of all tasks before
 										// they expire are fixed to 1000ms
 	/** The Max tasks per worker. */
 										public static int MaxTasksPerWorker = 20; // maximum # of tasks that a
 	// worker want to get
 
 	/** The Max range perc. */
-	public static double MaxRangePerc = 0.2; // maximum range of an mbr is 5%
+	public static double MaxRangePerc = 0.05; // maximum range of an mbr is 5%
 	// of the entire x or y
 	// dimensionF
 

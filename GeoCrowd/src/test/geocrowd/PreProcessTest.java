@@ -108,7 +108,7 @@ public class PreProcessTest extends PreProcess {
 	public void testGenerateSynWorkersTasks() {
 
 		PreProcess prep = new PreProcess();
-		PreProcess.DATA_SET = DatasetEnum.SKEWED;
+		PreProcess.DATA_SET = DatasetEnum.UNIFORM;
 		
 		prep.computeBoundary(Constants.skewedBoundary);
 		prep.readBoundary(PreProcess.DATA_SET);

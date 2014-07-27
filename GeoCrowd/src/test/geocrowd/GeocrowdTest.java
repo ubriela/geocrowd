@@ -160,9 +160,9 @@ public class GeocrowdTest {
 		for (int k = 0; k < 1; k++) {
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
-			Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+			Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 			Geocrowd.algorithm = AlgorithmEnum.BASIC;
-			GeocrowdOnline geoCrowd = new GeocrowdOnline("dataset/skew/worker/skew_workers0.txt");
+			GeocrowdOnline geoCrowd = new GeocrowdOnline("dataset/real/gowalla/worker/gowalla_workers0.txt");
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
 

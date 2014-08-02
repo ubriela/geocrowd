@@ -94,12 +94,12 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
         {
             if(!C.contains(t))
             {
-                if(s.get(t)-current_time_instance ==1)
+                if(s.get(t)-current_time_instance ==1) // If worker cover task will dead at next time instance 
                     return -1;
                 numElem ++;
                 d += s.get(t)-current_time_instance;
             }
         }
-        return -d/numElem;
+        return -d/numElem; //d/numElem: average time to deadline of new covered task
     }
 }

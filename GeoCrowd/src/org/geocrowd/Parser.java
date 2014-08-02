@@ -121,7 +121,7 @@ public class Parser {
 
 	public static int parseGenericWorkers(String fileName,
 			ArrayList<GenericWorker> workerList) {
-		workerList = new ArrayList();
+		workerList.clear(); //luan comment for test
 		int cnt = 0;
 		try {
 			FileReader reader = new FileReader(fileName);

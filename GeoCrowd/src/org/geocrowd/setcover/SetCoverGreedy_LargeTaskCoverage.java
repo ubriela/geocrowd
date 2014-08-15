@@ -118,9 +118,16 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
             assignedTaskSet.addAll(maxSet.keySet());
+            //compute average time to assign tasks 
+            for(Integer key: maxSet.keySet())
+            {
+                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration);
+            }
+            
         }
         
         assignedTasks = assignedTaskSet.size();
+        averageTime = averageTime*1.0/assignedTasks;
         System.out.println("#Task assigned: "+assignedTasks);
         return set_size - S.size();
     }

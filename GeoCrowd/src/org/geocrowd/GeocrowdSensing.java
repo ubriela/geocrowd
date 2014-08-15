@@ -143,7 +143,11 @@ public class GeocrowdSensing extends Geocrowd {
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
 			TotalAssignedTasks += sc.assignedTasks;
-
+                        if(sc.averageTime > 0)
+                        {
+                            AverageTimeToAssignTask += sc.averageTime;
+                            numTimeInstanceTaskAssign +=1;
+                        }
 			break;
 		case GREEDY_CLOSE_TO_DEADLINE:
 
@@ -152,6 +156,11 @@ public class GeocrowdSensing extends Geocrowd {
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
 			TotalAssignedTasks += sc.assignedTasks;
+                        if(sc.averageTime > 0)
+                        {
+                            AverageTimeToAssignTask += sc.averageTime;
+                            numTimeInstanceTaskAssign +=1;
+                        }
 			break;
 		}
 

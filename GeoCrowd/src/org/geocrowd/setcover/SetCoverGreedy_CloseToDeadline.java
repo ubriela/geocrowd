@@ -16,6 +16,7 @@ package org.geocrowd.setcover;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.geocrowd.common.Constants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -68,8 +69,15 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
             assignedTaskSet.addAll(maxSet.keySet());
+            //compute average time to assign tasks 
+            for(Integer key: maxSet.keySet())
+            {
+                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration);
+            }
         }
         assignedTasks = assignedTaskSet.size();
+        if(assignedTasks > 0)
+            averageTime = averageTime*1.0/assignedTasks;
         return set_size - S.size();
     }
     

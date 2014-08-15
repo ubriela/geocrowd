@@ -37,6 +37,7 @@ public abstract class SetCover {
     public HashSet<Integer> universe = null;
     public HashSet<Integer> assignedTaskSet = null;
 
+    public double averageTime=0;
     /**
      * The assigned tasks.
      */
@@ -70,7 +71,7 @@ public abstract class SetCover {
         listOfSets = new ArrayList<>();
         universe = new HashSet<>();
         currentTimeInstance = current_time_instance;
-        if (container.get(0).getClass().isInstance(new ArrayList())) {
+        if (container.size() > 0 && container.get(0).getClass().isInstance(new ArrayList())) {
             for (int i = 0; i < container.size(); i++) {
 
                 ArrayList<Integer> items = (ArrayList<Integer>) container.get(i);

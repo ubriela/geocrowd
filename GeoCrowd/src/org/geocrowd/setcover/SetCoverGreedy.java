@@ -44,7 +44,7 @@ public class SetCoverGreedy extends SetCover {
             HashSet<Integer> maxSet = null;
             int maxElem = 0;
             for (HashSet<Integer> s : S) {
-				// select the item set that maximize coverage
+		// select the item set that maximize coverage
                 // how many elements in s that are not in C
                 int newElem = 0;
                 for (Integer i : s) {
@@ -62,6 +62,8 @@ public class SetCoverGreedy extends SetCover {
             S.remove(maxSet);
             Q.removeAll(maxSet);
             assignedTaskSet.addAll(maxSet);
+            //compute average time to assign tasks in maxSet
+            
         }
      
 

@@ -15,7 +15,9 @@
 package org.geocrowd.setcover;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import org.geocrowd.common.Constants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,13 +39,14 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
      * @param C the c
      * @return the int
      */
-    private int computeAssociateSets(ArrayList<HashSet<Integer>> S, HashSet<Integer> s, HashSet<Integer> C) {
+    private int computeAssociateSets(ArrayList<HashMap<Integer, Integer>> S, HashMap<Integer, Integer> s,
+            HashSet<Integer> C) {
         int numAssociateSet = 0; //initialize  varibale
         //loop for uncovered elements
-        for (Integer i : s) {
+        for (Integer i : s.keySet()) {
             if (!C.contains(i)) { //check uncovered condition. 
-                for (HashSet<Integer> s2 : S) {
-                    if (s2.contains(i)) {
+                for (HashMap<Integer, Integer> s2 : S) {
+                    if (s2.keySet().contains(i)) {
                         numAssociateSet++;
                     }
                 }
@@ -59,7 +62,7 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
      */
     @Override
     public int minSetCover() {
-        ArrayList<HashSet<Integer>> S = (ArrayList<HashSet<Integer>>) listOfSets.clone();
+        ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         assignedTaskSet = new HashSet<Integer>();
 
@@ -68,15 +71,15 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
         int set_size = S.size();
 
         while (!Q.isEmpty()) {
-            HashSet<Integer> maxSet = null;
+            HashMap<Integer, Integer> maxSet = null;
             int maxElem = 0;
             int numAssociateSet = 0; // number of sets associates with maxSet.
-            for (HashSet<Integer> s : S) {
+            for (HashMap<Integer, Integer> s : S) {
                 // select the item set that maximize coverage
                 // how many elements in s that are not in C
                 int newElem = 0;
 
-                for (Integer i : s) {
+                for (Integer i : s.keySet()) {
                     if (!assignedTaskSet.contains(i)) {
                         newElem++;
                     }
@@ -97,12 +100,18 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
             }
 
             S.remove(maxSet);
-            Q.removeAll(maxSet);
-            assignedTaskSet.addAll(maxSet);
-            
+            Q.removeAll(maxSet.keySet());
+            assignedTaskSet.addAll(maxSet.keySet());
+            for(Integer key: maxSet.keySet())
+            {
+                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration)+1;
+            }
         }
 
         //compute workers per task
+        assignedTasks = assignedTaskSet.size();
+        averageTime = averageTime*1.0/assignedTasks;
+        System.out.println("#Task assigned: "+assignedTasks);
         return set_size - S.size();
     }
 }

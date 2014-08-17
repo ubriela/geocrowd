@@ -13,7 +13,9 @@
 package org.geocrowd.setcover;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import org.geocrowd.common.Constants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,20 +36,20 @@ public class SetCoverGreedy extends SetCover {
 	 */
     @Override
 	public int minSetCover() {
-        ArrayList<HashSet<Integer>> S = (ArrayList<HashSet<Integer>>) listOfSets.clone();
+        ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         assignedTaskSet = new HashSet<Integer>();
         
         int set_size = S.size();
 
         while (!Q.isEmpty()) {
-            HashSet<Integer> maxSet = null;
+            HashMap<Integer, Integer> maxSet = null;
             int maxElem = 0;
-            for (HashSet<Integer> s : S) {
+            for (HashMap<Integer, Integer> s : S) {
 		// select the item set that maximize coverage
                 // how many elements in s that are not in C
                 int newElem = 0;
-                for (Integer i : s) {
+                for (Integer i : s.keySet()) {
                     if (!assignedTaskSet.contains(i)) {
                         newElem++;
                     }
@@ -60,12 +62,18 @@ public class SetCoverGreedy extends SetCover {
 
             
             S.remove(maxSet);
-            Q.removeAll(maxSet);
-            assignedTaskSet.addAll(maxSet);
+            Q.removeAll(maxSet.keySet());
+            assignedTaskSet.addAll(maxSet.keySet());
+            for(Integer key: maxSet.keySet())
+            {
+                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration)+1;
+            }
             //compute average time to assign tasks in maxSet
             
         }
-     
+        assignedTasks = assignedTaskSet.size();
+        averageTime = averageTime*1.0/assignedTasks;
+        System.out.println("#Task assigned: "+assignedTasks);
 
         return set_size - S.size();
     }

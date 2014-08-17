@@ -33,7 +33,7 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
    
     
     /** The k. */
-    Integer k =2 ;
+    Integer k =4 ;
     
     
 
@@ -121,7 +121,7 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
             //compute average time to assign tasks 
             for(Integer key: maxSet.keySet())
             {
-                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration);
+                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration)+1;
             }
             
         }

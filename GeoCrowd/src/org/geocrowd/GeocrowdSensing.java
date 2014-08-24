@@ -125,12 +125,13 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy(getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
 			TotalAssignedWorkers += minAssignedWorkers;
-			TotalAssignedTasks += sc.universe.size();
+			TotalAssignedTasks += sc.assignedTasks;
                         if(sc.averageTime > 0)
                         {
                             AverageTimeToAssignTask += sc.averageTime;
                             numTimeInstanceTaskAssign +=1;
                             System.out.println("average time: "+sc.averageTime);
+                            System.out.println("total assign tasks: "+sc.assignedTasks );
                         }
 			break;
 		case GREEDY_LOW_WORKER_COVERAGE:

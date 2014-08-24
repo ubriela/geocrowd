@@ -1,15 +1,17 @@
-/*******************************************************************************
-* @ Year 2013
-* This is the source code of the following papers. 
-* 
-* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
-* 
-* 
-* Please contact the author Hien To, ubriela@gmail.com if you have any question.
+/**
+ * *****************************************************************************
+ * @ Year 2013 This is the source code of the following papers.
+ * 
+* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla
+ * Kazemi, Cyrus Shahabi.
+ * 
 *
-* Contributors:
-* Hien To - initial implementation
-*******************************************************************************/
+ * Please contact the author Hien To, ubriela@gmail.com if you have any
+ * question.
+ * 
+* Contributors: Hien To - initial implementation
+******************************************************************************
+ */
 package org.geocrowd.setcover;
 
 import java.util.ArrayList;
@@ -21,58 +23,50 @@ import org.geocrowd.common.Constants;
 // TODO: Auto-generated Javadoc
 /**
  * The Class SetCoverGreedyWaitTillDeadline.
- * 
+ *
  * @author Luan
  */
-public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
+public class SetCoverGreedy_LargeTaskCoverage extends SetCover {
 
-    
+    /**
+     * The k.
+     */
+    Integer k = 4;
 
-   
-    
-   
-    
-    /** The k. */
-    Integer k =4 ;
-    
-    
-
-    /** The average tasks per worker. */
+    /**
+     * The average tasks per worker.
+     */
     public double averageTasksPerWorker;
-    
-    /** The average workers per task. */
+
+    /**
+     * The average workers per task.
+     */
     public double averageWorkersPerTask;
 
     public SetCoverGreedy_LargeTaskCoverage(ArrayList container, Integer current_time_instance) {
         super(container, current_time_instance);
     }
 
-    
-    
-  
-
     /*
      Check worker contain elemenst will not available at next time
      */
     /**
-	 * Contain element dead at next time.
-	 * 
-	 * @param s
-	 *            the s
-	 * @param current_time_instance
-	 *            the current_time_instance
-	 * @return true, if successful
-	 */
+     * Contain element dead at next time.
+     *
+     * @param s the s
+     * @param current_time_instance the current_time_instance
+     * @return true, if successful
+     */
     private boolean containElementDeadAtNextTime(HashMap<Integer, Integer> s,
             int current_time_instance) {
-        return s.values().contains(current_time_instance+1) || (current_time_instance == Constants.TIME_INSTANCE - 1);
+        return s.values().contains(current_time_instance + 1) || (current_time_instance == Constants.TIME_INSTANCE - 1);
     }
 
     /**
-	 * Greedy algorithm.
-	 * 
-	 * @return number of assigned workers
-	 */
+     * Greedy algorithm.
+     *
+     * @return number of assigned workers
+     */
     public int minSetCover() {
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
@@ -82,7 +76,6 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
 //        ArrayList<HashMap<Integer, Integer>> AW = new ArrayList<>();
 //        int totalTasks = 0;
 //        int totalAssignedWorkers = 0;
-
         int set_size = S.size();
 
         while (!Q.isEmpty()) {
@@ -114,21 +107,22 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover{
             //update total task 
 //            totalTasks += maxSet.size();
 //            AW.add(maxSet);
-
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
-            assignedTaskSet.addAll(maxSet.keySet());
+
             //compute average time to assign tasks 
-            for(Integer key: maxSet.keySet())
-            {
-                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration)+1;
+            for (Integer key : maxSet.keySet()) {
+                if (!assignedTaskSet.contains(key)) {
+                    averageTime += currentTimeInstance - (maxSet.get(key) - Constants.TaskDuration) + 1;
+                }
             }
-            
+            assignedTaskSet.addAll(maxSet.keySet());
+
         }
-        
+
         assignedTasks = assignedTaskSet.size();
-        averageTime = averageTime*1.0/assignedTasks;
-        System.out.println("#Task assigned: "+assignedTasks);
+//        averageTime = averageTime*1.0/assignedTasks;
+        System.out.println("#Task assigned: " + assignedTasks);
         return set_size - S.size();
     }
 }

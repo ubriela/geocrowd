@@ -101,16 +101,18 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
 
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
-            assignedTaskSet.addAll(maxSet.keySet());
-            for(Integer key: maxSet.keySet())
-            {
-                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration)+1;
+            //compute average time to assign tasks 
+            for (Integer key : maxSet.keySet()) {
+                if (!assignedTaskSet.contains(key)) {
+                    averageTime += currentTimeInstance - (maxSet.get(key) - Constants.TaskDuration) + 1;
+                }
             }
+            assignedTaskSet.addAll(maxSet.keySet());
         }
 
         //compute workers per task
         assignedTasks = assignedTaskSet.size();
-        averageTime = averageTime*1.0/assignedTasks;
+//        averageTime = averageTime*1.0/assignedTasks;
         System.out.println("#Task assigned: "+assignedTasks);
         return set_size - S.size();
     }

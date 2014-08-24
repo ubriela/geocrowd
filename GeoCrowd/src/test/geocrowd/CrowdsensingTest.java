@@ -36,10 +36,10 @@ public class CrowdsensingTest {
         double avgTW = 0.0;
         double avgWT = 0.0;
 
-        for (int k = 0; k < 1; k++) {
+        for (int k = 0; k < 20; k++) {
 
             System.out.println("+++++++ Iteration: " + (k + 1));
-            Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+            Geocrowd.DATA_SET = DatasetEnum.YELP;
             Geocrowd.algorithm = AlgorithmEnum.GREEDY_LARGE_WORKER_FANOUT_PRIORITY;
             GeocrowdSensing crowdsensing = new GeocrowdSensing();
             // for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
@@ -47,7 +47,7 @@ public class CrowdsensingTest {
                 System.out.println("---------- Time instance: " + (i + 1));
 
                 switch (Geocrowd.DATA_SET) {
-                    case GOWALLA:
+                    case GOWALLA: 
                         crowdsensing.readTasks(Constants.gowallaTaskFileNamePrefix
                                 + i + ".txt");
                         crowdsensing.readWorkers(Constants.gowallaWorkerFileNamePrefix
@@ -122,7 +122,7 @@ public class CrowdsensingTest {
             System.out.println("Total time: " + totalTime + "   # of rounds: "
                     + (k + 1) + "  avg time:" + avgTime);
             
-            System.out.println("average time to assign tasks: "+ GeocrowdSensing.AverageTimeToAssignTask*1.0/(k+1)/Constants.TIME_INSTANCE);
+            System.out.println("average time to assign tasks: "+ GeocrowdSensing.AverageTimeToAssignTask*1.0/GeocrowdSensing.TotalAssignedTasks);
 
             System.out.println("avgTW/instance: "
                     + avgTW / ((k + 1) * Constants.TIME_INSTANCE));

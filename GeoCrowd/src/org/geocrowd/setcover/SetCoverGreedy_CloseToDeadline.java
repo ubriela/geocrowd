@@ -26,7 +26,7 @@ import org.geocrowd.common.Constants;
  */
 public class SetCoverGreedy_CloseToDeadline extends SetCover {
 
-     private int k=4;
+     private int k=3;
    
     /**
 	 * Instantiates a new sets the cover greedy combine deadline.
@@ -68,16 +68,17 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
 
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
-            assignedTaskSet.addAll(maxSet.keySet());
             //compute average time to assign tasks 
-            for(Integer key: maxSet.keySet())
-            {
-                averageTime += currentTimeInstance-(maxSet.get(key)-Constants.TaskDuration);
+            for (Integer key : maxSet.keySet()) {
+                if (!assignedTaskSet.contains(key)) {
+                    averageTime += currentTimeInstance - (maxSet.get(key) - Constants.TaskDuration) + 1;
+                }
             }
+            assignedTaskSet.addAll(maxSet.keySet());
         }
         assignedTasks = assignedTaskSet.size();
-        if(assignedTasks > 0)
-            averageTime = averageTime*1.0/assignedTasks;
+//        if(assignedTasks > 0)
+//            averageTime = averageTime*1.0/assignedTasks;
         return set_size - S.size();
     }
     

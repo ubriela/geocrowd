@@ -17,6 +17,7 @@ package org.geocrowd.setcover;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import org.geocrowd.common.Constants;
 
 // TODO: Auto-generated Javadoc
@@ -102,12 +103,15 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
             S.remove(maxSet);
             Q.removeAll(maxSet.keySet());
             //compute average time to assign tasks 
-            for (Integer key : maxSet.keySet()) {
+            Set assignedSet = maxSet.keySet();
+            for (Object kt : assignedSet) {
+                Integer key = (Integer)kt;
                 if (!assignedTaskSet.contains(key)) {
+                    
                     averageTime += currentTimeInstance - (maxSet.get(key) - Constants.TaskDuration) + 1;
+                    assignedTaskSet.add(key);
                 }
             }
-            assignedTaskSet.addAll(maxSet.keySet());
         }
 
         //compute workers per task

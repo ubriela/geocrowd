@@ -164,5 +164,9 @@ public static String skewedLocationDensityFileName = "dataset/skew/skew_loc_entr
 	// ------------------------------------------------------------
 	/** The radius. */
 	public static double radius = 5;		// task circle radius
+        /** enable random k */
+        public static boolean IS_RANDOM_K = false;
+        /** required number of responses*/
+        public static int K;
 
 }

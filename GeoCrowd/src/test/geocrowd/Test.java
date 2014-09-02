@@ -15,7 +15,10 @@ package test.geocrowd;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import org.geocrowd.common.Utils;
 import org.geocrowd.common.crowdsource.SpecializedTask;
 
 // TODO: Auto-generated Javadoc
@@ -32,6 +35,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		//test3();//
+//            testGetSubsets();
                 (new CrowdsensingTest()).test();
 	}
 	
@@ -99,4 +103,21 @@ public class Test {
 		for (SpecializedTask t : taskList)
 			System.out.println(t.toString());
 	}
+        
+        
+        public static void testGetSubsets(){
+            ArrayList<Integer> l=new ArrayList<Integer>();
+            for(int i=1;i<=5;i++)
+                l.add(i*2);
+            List<Set<Integer>> res = Utils.getSubsets(l, 3);
+            for(Set<Integer> r:res){
+                System.out.print("(");
+                for(Integer a:r){
+                    System.out.print(a);
+                }
+                System.out.println(")");
+                
+            }
+            
+        }
 }

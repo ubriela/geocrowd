@@ -20,15 +20,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-
+import java.util.List;
+import java.util.Set;
 import org.geocrowd.common.Constants;
+import org.geocrowd.common.Utils;
 import org.geocrowd.common.crowdsource.GenericWorker;
 import org.geocrowd.common.crowdsource.SensingTask;
+import org.geocrowd.common.crowdsource.VirtualWorker;
 import org.geocrowd.setcover.SetCover;
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy_CloseToDeadline;
-import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
 import org.geocrowd.setcover.SetCoverGreedy_LargeTaskCoverage;
+import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -109,6 +112,39 @@ public class GeocrowdSensing extends Geocrowd {
 		// }
 
 	}
+        
+        public void populateVitualWorkers()
+        {
+            /** sort task by k **/
+            int[] taskId=new int[taskList.size()];
+            for(int i=0;i<taskId.length;i++)
+                taskId[i]=i;
+            for(int i=0;i<taskList.size()-1;i++)
+            {
+                for(int j=i+1;j<taskList.size();j++)
+                {
+                    if(((SensingTask)taskList.get(i)).getK() <
+                           ((SensingTask)taskList.get(j)).getK())
+                    {
+                        int temp =taskId[i];
+                        taskId[i]=taskId[j];
+                        taskId[j]=temp;
+                    }
+                        
+                }
+            }
+            
+            /** create virtual worker */
+            for(int i=0;i<taskId.length;i++)
+            {
+                
+                int k= ((SensingTask)taskList.get(i)).getK();
+                ArrayList workerIdxs = invertedContainer.get(taskId[i]);
+                List<Set<Integer>> res = Utils.getSubsets(workerIdxs, k);
+                
+            }
+        
+        }
 
 	/**
 	 * Select minimum number of workers that cover maximum number of tasks.

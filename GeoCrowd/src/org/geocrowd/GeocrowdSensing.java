@@ -135,13 +135,19 @@ public class GeocrowdSensing extends Geocrowd {
             }
             
             /** create virtual worker */
+            
             for(int i=0;i<taskId.length;i++)
             {
                 
                 int k= ((SensingTask)taskList.get(i)).getK();
                 ArrayList workerIdxs = invertedContainer.get(taskId[i]);
                 List<Set<Integer>> res = Utils.getSubsets(workerIdxs, k);
-                
+                for(Set<Integer> r: res){
+                    //creat virtual worker 
+                    VirtualWorker vw= new VirtualWorker();
+                    vw.setWorkerIds((HashSet<Integer>) r);
+                    
+                }
             }
         
         }

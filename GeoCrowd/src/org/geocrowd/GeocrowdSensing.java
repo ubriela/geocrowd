@@ -114,7 +114,7 @@ public class GeocrowdSensing extends Geocrowd {
         // }
     }
 
-    public void populateVitualWorkers() {
+    public void  populateVitualWorkers() {
         /**
          * sort task by k *
          */
@@ -165,7 +165,16 @@ public class GeocrowdSensing extends Geocrowd {
             }
         }
         //update connection between virtual worker and task
-        
+        ArrayList<ArrayList> containerVirtualWorker = new ArrayList<>();
+        for(int i=0;i<vWorkerList.size();i++){
+            VirtualWorker vw = vWorkerList.get(i);
+            ArrayList<Integer> taskids = new ArrayList<>();
+            for(Integer j:vw.getWorkerIds()){
+                taskids.addAll(containerWorker.get(j));
+            }
+            containerVirtualWorker.set(i, taskids);
+        }
+        containerWorker= containerVirtualWorker;
 
     }
 

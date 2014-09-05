@@ -86,6 +86,9 @@ public class CrowdsensingTest {
                 crowdsensing.computeAverageWorkerPerTask();
                 avgTW += crowdsensing.avgTW;
                 avgWT += crowdsensing.avgWT;
+                
+                /** populate virtual workers*/
+                crowdsensing.populateVitualWorkers();
 
                 // debug
                 System.out.println("#Tasks: " + crowdsensing.taskList.size());

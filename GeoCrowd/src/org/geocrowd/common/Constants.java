@@ -167,6 +167,6 @@ public static String skewedLocationDensityFileName = "dataset/skew/skew_loc_entr
         /** enable random k */
         public static boolean IS_RANDOM_K = false;
         /** required number of responses*/
-        public static int K;
+        public static int K=2;
 
 }

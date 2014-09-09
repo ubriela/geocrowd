@@ -118,6 +118,7 @@ public class GeocrowdSensing extends Geocrowd {
         /**
          * sort task by k *
          */
+        
         int[] taskId = new int[taskList.size()];
         for (int i = 0; i < taskId.length; i++) {
             taskId[i] = i;
@@ -140,11 +141,14 @@ public class GeocrowdSensing extends Geocrowd {
         ArrayList<VirtualWorker> vWorkerList = new ArrayList<>();
 
         for (int i = 0; i < taskId.length; i++) {
-
-            int k = ((SensingTask) taskList.get(i)).getK();
+            
+            int k = ((SensingTask) taskList.get(taskId[i])).getK();
             //get workers cover task
             ArrayList workerIdxs = invertedContainer.get(taskId[i]);
+            if(workerIdxs==null)
+                continue;
             List<Set<Integer>> res = Utils.getSubsets(workerIdxs, k);
+           
             for (Set<Integer> r : res) {
 
                 //check exist or covered by existing virtual worker
@@ -156,6 +160,7 @@ public class GeocrowdSensing extends Geocrowd {
                         break;
                     }
                 }
+                
                 //creat virtual worker 
                 if (exist == false) {
                     VirtualWorker vw = new VirtualWorker();

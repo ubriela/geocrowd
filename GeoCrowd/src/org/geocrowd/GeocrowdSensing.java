@@ -40,6 +40,10 @@ import org.geocrowd.setcover.SetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.SetCoverGreedy_LargeTaskCoverage;
 import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
 
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnel;
+import com.google.common.hash.PrimitiveSink;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Crowdsensing. Used to find the minimum number of workers that cover
@@ -157,6 +161,15 @@ public class GeocrowdSensing extends Geocrowd {
 		}
 	};
 
+	Funnel<VirtualWorker> vworkerFunnel = new Funnel<VirtualWorker>() {
+		@Override
+		public void funnel(VirtualWorker w, PrimitiveSink into) {
+//			into.putInt(w.getWorkerIds().hashCode());
+			for (Integer i : w.getWorkerIds())
+				into.putInt(i);
+		}
+	};
+
 	public void populateVitualWorkers() {
 
 		/**
@@ -173,6 +186,8 @@ public class GeocrowdSensing extends Geocrowd {
 		/**
 		 * create virtual worker, using priority queue
 		 */
+		BloomFilter<VirtualWorker> bf = BloomFilter.create(vworkerFunnel,
+				1000000, 0.01);
 		PriorityQueue<VirtualWorker> vWorkerList = new PriorityQueue<>();
 
 		HashMap<Integer, ArrayList<SensingTask>> traversedTasks = new HashMap<Integer, ArrayList<SensingTask>>();
@@ -228,40 +243,37 @@ public class GeocrowdSensing extends Geocrowd {
 			 * about
 			 */
 
-			List<Set<Integer>> res = Utils.getSubsets(new ArrayList<>(
+			long start = System.nanoTime();
+			List<LinkedList<Integer>> res = Utils.getSubsets2(new ArrayList<>(
 					workerIdxs), t.getK());
-			System.out.println(workerIdxs.size() + " " + res.size());
+			long period = System.nanoTime() - start;
+			System.out.println(workerIdxs.size() + " " + res.size() + " "
+					+ period / 1000000.0);
 
 			/**
 			 * Do not need to check if the first set
 			 */
 			if (vWorkerList.size() == 0) {
-				for (Set<Integer> r : res)
+				for (LinkedList<Integer> r : res) {
 					vWorkerList.add(new VirtualWorker(r));
+					bf.put(new VirtualWorker(r));
+				}
 				continue;
 			}
-				
-			for (Set<Integer> r : res) {
 
+			start = System.nanoTime();
+			for (LinkedList<Integer> r : res) {
 				// check exist or covered by existing virtual worker
-				boolean exist = false;
-
-				for (VirtualWorker vw : vWorkerList) {
-					HashSet<Integer> vw_ids = vw.getWorkerIds();
-					if (vw_ids.containsAll(r)) {
-						exist = true;
-						break;
-					} else if (vw_ids.size() < r.size()) {
-						exist = false;
-						break;
-					}
+				VirtualWorker v = new VirtualWorker(r);
+				if (bf.mightContain(v)) {
+					if (!vWorkerList.contains(v))
+						vWorkerList.add(v);
+				} else {
+					vWorkerList.add(v);
 				}
-
-				// create virtual worker
-				if (exist == false)
-					vWorkerList.add(new VirtualWorker(r));
 			}
-
+			period = System.nanoTime() - start;
+			System.out.println("time (ms) " + period / 1000000.0);
 		}
 
 		/**
@@ -443,4 +455,5 @@ public class GeocrowdSensing extends Geocrowd {
 			tid++;
 		}// for loop
 	}
+
 }

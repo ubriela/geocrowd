@@ -14,12 +14,22 @@ package test.geocrowd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.geocrowd.common.Utils;
 import org.geocrowd.common.crowdsource.SpecializedTask;
+
+import com.googlecode.concurrenttrees.common.Iterables;
+import com.googlecode.concurrenttrees.common.PrettyPrinter;
+import com.googlecode.concurrenttrees.radix.ConcurrentRadixTree;
+import com.googlecode.concurrenttrees.radix.RadixTree;
+import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharArrayNodeFactory;
+import com.googlecode.concurrenttrees.radix.node.concrete.SmartArrayBasedNodeFactory;
+import com.googlecode.concurrenttrees.radix.node.util.PrettyPrintable;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,12 +44,68 @@ public class Test {
 	 *            the arguments
 	 */
 	public static void main(String[] args) {
-		// test3();//
-		// testGetSubsets();
-		// (new CrowdsensingTest()).test();
-		System.out.println(1);
-		System.out.println(Utils.distance(34.018413, -118.292142, 34.032782,
-				-118.291541));
+		RadixTree<Integer> tree = new ConcurrentRadixTree<Integer>(
+				new SmartArrayBasedNodeFactory());
+
+		tree.put("123", 1);
+		tree.put("235", 2);
+		tree.put("125", 3);
+		tree.put("45", 4);
+
+		System.out.println("Tree structure:");
+		// PrettyPrintable is a non-public API for testing, prints
+		// semi-graphical representations of trees...
+		PrettyPrinter.prettyPrint((PrettyPrintable) tree, System.out);
+
+		System.out.println();
+		System.out.println("Value for 'TEST' (exact match): "
+				+ tree.getValueForExactKey("TEST"));
+		System.out.println();
+		System.out.println("Keys starting with 'T': "
+				+ Iterables.toString(tree.getKeysStartingWith("13")));
+		System.out.println();
+		System.out.println("Values for keys starting with 'TE': "
+				+ Iterables.toString(tree.getValuesForKeysStartingWith("12")));
+		System.out.println();
+
+		// HashSet<Integer> h1 = new HashSet<Integer>();
+		// h1.add(1);
+		// h1.add(2);
+		// h1.add(3);
+		// h1.add(4);
+		// h1.add(3);
+		// HashSet<Integer> h2 = new HashSet<Integer>();
+		// h2.add(1);
+		// h2.add(2);
+		// h2.add(3);
+		// h2.add(4);
+		//
+		// System.out.println(h1.equals(h2));
+
+		// ArrayList<Integer> w1 = new ArrayList<Integer>(h1);
+		// ArrayList<Integer> w2 = new ArrayList<Integer>(h2);
+		//
+		// Collections.sort(w1);
+		// Collections.sort(w2);
+		//
+		// int k = 10;
+		// int max = Math.min(w1.size() - 1, w2.size() - 1);
+		// for (int i = 0; i <= max; i++) {
+		// if (w1.get(i) > w2.get(i))
+		// k = -1;
+		// else if (w1.get(i) < w2.get(i))
+		// k = 1;
+		// else if (i < max)
+		// continue;
+		// else if (i == w1.size() - 1 && i == w2.size() - 1)
+		// k= 0;
+		// else if (i == w1.size() - 1)
+		// k= 1;
+		// else if (i == w2.size() - 1)
+		// k= -1;
+		// }
+		//
+		// System.out.println(k);
 	}
 
 	/**

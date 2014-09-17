@@ -15,8 +15,10 @@
 package org.geocrowd.common;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -106,11 +108,38 @@ public class Utils {
 		// "guess" x is not in the subset
 		getSubsets(superSet, k, idx + 1, current, solution);
 	}
+	
+	private static void getSubsets2(List<Integer> superSet, int k, int idx,
+			Set<Integer> current, List<LinkedList<Integer>> solution) {
+		// successful stop clause
+		if (current.size() == k) {
+			LinkedList<Integer> ll = new LinkedList<>(current);
+			Collections.sort(ll);
+			solution.add(ll);
+			return;
+		}
+		// unseccessful stop clause
+		if (idx == superSet.size()) {
+			return;
+		}
+		Integer x = superSet.get(idx);
+		current.add(x);
+		// "guess" x is in the subset
+		getSubsets2(superSet, k, idx + 1, current, solution);
+		current.remove(x);
+		// "guess" x is not in the subset
+		getSubsets2(superSet, k, idx + 1, current, solution);
+	}
+	
+	public static List<LinkedList<Integer>> getSubsets2(List<Integer> superSet, int k) {
+		List<LinkedList<Integer>> res = new ArrayList<>();
+		getSubsets2(superSet, k, 0, new HashSet<Integer>(), res);
+		return res;
+	}
 
 	public static List<Set<Integer>> getSubsets(List<Integer> superSet, int k) {
 		List<Set<Integer>> res = new ArrayList<>();
 		getSubsets(superSet, k, 0, new HashSet<Integer>(), res);
 		return res;
 	}
-
 }

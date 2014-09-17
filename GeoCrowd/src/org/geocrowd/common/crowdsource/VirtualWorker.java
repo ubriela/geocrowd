@@ -6,30 +6,35 @@
 
 package org.geocrowd.common.crowdsource;
 
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
  *
  * @author luan
  */
-public class VirtualWorker extends  GenericWorker  implements Comparable<VirtualWorker> {
-    
-    private HashSet<Integer> workerIds=new HashSet<Integer>();
+public class VirtualWorker extends GenericWorker implements
+		Comparable<VirtualWorker> {
 
-    public VirtualWorker(Set<Integer> r) {
-		this.workerIds = (HashSet<Integer>) r;
+	private LinkedList<Integer> workerIds = new LinkedList<Integer>();
+
+	public VirtualWorker(LinkedList<Integer> r) {
+		this.workerIds = (LinkedList<Integer>) r;
 	}
 
-	public HashSet<Integer> getWorkerIds() {
-        return workerIds;
-    }
+	public VirtualWorker(Set<Integer> r) {
+		workerIds = new LinkedList<Integer>(r);
+		Collections.sort(workerIds);
+	}
 
-    public void setWorkerIds(HashSet<Integer> workerIds) {
-        this.workerIds = workerIds;
-    }
-    
-    
+	public LinkedList<Integer> getWorkerIds() {
+		return workerIds;
+	}
+
+	public void setWorkerIds(LinkedList<Integer> workerIds) {
+		this.workerIds = workerIds;
+	}
 
 	@Override
 	public int hashCode() {
@@ -59,11 +64,32 @@ public class VirtualWorker extends  GenericWorker  implements Comparable<Virtual
 
 	@Override
 	public int compareTo(VirtualWorker o) {
+		
 		/* the virtual workers with larger size at head */
 		if (workerIds.size() > o.workerIds.size())
 			return -1;
 		else if (workerIds.size() < o.workerIds.size())
 			return 1;
-		return 0;
+		else {
+			LinkedList<Integer> w1 = workerIds;
+			LinkedList<Integer> w2 = o.getWorkerIds();
+			
+			int max = Math.min(w1.size() - 1, w2.size() - 1);
+			for (int i = 0; i <= max; i++) {
+				if (w1.get(i) > w2.get(i))
+					return -1;
+				else if (w1.get(i) < w2.get(i))
+					return 1;
+				else if (i < max)
+					continue;
+				else if (i == w1.size() - 1 && i == w2.size() - 1)
+					return 0;
+				else if (i == w1.size() - 1)
+					return 1;
+				else if (i == w2.size() - 1)
+					return -1;
+			}
+			return 0;
+		}
 	}
 }

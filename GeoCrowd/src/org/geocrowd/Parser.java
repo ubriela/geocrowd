@@ -15,7 +15,8 @@ import org.geocrowd.common.crowdsource.SpecializedWorker;
 
 public class Parser {
 
-	public static int parseSpecializedWorkers(String fileName, ArrayList<GenericWorker> workerList) {
+	public static int parseSpecializedWorkers(String fileName,
+			ArrayList<GenericWorker> workerList) {
 		int cnt = 0;
 		try {
 			FileReader reader = new FileReader(fileName);
@@ -107,8 +108,8 @@ public class Parser {
 				int time = Integer.parseInt(parts[2]);
 				Double entropy = Double.parseDouble(parts[3]);
 				SensingTask t = new SensingTask(lat, lng, time, entropy);
-				t.setRadius(Constants.radius);
-                                t.setK(Constants.K);
+				t.setRadius(Constants.diameter/2);
+				t.setK(Constants.K);
 				taskList.add(listCount, t);
 				listCount++;
 				cnt++;
@@ -122,7 +123,7 @@ public class Parser {
 
 	public static int parseGenericWorkers(String fileName,
 			ArrayList<GenericWorker> workerList) {
-		workerList.clear(); //luan comment for test
+		workerList.clear(); // luan comment for test
 		int cnt = 0;
 		try {
 			FileReader reader = new FileReader(fileName);

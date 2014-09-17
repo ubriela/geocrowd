@@ -34,11 +34,6 @@ public class SensingTask extends GenericTask {
     private double radius;		// of the task region
 
     /**
-     * the required number of assigned workers
-     */
-    private int k;
-
-    /**
      * Instantiates a new sensing task.
      *
      * @param radius the radius
@@ -75,29 +70,6 @@ public class SensingTask extends GenericTask {
      */
     public void setRadius(double radius) {
         this.radius = radius;
-    }
-
-    /**
-     *
-     * @param k
-     */
-    public void setK(int k) {
-        if (Constants.IS_RANDOM_K) {
-            this.k = k;
-        } else {
-            Random r = new Random();
-            this.k = r.nextInt(k) + 1;
-        }
-
-    }
-
-    /**
-     * Gets the K.
-     *
-     * @return the k
-     */
-    public int getK() {
-        return k;
     }
 
 }

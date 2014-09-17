@@ -164,9 +164,9 @@ public class Constants {
 
 	// ------------------------------------------------------------
 	/** The radius. */
-	public static double diameter = 4; // task circle radius
+	public static double diameter = 2; // task circle radius
 	/** enable random k */
 	public static boolean IS_RANDOM_K = true;
 	/** required number of responses */
-	public static int K = 2;
+	public static int K = 3;
 }

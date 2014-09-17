@@ -198,7 +198,7 @@ public class GeocrowdSensing extends Geocrowd {
 		for (final GenericTask t : sortedTaskList) {
 			// get workers cover task
 			int idx = mapTaskIndices.get(t);
-			System.out.print("#task = " + i++ + " #k=" + t.getK()
+			System.out.println("#task = " + i++ + " #k=" + t.getK()
 					+ " $vworkers = " + vWorkerList.size());
 
 			ArrayList<Integer> workerIdxs = null;
@@ -275,14 +275,17 @@ public class GeocrowdSensing extends Geocrowd {
 				// check exist or covered by existing virtual worker
 				VirtualWorker v = new VirtualWorker(r.getVector());
 				if (bf.mightContain(v)) {
-					if (!vWorkerList.contains(v))
+					if (!vWorkerList.contains(v)) {
 						vWorkerList.add(v);
-				} else {
+						bf.put(v);
+					}
+				} else {	/** 100% */
 					vWorkerList.add(v);
+					bf.put(v);
 				}
 			}
 			long period = System.nanoTime() - start;
-			System.out.println(" #workers = " + workerIdxs.size() + " time (ms) = " + period / 1000000.0);
+			System.out.println("      #workers = " + workerIdxs.size() + " time (ms) = " + period / 1000000.0);
 		}
 
 		/**

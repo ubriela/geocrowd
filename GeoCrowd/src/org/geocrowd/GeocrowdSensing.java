@@ -198,8 +198,8 @@ public class GeocrowdSensing extends Geocrowd {
 		for (final GenericTask t : sortedTaskList) {
 			// get workers cover task
 			int idx = mapTaskIndices.get(t);
-			System.out.println("#task = " + i++ + " #k=" + t.getK()
-					+ " $vtasks = " + vWorkerList.size());
+			System.out.print("#task = " + i++ + " #k=" + t.getK()
+					+ " $vworkers = " + vWorkerList.size());
 
 			ArrayList<Integer> workerIdxs = null;
 			if (invertedContainer.containsKey(idx))
@@ -245,7 +245,7 @@ public class GeocrowdSensing extends Geocrowd {
 			 * about
 			 */
 
-			long start = System.nanoTime();
+
 			// List<LinkedList<Integer>> res = Utils.getSubsets2(workerIdxs,
 			// t.getK());
 
@@ -253,14 +253,12 @@ public class GeocrowdSensing extends Geocrowd {
 					.createVector(workerIdxs);
 
 			// Create a multi-combination generator to generate 3-combinations
-			// of
-			// the initial vector
+			// of the initial vector
 			Generator<Integer> gen = Factory.createSimpleCombinationGenerator(
 					initialVector, t.getK());
 
-			long period = System.nanoTime() - start;
-			System.out.println(workerIdxs.size() + " " + period / 1000000.0);
-
+			long start = System.nanoTime();
+			
 			/**
 			 * Do not need to check if the first set
 			 */
@@ -283,8 +281,8 @@ public class GeocrowdSensing extends Geocrowd {
 					vWorkerList.add(v);
 				}
 			}
-			period = System.nanoTime() - start;
-			System.out.println("time (ms) " + period / 1000000.0);
+			long period = System.nanoTime() - start;
+			System.out.println(" #workers = " + workerIdxs.size() + " time (ms) = " + period / 1000000.0);
 		}
 
 		/**

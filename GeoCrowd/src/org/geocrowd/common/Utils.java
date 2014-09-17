@@ -22,6 +22,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.paukov.combinatorics.Factory;
+import org.paukov.combinatorics.Generator;
+import org.paukov.combinatorics.ICombinatoricsVector;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Utils.
@@ -108,7 +112,7 @@ public class Utils {
 		// "guess" x is not in the subset
 		getSubsets(superSet, k, idx + 1, current, solution);
 	}
-	
+
 	private static void getSubsets2(List<Integer> superSet, int k, int idx,
 			Set<Integer> current, List<LinkedList<Integer>> solution) {
 		// successful stop clause
@@ -130,8 +134,9 @@ public class Utils {
 		// "guess" x is not in the subset
 		getSubsets2(superSet, k, idx + 1, current, solution);
 	}
-	
-	public static List<LinkedList<Integer>> getSubsets2(List<Integer> superSet, int k) {
+
+	public static List<LinkedList<Integer>> getSubsets2(List<Integer> superSet,
+			int k) {
 		List<LinkedList<Integer>> res = new ArrayList<>();
 		getSubsets2(superSet, k, 0, new HashSet<Integer>(), res);
 		return res;

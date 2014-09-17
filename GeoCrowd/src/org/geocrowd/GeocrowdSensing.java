@@ -39,6 +39,9 @@ import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.SetCoverGreedy_LargeTaskCoverage;
 import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
+import org.paukov.combinatorics.Factory;
+import org.paukov.combinatorics.Generator;
+import org.paukov.combinatorics.ICombinatoricsVector;
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnel;
@@ -164,7 +167,7 @@ public class GeocrowdSensing extends Geocrowd {
 	Funnel<VirtualWorker> vworkerFunnel = new Funnel<VirtualWorker>() {
 		@Override
 		public void funnel(VirtualWorker w, PrimitiveSink into) {
-//			into.putInt(w.getWorkerIds().hashCode());
+			// into.putInt(w.getWorkerIds().hashCode());
 			for (Integer i : w.getWorkerIds())
 				into.putInt(i);
 		}
@@ -198,9 +201,9 @@ public class GeocrowdSensing extends Geocrowd {
 			System.out.println("#task = " + i++ + " #k=" + t.getK()
 					+ " $vtasks = " + vWorkerList.size());
 
-			HashSet<Integer> workerIdxs = null;
+			ArrayList<Integer> workerIdxs = null;
 			if (invertedContainer.containsKey(idx))
-				workerIdxs = new HashSet<Integer>(invertedContainer.get(idx));
+				workerIdxs = invertedContainer.get(idx);
 			/* tasks that are not covered by any worker */
 			if (workerIdxs == null)
 				continue;
@@ -213,10 +216,9 @@ public class GeocrowdSensing extends Geocrowd {
 			if (traversedTasks.containsKey(t.getK())) {
 				for (SensingTask st : traversedTasks.get(t.getK())) {
 					int idxj = mapTaskIndices.get(st);
-					HashSet<Integer> workerIdxsj = null;
+					ArrayList<Integer> workerIdxsj = null;
 					if (invertedContainer.containsKey(idxj))
-						workerIdxsj = new HashSet<Integer>(
-								invertedContainer.get(idxj));
+						workerIdxsj = invertedContainer.get(idxj);
 
 					if (workerIdxsj != null
 							&& workerIdxsj.containsAll(workerIdxs)) {
@@ -244,27 +246,36 @@ public class GeocrowdSensing extends Geocrowd {
 			 */
 
 			long start = System.nanoTime();
-			List<LinkedList<Integer>> res = Utils.getSubsets2(new ArrayList<>(
-					workerIdxs), t.getK());
+			// List<LinkedList<Integer>> res = Utils.getSubsets2(workerIdxs,
+			// t.getK());
+
+			ICombinatoricsVector<Integer> initialVector = Factory
+					.createVector(workerIdxs);
+
+			// Create a multi-combination generator to generate 3-combinations
+			// of
+			// the initial vector
+			Generator<Integer> gen = Factory.createSimpleCombinationGenerator(
+					initialVector, t.getK());
+
 			long period = System.nanoTime() - start;
-			System.out.println(workerIdxs.size() + " " + res.size() + " "
-					+ period / 1000000.0);
+			System.out.println(workerIdxs.size() + " " + period / 1000000.0);
 
 			/**
 			 * Do not need to check if the first set
 			 */
 			if (vWorkerList.size() == 0) {
-				for (LinkedList<Integer> r : res) {
-					vWorkerList.add(new VirtualWorker(r));
-					bf.put(new VirtualWorker(r));
+				for (ICombinatoricsVector<Integer> r : gen) {
+					vWorkerList.add(new VirtualWorker(r.getVector()));
+					bf.put(new VirtualWorker(r.getVector()));
 				}
 				continue;
 			}
 
 			start = System.nanoTime();
-			for (LinkedList<Integer> r : res) {
+			for (ICombinatoricsVector<Integer> r : gen) {
 				// check exist or covered by existing virtual worker
-				VirtualWorker v = new VirtualWorker(r);
+				VirtualWorker v = new VirtualWorker(r.getVector());
 				if (bf.mightContain(v)) {
 					if (!vWorkerList.contains(v))
 						vWorkerList.add(v);

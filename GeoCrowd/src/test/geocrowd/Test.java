@@ -22,6 +22,9 @@ import java.util.Set;
 
 import org.geocrowd.common.Utils;
 import org.geocrowd.common.crowdsource.SpecializedTask;
+import org.paukov.combinatorics.Factory;
+import org.paukov.combinatorics.Generator;
+import org.paukov.combinatorics.ICombinatoricsVector;
 
 import com.googlecode.concurrenttrees.common.Iterables;
 import com.googlecode.concurrenttrees.common.PrettyPrinter;
@@ -44,29 +47,41 @@ public class Test {
 	 *            the arguments
 	 */
 	public static void main(String[] args) {
-		RadixTree<Integer> tree = new ConcurrentRadixTree<Integer>(
-				new SmartArrayBasedNodeFactory());
+		   // Create the initial vector of (apple, orange)
+		   ICombinatoricsVector<String> initialVector = Factory.createVector(
+		      new ArrayList(){{ add(1); add(2); add(3); add(4); }} );
 
-		tree.put("123", 1);
-		tree.put("235", 2);
-		tree.put("125", 3);
-		tree.put("45", 4);
+		   // Create a multi-combination generator to generate 3-combinations of
+		   // the initial vector
+		   Generator<String> gen = Factory.createSimpleCombinationGenerator(initialVector, 3);
 
-		System.out.println("Tree structure:");
-		// PrettyPrintable is a non-public API for testing, prints
-		// semi-graphical representations of trees...
-		PrettyPrinter.prettyPrint((PrettyPrintable) tree, System.out);
-
-		System.out.println();
-		System.out.println("Value for 'TEST' (exact match): "
-				+ tree.getValueForExactKey("TEST"));
-		System.out.println();
-		System.out.println("Keys starting with 'T': "
-				+ Iterables.toString(tree.getKeysStartingWith("13")));
-		System.out.println();
-		System.out.println("Values for keys starting with 'TE': "
-				+ Iterables.toString(tree.getValuesForKeysStartingWith("12")));
-		System.out.println();
+		   // Print all possible combinations
+		      System.out.println(gen.generateAllObjects());
+		
+		
+//		RadixTree<Integer> tree = new ConcurrentRadixTree<Integer>(
+//				new SmartArrayBasedNodeFactory());
+//
+//		tree.put("123", 1);
+//		tree.put("235", 2);
+//		tree.put("125", 3);
+//		tree.put("45", 4);
+//
+//		System.out.println("Tree structure:");
+//		// PrettyPrintable is a non-public API for testing, prints
+//		// semi-graphical representations of trees...
+//		PrettyPrinter.prettyPrint((PrettyPrintable) tree, System.out);
+//
+//		System.out.println();
+//		System.out.println("Value for 'TEST' (exact match): "
+//				+ tree.getValueForExactKey("TEST"));
+//		System.out.println();
+//		System.out.println("Keys starting with 'T': "
+//				+ Iterables.toString(tree.getKeysStartingWith("13")));
+//		System.out.println();
+//		System.out.println("Values for keys starting with 'TE': "
+//				+ Iterables.toString(tree.getValuesForKeysStartingWith("12")));
+//		System.out.println();
 
 		// HashSet<Integer> h1 = new HashSet<Integer>();
 		// h1.add(1);

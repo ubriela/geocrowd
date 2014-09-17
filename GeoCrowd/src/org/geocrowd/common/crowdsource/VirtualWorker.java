@@ -6,9 +6,13 @@
 
 package org.geocrowd.common.crowdsource;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+
+import org.paukov.combinatorics.ICombinatoricsVector;
 
 /**
  *
@@ -17,10 +21,10 @@ import java.util.Set;
 public class VirtualWorker extends GenericWorker implements
 		Comparable<VirtualWorker> {
 
-	private LinkedList<Integer> workerIds = new LinkedList<Integer>();
+	private List<Integer> workerIds = new LinkedList<Integer>();
 
-	public VirtualWorker(LinkedList<Integer> r) {
-		this.workerIds = (LinkedList<Integer>) r;
+	public VirtualWorker(List<Integer> list) {
+		this.workerIds = list;
 	}
 
 	public VirtualWorker(Set<Integer> r) {
@@ -28,7 +32,7 @@ public class VirtualWorker extends GenericWorker implements
 		Collections.sort(workerIds);
 	}
 
-	public LinkedList<Integer> getWorkerIds() {
+	public List<Integer> getWorkerIds() {
 		return workerIds;
 	}
 
@@ -71,8 +75,8 @@ public class VirtualWorker extends GenericWorker implements
 		else if (workerIds.size() < o.workerIds.size())
 			return 1;
 		else {
-			LinkedList<Integer> w1 = workerIds;
-			LinkedList<Integer> w2 = o.getWorkerIds();
+			List<Integer> w1 = workerIds;
+			List<Integer> w2 = o.getWorkerIds();
 			
 			int max = Math.min(w1.size() - 1, w2.size() - 1);
 			for (int i = 0; i <= max; i++) {

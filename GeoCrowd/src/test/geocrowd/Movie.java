@@ -2,6 +2,8 @@ package test.geocrowd;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -15,7 +17,8 @@ import java.util.PriorityQueue;
  * @author ubriela
  *
  */
-public class Movie implements Comparator<Movie>{
+public class Movie implements Comparable<Movie>{
+	static final double VERY_SMALL_NUMBER = 0.000001;
 	private final int movieId;
 	private final float rating;
 	private List<Movie> similarMovies; // Similarity is bidirectional
@@ -41,6 +44,28 @@ public class Movie implements Comparator<Movie>{
 
 	public List<Movie> getSimilarMovies() {
 		return similarMovies;
+	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "Movie [movieId=" + movieId + ", rating=" + rating
+				+ ", similarMovies=" + similarMovies + "]";
+	}
+
+	public static void main(String[] args) {
+		final Movie A = new Movie(1, (float)1.2);
+		final Movie B = new Movie(2, (float)2.4);
+		final Movie C = new Movie(3, (float)3.6);
+		final Movie D = new Movie(4, (float)4.8);
+		A.similarMovies = new ArrayList<Movie>(){{add(B);add(C);}};
+		B.similarMovies = new ArrayList<Movie>(){{add(A);add(D);}};
+		C.similarMovies = new ArrayList<Movie>(){{add(A);add(D);}};
+		D.similarMovies = new ArrayList<Movie>(){{add(B);add(C);}};
+		
+		for (Movie m : Movie.getMovieRecommendations(A, 1))
+			System.out.println(m.getId());
 	}
 
     /*
@@ -68,13 +93,40 @@ public class Movie implements Comparator<Movie>{
 		 * 1) distance does not matter
 		 * 
 		 */
-		PriorityQueue<Movie> topKMovies = new PriorityQueue<Movie>(initialCapacity, comparator)
-		return null;
+		
+		HashSet<Movie> allSimilarMovies = new HashSet<Movie>();
+		allSimilarMovies.add(movie);
+		LinkedList<Movie> traversingMovies = new LinkedList<Movie>();
+		traversingMovies.add(movie);
+		PriorityQueue<Movie> topKMovies = new PriorityQueue<Movie>(numTopRatedSimilarMovies);
+		topKMovies.add(movie);
+
+		while (!traversingMovies.isEmpty()) {
+			Movie m = traversingMovies.pollFirst();
+			for (Movie n : m.getSimilarMovies()) {
+				if (!allSimilarMovies.contains(n)) {
+					allSimilarMovies.add(n);
+					topKMovies.add(n);
+					traversingMovies.addFirst(n);	// DFS
+					
+					/** keep queue size less than k */
+					if (topKMovies.size() > numTopRatedSimilarMovies)
+						topKMovies.poll();
+				} 
+			}
+		}
+		
+		return new ArrayList<Movie>(topKMovies);
 	}
 
+
 	@Override
-	public int compare(Movie o1, Movie o2) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int compareTo(Movie o) {
+		if (this.getRating() > o.getRating())
+			return 1;
+		else if (this.getRating() < o.getRating())
+			return -1;
+		else 
+			return 0;
 	}
 }

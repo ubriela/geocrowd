@@ -1,5 +1,12 @@
-Reference: Hien To, Leyla Kazemi, Cyrus Shahabi. GeoCrowd: A Server-Assigned Crowdsourcing Framework
+*** This repository is the implementation of the following papers: ***
 
+1) Hien To, Leyla Kazemi, Cyrus Shahabi. Geocrowd: A Server-Assigned Crowdsourcing Framework.
+
+Related studies:
+
+https://bitbucket.org/hto/privategeocrowd/
+
+https://bitbucket.org/hto/geocast/
 
 ---------------------- Version --------------------------
 1.1

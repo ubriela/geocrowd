@@ -15,6 +15,8 @@ package test.geocrowd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+
 import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
 
 // TODO: Auto-generated Javadoc
@@ -39,7 +41,7 @@ public class SetCoverGreedySmallestAssociateSetTest {
 		container.add(new ArrayList<Integer>(Arrays.asList(3, 5)));
 		
 		SetCoverGreedy_LowWorkerCoverage scg = new SetCoverGreedy_LowWorkerCoverage(container,1);
-		int no_set = scg.minSetCover();
+		HashSet<Integer> no_set = scg.minSetCover();
 		System.out.println(no_set);
 	}
 }

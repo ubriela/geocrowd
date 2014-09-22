@@ -14,6 +14,7 @@ package test.geocrowd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class SetCoverTest {
 		container.add(new ArrayList<Integer>(Arrays.asList(4, 5)));
 		
 		SetCoverGreedy scg = new SetCoverGreedy(container,1);
-		int no_set = scg.minSetCover();
-		System.out.println(no_set);
+		HashSet<Integer> no_set = scg.minSetCover();
+		System.out.println(no_set.size());
 	}
 }

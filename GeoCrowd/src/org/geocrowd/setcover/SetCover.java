@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.geocrowd.common.crowdsource.VirtualWorker;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class SetCover.
@@ -42,6 +44,11 @@ public abstract class SetCover {
      * The assigned tasks.
      */
     public int assignedTasks = 0;
+    
+    /**
+     * The assigned workers
+     */
+    public HashSet<Integer> assignWorkers = new HashSet<>();
     /**
      * The current time instance.
      */
@@ -101,6 +108,6 @@ public abstract class SetCover {
      *
      * @return the number of assigned workers
      */
-    public abstract int minSetCover();
+    public abstract HashSet<Integer> minSetCover();
 
 }

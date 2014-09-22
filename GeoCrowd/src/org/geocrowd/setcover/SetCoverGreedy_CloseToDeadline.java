@@ -45,7 +45,7 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
      * @see org.geocrowd.setcover.SetCoverGreedyWaitTillDeadline#minSetCover()
      */
     @Override
-    public int minSetCover(){
+    public HashSet<Integer> minSetCover(){
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         assignedTaskSet = new HashSet<Integer>();
@@ -55,13 +55,14 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
         while (!Q.isEmpty()) {
             HashMap<Integer, Integer> maxSet = null;
             double maxElem = 10000000;
-            for (HashMap<Integer, Integer> s : S) {
-
+            for (int o=0;o<S.size();o++) {
+            	HashMap<Integer, Integer> s = S.get(o);
                 double newElem = weight(s, currentTimeInstance, assignedTaskSet);
                 if (newElem < maxElem && (newElem <=k || currentTimeInstance==Constants.TIME_INSTANCE-1))
                 {
                     maxElem = newElem;
                     maxSet = s;
+                    assignWorkers.add(o);
                 }
             }
             if(maxSet == null)
@@ -84,7 +85,7 @@ public class SetCoverGreedy_CloseToDeadline extends SetCover {
         assignedTasks = assignedTaskSet.size();
 //        if(assignedTasks > 0)
 //            averageTime = averageTime*1.0/assignedTasks;
-        return set_size - S.size();
+        return assignWorkers;
     }
     
     /**

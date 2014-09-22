@@ -68,7 +68,7 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover {
      *
      * @return number of assigned workers
      */
-    public int minSetCover() {
+    public HashSet<Integer> minSetCover() {
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
 //        HashSet<Integer> C = new HashSet<Integer>();
@@ -82,8 +82,8 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover {
         while (!Q.isEmpty()) {
             HashMap<Integer, Integer> maxSet = null;
             int maxElem = 0;
-            for (HashMap<Integer, Integer> s : S) {
-
+            for ( int o=0;o<S.size();o++) {
+            	HashMap<Integer, Integer> s = S.get(o);
                 //
                 // select the item set that maximize coverage
                 // how many elements in s that are not in C
@@ -99,6 +99,7 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover {
                 {
                     maxElem = newElem;
                     maxSet = s;
+                    assignWorkers.add(o);
                 }
             }
             if (maxSet == null) {
@@ -126,6 +127,6 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCover {
         assignedTasks = assignedTaskSet.size();
 //        averageTime = averageTime*1.0/assignedTasks;
         System.out.println("#Task assigned: " + assignedTasks);
-        return set_size - S.size();
+        return assignWorkers;
     }
 }

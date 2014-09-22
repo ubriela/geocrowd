@@ -121,6 +121,7 @@ public class Test {
 		// }
 		//
 		// System.out.println(k);
+		      (new CrowdsensingTest()).test();
 	}
 
 	/**

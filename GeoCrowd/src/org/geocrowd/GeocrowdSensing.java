@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -55,15 +56,18 @@ import com.google.common.hash.PrimitiveSink;
  * into workerList and taskList. Then, function matchingTasksWorkers is
  * executed, which compute task set covered by any worker (i.e., container).
  * Note that this function also compute the invertedContainer.
- *
+ * 
  * The main function minimizeWorkersMaximumTaskCoverage compute maximum
- *
+ * 
  */
 public class GeocrowdSensing extends Geocrowd {
 
+	PriorityQueue<VirtualWorker> vWorkerList;
+	VirtualWorker[] vWorkerArray;
+
 	/**
 	 * Gets the container with deadline.
-	 *
+	 * 
 	 * @return a container with task deadline
 	 */
 	private ArrayList<HashMap<Integer, Integer>> getContainerWithDeadline() {
@@ -191,7 +195,7 @@ public class GeocrowdSensing extends Geocrowd {
 		 */
 		BloomFilter<VirtualWorker> bf = BloomFilter.create(vworkerFunnel,
 				1000000, 0.01);
-		PriorityQueue<VirtualWorker> vWorkerList = new PriorityQueue<>();
+		vWorkerList = new PriorityQueue<>();
 
 		HashMap<Integer, ArrayList<SensingTask>> traversedTasks = new HashMap<Integer, ArrayList<SensingTask>>();
 		int i = 0;
@@ -245,7 +249,6 @@ public class GeocrowdSensing extends Geocrowd {
 			 * about
 			 */
 
-
 			// List<LinkedList<Integer>> res = Utils.getSubsets2(workerIdxs,
 			// t.getK());
 
@@ -258,7 +261,7 @@ public class GeocrowdSensing extends Geocrowd {
 					initialVector, t.getK());
 
 			long start = System.nanoTime();
-			
+
 			/**
 			 * Do not need to check if the first set
 			 */
@@ -279,32 +282,41 @@ public class GeocrowdSensing extends Geocrowd {
 						vWorkerList.add(v);
 						bf.put(v);
 					}
-				} else {	/** 100% */
+				} else {
+					/** 100% */
 					vWorkerList.add(v);
 					bf.put(v);
 				}
 			}
 			long period = System.nanoTime() - start;
-			System.out.println("      #workers = " + workerIdxs.size() + " time (ms) = " + period / 1000000.0);
+			System.out.println("      #workers = " + workerIdxs.size()
+					+ " time (ms) = " + period / 1000000.0);
 		}
 
 		/**
 		 * update connection between virtual worker and task why not update at
 		 * the right after creating them?
 		 */
-		ArrayList<ArrayList> containerVirtualWorker = new ArrayList<>();
-
-		Iterator<VirtualWorker> it = vWorkerList.iterator();
-		while (it.hasNext()) {
-			VirtualWorker vw = it.next();
+		vWorkerArray =  vWorkerList.toArray(new VirtualWorker[0]);
+		ArrayList containerVirtualWorker = new ArrayList<>();
+		
+		// Iterator<VirtualWorker> it = vWorkerList.iterator();
+		// while (it.hasNext()) {
+		for (int o = 0; o < vWorkerArray.length; o++) {
+			
+			// VirtualWorker vw = it.next();
+			VirtualWorker vw = vWorkerArray[o];
+			
 			ArrayList<Integer> taskids = new ArrayList<>();
 			for (Integer j : vw.getWorkerIds()) {
-				taskids.addAll(containerWorker.get(j));
+				if (containerWorker.size() > j)
+					taskids.addAll(containerWorker.get(j));
 			}
-			containerVirtualWorker.add(taskids);
+			containerVirtualWorker.add(vw);
+			containerVirtualWorker.set(o, taskids);
 		}
 
-		containerWorker = containerVirtualWorker;
+		containerWorker =  containerVirtualWorker;
 	}
 
 	/**
@@ -315,13 +327,21 @@ public class GeocrowdSensing extends Geocrowd {
 	public void minimizeWorkersMaximumTaskCoverage() {
 
 		SetCover sc = null;
-		int minAssignedWorkers = 0;
+		HashSet<Integer> minAssignedWorkers ;
 
 		switch (algorithm) {
 		case GREEDY_HIGH_TASK_COVERAGE:
 			sc = new SetCoverGreedy(getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
-			TotalAssignedWorkers += minAssignedWorkers;
+			if (vWorkerArray.length > 0) {
+				HashSet<Integer> assignedWorkerList = new HashSet<>();
+				for(Integer i: minAssignedWorkers){
+					assignedWorkerList.add(i);
+				}
+				TotalAssignedWorkers += assignedWorkerList.size();
+			}
+			else 
+				TotalAssignedWorkers+=minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageTime > 0) {
 				AverageTimeToAssignTask += sc.averageTime;
@@ -334,7 +354,15 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_LowWorkerCoverage(
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
-			TotalAssignedWorkers += minAssignedWorkers;
+			if (vWorkerArray.length > 0) {
+				HashSet<Integer> assignedWorkerList = new HashSet<>();
+				for(Integer i: minAssignedWorkers){
+					assignedWorkerList.add(i);
+				}
+				TotalAssignedWorkers += assignedWorkerList.size();
+			}
+			else 
+				TotalAssignedWorkers+=minAssignedWorkers.size();
 			TotalAssignedTasks += sc.universe.size();
 			if (sc.averageTime > 0) {
 				AverageTimeToAssignTask += sc.averageTime;
@@ -347,7 +375,15 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_LargeTaskCoverage(
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
-			TotalAssignedWorkers += minAssignedWorkers;
+			if (vWorkerArray.length > 0) {
+				HashSet<Integer> assignedWorkerList = new HashSet<>();
+				for(Integer i: minAssignedWorkers){
+					assignedWorkerList.add(i);
+				}
+				TotalAssignedWorkers += assignedWorkerList.size();
+			}
+			else 
+				TotalAssignedWorkers+=minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageTime > 0) {
 				AverageTimeToAssignTask += sc.averageTime;
@@ -360,7 +396,15 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_CloseToDeadline(getContainerWithDeadline(),
 					TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
-			TotalAssignedWorkers += minAssignedWorkers;
+			if (vWorkerArray.length > 0) {
+				HashSet<Integer> assignedWorkerList = new HashSet<>();
+				for(Integer i: minAssignedWorkers){
+					assignedWorkerList.add(i);
+				}
+				TotalAssignedWorkers += assignedWorkerList.size();
+			}
+			else 
+				TotalAssignedWorkers+=minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageTime > 0) {
 				AverageTimeToAssignTask += sc.averageTime;
@@ -394,7 +438,7 @@ public class GeocrowdSensing extends Geocrowd {
 
 	/**
 	 * Read tasks from file.
-	 *
+	 * 
 	 * @param fileName
 	 *            the file name
 	 */
@@ -406,7 +450,7 @@ public class GeocrowdSensing extends Geocrowd {
 	/**
 	 * Read workers from file Working region of each worker is computed from his
 	 * past history.
-	 *
+	 * 
 	 * @param fileName
 	 *            the file name
 	 */
@@ -418,9 +462,9 @@ public class GeocrowdSensing extends Geocrowd {
 	/**
 	 * Compute input for one time instance, including container and
 	 * invertedTable.
-	 *
+	 * 
 	 * Find the tasks whose regions contain the worker
-	 *
+	 * 
 	 * @param workerIdx
 	 *            the worker idx
 	 */

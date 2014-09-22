@@ -62,7 +62,7 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
      * @return the int
      */
     @Override
-    public int minSetCover() {
+    public HashSet<Integer> minSetCover() {
         ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
         HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
         assignedTaskSet = new HashSet<Integer>();
@@ -75,9 +75,10 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
             HashMap<Integer, Integer> maxSet = null;
             int maxElem = 0;
             int numAssociateSet = 0; // number of sets associates with maxSet.
-            for (HashMap<Integer, Integer> s : S) {
+            for ( int o=0 ; o < S.size();o++) {
                 // select the item set that maximize coverage
                 // how many elements in s that are not in C
+            	HashMap<Integer, Integer> s = S.get(o);
                 int newElem = 0;
 
                 for (Integer i : s.keySet()) {
@@ -89,6 +90,7 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
                     maxElem = newElem;
                     maxSet = s;
                     numAssociateSet = computeAssociateSets(S, s, assignedTaskSet);
+                    assignWorkers.add(o);
                 } else if (newElem == maxElem) //compare associate sets , choose the smaller
                 {
                     int n = computeAssociateSets(S, s, assignedTaskSet);
@@ -96,6 +98,7 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
                         maxElem = newElem;
                         maxSet = s;
                         numAssociateSet = n;
+                        assignWorkers.add(o);
                     }
                 }
             }
@@ -118,6 +121,6 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
         assignedTasks = assignedTaskSet.size();
 //        averageTime = averageTime*1.0/assignedTasks;
         System.out.println("#Task assigned: "+assignedTasks);
-        return set_size - S.size();
+        return assignWorkers;
     }
 }

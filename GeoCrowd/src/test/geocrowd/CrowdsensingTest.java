@@ -36,7 +36,7 @@ public class CrowdsensingTest {
         double avgTW = 0.0;
         double avgWT = 0.0;
 
-        for (int k = 0; k < 20; k++) {
+        for (int k = 0; k < 1; k++) {
 
             System.out.println("+++++++ Iteration: " + (k + 1));
             Geocrowd.DATA_SET = DatasetEnum.GOWALLA;

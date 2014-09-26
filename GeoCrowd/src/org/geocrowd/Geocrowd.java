@@ -62,7 +62,7 @@ public abstract class Geocrowd {
 	public ArrayList<GenericWorker> workerList = new ArrayList<>();
 
 	/** maintain a set of current task list, not include expired ones. */
-	public ArrayList<GenericTask> taskList = new ArrayList<>();
+	public static ArrayList<GenericTask> taskList = new ArrayList<>();
 
 	/**
 	 * maintain tasks that participate in one time instance task assignment

@@ -37,6 +37,7 @@ import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.VirtualWorker;
 import org.geocrowd.setcover.SetCover;
 import org.geocrowd.setcover.SetCoverGreedy;
+import org.geocrowd.setcover.SetCoverGreedyUsingAliveTask;
 import org.geocrowd.setcover.SetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.SetCoverGreedy_LargeTaskCoverage;
 import org.geocrowd.setcover.SetCoverGreedy_LowWorkerCoverage;
@@ -297,16 +298,16 @@ public class GeocrowdSensing extends Geocrowd {
 		 * update connection between virtual worker and task why not update at
 		 * the right after creating them?
 		 */
-		vWorkerArray =  vWorkerList.toArray(new VirtualWorker[0]);
+		vWorkerArray = vWorkerList.toArray(new VirtualWorker[0]);
 		ArrayList containerVirtualWorker = new ArrayList<>();
-		
+
 		// Iterator<VirtualWorker> it = vWorkerList.iterator();
 		// while (it.hasNext()) {
 		for (int o = 0; o < vWorkerArray.length; o++) {
-			
+
 			// VirtualWorker vw = it.next();
 			VirtualWorker vw = vWorkerArray[o];
-			
+
 			ArrayList<Integer> taskids = new ArrayList<>();
 			for (Integer j : vw.getWorkerIds()) {
 				if (containerWorker.size() > j)
@@ -316,7 +317,7 @@ public class GeocrowdSensing extends Geocrowd {
 			containerVirtualWorker.set(o, taskids);
 		}
 
-		containerWorker =  containerVirtualWorker;
+		containerWorker = containerVirtualWorker;
 	}
 
 	/**
@@ -327,21 +328,34 @@ public class GeocrowdSensing extends Geocrowd {
 	public void minimizeWorkersMaximumTaskCoverage() {
 
 		SetCover sc = null;
-		HashSet<Integer> minAssignedWorkers ;
+		HashSet<Integer> minAssignedWorkers;
 
 		switch (algorithm) {
 		case GREEDY_HIGH_TASK_COVERAGE:
 			sc = new SetCoverGreedy(getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
-			if (vWorkerArray.length > 0) {
+			if (vWorkerArray != null && vWorkerArray.length > 0) {
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
-				for(Integer i: minAssignedWorkers){
+				for (Integer i : minAssignedWorkers) {
 					assignedWorkerList.add(i);
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
+			} else
+				TotalAssignedWorkers += minAssignedWorkers.size();
+			TotalAssignedTasks += sc.assignedTasks;
+			if (sc.averageTime > 0) {
+				AverageTimeToAssignTask += sc.averageTime;
+				numTimeInstanceTaskAssign += 1;
+				System.out.println("average time: " + sc.averageTime);
+				System.out.println("total assign tasks: " + sc.assignedTasks);
 			}
-			else 
-				TotalAssignedWorkers+=minAssignedWorkers.size();
+			break;
+		case GREEDY_HIGH_TASK_COVERAGE_ALIVE_TASK:
+			sc = new SetCoverGreedyUsingAliveTask(getContainerWithDeadline(),
+					TimeInstance);
+			minAssignedWorkers = sc.minSetCover();
+
+			TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageTime > 0) {
 				AverageTimeToAssignTask += sc.averageTime;
@@ -354,15 +368,14 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_LowWorkerCoverage(
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
-			if (vWorkerArray.length > 0) {
+			if (vWorkerArray != null && vWorkerArray.length > 0) {
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
-				for(Integer i: minAssignedWorkers){
+				for (Integer i : minAssignedWorkers) {
 					assignedWorkerList.add(i);
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
-			}
-			else 
-				TotalAssignedWorkers+=minAssignedWorkers.size();
+			} else
+				TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.universe.size();
 			if (sc.averageTime > 0) {
 				AverageTimeToAssignTask += sc.averageTime;
@@ -375,15 +388,14 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_LargeTaskCoverage(
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
-			if (vWorkerArray.length > 0) {
+			if (vWorkerArray != null && vWorkerArray.length > 0) {
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
-				for(Integer i: minAssignedWorkers){
+				for (Integer i : minAssignedWorkers) {
 					assignedWorkerList.add(i);
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
-			}
-			else 
-				TotalAssignedWorkers+=minAssignedWorkers.size();
+			} else
+				TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageTime > 0) {
 				AverageTimeToAssignTask += sc.averageTime;
@@ -396,15 +408,14 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_CloseToDeadline(getContainerWithDeadline(),
 					TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
-			if (vWorkerArray.length > 0) {
+			if (vWorkerArray != null && vWorkerArray.length > 0) {
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
-				for(Integer i: minAssignedWorkers){
+				for (Integer i : minAssignedWorkers) {
 					assignedWorkerList.add(i);
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
-			}
-			else 
-				TotalAssignedWorkers+=minAssignedWorkers.size();
+			} else
+				TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageTime > 0) {
 				AverageTimeToAssignTask += sc.averageTime;

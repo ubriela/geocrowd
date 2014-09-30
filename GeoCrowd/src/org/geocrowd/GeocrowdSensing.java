@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -64,8 +65,15 @@ import com.google.common.hash.PrimitiveSink;
  */
 public class GeocrowdSensing extends Geocrowd {
 
+	/**
+	 * Ranked by the size of worker set
+	 */
 	PriorityQueue<VirtualWorker> vWorkerList;
-	// vWorkerArray store virtual workers to easily get kth element.
+
+	/**
+	 * store all virtual workers to easily get k-th element. similar role to
+	 * workerList for redundant task assignment
+	 */
 	VirtualWorker[] vWorkerArray;
 
 	/**
@@ -101,7 +109,7 @@ public class GeocrowdSensing extends Geocrowd {
 		invertedContainer = new HashMap<Integer, ArrayList>();
 		candidateTaskIndices = new ArrayList();
 		taskSet = new HashSet<Integer>();
-		containerWorker = new ArrayList<ArrayList>();
+		containerWorker = new ArrayList<>();
 		containerPrune = new ArrayList[workerList.size()];
 
 		// remove expired task from task list
@@ -181,6 +189,17 @@ public class GeocrowdSensing extends Geocrowd {
 		}
 	};
 
+	/**
+	 * Virtual workers includes a set of worker ids that cover the same task.
+	 * 
+	 * This function is only used for the case of redundant task assignment.
+	 * 
+	 * Input: bipartite graph, in which each task has a parameter K - the number
+	 * of of needed task responses.
+	 * 
+	 * Output: container of virtual workers, similar to containerWorker so that
+	 * this function is plug-able
+	 */
 	public void populateVitualWorkers() {
 
 		/**
@@ -298,26 +317,29 @@ public class GeocrowdSensing extends Geocrowd {
 		}
 
 		/**
-		 * update connection between virtual worker and task why not update at
-		 * the right after creating them?
+		 * update connection between virtual worker and task.
 		 */
-		vWorkerArray = vWorkerList.toArray(new VirtualWorker[0]);
+
+		vWorkerArray = vWorkerList.toArray(new VirtualWorker[0]); // copy all
+																	// elems
 		ArrayList containerVirtualWorker = new ArrayList<>();
 
-		// Iterator<VirtualWorker> it = vWorkerList.iterator();
-		// while (it.hasNext()) {
+		/**
+		 * Iterate all worker virtual o
+		 */
 		for (int o = 0; o < vWorkerArray.length; o++) {
-
-			// VirtualWorker vw = it.next();
 			VirtualWorker vw = vWorkerArray[o];
 
-			ArrayList<Integer> taskids = new ArrayList<>();
-			for (Integer j : vw.getWorkerIds()) {
+			HashMap<Integer, Integer> taskids = new HashMap<>();
+			/**
+			 * Iterate all worker ids of virtual worker o
+			 */
+			for (Integer j : vw.getWorkerIds())
 				if (containerWorker.size() > j)
-					taskids.addAll(containerWorker.get(j));
-			}
-			containerVirtualWorker.add(vw);
-			containerVirtualWorker.set(o, taskids);
+					taskids.putAll((Map<? extends Integer, ? extends Integer>) containerWorker
+							.get(j));
+
+			containerVirtualWorker.add(taskids);
 		}
 
 		containerWorker = containerVirtualWorker;

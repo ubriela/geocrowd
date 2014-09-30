@@ -40,7 +40,7 @@ public class SetCoverGreedy_HighTaskCoverage extends SetCoverGreedy {
 	public HashSet<Integer> minSetCover() {
 		ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets
 				.clone();
-		
+
 		/**
 		 * Q is the universe of tasks
 		 */
@@ -51,13 +51,15 @@ public class SetCoverGreedy_HighTaskCoverage extends SetCoverGreedy {
 		 * Run until no more tasks to cover
 		 */
 		while (!Q.isEmpty()) {
-			int bestWorkerIndex = 0;	// track index of the best worker in S
+			int bestWorkerIndex = 0; // track index of the best worker in S
 			int maxNoUncoveredTasks = 0;
 			/**
-			 * Iterate all workers, find the one which covers maximum number of uncovered tasks
+			 * Iterate all workers, find the one which covers maximum number of
+			 * uncovered tasks
 			 */
 			for (int k = 0; k < S.size(); k++) {
-				HashMap<Integer, Integer> s = S.get(k);	// task set covered by current worker
+				HashMap<Integer, Integer> s = S.get(k); // task set covered by
+														// current worker
 				int noUncoveredTasks = 0;
 				for (Integer i : s.keySet()) {
 					if (!assignedTaskSet.contains(i)) {
@@ -69,22 +71,23 @@ public class SetCoverGreedy_HighTaskCoverage extends SetCoverGreedy {
 					bestWorkerIndex = k;
 				}
 			}
-			
+
 			assignWorkers.add(bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
 			S.remove(taskSet);
 			Q.removeAll(taskSet.keySet());
 
-			for (Integer taskidx : taskSet.keySet()) {
+			/**
+			 * compute average time to assign tasks in taskSet
+			 */
+			for (Integer taskidx : taskSet.keySet())
 				if (!assignedTaskSet.contains(taskidx)) {
 
 					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskidx) - Constants.TaskDuration) + 1;
+							- (taskSet.get(taskidx) - Constants.TaskDuration)
+							+ 1;
 					assignedTaskSet.add(taskidx);
 				}
-			}
-			// compute average time to assign tasks in maxSet
-
 		}
 		assignedTasks = assignedTaskSet.size();
 		// averageTime = averageTime*1.0/assignedTasks;

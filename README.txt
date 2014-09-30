@@ -8,6 +8,8 @@ https://bitbucket.org/hto/privategeocrowd/
 
 https://bitbucket.org/hto/geocast/
 
+https://bitbucket.org/hto/maximumcomplextask/
+
 ---------------------- Version --------------------------
 1.1
 

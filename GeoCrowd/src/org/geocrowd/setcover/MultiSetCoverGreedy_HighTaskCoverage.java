@@ -51,15 +51,16 @@ public class MultiSetCoverGreedy_HighTaskCoverage extends SetCoverGreedy {
 		HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
 
 		while (!Q.isEmpty()) {
-			HashMap<Integer, Integer> maxSet = null;
-			int maxElem = 0;
+			int bestWorkerIndex = 0; // track index of the best worker in S
+			int maxNoUncoveredTasks = 0;
+
 			/**
-			 * Iterate over worker set to select the item set that maximize
-			 * the uncovered tasks
+			 * Iterate over worker set to select the item set that maximize the
+			 * uncovered tasks
 			 */
 			for (int k = 0; k < S.size(); k++) {
 				HashMap<Integer, Integer> s = S.get(k);
-				int noIncompletedTasks = 0;
+				int noUncoveredTasks = 0;
 				/**
 				 * check if the task with id i is covered by < k workers
 				 */
@@ -67,34 +68,38 @@ public class MultiSetCoverGreedy_HighTaskCoverage extends SetCoverGreedy {
 					if (assignedTaskMap.get(i) == null
 							|| assignedTaskMap.get(i) < Geocrowd.taskList
 									.get(i).getK()) {
-						noIncompletedTasks++;
+						noUncoveredTasks++;
 					}
 				}
-				if (noIncompletedTasks > maxElem) {
-					maxElem = noIncompletedTasks;
-					maxSet = s;
-					assignWorkers.add(k);
+
+				if (noUncoveredTasks > maxNoUncoveredTasks) {
+					maxNoUncoveredTasks = noUncoveredTasks;
+					bestWorkerIndex = k;
 				}
 
 			}
 
-			S.remove(maxSet);
-			Q.removeAll(maxSet.keySet());
+			assignWorkers.add(bestWorkerIndex);
+			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
+			S.remove(taskSet);
+			Q.removeAll(taskSet.keySet());
 
-			Set assignedSet = maxSet.keySet();
-			for (Object kt : assignedSet) {
-				Integer key = (Integer) kt;
-				if (!assignedTaskMap.keySet().contains(key)) {
+			/**
+			 * compute average time to assign tasks in taskSet
+			 */
+			for (Integer key : taskSet.keySet()) {
+				if (!assignedTaskMap.keySet().contains(key))
 
-					// put task to assignedTaskMap
+					/**
+					 * put task to assignedTaskMap
+					 */
 					assignedTaskMap.put(key, 1);
-				} else {
-					// put taskid-number workers covered task to assignedTaskMap
+				else
+					/**
+					 * put taskid-number workers covered task to assignedTaskMap
+					 */
 					assignedTaskMap.put(key, assignedTaskMap.get(key) + 1);
-				}
 			}
-			// compute average time to assign tasks in maxSet
-
 		}
 
 		/**
@@ -102,12 +107,12 @@ public class MultiSetCoverGreedy_HighTaskCoverage extends SetCoverGreedy {
 		 */
 		assignedTaskSet = new HashSet<Integer>();
 
-		// compute assignedTasks
-		for (Integer key : assignedTaskMap.keySet()) {
-			// task is assigned only when number workers covered it >= k
+		/**
+		 * make sure the tasks are covered by at least k workers
+		 */
+		for (Integer key : assignedTaskMap.keySet())
 			if (assignedTaskMap.get(key) >= Geocrowd.taskList.get(key).getK())
 				assignedTaskSet.add(key);
-		}
 		assignedTasks = assignedTaskSet.size();
 		System.out.println("#Task assigned: " + assignedTasks);
 

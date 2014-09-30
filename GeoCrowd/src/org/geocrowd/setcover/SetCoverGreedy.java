@@ -39,9 +39,9 @@ public abstract class SetCoverGreedy {
     public HashSet<Integer> universe = null;
     public HashSet<Integer> assignedTaskSet = null;
 
-    public double averageTime=0;
+    public double averageDelayTime=0;
     /**
-     * The assigned tasks.
+     * The number of assigned tasks.
      */
     public int assignedTasks = 0;
     

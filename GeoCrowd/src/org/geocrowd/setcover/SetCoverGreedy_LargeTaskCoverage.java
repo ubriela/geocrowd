@@ -117,7 +117,7 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCoverGreedy {
                 Integer key = (Integer)kt;
                 if (!assignedTaskSet.contains(key)) {
                     
-                    averageTime += currentTimeInstance - (maxSet.get(key) - Constants.TaskDuration) + 1;
+                    averageDelayTime += currentTimeInstance - (maxSet.get(key) - Constants.TaskDuration) + 1;
                     assignedTaskSet.add(key);
                 }
             }

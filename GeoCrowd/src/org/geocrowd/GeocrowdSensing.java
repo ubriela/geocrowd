@@ -349,10 +349,10 @@ public class GeocrowdSensing extends Geocrowd {
 			} else
 				TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
-			if (sc.averageTime > 0) {
-				AverageTimeToAssignTask += sc.averageTime;
+			if (sc.averageDelayTime > 0) {
+				AverageTimeToAssignTask += sc.averageDelayTime;
 				numTimeInstanceTaskAssign += 1;
-				System.out.println("average time: " + sc.averageTime);
+				System.out.println("average time: " + sc.averageDelayTime);
 				System.out.println("total assign tasks: " + sc.assignedTasks);
 			}
 			break;
@@ -363,10 +363,10 @@ public class GeocrowdSensing extends Geocrowd {
 
 			TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
-			if (sc.averageTime > 0) {
-				AverageTimeToAssignTask += sc.averageTime;
+			if (sc.averageDelayTime > 0) {
+				AverageTimeToAssignTask += sc.averageDelayTime;
 				numTimeInstanceTaskAssign += 1;
-				System.out.println("average time: " + sc.averageTime);
+				System.out.println("average time: " + sc.averageDelayTime);
 				System.out.println("total assign tasks: " + sc.assignedTasks);
 			}
 			break;
@@ -385,10 +385,10 @@ public class GeocrowdSensing extends Geocrowd {
 			} else
 				TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.universe.size();
-			if (sc.averageTime > 0) {
-				AverageTimeToAssignTask += sc.averageTime;
+			if (sc.averageDelayTime > 0) {
+				AverageTimeToAssignTask += sc.averageDelayTime;
 				numTimeInstanceTaskAssign += 1;
-				System.out.println("average time: " + sc.averageTime);
+				System.out.println("average time: " + sc.averageDelayTime);
 			}
 			break;
 		case GREEDY_LARGE_WORKER_FANOUT_PRIORITY:
@@ -407,9 +407,9 @@ public class GeocrowdSensing extends Geocrowd {
 			} else
 				TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
-			if (sc.averageTime > 0) {
-				AverageTimeToAssignTask += sc.averageTime;
-				System.out.println("average time: " + sc.averageTime);
+			if (sc.averageDelayTime > 0) {
+				AverageTimeToAssignTask += sc.averageDelayTime;
+				System.out.println("average time: " + sc.averageDelayTime);
 				numTimeInstanceTaskAssign += 1;
 			}
 			break;
@@ -429,8 +429,8 @@ public class GeocrowdSensing extends Geocrowd {
 			} else
 				TotalAssignedWorkers += minAssignedWorkers.size();
 			TotalAssignedTasks += sc.assignedTasks;
-			if (sc.averageTime > 0) {
-				AverageTimeToAssignTask += sc.averageTime;
+			if (sc.averageDelayTime > 0) {
+				AverageTimeToAssignTask += sc.averageDelayTime;
 				numTimeInstanceTaskAssign += 1;
 			}
 			break;

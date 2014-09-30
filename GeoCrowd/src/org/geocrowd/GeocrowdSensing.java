@@ -64,6 +64,7 @@ import com.google.common.hash.PrimitiveSink;
 public class GeocrowdSensing extends Geocrowd {
 
 	PriorityQueue<VirtualWorker> vWorkerList;
+	//vWorkerArray store virtual workers to easily get kth element. 
 	VirtualWorker[] vWorkerArray;
 
 	/**
@@ -334,10 +335,12 @@ public class GeocrowdSensing extends Geocrowd {
 		case GREEDY_HIGH_TASK_COVERAGE:
 			sc = new SetCoverGreedy(getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
+			// if using virtual workers, compute real assigned workers 
 			if (vWorkerArray != null && vWorkerArray.length > 0) {
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
 				for (Integer i : minAssignedWorkers) {
-					assignedWorkerList.add(i);
+					//add all worker ID list of a virtual worker
+					assignedWorkerList.addAll(vWorkerArray[i].getWorkerIds());
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
 			} else
@@ -368,10 +371,12 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_LowWorkerCoverage(
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
+			// if using virtual workers, compute real assigned workers 
 			if (vWorkerArray != null && vWorkerArray.length > 0) {
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
 				for (Integer i : minAssignedWorkers) {
-					assignedWorkerList.add(i);
+					//add all worker ID list of a virtual worker
+					assignedWorkerList.addAll(vWorkerArray[i].getWorkerIds());
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
 			} else
@@ -388,10 +393,12 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_LargeTaskCoverage(
 					getContainerWithDeadline(), TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
+			// if using virtual workers, compute real assigned workers 
 			if (vWorkerArray != null && vWorkerArray.length > 0) {
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
 				for (Integer i : minAssignedWorkers) {
-					assignedWorkerList.add(i);
+					//add all worker ID list of a virtual worker
+					assignedWorkerList.addAll(vWorkerArray[i].getWorkerIds());
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
 			} else
@@ -408,10 +415,12 @@ public class GeocrowdSensing extends Geocrowd {
 			sc = new SetCoverGreedy_CloseToDeadline(getContainerWithDeadline(),
 					TimeInstance);
 			minAssignedWorkers = sc.minSetCover();
+			// if using virtual workers, compute real assigned workers 
 			if (vWorkerArray != null && vWorkerArray.length > 0) {
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
 				for (Integer i : minAssignedWorkers) {
-					assignedWorkerList.add(i);
+					//add all worker ID list of a virtual worker
+					assignedWorkerList.addAll(vWorkerArray[i].getWorkerIds());
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
 			} else

@@ -28,6 +28,7 @@ import org.geocrowd.common.Constants;
  */
 public class SetCoverGreedyUsingAliveTask extends SetCover {
 
+	// assignTaskMap store taskid with number of workers cover task
 	public HashMap<Integer, Integer> assignedTaskMap = new HashMap<>();
 
 	public SetCoverGreedyUsingAliveTask(ArrayList container,
@@ -46,6 +47,7 @@ public class SetCoverGreedyUsingAliveTask extends SetCover {
 		ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets
 				.clone();
 		HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
+		// assignedTaskSet stores set of covered tasks. 
 		assignedTaskSet = new HashSet<Integer>();
 
 		int set_size = S.size();
@@ -58,6 +60,7 @@ public class SetCoverGreedyUsingAliveTask extends SetCover {
 				// how many elements in s that are not in C
 				HashMap<Integer, Integer> s = S.get(k);
 				int newElem = 0;
+				// check task is covered by < k workers. 
 				for (Integer i : s.keySet()) {
 					if (assignedTaskMap.get(i) == null
 							|| assignedTaskMap.get(i) < Geocrowd.taskList
@@ -80,13 +83,11 @@ public class SetCoverGreedyUsingAliveTask extends SetCover {
 			for (Object kt : assignedSet) {
 				Integer key = (Integer) kt;
 				if (!assignedTaskMap.keySet().contains(key)) {
-
-					// averageTime += currentTimeInstance - (maxSet.get(key) -
-					// Constants.TaskDuration) + 1;
+					
+					//put task to assignedTaskMap
 					assignedTaskMap.put(key, 1);
 				} else {
-					// averageTime += currentTimeInstance - (maxSet.get(key) -
-					// Constants.TaskDuration) + 1;
+					//put taskid-number workers covered task to assignedTaskMap
 					assignedTaskMap.put(key, assignedTaskMap.get(key) + 1);
 				}
 			}
@@ -96,6 +97,7 @@ public class SetCoverGreedyUsingAliveTask extends SetCover {
 
 		// compute assignedTasks
 		for (Integer key : assignedTaskMap.keySet()) {
+			//task is assigned only when number workers covered it >= k
 			if (assignedTaskMap.get(key) >= Geocrowd.taskList.get(key).getK())
 				assignedTaskSet.add(key);
 		}

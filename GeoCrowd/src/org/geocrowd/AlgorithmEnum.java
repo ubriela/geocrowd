@@ -37,5 +37,5 @@ public enum AlgorithmEnum {
 	/** combine deadline and High task coverage. */
 	GREEDY_CLOSE_TO_DEADLINE,
 	/** Set Cover Greedy using alive concept **/
-	GREEDY_HIGH_TASK_COVERAGE_ALIVE_TASK
+	GREEDY_HIGH_TASK_COVERAGE_MULTI
 };

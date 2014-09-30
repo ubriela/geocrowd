@@ -26,7 +26,7 @@ import org.geocrowd.common.Constants;
  *
  * @author Luan
  */
-public class SetCoverGreedy_LowWorkerCoverage extends SetCover {
+public class SetCoverGreedy_LowWorkerCoverage extends SetCoverGreedy {
 
     public SetCoverGreedy_LowWorkerCoverage(ArrayList container, Integer current_time_instance) {
         super(container, current_time_instance);

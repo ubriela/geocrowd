@@ -25,7 +25,7 @@ import org.geocrowd.common.Constants;
  * 
  * @author Luan
  */
-public class SetCoverGreedy_CloseToDeadline extends SetCover {
+public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
 
      private int k=3;
    

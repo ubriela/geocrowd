@@ -27,7 +27,7 @@ import org.geocrowd.common.Constants;
  *
  * @author Luan
  */
-public class SetCoverGreedy_LargeTaskCoverage extends SetCover {
+public class SetCoverGreedy_LargeTaskCoverage extends SetCoverGreedy {
 
     /**
      * The k.

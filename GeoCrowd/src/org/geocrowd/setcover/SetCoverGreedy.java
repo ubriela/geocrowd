@@ -1,89 +1,113 @@
 /**
  * *****************************************************************************
  * @ Year 2013 This is the source code of the following papers.
- * 
-* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla
+ *
+ * 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla
  * Kazemi, Cyrus Shahabi.
- * 
-*
+ *
+ *
  * Please contact the author Hien To, ubriela@gmail.com if you have any
  * question.
- * 
-* Contributors: Hien To - initial implementation
-******************************************************************************
+ *
+ * Contributors: Hien To - initial implementation
+ ******************************************************************************
  */
 package org.geocrowd.setcover;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
-import org.geocrowd.common.Constants;
+
+import org.geocrowd.common.crowdsource.VirtualWorker;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class SetCoverGreedy.
+ * The Class SetCover.
  */
-public class SetCoverGreedy extends SetCover {
+public abstract class SetCoverGreedy {
+
+    /**
+     * Each element in the list is associated with a worker, and each worker
+     * contains a set of task ids that he is eligible to perform
+	 *
+     */
+    ArrayList listOfSets = null;
+
+    /**
+     * All the task index in the candidate tasks (not the task list).
+     */
+    public HashSet<Integer> universe = null;
+    public HashSet<Integer> assignedTaskSet = null;
+
+    public double averageTime=0;
+    /**
+     * The assigned tasks.
+     */
+    public int assignedTasks = 0;
+    
+    /**
+     * The assigned workers
+     */
+    public HashSet<Integer> assignWorkers = new HashSet<>();
+    /**
+     * The current time instance.
+     */
+    Integer currentTimeInstance = 0;
+    /*
+     /**
+     * Initialize variables.
+     * 
+     * @param container
+     *            the container
+     */
+//	public SetCover(ArrayList<ArrayList> container) {
+//		listOfSets = new ArrayList<>();
+//		universe = new HashSet<>();
+//
+//		for (int i = 0; i < container.size(); i++) {
+//			ArrayList<Integer> items = container.get(i);
+//			if (items != null) {
+//				HashSet<Integer> itemSet = new HashSet<Integer>(items);
+//				listOfSets.add(itemSet);
+//				universe.addAll(itemSet);
+//			}
+//		}
+//	}
 
     public SetCoverGreedy(ArrayList container, Integer current_time_instance) {
-        super(container, current_time_instance);
+        listOfSets = new ArrayList<>();
+        universe = new HashSet<>();
+        currentTimeInstance = current_time_instance;
+        if (container.size() > 0 && container.get(0).getClass().isInstance(new ArrayList())) {
+            for (int i = 0; i < container.size(); i++) {
+
+                ArrayList<Integer> items = (ArrayList<Integer>) container.get(i);
+                if (items != null) {
+                    HashSet<Integer> itemSet = new HashSet<Integer>(items);
+                    listOfSets.add(itemSet);
+                    universe.addAll(itemSet);
+                }
+            }
+        } else {
+            for (int i = 0; i < container.size(); i++) {
+
+                HashMap<Integer, Integer> items = (HashMap<Integer, Integer>) container.get(i);
+                if (items != null) {
+                    HashMap<Integer, Integer> itemSet = new HashMap<>(items);
+                    listOfSets.add(itemSet);
+                    universe.addAll(itemSet.keySet());
+                }
+            }
+        }
     }
 
     /**
-     * Greedy algorithm.
+     * Min set cover.
+     *
+     * Note that all the tasks will be assigned after this.
      *
      * @return the number of assigned workers
      */
-    @Override
-    public HashSet<Integer> minSetCover() {
-        ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets.clone();
-        HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
-        assignedTaskSet = new HashSet<Integer>();
+    public abstract HashSet<Integer> minSetCover();
 
-        int set_size = S.size();
-
-        while (!Q.isEmpty()) {
-            HashMap<Integer, Integer> maxSet = null;
-            int maxElem = 0;
-            for ( int k=0;k<S.size();k++) {
-                // select the item set that maximize coverage
-                // how many elements in s that are not in C
-            	HashMap<Integer, Integer> s= S.get(k);
-                int newElem = 0;
-                for (Integer i : s.keySet()) {
-                    if (!assignedTaskSet.contains(i)) {
-                        newElem++;
-                    }
-                }
-                if (newElem > maxElem) {
-                    maxElem = newElem;
-                    maxSet = s;
-                    assignWorkers.add(k);
-                }
-                
-                
-            }
-
-            S.remove(maxSet);
-            Q.removeAll(maxSet.keySet());
-
-            Set assignedSet = maxSet.keySet();
-            for (Object kt : assignedSet) {
-                Integer key = (Integer)kt;
-                if (!assignedTaskSet.contains(key)) {
-                    
-                    averageTime += currentTimeInstance - (maxSet.get(key) - Constants.TaskDuration) + 1;
-                    assignedTaskSet.add(key);
-                }
-            }
-            //compute average time to assign tasks in maxSet
-
-        }
-        assignedTasks = assignedTaskSet.size();
-//        averageTime = averageTime*1.0/assignedTasks;
-        System.out.println("#Task assigned: " + assignedTasks);
-
-        return assignWorkers;
-    }
 }

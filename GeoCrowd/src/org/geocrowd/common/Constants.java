@@ -18,6 +18,15 @@ package org.geocrowd.common;
  */
 public class Constants {
 
+	/** The radius. */
+	public static double diameter = 0.5; // task circle radius
+	/** enable random k */
+	public static boolean IS_RANDOM_K = true;
+	/** required number of responses */
+	public static int K = 2;
+	
+	// ------------------------------------------------------------
+	
 	// shared parameters
 	/** The Task type no. */
 	public static double TaskTypeNo = 0; // number of task types/expertise
@@ -161,12 +170,4 @@ public class Constants {
 
 	/** The uni boundary. */
 	public static String uniBoundary = "dataset/uni/uni_boundary.txt";
-
-	// ------------------------------------------------------------
-	/** The radius. */
-	public static double diameter = 0.5; // task circle radius
-	/** enable random k */
-	public static boolean IS_RANDOM_K = true;
-	/** required number of responses */
-	public static int K = 2;
 }

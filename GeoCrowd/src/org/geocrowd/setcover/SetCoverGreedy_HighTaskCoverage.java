@@ -90,7 +90,6 @@ public class SetCoverGreedy_HighTaskCoverage extends SetCoverGreedy {
 				}
 		}
 		assignedTasks = assignedTaskSet.size();
-		// averageTime = averageTime*1.0/assignedTasks;
 		System.out.println("#Task assigned: " + assignedTasks);
 
 		return assignWorkers;

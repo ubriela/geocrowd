@@ -40,7 +40,7 @@ public class CrowdsensingTest {
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
 			Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-			Geocrowd.algorithm = AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE;
+			Geocrowd.algorithm = AlgorithmEnum.GREEDY_CLOSE_TO_DEADLINE;
 			GeocrowdSensing crowdsensing = new GeocrowdSensing();
 			// for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
@@ -90,7 +90,7 @@ public class CrowdsensingTest {
 
 				/** populate virtual workers */
 				if (Constants.K != 1)
-					if (Geocrowd.algorithm != AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE)
+					if (Geocrowd.algorithm != AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE_MULTI)
 						crowdsensing.populateVitualWorkers();
 
 				// debug

@@ -130,16 +130,26 @@ public class GeocrowdSensing extends Geocrowd {
 				containerWorker.add(containerPrune[i]);
 			}
 		}
+		/**
+		 * update invertedContainer <taskid, ArrayList<workerIndex>>
+		 */
+		for (int tid = 0; tid < taskList.size(); tid++) {
+			for (int i = 0; i < containerWorker.size(); i++) {
+				final int workerIndex = i;
+				if (containerWorker.get(workerIndex).contains(tid)) {
+					if (!invertedContainer.containsKey(tid)) {
+						invertedContainer.put(tid, new ArrayList() {
+							{
+								add(workerIndex);
+							}
+						});
+					} else {
+						invertedContainer.get(tid).add(workerIndex);
+					}
+				}
+			}
+		}
 
-		// find tasks with no worker
-		// Iterator it = candidateTasks.iterator();
-		// while (it.hasNext()) {
-		// Integer taskid = (Integer) it.next();
-		// ArrayList workers = invertedContainer.get(taskid);
-		// if (workers.size() == 0) {
-		// System.out.println("task with no worker!!!!!!!!!!!!");
-		// }
-		// }
 	}
 
 	final Comparator<GenericTask> TASK_ORDER = new Comparator<GenericTask>() {
@@ -200,6 +210,7 @@ public class GeocrowdSensing extends Geocrowd {
 	 * Output: container of virtual workers, similar to containerWorker so that
 	 * this function is plug-able
 	 */
+	@SuppressWarnings("unchecked")
 	public void populateVitualWorkers() {
 
 		/**
@@ -334,10 +345,10 @@ public class GeocrowdSensing extends Geocrowd {
 			/**
 			 * Iterate all worker ids of virtual worker o
 			 */
+			ArrayList<HashMap<Integer, Integer>> containerWokerWithDeadline = getContainerWithDeadline();
 			for (Integer j : vw.getWorkerIds())
-				if (containerWorker.size() > j)
-					taskids.putAll((Map<? extends Integer, ? extends Integer>) containerWorker
-							.get(j));
+				taskids.putAll((Map<? extends Integer, ? extends Integer>) containerWokerWithDeadline
+						.get(j));
 
 			containerVirtualWorker.add(taskids);
 		}
@@ -356,27 +367,41 @@ public class GeocrowdSensing extends Geocrowd {
 		HashSet<Integer> minAssignedWorkers;
 
 		switch (algorithm) {
+
 		case GREEDY_HIGH_TASK_COVERAGE:
-			sc = new SetCoverGreedy_HighTaskCoverage(
-					getContainerWithDeadline(), TimeInstance);
-			minAssignedWorkers = sc.minSetCover();
-			// if using virtual workers, compute real assigned workers
+
+			// check using virtual worker or not
 			if (vWorkerArray != null && vWorkerArray.length > 0) {
+				/**
+				 * containerWorker has been updated from function
+				 * populateVirtualWorker
+				 */
+				sc = new SetCoverGreedy_HighTaskCoverage(containerWorker,
+						TimeInstance);
+				minAssignedWorkers = sc.minSetCover();
+
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
 				for (Integer i : minAssignedWorkers) {
 					// add all worker ID list of a virtual worker
 					assignedWorkerList.addAll(vWorkerArray[i].getWorkerIds());
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
-			} else
+			} else {
+				sc = new SetCoverGreedy_HighTaskCoverage(
+						getContainerWithDeadline(), TimeInstance);
+				minAssignedWorkers = sc.minSetCover();
+
 				TotalAssignedWorkers += minAssignedWorkers.size();
+
+			}
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageDelayTime > 0) {
 				AverageTimeToAssignTask += sc.averageDelayTime;
 				numTimeInstanceTaskAssign += 1;
 				System.out.println("average time: " + sc.averageDelayTime);
-				System.out.println("total assign tasks: " + sc.assignedTasks);
+
 			}
+
 			break;
 		case GREEDY_HIGH_TASK_COVERAGE_MULTI:
 			sc = new MultiSetCoverGreedy_HighTaskCoverage(
@@ -389,7 +414,6 @@ public class GeocrowdSensing extends Geocrowd {
 				AverageTimeToAssignTask += sc.averageDelayTime;
 				numTimeInstanceTaskAssign += 1;
 				System.out.println("average time: " + sc.averageDelayTime);
-				System.out.println("total assign tasks: " + sc.assignedTasks);
 			}
 			break;
 		case GREEDY_LOW_WORKER_COVERAGE:
@@ -415,45 +439,67 @@ public class GeocrowdSensing extends Geocrowd {
 			break;
 		case GREEDY_LARGE_WORKER_FANOUT_PRIORITY:
 
-			sc = new SetCoverGreedy_LargeTaskCoverage(
-					getContainerWithDeadline(), TimeInstance);
-			minAssignedWorkers = sc.minSetCover();
-			// if using virtual workers, compute real assigned workers
+			// check using virtual worker or not
 			if (vWorkerArray != null && vWorkerArray.length > 0) {
+				/**
+				 * containerWorker has been updated from function
+				 * populateVirtualWorker
+				 */
+				sc = new SetCoverGreedy_LargeTaskCoverage(containerWorker,
+						TimeInstance);
+				minAssignedWorkers = sc.minSetCover();
+
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
 				for (Integer i : minAssignedWorkers) {
 					// add all worker ID list of a virtual worker
 					assignedWorkerList.addAll(vWorkerArray[i].getWorkerIds());
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
-			} else
+			} else {
+				sc = new SetCoverGreedy_HighTaskCoverage(
+						getContainerWithDeadline(), TimeInstance);
+				minAssignedWorkers = sc.minSetCover();
+
 				TotalAssignedWorkers += minAssignedWorkers.size();
+
+			}
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageDelayTime > 0) {
 				AverageTimeToAssignTask += sc.averageDelayTime;
-				System.out.println("average time: " + sc.averageDelayTime);
 				numTimeInstanceTaskAssign += 1;
+				System.out.println("average time: " + sc.averageDelayTime);
 			}
 			break;
 		case GREEDY_CLOSE_TO_DEADLINE:
 
-			sc = new SetCoverGreedy_CloseToDeadline(getContainerWithDeadline(),
-					TimeInstance);
-			minAssignedWorkers = sc.minSetCover();
-			// if using virtual workers, compute real assigned workers
 			if (vWorkerArray != null && vWorkerArray.length > 0) {
+				/**
+				 * containerWorker has been updated from function
+				 * populateVirtualWorker
+				 */
+				sc = new SetCoverGreedy_CloseToDeadline(containerWorker,
+						TimeInstance);
+				minAssignedWorkers = sc.minSetCover();
+
 				HashSet<Integer> assignedWorkerList = new HashSet<>();
 				for (Integer i : minAssignedWorkers) {
 					// add all worker ID list of a virtual worker
 					assignedWorkerList.addAll(vWorkerArray[i].getWorkerIds());
 				}
 				TotalAssignedWorkers += assignedWorkerList.size();
-			} else
+			} else {
+				sc = new SetCoverGreedy_HighTaskCoverage(
+						getContainerWithDeadline(), TimeInstance);
+				minAssignedWorkers = sc.minSetCover();
+
 				TotalAssignedWorkers += minAssignedWorkers.size();
+
+			}
 			TotalAssignedTasks += sc.assignedTasks;
 			if (sc.averageDelayTime > 0) {
 				AverageTimeToAssignTask += sc.averageDelayTime;
 				numTimeInstanceTaskAssign += 1;
+				System.out.println("average time: " + sc.averageDelayTime);
 			}
 			break;
 		}
@@ -540,17 +586,13 @@ public class GeocrowdSensing extends Geocrowd {
 				containerPrune[workerIdx]
 						.add(candidateTaskIndices.indexOf(tid));
 
-				/* inverted container */
-				if (!invertedContainer.containsKey(tid)) {
-					invertedContainer.put(tid, new ArrayList() {
-						{
-							add(workerIdx);
-						}
-					});
-				} else {
-					invertedContainer.get(tid).add(workerIdx);
-				}
-
+				/**
+				 * /* inverted container need to update after compute
+				 * containerWorker if (!invertedContainer.containsKey(tid)) {
+				 * invertedContainer.put(tid, new ArrayList() { {
+				 * add(workerIdx); } }); } else {
+				 * invertedContainer.get(tid).add(workerIdx); }
+				 */
 			}// if not overlapped
 
 			tid++;

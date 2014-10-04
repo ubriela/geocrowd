@@ -113,6 +113,7 @@ public class MultiSetCoverGreedy_HighTaskCoverage extends SetCoverGreedy {
 		for (Integer key : assignedTaskMap.keySet())
 			if (assignedTaskMap.get(key) >= Geocrowd.taskList.get(key).getK())
 				assignedTaskSet.add(key);
+		
 		assignedTasks = assignedTaskSet.size();
 		System.out.println("#Task assigned: " + assignedTasks);
 

@@ -42,6 +42,11 @@ public class CrowdsensingTest {
 			Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 			Geocrowd.algorithm = AlgorithmEnum.GREEDY_CLOSE_TO_DEADLINE;
 			GeocrowdSensing crowdsensing = new GeocrowdSensing();
+			
+			crowdsensing.printBoundaries();
+			crowdsensing.createGrid();
+			crowdsensing.readEntropy();
+			
 			// for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
@@ -73,7 +78,7 @@ public class CrowdsensingTest {
 							.readWorkers(Constants.skewedWorkerFileNamePrefix
 									+ i + ".txt");
 					break;
-				case SMALL:
+				case SMALL_TEST:
 					crowdsensing.readTasks(Constants.smallTaskFileNamePrefix
 							+ i + ".txt");
 					crowdsensing
@@ -90,7 +95,9 @@ public class CrowdsensingTest {
 
 				/** populate virtual workers */
 				if (Constants.K != 1)
-					if (Geocrowd.algorithm != AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE_MULTI)
+					if (Geocrowd.algorithm != AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE_MULTI
+					&& Geocrowd.algorithm != AlgorithmEnum.GREEDY_LARGE_WORKER_FANOUT_MULTI
+					&& Geocrowd.algorithm != AlgorithmEnum.GREEDY_CLOSE_TO_DEADLINE_MULTI)
 						crowdsensing.populateVitualWorkers();
 
 				// debug

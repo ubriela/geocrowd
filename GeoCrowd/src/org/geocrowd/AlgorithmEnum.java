@@ -33,9 +33,11 @@ public enum AlgorithmEnum {
 	/** Low worker coverage priority. */
 	GREEDY_LOW_WORKER_COVERAGE,
 	/** High task coverage. */
-	GREEDY_LARGE_WORKER_FANOUT_PRIORITY,
+	GREEDY_LARGE_WORKER_FANOUT,
 	/** combine deadline and High task coverage. */
 	GREEDY_CLOSE_TO_DEADLINE,
 	/** Set Cover Greedy using alive concept **/
-	GREEDY_HIGH_TASK_COVERAGE_MULTI
+	GREEDY_HIGH_TASK_COVERAGE_MULTI,
+	GREEDY_LARGE_WORKER_FANOUT_MULTI,
+	GREEDY_CLOSE_TO_DEADLINE_MULTI
 };

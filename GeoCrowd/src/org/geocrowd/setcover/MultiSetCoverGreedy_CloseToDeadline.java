@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.geocrowd.common.Constants;
-import org.geocrowd.common.crowdsource.GenericTask;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -27,19 +25,10 @@ import org.geocrowd.common.crowdsource.GenericTask;
  * 
  * @author Luan
  */
-public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
+public class MultiSetCoverGreedy_CloseToDeadline extends MultiSetCoverGreedy {
 
-	public HashMap<GenericTask, Double> entropies;
-	private ArrayList<GenericTask> taskList;
-	
-	public void setEntropies(HashMap<GenericTask, Double> entropies) {
-		this.entropies = entropies;
-	}
-	
-	public void setTaskList(ArrayList<GenericTask> taskList) {
-		this.taskList = taskList;	
-	}
-	
+	private int k = 3;
+
 	/**
 	 * Instantiates a new sets the cover greedy combine deadline.
 	 * 
@@ -48,12 +37,11 @@ public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
 	 * @param current_time_instance
 	 *            the current_time_instance
 	 */
-
-	public SetCoverGreedy_CloseToDeadline(ArrayList container,
+	
+	public MultiSetCoverGreedy_CloseToDeadline(ArrayList container,
 			Integer current_time_instance) {
 		super(container, current_time_instance);
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -82,10 +70,10 @@ public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
 			 */
 			for (int j = 0; j < S.size(); j++) {
 				HashMap<Integer, Integer> s = S.get(j);
-				double avgTimeToDead = avgTimeToDead(s, currentTimeInstance,
+				double avgTimeToDead = weight(s, currentTimeInstance,
 						assignedTaskSet);
 				if (avgTimeToDead < smallestAvgTimeToDead
-						&& (avgTimeToDead <= Constants.T || currentTimeInstance == Constants.TIME_INSTANCE - 1)) {
+						&& (avgTimeToDead <= k || currentTimeInstance == Constants.TIME_INSTANCE - 1)) {
 					smallestAvgTimeToDead = avgTimeToDead;
 					bestWorkerIndex = j;
 				}
@@ -98,7 +86,6 @@ public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
 			S.remove(taskSet);
 			Q.removeAll(taskSet.keySet());
-
 			/**
 			 * compute average time to assign tasks in taskSet
 			 */
@@ -112,45 +99,39 @@ public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
 				}
 			}
 		}
-		assignedTasks = assignedTaskSet.size();
-		System.out.println("#Task assigned: " + assignedTasks);
+
+		/**
+		 * Compute the number of (qualified) assigned tasks
+		 */
+		filterNonqualifedTasks();
+		
 		return assignWorkers;
 	}
 
-
 	/**
 	 * larger average time to dead for its covered task, smaller worker's weight
-	 * @param tasksWithDeadlines <taskid, deadline>
-	 * @param current_time_instance
-	 * @param completedTasks [taskid]
-	 * @return
+	 * 
+	 * 
 	 */
-	private double avgTimeToDead(HashMap<Integer, Integer> tasksWithDeadlines,
-			int current_time_instance, HashSet<Integer> completedTasks) {
-		int uncoveredTasks = 0;
-		double totalElapsedTime = 0;
-		for (Integer t : tasksWithDeadlines.keySet()) {
-			/**
-			 * Only consider uncovered tasks
-			 */
-			if (!completedTasks.contains(t)) {
-				/**
-				 * if the task will dead at next time instance, return 1 so that it will be assigned
-				 */
-				if (tasksWithDeadlines.get(t) - current_time_instance == 1)
+	private double weight(HashMap<Integer, Integer> s,
+			int current_time_instance, HashSet<Integer> C) {
+		double w = 0;
+		int numElem = 0;
+		double d = 0;
+		for (Integer t : s.keySet()) {
+			if (!C.contains(t)) {
+				if (s.get(t) - current_time_instance == 1) // If worker cover
+															// task will dead at
+															// next time
+															// instance
 					return 1;
-				uncoveredTasks++;
-				double elapsedTime = tasksWithDeadlines.get(t) - current_time_instance; // the smaller, the better
-				
-				if (Constants.useLocationEntropy) {
-					elapsedTime = elapsedTime*entropies.get(taskList.get(t));
-				}
-				totalElapsedTime += elapsedTime;
+				numElem++;
+				d += s.get(t) - current_time_instance;
 			}
 		}
 		/**
-		 * average time to deadline of new covered task
+		 *  average time to deadline of new covered task
 		 */
-		return totalElapsedTime / uncoveredTasks;
+		return d / numElem; 
 	}
 }

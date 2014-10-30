@@ -82,7 +82,7 @@ public class GeocrowdTest {
 					geoCrowd.readWorkers(Constants.uniWorkerFileNamePrefix + i
 							+ ".txt");
 					break;
-				case SMALL:
+				case SMALL_TEST:
 					geoCrowd.readTasks(Constants.smallTaskFileNamePrefix + i
 							+ ".txt");
 					geoCrowd.readWorkers(Constants.smallWorkerFileNamePrefix
@@ -179,7 +179,7 @@ public class GeocrowdTest {
 					geoCrowd.readTasks(Constants.uniTaskFileNamePrefix + i
 							+ ".txt");
 					break;
-				case SMALL:
+				case SMALL_TEST:
 					geoCrowd.readTasks(Constants.smallTaskFileNamePrefix + i
 							+ ".txt");
 					break;
@@ -330,7 +330,7 @@ public class GeocrowdTest {
 	 */
 	@Test
 	public void testGeoCrowd_Small() {
-		Geocrowd.DATA_SET = DatasetEnum.SMALL;
+		Geocrowd.DATA_SET = DatasetEnum.SMALL_TEST;
 		Geocrowd.algorithm = AlgorithmEnum.BASIC;
 		GeocrowdInstance geoCrowd = new GeocrowdInstance();
 		geoCrowd.printBoundaries();

@@ -27,5 +27,5 @@ public enum DatasetEnum {
 	/** The yelp. */
 	YELP,
 	/** The small. */
-	SMALL
+	SMALL_TEST
 }

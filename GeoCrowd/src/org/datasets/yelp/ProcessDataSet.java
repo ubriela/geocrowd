@@ -24,7 +24,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import org.geocrowd.Parser;
 import org.geocrowd.common.Point;
+import org.geocrowd.common.crowdsource.GenericWorker;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
@@ -182,9 +184,6 @@ public class ProcessDataSet {
                     Review_Date.put(time_instance, temp_user);
                 }
 
-
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -192,6 +191,8 @@ public class ProcessDataSet {
         System.out.println("Total user reviewed: " + Review.size());
 
     }
+    
+    
 
     /**
 	 * Access_ user.
@@ -304,18 +305,13 @@ public class ProcessDataSet {
         for (int i = 0; i < temp.length; i++) {
             number[i] = Integer.parseInt(temp[i]);
         }
+        
         switch (number[0]) {
             case 2005:
                 to_return = 0;
                 break;
-            case 2006:
-                to_return = 1;
-                break;
-            case 2013:
-                to_return = 21;
-                break;
             default:
-                to_return = (number[1] / 4) + ((number[0] - 2007) * 3 + 2);
+                to_return = (int) (Constant.TimeInstance * (number[2] + number[1]*30 + (number[0] - 2006) * 356)/((2015 - 2006) * 356));
                 break;
         }
         return to_return;
@@ -641,10 +637,10 @@ public class ProcessDataSet {
                 // System.out.println(u_id + "-one empty here");
             }
         }
-        System.out.println(c);
+        //System.out.println(c);
 
     }
-
+  
     /**
 	 * Compute mean contribution distance.
 	 * 
@@ -692,6 +688,110 @@ public class ProcessDataSet {
     /**
 	 * Split_ worker_by_time.
 	 */
+    public static void split_Worker_by_time2() {
+
+        Random gen = new Random();
+        Iterator time_instance = Review_Date.keySet().iterator();
+        StringBuilder sb = new StringBuilder();
+        while (time_instance.hasNext()) {
+            sb.delete(0, sb.length());
+            int instance = (Integer) time_instance.next();
+            //System.out.println(instance);
+            Iterator users = Review_Date.get(instance).keySet().iterator();
+            while (users.hasNext()) {
+                StringBuilder sb_temp = new StringBuilder();
+                String u_id = (String) users.next();
+                Iterator businesses = Review_Date.get(instance).get(u_id).keySet().iterator();
+                double minLatitude = Double.MAX_VALUE;
+                double maxLatitude = (-1) * Double.MAX_VALUE;
+                double minLongitude = Double.MAX_VALUE;
+                double maxLongitude = (-1) * Double.MAX_VALUE;
+                while (businesses.hasNext()) {
+                    int col = (Integer) businesses.next();
+                    //System.out.println(col + "\t" + Review_Date.get(instance).get(u_id).get(col));
+                    
+                    if (!Business_Location.containsKey(
+                            Review_Date.get(instance).get(u_id).get(col))) {
+                    	// there might be the case some business in reviews but not in business
+                    	System.out.println("This business does not exist in Business_Location: " + Review_Date.get(instance).get(u_id).get(col));
+                    	continue;
+                    }
+                    
+                    double temp_lat = Business_Location.get(
+                            Review_Date.get(instance).get(u_id).get(col).toString()).get("lat");
+                    double temp_lng = Business_Location.get(
+                            Review_Date.get(instance).get(u_id).get(col).toString()).get("lng");
+
+                    if (temp_lat < minLatitude) {
+                        minLatitude = temp_lat;
+                    }
+                    if (temp_lat > maxLatitude) {
+                        maxLatitude = temp_lat;
+                    }
+                    if (temp_lng < minLongitude) {
+                        minLongitude = temp_lng;
+                    }
+                    if (temp_lng > maxLongitude) {
+                        maxLongitude = temp_lng;
+                    }
+
+                    // System.out.print (Review.get(u_id).get(col).toString());
+
+                    if (Business_Categories.keySet().contains(
+                            Review_Date.get(instance).get(u_id).get(col).toString())) {
+                        for (int j = 0; j < Business_Categories.get(
+                                Review_Date.get(instance).get(u_id).get(col).toString()).size(); j++) {
+                            String expertise = Business_Categories
+                                    .get(Review_Date.get(instance).get(u_id).get(col).toString())
+                                    .get(j).toString();
+                            if (!User_Categories.get(u_id).contains(expertise)) {
+                                User_Categories.get(u_id).add(expertise);
+                            }
+                        }
+                    }
+
+                }
+
+                double lat = (minLatitude + maxLatitude) / 2;
+                double lon = (minLongitude + maxLongitude) / 2;
+                sb_temp.append(u_id + "," + lat + "," + lon);
+
+
+                sb_temp.append("," + Review_Date.get(instance).get(u_id).size());
+
+
+                sb_temp.append(",[" + minLatitude + "," + minLongitude + ","
+                        + maxLatitude + "," + maxLongitude + "]");
+
+                if (User_Categories.get(u_id).size() != 0) {
+
+                    sb_temp.append(",[");
+                    for (int j = 0; j < User_Categories.get(u_id).size(); j++) {
+                        if (j > 0 && j < User_Categories.get(u_id).size()) {
+                            sb_temp.append(',');
+                        }
+                        sb_temp.append(String.valueOf(Expertise
+                                .indexOf(User_Categories.get(u_id).get(j))));
+                    }
+
+                    sb_temp.append("]\n");
+
+                    sb.append(sb_temp);
+
+                    //  total_expertise_user++;
+                } else {
+                    // System.out.println(u_id + "-one empty here");
+                }
+            }
+            Utils.writefile2(sb.toString(), Constant.SplitWorkerByTime + String.format("%04d", instance) + Constant.suffix);
+        }
+
+
+    }
+    
+    /**
+	 * Split_ worker_by_time.
+	 */
     public static void split_Worker_by_time() {
 
         Random gen = new Random();
@@ -700,18 +800,31 @@ public class ProcessDataSet {
         while (time_instance.hasNext()) {
             sb.delete(0, sb.length());
             int instance = (Integer) time_instance.next();
+//            System.out.println(instance);
             Iterator users = Review_Date.get(instance).keySet().iterator();
             while (users.hasNext()) {
                 StringBuilder sb_temp = new StringBuilder();
                 String u_id = (String) users.next();
                 Iterator businesses = Review_Date.get(instance).get(u_id).keySet().iterator();
-                int i = gen.nextInt(Review_Date.get(instance).get(u_id).size());
                 double minLatitude = Double.MAX_VALUE;
                 double maxLatitude = (-1) * Double.MAX_VALUE;
                 double minLongitude = Double.MAX_VALUE;
                 double maxLongitude = (-1) * Double.MAX_VALUE;
                 while (businesses.hasNext()) {
                     int col = (Integer) businesses.next();
+//                    System.out.println(col + "\t" + Review_Date.get(instance).get(u_id).get(col));
+                    
+                    if (!Business_Location.containsKey(
+                            Review_Date.get(instance).get(u_id).get(col))) {
+                    	// there might be the case some business in reviews but not in business
+                    	System.out.println("This business does not exist in Business_Location: " + Review_Date.get(instance).get(u_id).get(col));
+                    	continue;
+                    }
+                    
+//                    if (Business_Location.contains(
+//                            Review_Date.get(instance).get(u_id).get(col)))
+//                    	continue;	// there might be the case some business in reviews but not in business
+                    
                     double temp_lat = Business_Location.get(
                             Review_Date.get(instance).get(u_id).get(col).toString()).get("lat");
                     double temp_lng = Business_Location.get(
@@ -783,4 +896,51 @@ public class ProcessDataSet {
 
 
     }
+
+    /**
+     * Used for dynamic private geocrowd project
+     */
+	public static void process_TI() {
+		ArrayList<GenericWorker> workerList = new ArrayList<>();
+		Parser.parseSpecializedWorkers(Constant.YelpWorker, workerList);
+		
+		HashMap<String, GenericWorker> workers = new HashMap<String, GenericWorker>();
+		for (GenericWorker w : workerList)
+			workers.put(w.getUserID(), w);
+		
+		StringBuilder sb1 = new StringBuilder();
+		StringBuilder sb2 = new StringBuilder();
+		for (int i = 0; i < Constant.TimeInstance; i++) {
+			sb1.delete(0, sb1.length());
+			sb2.delete(0, sb2.length());
+			ArrayList<GenericWorker> wl = new ArrayList<>();
+			Parser.parseSpecializedWorkers(Constant.SplitWorkerByTime + String.format("%04d", i) + Constant.suffix, wl);
+			
+			for (GenericWorker w : wl) {
+				if (workers.containsKey(w.getUserID()))
+					workers.put(w.getUserID(), w);
+				
+				/**
+				 * to remove [0,0] coordinates which may cause problems
+				 */
+				if (w.getLatitude() == 0 || w.getLongitude() == 0)
+					continue;
+				sb1.append(w.getLatitude() + "\t" + w.getLongitude() + "\n");
+			}
+			
+			//	dump current workers to file
+			for (GenericWorker w : workers.values()) {
+				if (w.getLatitude() == 0 || w.getLongitude() == 0)
+					continue;
+				String loc = w.getLatitude() + "\t" + w.getLongitude() + "\n";
+				sb2.append(loc);
+			}
+			
+			sb1.setLength(sb1.length() - 1);
+			sb2.setLength(sb2.length() - 1);
+			
+			Utils.writefile2(sb1.toString(), Constant.SplitWorkerByTime1 + String.format("%04d", i) + Constant.suffix);
+			Utils.writefile2(sb2.toString(), Constant.SplitWorkerByTime2 + String.format("%04d", i) + Constant.suffix);
+		}
+	}
 }

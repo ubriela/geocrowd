@@ -22,12 +22,7 @@ import org.geocrowd.common.Constants;
 /**
  * @author Luan
  */
-public class SetCoverGreedy_LargeTaskCoverage extends SetCoverGreedy {
-
-	/**
-	 * Only choose worker covers at least k tasks.
-	 */
-	Integer k = 4;
+public class SetCoverGreedy_LargeWorkerFanout extends SetCoverGreedy {
 
 	/**
 	 * The average tasks per worker.
@@ -39,7 +34,7 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCoverGreedy {
 	 */
 	public double averageWorkersPerTask;
 
-	public SetCoverGreedy_LargeTaskCoverage(ArrayList container,
+	public SetCoverGreedy_LargeWorkerFanout(ArrayList container,
 			Integer current_time_instance) {
 		super(container, current_time_instance);
 	}
@@ -90,11 +85,11 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCoverGreedy {
 				}
 				/**
 				 * check condition: only select workers that either cover 
-				 * at least K (e.g.,= k=2,3..)tasks or
-				 *  cover any task that will not available in the next time instance
+				 * at least K (e.g.,= k=2,3..) tasks or
+				 * cover any task that will not available in the next time instance
 				 */
 				if (noUncoveredTasks > maxNoUncoveredTask
-						&& (noUncoveredTasks >= k || containElementDeadAtNextTime(
+						&& (noUncoveredTasks >= Constants.M || containElementDeadAtNextTime(
 								s, currentTimeInstance))) 
 				{
 					maxNoUncoveredTask = noUncoveredTasks;
@@ -102,6 +97,10 @@ public class SetCoverGreedy_LargeTaskCoverage extends SetCoverGreedy {
 
 				}
 			}
+			
+			/**
+			 * why this?
+			 */
 			if (bestWorkerIndex == -1) {
 				break;
 			}

@@ -12,13 +12,18 @@
  *******************************************************************************/
 package org.geocrowd;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.entropy.Coord;
+import org.geocrowd.common.entropy.EntropyRecord;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -26,6 +31,42 @@ import org.geocrowd.common.crowdsource.GenericWorker;
  */
 public abstract class Geocrowd {
 
+	/** The min latitude. */
+	public double minLatitude = Double.MAX_VALUE;
+
+	/** The max latitude. */
+	public double maxLatitude = -Double.MAX_VALUE;
+
+	/** The min longitude. */
+	public double minLongitude = Double.MAX_VALUE;
+
+	/** The max longitude. */
+	public double maxLongitude = -Double.MAX_VALUE;
+	
+	/** The resolution. */
+	public double resolution = 0;
+	
+	/** The row count. */
+	public int rowCount = 0; // number of rows for the grid
+
+	/** The col count. */
+	public int colCount = 0; // number of cols for the grid
+	
+	/** The entropies. */
+	public HashMap<Integer, HashMap<Integer, Double>> entropies = null;
+
+	/** The max entropy. */
+	public double maxEntropy = 0;
+	
+	/** The sum entropy. */
+	public int sumEntropy = 0;
+	
+	// ---------------
+
+	/** The entropy list. */
+	public ArrayList<EntropyRecord> entropyList = new ArrayList();
+	
+	
 	/** The data set. */
 	public static DatasetEnum DATA_SET;
 
@@ -181,6 +222,145 @@ public abstract class Geocrowd {
 				TotalExpiredTask++;
 			}
 		}
+	}
+	
+	/**
+	 * Creates the grid.
+	 */
+	public void createGrid() {
+		double resolution = 0;
+		switch (DATA_SET) {
+		case GOWALLA:
+			resolution = Constants.gowallaResolution;
+			break;
+		case SKEWED:
+			resolution = Constants.skewedResolution;
+			break;
+		case UNIFORM:
+			resolution = Constants.uniResolution;
+			break;
+		case SMALL_TEST:
+			resolution = Constants.smallResolution;
+			break;
+		case YELP:
+			resolution = Constants.yelpResolution;
+			break;
+		}
+		rowCount = (int) ((maxLatitude - minLatitude) / resolution) + 1;
+		colCount = (int) ((maxLongitude - minLongitude) / resolution) + 1;
+		System.out.println("Grid resolution: " + rowCount + "x" + colCount);
+	}
+	
+	/**
+	 * Get a list of entropy records.
+	 */
+	public void readEntropy() {
+		String filePath = "";
+		switch (DATA_SET) {
+		case GOWALLA:
+			filePath = Constants.gowallaLocationEntropyFileName;
+			break;
+		case SKEWED:
+			filePath = Constants.skewedLocationDensityFileName;
+			break;
+		case UNIFORM:
+			filePath = Constants.uniLocationDensityFileName;
+			break;
+		case SMALL_TEST:
+			filePath = Constants.smallLocationDensityFileName;
+			break;
+		case YELP:
+			filePath = Constants.yelpLocationEntropyFileName;
+			break;
+		}
+
+		entropies = new HashMap<Integer, HashMap<Integer, Double>>();
+		try {
+			FileReader file = new FileReader(filePath);
+			BufferedReader in = new BufferedReader(file);
+			while (in.ready()) {
+				String line = in.readLine();
+				String[] parts = line.split(",");
+				int row = Integer.parseInt(parts[0]);
+				int col = Integer.parseInt(parts[1]);
+				double entropy = Double.parseDouble(parts[2]);
+				if (entropy > maxEntropy)
+					maxEntropy = entropy;
+
+				if (entropies.containsKey(row))
+					entropies.get(row).put(col, entropy);
+				else {
+					HashMap<Integer, Double> rows = new HashMap<Integer, Double>();
+					rows.put(col, entropy);
+					entropies.put(row, rows);
+				}
+				EntropyRecord dR = new EntropyRecord(entropy, new Coord(row,
+						col));
+				entropyList.add(dR);
+				sumEntropy += entropy;
+			}
+			System.out.println("Sum of entropy: " + sumEntropy
+					+ "; Max entropy: " + maxEntropy);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	/**
+	 * Lat to row idx.
+	 * 
+	 * @param lat
+	 *            the lat
+	 * @return the int
+	 */
+	public int latToRowIdx(double lat) {
+		return (int) ((lat - minLatitude) / resolution);
+	}
+
+	/**
+	 * Lng to col idx.
+	 * 
+	 * @param lng
+	 *            the lng
+	 * @return the int
+	 */
+	public int lngToColIdx(double lng) {
+		return (int) ((lng - minLongitude) / resolution);
+	}
+
+	
+	/**
+	 * Compute cost.
+	 * 
+	 * @param t
+	 *            the t
+	 * @return the double
+	 */
+	public double computeCost(GenericTask t) {
+		int row = latToRowIdx(t.getLat());
+		int col = lngToColIdx(t.getLng());
+		// System.out.println(row + " " + col);
+		double entropy = 0;
+		if (entropies.containsKey(row)) {
+			HashMap h = entropies.get(row);
+			Iterator it = h.keySet().iterator();
+
+			if (entropies.get(row).containsKey(col)) {
+				// System.out.println(row + " !!!!!!!  " + col);
+				entropy = entropies.get(row).get(col);
+			}
+		}
+		// System.out.println(score / (1.0 + entropy));
+		return entropy;
+	}
+
+	/**
+	 * Prints the boundaries.
+	 */
+	public void printBoundaries() {
+		System.out.println("minLat:" + minLatitude + "   maxLat:" + maxLatitude
+				+ "   minLng:" + minLongitude + "   maxLng:" + maxLongitude);
 	}
 	
 	/**

@@ -170,6 +170,16 @@ public class UniformGenerator {
 	}
 	
 	/**
+	 * Random number depends on seed
+	 * @param seed
+	 * @return
+	 */
+	public static double randomGenerator(long seed) {
+	    Random generator = new Random(seed);
+	    return generator.nextDouble();
+	}
+	
+	/**
 	 * Generate a list of random value in a list, the values can be overlapped.
 	 * 
 	 * @param test_size

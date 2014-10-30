@@ -17,21 +17,44 @@ package org.geocrowd.setcover;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.geocrowd.Geocrowd;
 import org.geocrowd.common.Constants;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SetCoverGreedy.
+ * @author Hien To
  */
-public class MultiSetCoverGreedy_HighTaskCoverage extends MultiSetCoverGreedy {
+public class MultiSetCoverGreedy_LargeWorkerFanout extends MultiSetCoverGreedy {
 
-	public MultiSetCoverGreedy_HighTaskCoverage(ArrayList container,
+	/**
+	 * Only choose worker covers at least k tasks.
+	 */
+	Integer k = 4;
+
+	/**
+	 * The average tasks per worker.
+	 */
+	public double averageTasksPerWorker;
+
+	/**
+	 * The average workers per task.
+	 */
+	public double averageWorkersPerTask;
+
+	public MultiSetCoverGreedy_LargeWorkerFanout(ArrayList container,
 			Integer current_time_instance) {
 		super(container, current_time_instance);
-		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * Input: hashmap<taskid, deadline>, current time instance
+	 * 
+	 * @return true, if there is at least one task dead at next time instance
+	 */
+	private boolean containElementDeadAtNextTime(HashMap<Integer, Integer> s,
+			int current_time_instance) {
+		return s.values().contains(current_time_instance + 1)
+				|| (current_time_instance == Constants.TIME_INSTANCE - 1);
 	}
 
 	/**
@@ -47,7 +70,7 @@ public class MultiSetCoverGreedy_HighTaskCoverage extends MultiSetCoverGreedy {
 
 		while (!Q.isEmpty()) {
 			int bestWorkerIndex = 0; // track index of the best worker in S
-			int maxNoUncoveredTasks = 0;
+			int maxUncoveredTasks = 0;
 
 			/**
 			 * Iterate over worker set to select the item set that maximize the
@@ -55,7 +78,7 @@ public class MultiSetCoverGreedy_HighTaskCoverage extends MultiSetCoverGreedy {
 			 */
 			for (int k = 0; k < S.size(); k++) {
 				HashMap<Integer, Integer> s = S.get(k);
-				int noUncoveredTasks = 0;
+				int uncoveredTasks = 0;
 				/**
 				 * check if the task with id i is covered by < k workers
 				 */
@@ -63,15 +86,21 @@ public class MultiSetCoverGreedy_HighTaskCoverage extends MultiSetCoverGreedy {
 					if (assignedTaskMap.get(i) == null
 							|| assignedTaskMap.get(i) < Geocrowd.taskList
 									.get(i).getK()) {
-						noUncoveredTasks++;
+						uncoveredTasks++;
 					}
 				}
 
-				if (noUncoveredTasks > maxNoUncoveredTasks) {
-					maxNoUncoveredTasks = noUncoveredTasks;
+				/**
+				 * check condition: only select workers that either cover 
+				 * at least K (e.g.,= k=2,3..) tasks or
+				 * cover any task that will not available in the next time instance
+				 */
+				if (uncoveredTasks > maxUncoveredTasks
+						&& (uncoveredTasks >= Constants.M || containElementDeadAtNextTime(
+								s, currentTimeInstance))) {
+					maxUncoveredTasks = uncoveredTasks;
 					bestWorkerIndex = k;
 				}
-
 			}
 
 			assignWorkers.add(bestWorkerIndex);

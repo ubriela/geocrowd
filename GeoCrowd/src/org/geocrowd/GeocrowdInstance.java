@@ -46,38 +46,11 @@ import cplex.BPMatchingCplex;
  */
 public class GeocrowdInstance extends Geocrowd {
 
-	/** The min latitude. */
-	public double minLatitude = Double.MAX_VALUE;
-
-	/** The max latitude. */
-	public double maxLatitude = -Double.MAX_VALUE;
-
-	/** The min longitude. */
-	public double minLongitude = Double.MAX_VALUE;
-
-	/** The max longitude. */
-	public double maxLongitude = -Double.MAX_VALUE;
-
 	/** The worker no. */
 	public int workerNo = 100; // 100 // number of workers when workers are to
 								// be generated #
 	/** The grid. */
 	public Cell[][] grid;
-
-	/** The entropies. */
-	public HashMap<Integer, HashMap<Integer, Double>> entropies = null;
-
-	/** The max entropy. */
-	public double maxEntropy = 0;
-
-	/** The row count. */
-	public int rowCount = 0; // number of rows for the grid
-
-	/** The col count. */
-	public int colCount = 0; // number of cols for the grid
-
-	/** The entropy list. */
-	public ArrayList<EntropyRecord> entropyList = new ArrayList();
 
 	/** The sum max t. */
 	public int sumMaxT = 0;
@@ -89,17 +62,12 @@ public class GeocrowdInstance extends Geocrowd {
 	public int TotalTasksExpertiseMatch = 0; // number of assigned tasks, from
 												// exact
 												// match
-	/** The sum entropy. */
-	public int sumEntropy = 0;
 
 	/** The task expired no. */
 	public int taskExpiredNo = 0;
 
 	/** The all tasks. */
 	public ArrayList<double[]> allTasks = new ArrayList();
-
-	/** The resolution. */
-	public double resolution = 0;
 
 	/**
 	 * Instantiates a new geocrowd.
@@ -116,7 +84,7 @@ public class GeocrowdInstance extends Geocrowd {
 		case UNIFORM:
 			boundaryFile = Constants.uniBoundary;
 			break;
-		case SMALL:
+		case SMALL_TEST:
 			boundaryFile = Constants.smallBoundary;
 			break;
 		case YELP:
@@ -161,35 +129,6 @@ public class GeocrowdInstance extends Geocrowd {
 		return ((col) * resolution) + minLongitude;
 	}
 
-	/**
-	 * Compute cost.
-	 * 
-	 * @param t
-	 *            the t
-	 * @return the double
-	 */
-	private double computeCost(GenericTask t) {
-		int row = latToRowIdx(t.getLat());
-		int col = lngToColIdx(t.getLng());
-		// System.out.println(row + " " + col);
-		double entropy = 0;
-		if (entropies.containsKey(row)) {
-			HashMap h = entropies.get(row);
-			Iterator it = h.keySet().iterator();
-			// while (it.hasNext()) {
-			// Integer key = (Integer) it.next();
-			//
-			// System.out.println(key + " " + col);
-			// }
-			if (entropies.get(row).containsKey(col)) {
-				// System.out.println(row + " !!!!!!!  " + col);
-				entropy = entropies.get(row).get(col);
-			}
-		}
-		// System.out.println(score / (1.0 + entropy));
-		return entropy;
-	}
-
 	// compute score of a tuple <w,t>
 	/**
 	 * Compute score.
@@ -205,33 +144,6 @@ public class GeocrowdInstance extends Geocrowd {
 			return Constants.EXPERTISE_MATCH_SCORE;
 		else
 			return Constants.NON_EXPERTISE_MATCH_SCORE;
-	}
-
-	/**
-	 * Creates the grid.
-	 */
-	public void createGrid() {
-		resolution = 0;
-		switch (DATA_SET) {
-		case GOWALLA:
-			resolution = Constants.gowallaResolution;
-			break;
-		case SKEWED:
-			resolution = Constants.skewedResolution;
-			break;
-		case UNIFORM:
-			resolution = Constants.uniResolution;
-			break;
-		case SMALL:
-			resolution = Constants.smallResolution;
-			break;
-		case YELP:
-			resolution = Constants.yelpResolution;
-			break;
-		}
-		rowCount = (int) ((maxLatitude - minLatitude) / resolution) + 1;
-		colCount = (int) ((maxLongitude - minLongitude) / resolution) + 1;
-		System.out.println("Grid resolution: " + rowCount + "x" + colCount);
 	}
 
 	/**
@@ -337,28 +249,6 @@ public class GeocrowdInstance extends Geocrowd {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Lat to row idx.
-	 * 
-	 * @param lat
-	 *            the lat
-	 * @return the int
-	 */
-	public int latToRowIdx(double lat) {
-		return (int) ((lat - minLatitude) / resolution);
-	}
-
-	/**
-	 * Lng to col idx.
-	 * 
-	 * @param lng
-	 *            the lng
-	 * @return the int
-	 */
-	public int lngToColIdx(double lng) {
-		return (int) ((lng - minLongitude) / resolution);
 	}
 
 	/**
@@ -826,14 +716,6 @@ public class GeocrowdInstance extends Geocrowd {
 	}
 
 	/**
-	 * Prints the boundaries.
-	 */
-	public void printBoundaries() {
-		System.out.println("minLat:" + minLatitude + "   maxLat:" + maxLatitude
-				+ "   minLng:" + minLongitude + "   maxLng:" + maxLongitude);
-	}
-
-	/**
 	 * Prints the grid.
 	 */
 	public void printGrid() {
@@ -914,61 +796,6 @@ public class GeocrowdInstance extends Geocrowd {
 
 			t++;
 		}// for loop
-	}
-
-	/**
-	 * Get a list of entropy records.
-	 */
-	public void readEntropy() {
-		String filePath = "";
-		switch (DATA_SET) {
-		case GOWALLA:
-			filePath = Constants.gowallaLocationEntropyFileName;
-			break;
-		case SKEWED:
-			filePath = Constants.skewedLocationDensityFileName;
-			break;
-		case UNIFORM:
-			filePath = Constants.uniLocationDensityFileName;
-			break;
-		case SMALL:
-			filePath = Constants.smallLocationDensityFileName;
-			break;
-		case YELP:
-			filePath = Constants.yelpLocationEntropyFileName;
-			break;
-		}
-
-		entropies = new HashMap<Integer, HashMap<Integer, Double>>();
-		try {
-			FileReader file = new FileReader(filePath);
-			BufferedReader in = new BufferedReader(file);
-			while (in.ready()) {
-				String line = in.readLine();
-				String[] parts = line.split(",");
-				int row = Integer.parseInt(parts[0]);
-				int col = Integer.parseInt(parts[1]);
-				double entropy = Double.parseDouble(parts[2]);
-				if (entropy > maxEntropy)
-					maxEntropy = entropy;
-
-				if (entropies.containsKey(row))
-					entropies.get(row).put(col, entropy);
-				else {
-					HashMap<Integer, Double> rows = new HashMap<Integer, Double>();
-					rows.put(col, entropy);
-					entropies.put(row, rows);
-				}
-				EntropyRecord dR = new EntropyRecord(entropy, new Coord(row,
-						col));
-				entropyList.add(dR);
-				sumEntropy += entropy;
-			}
-			System.out.println("Sum of entropy: " + sumEntropy
-					+ "; Max entropy: " + maxEntropy);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**

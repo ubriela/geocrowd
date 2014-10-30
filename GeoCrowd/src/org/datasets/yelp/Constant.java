@@ -48,10 +48,13 @@ public class Constant {
 	public static String SaveStatistic = "dataset/real/yelp/yelp_statistic.txt";
 
 	/** The Split worker by time. */
-	public static String SplitWorkerByTime = "dataset/real/yelp/worker/yelp_workers";
+	public static String SplitWorkerByTime = "dataset/real/yelp/worker/t_yelp_workers";
+	public static String SplitWorkerByTime1 = "dataset/real/yelp/worker/t1/t1_yelp_workers";
+	public static String SplitWorkerByTime2 = "dataset/real/yelp/worker/t2/t2_yelp_workers";
 
 	/** The Save worker. */
 	public static String SaveWorker = "dataset/real/yelp/worker/yelp_workers";
+	public static String YelpWorker = "dataset/real/yelp/yelp_all_workers.txt";
 	
 	/** The suffix. */
 	public static String suffix = ".txt";
@@ -66,9 +69,12 @@ public class Constant {
 	public static double realResolution = 0.001;
 	
 	/** The Worker per file. */
-	public static int WorkerPerFile = 10000;
+	public static int WorkerPerFile = 1000;
 	
 	/** The Task per file. */
-	public static int TaskPerFile = 500;
+	public static int TaskPerFile = 5000;
+	
+	/** The number of time instance */
+	public static int TimeInstance = 10;
 
 }

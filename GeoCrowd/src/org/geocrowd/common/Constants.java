@@ -21,9 +21,22 @@ public class Constants {
 	/** The radius. */
 	public static double diameter = 0.5; // task circle radius
 	/** enable random k */
-	public static boolean IS_RANDOM_K = true;
+	public static boolean IS_RANDOM_K = false;
+	
 	/** required number of responses */
-	public static int K = 2;
+	public static int K = 1;
+	
+	/**
+	 * Only choose worker covers at least k tasks.
+	 */
+	public static int M = 4;
+	
+	/**
+	 * Time to deadline
+	 */
+	public static int T = 3;
+	
+	public static boolean useLocationEntropy = true;
 	
 	// ------------------------------------------------------------
 	

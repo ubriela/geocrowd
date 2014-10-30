@@ -269,7 +269,7 @@ public class PreProcess {
 		case UNIFORM:
 			matlabWorkerFilePath = Constants.uniMatlabWorkerFilePath;
 			break;
-		case SMALL:
+		case SMALL_TEST:
 			matlabWorkerFilePath = Constants.smallWorkerFilePath;
 		}
 
@@ -324,7 +324,7 @@ public class PreProcess {
 		case UNIFORM:
 			resolution = Constants.uniResolution;
 			break;
-		case SMALL:
+		case SMALL_TEST:
 			resolution = Constants.smallResolution;
 		case YELP:
 			resolution = Constants.yelpResolution;
@@ -802,7 +802,7 @@ public class PreProcess {
 		case UNIFORM:
 			boundaryFile = Constants.uniBoundary;
 			break;
-		case SMALL:
+		case SMALL_TEST:
 			boundaryFile = Constants.smallBoundary;
 			break;
 		case YELP:
@@ -956,7 +956,7 @@ public class PreProcess {
 		case UNIFORM:
 			locationDensityFileName = Constants.uniLocationDensityFileName;
 			break;
-		case SMALL:
+		case SMALL_TEST:
 			locationDensityFileName = Constants.smallLocationDensityFileName;
 			break;
 		}

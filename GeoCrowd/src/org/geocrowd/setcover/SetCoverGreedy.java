@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.VirtualWorker;
 
 // TODO: Auto-generated Javadoc
@@ -73,6 +74,7 @@ public abstract class SetCoverGreedy {
 //			}
 //		}
 //	}
+
 
     public SetCoverGreedy(ArrayList container, Integer current_time_instance) {
         listOfSets = new ArrayList<>();

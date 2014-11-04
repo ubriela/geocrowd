@@ -76,5 +76,4 @@ public class Constant {
 	
 	/** The number of time instance */
 	public static int TimeInstance = 10;
-
 }

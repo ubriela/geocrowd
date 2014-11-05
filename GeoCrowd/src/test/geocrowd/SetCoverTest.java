@@ -14,7 +14,10 @@ package test.geocrowd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+
+import maxcover.MaxCoverBasic;
 
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy_HighTaskCoverage;
@@ -33,7 +36,7 @@ public class SetCoverTest {
 	 * Test.
 	 */
 	@Test
-	public void test() {
+	public void test() {		
 		ArrayList<ArrayList> container = new ArrayList<>();
 		
 		container.add(new ArrayList<Integer>(Arrays.asList(1, 2, 3)));

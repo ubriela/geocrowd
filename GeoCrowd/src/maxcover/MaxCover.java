@@ -24,14 +24,16 @@ import org.geocrowd.common.crowdsource.VirtualWorker;
 /**
  * The Class MaxSetCover.
  */
-public abstract class MaxCoverGreedy {
+public abstract class MaxCover {
 
     /**
      * Each element in the list is associated with a worker, and each worker
      * contains a set of task ids that he is eligible to perform
 	 *
      */
-    ArrayList listOfSets = null;
+    public ArrayList listOfSets = null;
+    
+    public int k = 0;	// budget
 
     /**
      * All the task index in the candidate tasks (not the task list).
@@ -54,12 +56,14 @@ public abstract class MaxCoverGreedy {
      */
     Integer currentTimeInstance = 0;
 
-    public MaxCoverGreedy(ArrayList container, Integer current_time_instance) {
+    public MaxCover(ArrayList container, Integer currentTI) {
         listOfSets = new ArrayList<>();
         universe = new HashSet<>();
-        currentTimeInstance = current_time_instance;
+        currentTimeInstance = currentTI;
         if (container.size() > 0 && container.get(0).getClass().isInstance(new ArrayList())) {
-            for (int i = 0; i < container.size(); i++) {
+            // !!! this part may not in use
+        	System.out.println("debug: without deadline info");
+;        	for (int i = 0; i < container.size(); i++) {
 
                 ArrayList<Integer> items = (ArrayList<Integer>) container.get(i);
                 if (items != null) {
@@ -69,8 +73,10 @@ public abstract class MaxCoverGreedy {
                 }
             }
         } else {
+        	/**
+        	 * In case each task has a deadline
+        	 */
             for (int i = 0; i < container.size(); i++) {
-
                 HashMap<Integer, Integer> items = (HashMap<Integer, Integer>) container.get(i);
                 if (items != null) {
                     HashMap<Integer, Integer> itemSet = new HashMap<>(items);
@@ -88,5 +94,5 @@ public abstract class MaxCoverGreedy {
      *
      * @return the number of assigned workers
      */
-    public abstract HashSet<Integer> maxSetCover();
+    public abstract HashSet<Integer> maxCover();
 }

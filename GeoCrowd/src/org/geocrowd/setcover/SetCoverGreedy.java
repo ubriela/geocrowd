@@ -32,7 +32,7 @@ public abstract class SetCoverGreedy {
      * contains a set of task ids that he is eligible to perform
 	 *
      */
-    ArrayList listOfSets = null;
+    public ArrayList listOfSets = null;
 
     /**
      * All the task index in the candidate tasks (not the task list).

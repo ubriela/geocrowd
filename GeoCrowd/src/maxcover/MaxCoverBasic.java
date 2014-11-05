@@ -75,7 +75,7 @@ public class MaxCoverBasic extends MaxCover {
 			}
 			
 //			System.out.print(S.get(bestWorkerIndex));
-//			System.out.println(maxNoUncoveredTasks);
+			System.out.println(maxNoUncoveredTasks);
 			
 			assignWorkers.add(bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);

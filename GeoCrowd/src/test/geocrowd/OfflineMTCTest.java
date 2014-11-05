@@ -14,11 +14,11 @@ public class OfflineMTCTest {
 
     public static void test() {
 
-        Geocrowd.DATA_SET = DatasetEnum.SMALL_TEST;
+        Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
         OfflineMTC offlineMTC = new OfflineMTC();
-        offlineMTC.budget = 2;
-        for (int i = 0; i < 2; i++) {
+        offlineMTC.budget = 100;
+        for (int i = 0; i < 10; i++) {
             switch (Geocrowd.DATA_SET) {
                 case GOWALLA:
                     offlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix

@@ -15,11 +15,11 @@ import org.geocrowd.common.Constants;
  * @author ubriela
  *
  */
-public class MaxCoverAdapt extends MaxCover {
+public class MaxCoverAdaptS extends MaxCoverS {
 
 	public int lambda; // algorithm stops when gain is less than lambda
 
-	public MaxCoverAdapt(ArrayList container, Integer currentTI) {
+	public MaxCoverAdaptS(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
 		// TODO Auto-generated constructor stub
 	}
@@ -45,24 +45,22 @@ public class MaxCoverAdapt extends MaxCover {
 		 * threshold or no more tasks to cover
 		 */
 		while (!Q.isEmpty()) {
-			int bestWorkerIndex = 0; // track index of the best worker in S
+			int bestWorkerIndex = 0;
+			double smallestAvgWeight = 10000000;
 			int maxNoUncoveredTasks = 0;
+			
 			/**
 			 * Iterate all workers, find the one which covers maximum number of
 			 * uncovered tasks
 			 */
 			for (int k : S.keySet()) {
-				HashMap<Integer, Integer> s = S.get(k); // task set covered by
-														// current worker
-				int noUncoveredTasks = 0;
-				for (Integer i : s.keySet()) {
-					if (!assignedTaskSet.contains(i)) {
-						noUncoveredTasks++;
-					}
-				}
-				if (noUncoveredTasks > maxNoUncoveredTasks) {
-					maxNoUncoveredTasks = noUncoveredTasks;
+				HashMap<Integer, Integer> s = S.get(k);
+				WeightGain wg = weight(s, currentTimeInstance,
+						assignedTaskSet);
+				if (wg.weight < smallestAvgWeight) {
+					smallestAvgWeight = wg.weight;
 					bestWorkerIndex = k;
+					maxNoUncoveredTasks = wg.gain;
 				}
 			}
 

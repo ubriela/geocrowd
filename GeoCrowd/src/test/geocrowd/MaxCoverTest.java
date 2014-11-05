@@ -19,6 +19,7 @@ import java.util.HashSet;
 
 import maxcover.MaxCoverAdapt;
 import maxcover.MaxCoverBasic;
+import maxcover.MaxCoverT;
 
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy_HighTaskCoverage;
@@ -74,7 +75,7 @@ public class MaxCoverTest {
 		return container;
 	}
 	
-	@Test
+//	@Test
 	public void testMaxCoverBasic() {
 		ArrayList<HashMap<Integer, Integer>> container = getContainer();
 		MaxCoverBasic mc = new MaxCoverBasic(container, 0);
@@ -91,7 +92,20 @@ public class MaxCoverTest {
 	public void testMaxCoverAdapt() {
 		ArrayList<HashMap<Integer, Integer>> container = getContainer();
 		MaxCoverAdapt mc = new MaxCoverAdapt(container, 0);
-		mc.lambda = 1;
+		mc.lambda = 3;
+		
+		System.out.println(mc.universe);
+		System.out.println(mc.mapSets);
+		
+		HashSet<Integer> no_set = mc.maxCover();
+		System.out.println(no_set);
+	}
+	
+	@Test
+	public void testMaxCoverT() {
+		ArrayList<HashMap<Integer, Integer>> container = getContainer();
+		MaxCoverT mc = new MaxCoverT(container, 1);
+		mc.budget = 2;
 		
 		System.out.println(mc.universe);
 		System.out.println(mc.mapSets);

@@ -32,7 +32,6 @@ import org.junit.Test;
  */
 public class MaxCoverTest {
 	
-	
 	public ArrayList<HashMap<Integer, Integer>> getContainer() {
 		ArrayList<HashMap<Integer, Integer>> container = new ArrayList<>();
 		
@@ -52,7 +51,6 @@ public class MaxCoverTest {
 		s2.put(4, 0);
 		s2.put(5, 0);
 		container.add(s2);
-		
 		
 		HashMap<Integer, Integer> s3 = new HashMap<Integer, Integer>();
 		s3.put(4, 0);
@@ -80,10 +78,10 @@ public class MaxCoverTest {
 	public void testMaxCoverBasic() {
 		ArrayList<HashMap<Integer, Integer>> container = getContainer();
 		MaxCoverBasic mc = new MaxCoverBasic(container, 0);
-		mc.k = 2;
+		mc.budget = 2;
 		
 		System.out.println(mc.universe);
-		System.out.println(mc.listOfSets);
+		System.out.println(mc.mapSets);
 		
 		HashSet<Integer> no_set = mc.maxCover();
 		System.out.println(no_set);
@@ -96,7 +94,7 @@ public class MaxCoverTest {
 		mc.lambda = 1;
 		
 		System.out.println(mc.universe);
-		System.out.println(mc.listOfSets);
+		System.out.println(mc.mapSets);
 		
 		HashSet<Integer> no_set = mc.maxCover();
 		System.out.println(no_set);

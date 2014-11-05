@@ -31,9 +31,9 @@ public abstract class MaxCover {
      * contains a set of task ids that he is eligible to perform
 	 *
      */
-    public ArrayList listOfSets = null;
+    public HashMap mapSets = null;
     
-    public int k = 0;	// budget
+    public int budget = 0;	// budget
 
     /**
      * All the task index in the candidate tasks (not the task list).
@@ -57,7 +57,8 @@ public abstract class MaxCover {
     Integer currentTimeInstance = 0;
 
     public MaxCover(ArrayList container, Integer currentTI) {
-        listOfSets = new ArrayList<>();
+        mapSets = new HashMap<>();
+        int k = 0;
         universe = new HashSet<>();
         currentTimeInstance = currentTI;
         if (container.size() > 0 && container.get(0).getClass().isInstance(new ArrayList())) {
@@ -68,7 +69,7 @@ public abstract class MaxCover {
                 ArrayList<Integer> items = (ArrayList<Integer>) container.get(i);
                 if (items != null) {
                     HashSet<Integer> itemSet = new HashSet<Integer>(items);
-                    listOfSets.add(itemSet);
+                    mapSets.put(k++, itemSet);
                     universe.addAll(itemSet);
                 }
             }
@@ -80,7 +81,7 @@ public abstract class MaxCover {
                 HashMap<Integer, Integer> items = (HashMap<Integer, Integer>) container.get(i);
                 if (items != null) {
                     HashMap<Integer, Integer> itemSet = new HashMap<>(items);
-                    listOfSets.add(itemSet);
+                    mapSets.put(k++, itemSet);
                     universe.addAll(itemSet.keySet());
                 }
             }

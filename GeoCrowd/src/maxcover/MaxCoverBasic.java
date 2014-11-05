@@ -40,7 +40,7 @@ public class MaxCoverBasic extends MaxCover {
 	 */
 	@Override
 	public HashSet<Integer> maxCover() {
-		ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets
+		HashMap<Integer, HashMap<Integer, Integer>> S = (HashMap<Integer, HashMap<Integer, Integer>>) mapSets
 				.clone();
 
 		/**
@@ -52,14 +52,14 @@ public class MaxCoverBasic extends MaxCover {
 		/**
 		 * Run until either running out of budget or no more tasks to cover
 		 */
-		while (assignWorkers.size() < k && !Q.isEmpty()) {
+		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = 0; // track index of the best worker in S
 			int maxNoUncoveredTasks = 0;
 			/**
 			 * Iterate all workers, find the one which covers maximum number of
 			 * uncovered tasks
 			 */
-			for (int k = 0; k < S.size(); k++) {
+			for (int k : S.keySet()) {
 				HashMap<Integer, Integer> s = S.get(k); // task set covered by
 														// current worker
 				int noUncoveredTasks = 0;
@@ -73,14 +73,13 @@ public class MaxCoverBasic extends MaxCover {
 					bestWorkerIndex = k;
 				}
 			}
-
 			
-			System.out.println(S.get(bestWorkerIndex));
+			System.out.print(S.get(bestWorkerIndex));
 			System.out.println(maxNoUncoveredTasks);
 			
 			assignWorkers.add(bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
-			S.remove(taskSet);
+			S.remove(bestWorkerIndex);
 			Q.removeAll(taskSet.keySet());
 
 			/**

@@ -31,7 +31,7 @@ public class MaxCoverAdapt extends MaxCover {
 	 */
 	@Override
 	public HashSet<Integer> maxCover() {
-		ArrayList<HashMap<Integer, Integer>> S = (ArrayList<HashMap<Integer, Integer>>) listOfSets
+		HashMap<Integer, HashMap<Integer, Integer>> S = (HashMap<Integer, HashMap<Integer, Integer>>) mapSets
 				.clone();
 
 		/**
@@ -51,7 +51,7 @@ public class MaxCoverAdapt extends MaxCover {
 			 * Iterate all workers, find the one which covers maximum number of
 			 * uncovered tasks
 			 */
-			for (int k = 0; k < S.size(); k++) {
+			for (int k : S.keySet()) {
 				HashMap<Integer, Integer> s = S.get(k); // task set covered by
 														// current worker
 				int noUncoveredTasks = 0;
@@ -75,7 +75,7 @@ public class MaxCoverAdapt extends MaxCover {
 			
 			assignWorkers.add(bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
-			S.remove(taskSet);
+			S.remove(bestWorkerIndex);
 			Q.removeAll(taskSet.keySet());
 
 			/**

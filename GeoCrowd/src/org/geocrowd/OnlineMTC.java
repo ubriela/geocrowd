@@ -39,7 +39,6 @@ public class OnlineMTC extends GeocrowdSensing {
     public void readTasks(String fileName) {
         this.numberArrivalTask = Parser.parseSensingTasks(fileName, taskList);
         TaskCount += this.numberArrivalTask;
-       
     }
     
     

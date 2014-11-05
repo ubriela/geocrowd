@@ -26,8 +26,8 @@ public class OnlineMTCTest {
     }
 
     private static void test() throws IOException {
-        Geocrowd.DATA_SET = DatasetEnum.SMALL_TEST;
-        Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_BASIC;
+        Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+        Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_PRO_B;
         OnlineMTC onlineMTC = new OnlineMTC();
         onlineMTC.totalBudget = 4;
 

@@ -18,7 +18,6 @@ import org.geocrowd.common.Constants;
 public class MaxCoverAdapt extends MaxCover {
 
     public int lambda; // algorithm stops when gain is less than lambda
-    public int totalNumberTasks;
     public int beta;
     
     public MaxCoverAdapt(ArrayList container, Integer currentTI) {

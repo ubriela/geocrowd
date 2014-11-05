@@ -54,7 +54,7 @@ public class Constants {
 	public static int TaskNo = 1000; // 200; // number of tasks
 
 	/** The time instance. */
-	public static int TIME_INSTANCE = 20;
+	public static int TIME_INSTANCE = 2;
 
 	/** The Task duration. */
 	public static int TaskDuration = 1;// 20000; //duration of all tasks before

@@ -326,7 +326,8 @@ public class GeocrowdOnline extends Geocrowd {
 
 	@Override
 	public void readTasks(String fileName) {
-		TaskCount += Parser.parseSpecializedTasks(fileName, taskList);
+            int newTask = Parser.parseSpecializedTasks(fileName, taskList);
+		TaskCount += newTask;
 	}
 
 	@Override

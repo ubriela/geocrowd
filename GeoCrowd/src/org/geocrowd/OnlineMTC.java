@@ -19,6 +19,8 @@ public class OnlineMTC extends GeocrowdSensing {
     public int totalBudget = 0;
 
     public final int totalNumberTasks;
+    
+    public int numberArrivalTask=0;
 
     public OnlineMTC() throws IOException {
         if (AlgorithmEnum.BASIC != Geocrowd.algorithm) {
@@ -27,24 +29,38 @@ public class OnlineMTC extends GeocrowdSensing {
         else this.totalNumberTasks=-1;
     }
 
+    
+     /**
+     * Read tasks from file.
+     *
+     * @param fileName the file name
+     */
+    @Override
+    public void readTasks(String fileName) {
+        this.numberArrivalTask = Parser.parseSensingTasks(fileName, taskList);
+        TaskCount += this.numberArrivalTask;
+       
+    }
+    
+    
     public HashSet<Integer> maxCoverage() {
         MaxCover maxCover = null;
         HashSet<Integer> assignedWorker = null;
         switch (algorithm) {
 
             case MAX_COVER_BASIC:
-
+            case MAX_COVER_PRO_B:
                 MaxCoverBasic maxCoverBasic = new MaxCoverBasic(getContainerWithDeadline(), TimeInstance);
                 maxCoverBasic.budget = getBudget(algorithm);
-                maxCoverBasic.maxCover();
+                assignedWorker=  maxCoverBasic.maxCover();
                 maxCover = maxCoverBasic;
-
+                break;
+            
             case MAX_COVER_ADAPT_B:
 
                 MaxCoverAdapt maxCoverAdapt = new MaxCoverAdapt(getContainerWithDeadline(), TimeInstance);
-                maxCoverAdapt.totalNumberTasks = totalNumberTasks;
                 assignedWorker = maxCover.maxCover();
-
+                break;
         }
 
         /**
@@ -81,6 +97,10 @@ public class OnlineMTC extends GeocrowdSensing {
                 } else {
                     return totalBudget - totalBudget / Constant.TimeInstance * (Constant.TimeInstance - 1);
                 }
+            case MAX_COVER_PRO_B:
+                    
+                    return totalBudget*numberArrivalTask / totalNumberTasks;
+                
 
         }
         return 0;
@@ -91,23 +111,23 @@ public class OnlineMTC extends GeocrowdSensing {
         for(int i=0;i<Constant.TimeInstance;i++){
             switch (Geocrowd.DATA_SET) {
                 case GOWALLA:
-                    numberTasks+= Parser.readNumberOfTasks(Constants.gowallaWorkerFileNamePrefix
+                    numberTasks+= Parser.readNumberOfTasks(Constants.gowallaTaskFileNamePrefix
                             + i + ".txt");
                     break;
                 case YELP:
-                    numberTasks+= Parser.readNumberOfTasks(Constants.yelpWorkerFileNamePrefix
+                    numberTasks+= Parser.readNumberOfTasks(Constants.yelpTaskFileNamePrefix
                             + i + ".txt");
                     break;
                 case UNIFORM:
-                    numberTasks+= Parser.readNumberOfTasks(Constants.uniWorkerFileNamePrefix
+                    numberTasks+= Parser.readNumberOfTasks(Constants.uniTaskFileNamePrefix
                             + i + ".txt");
                     break;
                 case SKEWED:
-                    numberTasks+= Parser.readNumberOfTasks(Constants.skewedWorkerFileNamePrefix
+                    numberTasks+= Parser.readNumberOfTasks(Constants.skewedTaskFileNamePrefix
                             + i + ".txt");
                     break;
                 case SMALL_TEST:
-                    numberTasks+= Parser.readNumberOfTasks(Constants.smallWorkerFileNamePrefix
+                    numberTasks+= Parser.readNumberOfTasks(Constants.smallTaskFileNamePrefix
                             + i + ".txt");
                     break;
             }

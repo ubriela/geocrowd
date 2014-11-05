@@ -55,10 +55,10 @@ public class OnlineMTC extends GeocrowdSensing {
 
             case MAX_COVER_BASIC:
             case MAX_COVER_PRO_B:
-                MaxCoverBasic maxCoverBasic = new MaxCoverBasic(getContainerWithDeadline(), TimeInstance);
-                maxCoverBasic.budget = getBudget(algorithm);
-                assignedWorker = maxCoverBasic.maxCover();
-                maxCover = maxCoverBasic;
+                MaxCoverBasic maxCoverPro = new MaxCoverBasic(getContainerWithDeadline(), TimeInstance);
+                maxCoverPro.budget = getBudget(algorithm);
+                assignedWorker = maxCoverPro.maxCover();
+                maxCover = maxCoverPro;
                 break;
 
             case MAX_COVER_ADAPT_B:
@@ -67,23 +67,26 @@ public class OnlineMTC extends GeocrowdSensing {
                  * compute lamda0
                  */
                 if (TimeInstance == 0) {
-                    MaxCoverBasic maxCoverBasic2 = new MaxCoverBasic(getContainerWithDeadline(), TimeInstance);
-                    maxCoverBasic2.budget = getBudget(AlgorithmEnum.MAX_COVER_PRO_B);
-                    assignedWorker = maxCoverBasic2.maxCover();
-                    lamda = maxCoverBasic2.gain;
+                    MaxCoverBasic maxCoverPro2 = new MaxCoverBasic(getContainerWithDeadline(), TimeInstance);
+                    maxCoverPro2.budget = getBudget(AlgorithmEnum.MAX_COVER_PRO_B);
+                    assignedWorker = maxCoverPro2.maxCover();
+                    lamda = maxCoverPro2.gain;
                     usedBudget += assignedWorker.size();
-                    maxCover = maxCoverBasic2;
+
+                    maxCover = maxCoverPro2;
                 } else {
-                    if (usedBudget - totalBudget * totalNumberArrivalTask / totalNumberTasks > 0) {
-                        lamda += beta;
-                    }
-                    else 
-                        lamda = lamda-beta;
+
                     MaxCoverAdapt maxCoverAdapt = new MaxCoverAdapt(getContainerWithDeadline(), TimeInstance);
                     maxCoverAdapt.lambda = lamda;
                     assignedWorker = maxCoverAdapt.maxCover();
                     maxCover = maxCoverAdapt;
                     usedBudget += assignedWorker.size();
+
+                    if (usedBudget - totalBudget * totalNumberArrivalTask / totalNumberTasks > 0) {
+                        lamda += beta;
+                    } else {
+                        lamda = lamda - beta;
+                    }
                 }
 
                 break;

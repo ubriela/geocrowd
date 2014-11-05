@@ -67,9 +67,8 @@ public class OnlineMTC extends GeocrowdSensing {
                  */
                 MaxCoverBasic maxCoverBasic2 = new MaxCoverBasic(getContainerWithDeadline(), TimeInstance);
                 maxCoverBasic2.budget = getBudget(MAX_COVER_BASIC);
-                assignedWorker = maxCoverBasic.maxCover();
-                lamda
-                        = assignedWorker = maxCover.maxCover();
+                assignedWorker = maxCoverBasic2.maxCover();
+                
                 break;
         }
 

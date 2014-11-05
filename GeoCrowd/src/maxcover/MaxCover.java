@@ -26,74 +26,82 @@ import org.geocrowd.common.crowdsource.VirtualWorker;
  */
 public abstract class MaxCover {
 
-    /**
-     * Each element in the list is associated with a worker, and each worker
-     * contains a set of task ids that he is eligible to perform
+	/**
+	 * Each element in the list is associated with a worker, and each worker
+	 * contains a set of task ids that he is eligible to perform
 	 *
-     */
-    public HashMap mapSets = null;
-    
-    public int budget = 0;	// budget
+	 */
+	public HashMap mapSets = null;
 
-    /**
-     * All the task index in the candidate tasks (not the task list).
-     */
-    public HashSet<Integer> universe = null;
-    public HashSet<Integer> assignedTaskSet = null;
+	public int budget = 0; // budget
 
-    public double averageDelayTime=0;
-    /**
-     * The number of assigned tasks.
-     */
-    public int assignedTasks = 0;
-    
-    /**
-     * The assigned workers
-     */
-    public HashSet<Integer> assignWorkers = new HashSet<>();
-    /**
-     * The current time instance.
-     */
-    Integer currentTimeInstance = 0;
+	public int gain = 0; // this gain is updated at every stage of greedy
+							// algorithm
+	
 
-    public MaxCover(ArrayList container, Integer currentTI) {
-        mapSets = new HashMap<>();
-        int k = 0;
-        universe = new HashSet<>();
-        currentTimeInstance = currentTI;
-        if (container.size() > 0 && container.get(0).getClass().isInstance(new ArrayList())) {
-            // !!! this part may not in use
-        	System.out.println("debug: without deadline info");
-;        	for (int i = 0; i < container.size(); i++) {
+	/**
+	 * All the task index in the candidate tasks (not the task list).
+	 */
+	public HashSet<Integer> universe = null;
+	public HashSet<Integer> assignedTaskSet = null;
 
-                ArrayList<Integer> items = (ArrayList<Integer>) container.get(i);
-                if (items != null) {
-                    HashSet<Integer> itemSet = new HashSet<Integer>(items);
-                    mapSets.put(k++, itemSet);
-                    universe.addAll(itemSet);
-                }
-            }
-        } else {
-        	/**
-        	 * In case each task has a deadline
-        	 */
-            for (int i = 0; i < container.size(); i++) {
-                HashMap<Integer, Integer> items = (HashMap<Integer, Integer>) container.get(i);
-                if (items != null) {
-                    HashMap<Integer, Integer> itemSet = new HashMap<>(items);
-                    mapSets.put(k++, itemSet);
-                    universe.addAll(itemSet.keySet());
-                }
-            }
-        }
-    }
+	public double averageDelayTime = 0;
+	/**
+	 * The number of assigned tasks.
+	 */
+	public int assignedTasks = 0;
 
-    /**
-     * Max set cover.
-     *
-     * Note that all the tasks will be assigned after this.
-     *
-     * @return the number of assigned workers
-     */
-    public abstract HashSet<Integer> maxCover();
+	/**
+	 * The assigned workers
+	 */
+	public HashSet<Integer> assignWorkers = new HashSet<>();
+	/**
+	 * The current time instance.
+	 */
+	Integer currentTimeInstance = 0;
+
+	public MaxCover(ArrayList container, Integer currentTI) {
+		mapSets = new HashMap<>();
+		int k = 0;
+		universe = new HashSet<>();
+		currentTimeInstance = currentTI;
+		if (container.size() > 0
+				&& container.get(0).getClass().isInstance(new ArrayList())) {
+			// !!! this part may not in use
+			System.out.println("debug: without deadline info");
+			;
+			for (int i = 0; i < container.size(); i++) {
+
+				ArrayList<Integer> items = (ArrayList<Integer>) container
+						.get(i);
+				if (items != null) {
+					HashSet<Integer> itemSet = new HashSet<Integer>(items);
+					mapSets.put(k++, itemSet);
+					universe.addAll(itemSet);
+				}
+			}
+		} else {
+			/**
+			 * In case each task has a deadline
+			 */
+			for (int i = 0; i < container.size(); i++) {
+				HashMap<Integer, Integer> items = (HashMap<Integer, Integer>) container
+						.get(i);
+				if (items != null) {
+					HashMap<Integer, Integer> itemSet = new HashMap<>(items);
+					mapSets.put(k++, itemSet);
+					universe.addAll(itemSet.keySet());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Max set cover.
+	 *
+	 * Note that all the tasks will be assigned after this.
+	 *
+	 * @return the number of assigned workers
+	 */
+	public abstract HashSet<Integer> maxCover();
 }

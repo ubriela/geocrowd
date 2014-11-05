@@ -100,7 +100,7 @@ public abstract class Geocrowd {
 	public int TimeInstance = 0;
 
 	/** current workers at one time instance. */
-	public ArrayList<GenericWorker> workerList = new ArrayList<>();
+	public static ArrayList<GenericWorker> workerList = new ArrayList<>();
 
 	/** maintain a set of current task list, not include expired ones. */
 	public static ArrayList<GenericTask> taskList = new ArrayList<>();

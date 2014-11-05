@@ -23,16 +23,16 @@ import org.geocrowd.common.Utils;
 public class GenericWorker {
 	
 	/** The user id. */
-	private String userID;
+	public String userID;
 	
 	/** The lat. */
-	private double lat;
+	public double lat;
 	
 	/** The lng. */
-	private double lng;
+	public double lng;
 	
 	/** The max task no. */
-	private int maxTaskNo;
+	public int maxTaskNo;
 	
 
 	/**

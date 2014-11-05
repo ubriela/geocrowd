@@ -39,7 +39,24 @@ public enum AlgorithmEnum {
 	/** Set Cover Greedy using alive concept **/
 	GREEDY_HIGH_TASK_COVERAGE_MULTI,
 	GREEDY_LARGE_WORKER_FANOUT_MULTI,
-	GREEDY_CLOSE_TO_DEADLINE_MULTI
+	GREEDY_CLOSE_TO_DEADLINE_MULTI,
+        
+        
+        /** Max cover greedy **/
+        MAX_COVER_BASIC,
+        MAX_COVER_BASIC_T,
+        MAX_COVER_BASIC_S,
+        MAX_COVER_BASIC_ST,
+        MAX_COVER_PRO_B,
+        MAX_COVER_PRO_T,
+        MAX_COVER_PRO_S,
+        MAX_COVER_PRO_ST,
+        MAX_COVER_ADAPT_B,
+        MAX_COVER_ADAPT_T,
+        MAX_COVER_ADAPT_S,
+        MAX_COVER_ADAPT_ST
+        
+        
 	
 	
 	

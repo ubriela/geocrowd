@@ -18,8 +18,8 @@ package org.geocrowd.common;
  */
 public class Constants {
 
-	/** The radius. */
-	public static double diameter = 0.5; // task circle radius
+	/** The diameter. */
+	public static double diameter = 4; // task circle diameter
 	/** enable random k */
 	public static boolean IS_RANDOM_K = false;
 	
@@ -57,7 +57,7 @@ public class Constants {
 	public static int TIME_INSTANCE = 20;
 
 	/** The Task duration. */
-	public static int TaskDuration = 5;// 20000; //duration of all tasks before
+	public static int TaskDuration = 1;// 20000; //duration of all tasks before
 										// they expire are fixed to 1000ms
 	/** The Max tasks per worker. */
 	public static int MaxTasksPerWorker = 20; // maximum # of tasks that a
@@ -70,13 +70,13 @@ public class Constants {
 
 	// small dataset
 	/** The small task file name prefix. */
-	public static String smallTaskFileNamePrefix = "dataset/small/task/tasks";
+	public static String smallTaskFileNamePrefix = "dataset/small/maxcover/task/tasks";
 
 	/** The small worker file path. */
 	public static String smallWorkerFilePath = "dataset/small/worker/locations";
 
 	/** The small worker file name prefix. */
-	public static String smallWorkerFileNamePrefix = "dataset/small/worker/workers";
+	public static String smallWorkerFileNamePrefix = "dataset/small/maxcover/worker/workers";
 
 	/** The small boundary. */
 	public static String smallBoundary = "dataset/small/small_boundary.txt";

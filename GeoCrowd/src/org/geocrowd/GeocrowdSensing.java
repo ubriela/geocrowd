@@ -52,6 +52,7 @@ import org.paukov.combinatorics.ICombinatoricsVector;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.PrimitiveSink;
+import org.geocrowd.common.crowdsource.SensingWorker;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -78,6 +79,7 @@ public class GeocrowdSensing extends Geocrowd {
 	 */
 	VirtualWorker[] vWorkerArray;
 
+       
 	/**
 	 * Gets an array of workers, each worker is associated with a hashmap
 	 * <taskid, deadline>.
@@ -86,7 +88,7 @@ public class GeocrowdSensing extends Geocrowd {
 	 * 
 	 * @return a container with task deadline
 	 */
-	private ArrayList<HashMap<Integer, Integer>> getContainerWithDeadline() {
+	public ArrayList<HashMap<Integer, Integer>> getContainerWithDeadline() {
 		ArrayList<HashMap<Integer, Integer>> containerWithDeadline = new ArrayList<>();
 		Iterator it = containerWorker.iterator();
 		while (it.hasNext()) {
@@ -116,12 +118,14 @@ public class GeocrowdSensing extends Geocrowd {
 		containerWorker = new ArrayList<>();
 		containerPrune = new ArrayList[workerList.size()];
 
-		// remove expired task from task list
+		
+                  // remove expired task from task list
 		pruneExpiredTasks();
-
 		for (int workeridx = 0; workeridx < workerList.size(); workeridx++) {
 			reverseRangeQuery(workeridx);
 		}
+               
+               
 
 		// remove workers with no tasks
 		for (int i = containerPrune.length - 1; i >= 0; i--) {
@@ -593,6 +597,8 @@ public class GeocrowdSensing extends Geocrowd {
 	public void readTasks(String fileName) {
 		TaskCount += Parser.parseSensingTasks(fileName, taskList);
 	}
+        
+     
 
 	/**
 	 * Read workers from file Working region of each worker is computed from his
@@ -615,7 +621,7 @@ public class GeocrowdSensing extends Geocrowd {
 	 * @param workerIdx
 	 *            the worker idx
 	 */
-	private void reverseRangeQuery(final int workerIdx) {
+	public void reverseRangeQuery(final int workerIdx) {
 		/* actual worker */
 		GenericWorker w = workerList.get(workerIdx);
 
@@ -625,9 +631,10 @@ public class GeocrowdSensing extends Geocrowd {
 			SensingTask task = (SensingTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getEntryTime()) >= Constants.TaskDuration) {
+			if ((TimeInstance - task.getEntryTime()) >= (Constants.TaskDuration-1)) {
 				task.setExpired();
-			} else /* if worker in task region */if (distanceWorkerTask(w,
+			} 
+                        /* if worker in task region */if (distanceWorkerTask(w,
 					task) <= task.getRadius()) {
 
 				/* compute a list of candidate tasks */

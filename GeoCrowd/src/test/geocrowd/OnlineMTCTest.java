@@ -27,11 +27,11 @@ public class OnlineMTCTest {
 
     private static void test() throws IOException {
         Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-        Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_PRO_B;
+        Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_BASIC;
         OnlineMTC onlineMTC = new OnlineMTC();
         onlineMTC.totalBudget = 4;
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
 
             switch (Geocrowd.DATA_SET) {
                 case GOWALLA:

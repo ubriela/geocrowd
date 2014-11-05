@@ -75,5 +75,5 @@ public class Constant {
 	public static int TaskPerFile = 5000;
 	
 	/** The number of time instance */
-	public static int TimeInstance = 2;
+	public static int TimeInstance = 3;
 }

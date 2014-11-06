@@ -95,7 +95,8 @@ public class PreProcessTest extends PreProcess {
 	@Test
 	public void testFilterInput() {
 		PreProcess prep = new PreProcess();
-
+		PreProcess.DATA_SET = DatasetEnum.GOWALLA;
+		
 		prep.filterInput(Constants.gowallaFileName_CA, 32.1713906, -124.3041035, 41.998434033, -114.0043464333);
 
 		prep.computeBoundary(Constants.gowallaFileName_CA);

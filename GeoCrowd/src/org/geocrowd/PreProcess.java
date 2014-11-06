@@ -1,15 +1,15 @@
 /*******************************************************************************
-* @ Year 2013
-* This is the source code of the following papers. 
-* 
-* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
-* 
-* 
-* Please contact the author Hien To, ubriela@gmail.com if you have any question.
-*
-* Contributors:
-* Hien To - initial implementation
-*******************************************************************************/
+ * @ Year 2013
+ * This is the source code of the following papers. 
+ * 
+ * 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+ * 
+ * 
+ * Please contact the author Hien To, ubriela@gmail.com if you have any question.
+ *
+ * Contributors:
+ * Hien To - initial implementation
+ *******************************************************************************/
 package org.geocrowd;
 
 import java.io.*;
@@ -31,38 +31,37 @@ import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.Observation;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PreProcess.
  * 
  * @author Leyla & Hien To
  */
 public class PreProcess {
-	
+
 	/** The min lat. */
 	public static double minLat = Double.MAX_VALUE;
-	
+
 	/** The max lat. */
 	public static double maxLat = (-1) * Double.MAX_VALUE;
-	
+
 	/** The min lng. */
 	public static double minLng = Double.MAX_VALUE;
-	
+
 	/** The max lng. */
 	public static double maxLng = (-1) * Double.MAX_VALUE;
 
 	/** The row count. */
 	public static int rowCount = 0; // number of rows for the grid
-	
+
 	/** The col count. */
 	public static int colCount = 0; // number of cols for the grid
-	
+
 	/** The time counter. */
 	public static int timeCounter = 0; // works as the clock for task generation
-	
+
 	/** The resolution. */
 	public double resolution = 0;
-	
+
 	/** The data set. */
 	public static DatasetEnum DATA_SET;
 
@@ -88,7 +87,7 @@ public class PreProcess {
 		if (mbr.getMaxLng() > maxLng)
 			mbr.setMaxLng(maxLng);
 	}
-	
+
 	/**
 	 * Giving a set of points, compute the MBR covering all the points.
 	 * 
@@ -121,13 +120,12 @@ public class PreProcess {
 
 				FileWriter writer = new FileWriter(datafile + "_boundary.txt");
 				BufferedWriter out = new BufferedWriter(writer);
-				out.write(minLat + " " + minLng + " " + maxLat
-						+ " " + maxLng);
+				out.write(minLat + " " + minLng + " " + maxLat + " " + maxLng);
 				out.close();
 
-				System.out.println("Boundary [minLat:" + minLat
-						+ "   maxLat:" + maxLat + "   minLng:"
-						+ minLng + "   maxLng:" + maxLng + "]");
+				System.out.println("Boundary [minLat:" + minLat + "   maxLat:"
+						+ maxLat + "   minLng:" + minLng + "   maxLng:"
+						+ maxLng + "]");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -158,8 +156,8 @@ public class PreProcess {
 
 					FileWriter writer = new FileWriter(Constants.skewedBoundary);
 					BufferedWriter out = new BufferedWriter(writer);
-					out.write(minLat + " " + minLng + " "
-							+ maxLat + " " + maxLng);
+					out.write(minLat + " " + minLng + " " + maxLat + " "
+							+ maxLng);
 					out.close();
 
 				} catch (Exception e) {
@@ -167,8 +165,8 @@ public class PreProcess {
 				}
 			}
 			System.out.println("Boundary [minLat:" + minLat + "   maxLat:"
-					+ maxLat + "   minLng:" + minLng + "   maxLng:"
-					+ maxLng + "]");
+					+ maxLat + "   minLng:" + minLng + "   maxLng:" + maxLng
+					+ "]");
 			break;
 
 		case UNIFORM:
@@ -197,8 +195,8 @@ public class PreProcess {
 
 					FileWriter writer = new FileWriter(Constants.uniBoundary);
 					BufferedWriter out = new BufferedWriter(writer);
-					out.write(minLat + " " + minLng + " "
-							+ maxLat + " " + maxLng);
+					out.write(minLat + " " + minLng + " " + maxLat + " "
+							+ maxLng);
 					out.close();
 
 				} catch (Exception e) {
@@ -206,20 +204,19 @@ public class PreProcess {
 				}
 			}
 			System.out.println("Boundary [minLat:" + minLat + "   maxLat:"
-					+ maxLat + "   minLng:" + minLng + "   maxLng:"
-					+ maxLng + "]");
+					+ maxLat + "   minLng:" + minLng + "   maxLng:" + maxLng
+					+ "]");
 			break;
 		}
-		
+
 		MBR mbr = new MBR(minLat, minLng, maxLat, maxLng);
 		double x = Utils.distance(minLat, minLng, maxLat, minLng);
 		double y = Utils.distance(minLat, minLng, minLat, maxLng);
-		System.out.println("Area: " + x*y);
+		System.out.println("Area: " + x * y);
 		System.out.println("Region MBR size: " + mbr.diagonalLength());
 
 	}
 
-	
 	/**
 	 * Compute location entropy for each location and save into a file.
 	 * 
@@ -388,29 +385,28 @@ public class PreProcess {
 				Integer id = Integer.parseInt(parts[0]);
 				Double lat = Double.parseDouble(parts[2]);
 				Double lng = Double.parseDouble(parts[3]);
-				if (id.equals(prev_id)) {	// add to current list
+				if (id.equals(prev_id)) { // add to current list
 					points.add(new Point(lat, lng));
 				} else {
 					// create new list
 					points = new ArrayList<Point>();
 					points.add(new Point(lat, lng));
-					
+
 					// add current list to data
 					data.put(prev_id, points);
-					
+
 					sb.append(lat + "\t" + lng + "\n");
 				}
-				
+
 				prev_id = id;
 			}
 			data.put(prev_id, points);
-			
+
 			FileWriter writer = new FileWriter(filename + ".dat");
 			BufferedWriter out = new BufferedWriter(writer);
 			out.write(sb.toString());
 			out.close();
-			sb.delete(0,  sb.length());
-			
+			sb.delete(0, sb.length());
 
 			// iterate through HashMap keys Enumeration
 			double sum = 0;
@@ -423,13 +419,15 @@ public class PreProcess {
 				MBR mbr = MBR.computeMBR(pts);
 				double d = mbr.diagonalLength();
 				sum += d;
-				count ++;
+				count++;
 				if (d > maxMBR)
 					maxMBR = d;
 				double mcd = Utils.MCD(pts.get(0), pts);
-				sb.append(t.toString() + "\t" + mbr.getMinLat() + "\t" + mbr.getMinLng() + "\t" + mbr.getMaxLat() + "\t" + mbr.getMaxLng() + "\t" + d + "\t" + mcd +  "\n");
+				sb.append(t.toString() + "\t" + mbr.getMinLat() + "\t"
+						+ mbr.getMinLng() + "\t" + mbr.getMaxLat() + "\t"
+						+ mbr.getMaxLng() + "\t" + d + "\t" + mcd + "\n");
 			}
-			
+
 			writer = new FileWriter(filename + ".mbr.txt");
 			out = new BufferedWriter(writer);
 			out.write(sb.toString());
@@ -457,7 +455,8 @@ public class PreProcess {
 	 * @param max_y
 	 *            the max_y
 	 */
-	public void filterInput(String filename, double min_x, double min_y, double max_x, double max_y) {
+	public void filterInput(String filename, double min_x, double min_y,
+			double max_x, double max_y) {
 		System.out.println("Filtering location data...");
 		try {
 			FileReader reader = new FileReader(Constants.gowallaFileName);
@@ -476,15 +475,16 @@ public class PreProcess {
 				// 114° 8' W to 124° 24' W
 				// Latitude: 32° 30' N to 42° N
 
-				if ((lat < min_x) || (lat > max_x) || (lng < (min_y) || (lng > (max_y))))
+				if ((lat < min_x) || (lat > max_x)
+						|| (lng < (min_y) || (lng > (max_y))))
 					continue;
-				
+
 				out.write(line + "\n");
 
 				cnt++;
 			}
 			out.close();
-		
+
 		}
 
 		catch (Exception e) {
@@ -503,7 +503,8 @@ public class PreProcess {
 	 *            the datasetfile
 	 * @return the hashtable
 	 */
-	public Hashtable<Date, ArrayList<SpecializedWorker>> generateRealWorkers(String datasetfile) {
+	public Hashtable<Date, ArrayList<SpecializedWorker>> generateRealWorkers(
+			String datasetfile) {
 		Hashtable<Date, ArrayList<SpecializedWorker>> hashTable = new Hashtable();
 		try {
 			FileReader reader = new FileReader(Constants.gowallaFileName_CA);
@@ -534,7 +535,8 @@ public class PreProcess {
 				Integer pointID = Integer.parseInt(parts[4]);
 				int exp = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				SpecializedWorker w = new SpecializedWorker(userID, lat, lng, 0, mbr);
+				SpecializedWorker w = new SpecializedWorker(userID, lat, lng,
+						0, mbr);
 				w.addExpertise(exp);
 				if (!hashTable.containsKey(date)) {
 					ArrayList<SpecializedWorker> workers = new ArrayList<SpecializedWorker>();
@@ -600,7 +602,8 @@ public class PreProcess {
 				int time = timeCounter;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				SpecializedTask t = new SpecializedTask(lat, lng, time, -1, taskType);
+				SpecializedTask t = new SpecializedTask(lat, lng, time, -1,
+						taskType);
 				out.write(lat + "," + lng + "," + time + "," + -1 + ","
 						+ taskType + "\n");
 				countTask++;
@@ -628,10 +631,8 @@ public class PreProcess {
 			String matlabFile, boolean isConstantMBR, boolean isConstantMaxT) {
 		int maxSumTaskWorkers = 0;
 		System.out.println("Workers:");
-		double maxRangeX = (maxLat - minLat)
-				* (Constants.MaxRangePerc);
-		double maxRangeY = (maxLng - minLng)
-				* Constants.MaxRangePerc;
+		double maxRangeX = (maxLat - minLat) * (Constants.MaxRangePerc);
+		double maxRangeY = (maxLng - minLng) * Constants.MaxRangePerc;
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
@@ -664,12 +665,13 @@ public class PreProcess {
 				checkBoundaryMBR(mbr);
 				int exp = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);
-				SpecializedWorker w = new SpecializedWorker("dump", lat, lng, maxT, mbr);
+				SpecializedWorker w = new SpecializedWorker("dump", lat, lng,
+						maxT, mbr);
 				w.addExpertise(exp);
-				out.write(-1 + "," + lat + "," + lng + "," + maxT
-						+ "," + "[" + mbr.getMinLat() + "," + mbr.getMinLng()
-						+ "," + mbr.getMaxLat() + "," + mbr.getMaxLng() + "],["
-						+ exp + "]\n");
+				out.write(-1 + "," + lat + "," + lng + "," + maxT + "," + "["
+						+ mbr.getMinLat() + "," + mbr.getMinLng() + ","
+						+ mbr.getMaxLat() + "," + mbr.getMaxLng() + "],[" + exp
+						+ "]\n");
 			}
 			out.close();
 		} catch (IOException e) {
@@ -707,8 +709,7 @@ public class PreProcess {
 	 * @param isConstantMaxT
 	 *            the is constant max t
 	 */
-	public void generateSynWorkers(boolean isConstantMBR,
-			boolean isConstantMaxT) {
+	public void generateSynWorkers(boolean isConstantMBR, boolean isConstantMaxT) {
 		switch (DATA_SET) {
 		case SKEWED:
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
@@ -777,7 +778,8 @@ public class PreProcess {
 
 				cnt++;
 			}
-			System.out.println("Hashtable<location, grid> size: " + hashTable.size());
+			System.out.println("Hashtable<location, grid> size: "
+					+ hashTable.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -832,7 +834,8 @@ public class PreProcess {
 	 *            the datasetfile
 	 * @return a hashtable <location id, occurrences>
 	 */
-	public Hashtable<Integer, ArrayList<Observation>> readRealEntropyData(String datasetfile) {
+	public Hashtable<Integer, ArrayList<Observation>> readRealEntropyData(
+			String datasetfile) {
 		Hashtable hashTable = new Hashtable();
 		try {
 			FileReader reader = new FileReader(datasetfile);
@@ -913,7 +916,8 @@ public class PreProcess {
 	 * @param hashTable
 	 *            the hash table
 	 */
-	public void saveRealWorkers(Hashtable<Date, ArrayList<SpecializedWorker>> hashTable) {
+	public void saveRealWorkers(
+			Hashtable<Date, ArrayList<SpecializedWorker>> hashTable) {
 		try {
 			Set<Date> set = hashTable.keySet();
 

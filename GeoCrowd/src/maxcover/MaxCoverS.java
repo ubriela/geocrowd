@@ -106,6 +106,6 @@ public class MaxCoverS extends MaxCoverT {
 		/**
 		 * average region entropy of new covered tasks
 		 */
-		return new WeightGain(totalEntropy / uncoveredTasks, uncoveredTasks) ;
+		return new WeightGain(totalEntropy*1.0 / uncoveredTasks, uncoveredTasks) ;
 	}
 }

@@ -90,8 +90,8 @@ public class MaxCoverST extends MaxCoverS {
 		 * At each stage, chooses the worker based on a linear combination of
 		 * ATD and ARE
 		 */
-		double ATD = totalElapsedTime / uncoveredTasks;
-		double ARE = totalEntropy / uncoveredTasks;
+		double ATD = totalElapsedTime*1.0 / uncoveredTasks;
+		double ARE = totalEntropy *1.0/ uncoveredTasks;
 		double alpha = 0.5;
 		double maxATD = 10;
 		double maxARE = 10;

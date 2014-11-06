@@ -108,6 +108,8 @@ public class Parser {
             while (in.ready()) {
                 String line = in.readLine();
                 String[] parts = line.split(",");
+                if("".equals(line.trim()) || parts.length < 4)
+                    continue;
                 double lat = Double.parseDouble(parts[0]);
                 double lng = Double.parseDouble(parts[1]);
                 int time = Integer.parseInt(parts[2]);

@@ -44,7 +44,7 @@ public class MaxCoverAdapt extends MaxCover {
          * Run until either the gain of adding one worker is less than a
          * threshold or no more tasks to cover
          */
-        while (!Q.isEmpty()) {
+        while (assignWorkers.size() < budget && !Q.isEmpty()) {
             int bestWorkerIndex = 0; // track index of the best worker in S
             int maxNoUncoveredTasks = 0;
             /**

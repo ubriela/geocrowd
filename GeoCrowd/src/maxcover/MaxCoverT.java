@@ -54,7 +54,6 @@ public class MaxCoverT extends MaxCover {
 		 * store all assigned tasks
 		 */
 		assignedTaskSet = new HashSet<Integer>();
-
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = 0;
 			double smallestAvgTimeToDead = 10000000;
@@ -67,15 +66,18 @@ public class MaxCoverT extends MaxCover {
 				HashMap<Integer, Integer> s = S.get(k);
 				WeightGain wg = weight(s, currentTimeInstance,
 						assignedTaskSet);
+                               
 				if (wg.weight < smallestAvgTimeToDead) {
 					smallestAvgTimeToDead = wg.weight;
 					bestWorkerIndex = k;
 				}
-			}
-
+			}   
+//                        System.out.println("weight:"+smallestAvgTimeToDead);
+                        
 			assignWorkers.add(bestWorkerIndex);
 
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
+//                        System.out.println("Task set size: "+taskSet.size());
 			S.remove(bestWorkerIndex);
 			Q.removeAll(taskSet.keySet());
 
@@ -137,6 +139,6 @@ public class MaxCoverT extends MaxCover {
 		/**
 		 * average time to deadline of new covered task
 		 */
-		return new WeightGain(totalElapsedTime / uncoveredTasks, uncoveredTasks);
+		return new WeightGain(totalElapsedTime*1.0 / uncoveredTasks, uncoveredTasks);
 	}
 }

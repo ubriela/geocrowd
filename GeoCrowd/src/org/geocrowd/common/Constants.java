@@ -54,10 +54,10 @@ public class Constants {
 	public static int TaskNo = 1000; // 200; // number of tasks
 
 	/** The time instance. */
-	public static int TIME_INSTANCE = 3;
+	public static int TIME_INSTANCE = 12;
 
 	/** The Task duration. */
-	public static int TaskDuration = 1;// 20000; //duration of all tasks before
+	public static int TaskDuration = 5;// 20000; //duration of all tasks before
 										// they expire are fixed to 1000ms
 	/** The Max tasks per worker. */
 	public static int MaxTasksPerWorker = 20; // maximum # of tasks that a

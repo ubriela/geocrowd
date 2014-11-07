@@ -60,7 +60,7 @@ public class PreProcess {
 	public static int timeCounter = 0; // works as the clock for task generation
 
 	/** The resolution. */
-	public double resolution = 0;
+	public double resolution = 0.0002;
 
 	/** The data set. */
 	public static DatasetEnum DATA_SET;

@@ -44,7 +44,7 @@ public abstract class Geocrowd {
 	public double maxLongitude = -Double.MAX_VALUE;
 	
 	/** The resolution. */
-	public double resolution = 4656.612875245797e-12;
+	public double resolution = 0.0002;
 	
 	/** The row count. */
 	public int rowCount = 0; // number of rows for the grid
@@ -228,7 +228,7 @@ public abstract class Geocrowd {
 	 * Creates the grid.
 	 */
 	public void createGrid() {
-		double resolution = 0;
+//		double resolution = 0;
 		switch (DATA_SET) {
 		case GOWALLA:
 			resolution = Constants.gowallaResolution;

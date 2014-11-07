@@ -19,7 +19,7 @@ package org.geocrowd.common;
 public class Constants {
 
 	/** The diameter. */
-	public static double diameter = 500; // task circle diameter
+	public static double diameter = 400; // task circle diameter
 	/** enable random k */
 	public static boolean IS_RANDOM_K = false;
 	
@@ -51,13 +51,13 @@ public class Constants {
 	public static final double NON_EXPERTISE_MATCH_SCORE = 1;
 
 	/** The Task no. */
-	public static int TaskNo = 200; // 200; // number of tasks
+	public static int TaskNo = 1000; // 200; // number of tasks
 
 	/** The time instance. */
-	public static int TIME_INSTANCE = 20;
+	public static int TIME_INSTANCE = 30;
 
 	/** The Task duration. */
-	public static int TaskDuration = 5;// 20000; //duration of all tasks before
+	public static int TaskDuration = 3;// 20000; //duration of all tasks before
 										// they expire are fixed to 1000ms
 	/** The Max tasks per worker. */
 	public static int MaxTasksPerWorker = 20; // maximum # of tasks that a

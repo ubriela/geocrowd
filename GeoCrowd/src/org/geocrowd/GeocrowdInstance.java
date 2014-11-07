@@ -126,7 +126,7 @@ public class GeocrowdInstance extends Geocrowd {
 	 * @return the double
 	 */
 	public double colToLng(int col) {
-		return ((col) * resolution) + minLongitude;
+		return ((col) * (maxLongitude - minLongitude)*resolution) + minLongitude;
 	}
 
 	// compute score of a tuple <w,t>
@@ -994,7 +994,7 @@ public class GeocrowdInstance extends Geocrowd {
 	 * @return the double
 	 */
 	public double rowToLat(int row) {
-		return ((row) * resolution) + minLatitude;
+		return ((row) *  (maxLatitude - minLatitude)*resolution) + minLatitude;
 	}
 
 }

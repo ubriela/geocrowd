@@ -118,7 +118,7 @@ public class PreProcess {
 					cnt++;
 				}
 
-				FileWriter writer = new FileWriter(datafile + "_boundary.txt");
+				FileWriter writer = new FileWriter(Constants.gowallaBoundary);
 				BufferedWriter out = new BufferedWriter(writer);
 				out.write(minLat + " " + minLng + " " + maxLat + " " + maxLng);
 				out.close();
@@ -310,7 +310,6 @@ public class PreProcess {
 	 *            the dataset
 	 */
 	public void createGrid(DatasetEnum dataset) {
-		resolution = 0;
 		switch (dataset) {
 		case GOWALLA:
 			resolution = Constants.gowallaResolution;
@@ -326,8 +325,7 @@ public class PreProcess {
 		case YELP:
 			resolution = Constants.yelpResolution;
 		}
-		rowCount = (int) ((maxLat - minLat) / resolution);
-		colCount = (int) ((maxLng - minLng) / resolution);
+		rowCount = colCount = (int)(1.0/resolution);
 		System.out
 				.println("rowcount: " + rowCount + "    colCount:" + colCount);
 	}
@@ -737,7 +735,7 @@ public class PreProcess {
 	 * @return the col idx
 	 */
 	public int getColIdx(double lng) {
-		return (int) ((lng - minLng) / resolution);
+		return (int) ((lng - minLng) / (resolution * (maxLng - minLng)));
 	}
 
 	/**
@@ -748,7 +746,7 @@ public class PreProcess {
 	 * @return the row idx
 	 */
 	public int getRowIdx(double lat) {
-		return (int) ((lat - minLat) / resolution);
+		return (int) (1/resolution * (lat - minLat) / (maxLat - minLat));
 	}
 
 	/**
@@ -872,7 +870,7 @@ public class PreProcess {
 				cnt++;
 			}
 			System.out.println("Hashtable <location, occurrences> size: "
-					+ hashTable.size());
+					+ hashTable.size()  + " (the number of cells with checkins)");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -983,5 +981,13 @@ public class PreProcess {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void debug() {
+		System.out.println("minLat " + minLat);
+		System.out.println("minLng " + minLng);
+		System.out.println("maxLat " + maxLat);
+		System.out.println("maxLng " + maxLng);
+		System.out.println("resolution " + resolution);
 	}
 }

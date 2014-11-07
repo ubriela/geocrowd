@@ -224,32 +224,32 @@ public abstract class Geocrowd {
 		}
 	}
 	
-	/**
-	 * Creates the grid.
-	 */
-	public void createGrid() {
-		double resolution = 0;
-		switch (DATA_SET) {
-		case GOWALLA:
-			resolution = Constants.gowallaResolution;
-			break;
-		case SKEWED:
-			resolution = Constants.skewedResolution;
-			break;
-		case UNIFORM:
-			resolution = Constants.uniResolution;
-			break;
-		case SMALL_TEST:
-			resolution = Constants.smallResolution;
-			break;
-		case YELP:
-			resolution = Constants.yelpResolution;
-			break;
-		}
-		rowCount = (int) ((maxLatitude - minLatitude) / resolution) + 1;
-		colCount = (int) ((maxLongitude - minLongitude) / resolution) + 1;
-		System.out.println("Grid resolution: " + rowCount + "x" + colCount);
-	}
+//	/**
+//	 * Creates the grid.
+//	 */
+//	public void createGrid() {
+//		double resolution = 0;
+//		switch (DATA_SET) {
+//		case GOWALLA:
+//			resolution = Constants.gowallaResolution;
+//			break;
+//		case SKEWED:
+//			resolution = Constants.skewedResolution;
+//			break;
+//		case UNIFORM:
+//			resolution = Constants.uniResolution;
+//			break;
+//		case SMALL_TEST:
+//			resolution = Constants.smallResolution;
+//			break;
+//		case YELP:
+//			resolution = Constants.yelpResolution;
+//			break;
+//		}
+//		rowCount = (int) ((maxLatitude - minLatitude) / resolution) + 1;
+//		colCount = (int) ((maxLongitude - minLongitude) / resolution) + 1;
+//		System.out.println("Grid resolution: " + rowCount + "x" + colCount);
+//	}
 	
 	/**
 	 * Get a list of entropy records.
@@ -308,6 +308,32 @@ public abstract class Geocrowd {
 	
 
 	/**
+	 * compute grid granularity.
+	 * 
+	 * @param dataset
+	 *            the dataset
+	 */
+	public void createGrid() {
+		switch (DATA_SET) {
+		case GOWALLA:
+			resolution = Constants.gowallaResolution;
+			break;
+		case SKEWED:
+			resolution = Constants.skewedResolution;
+			break;
+		case UNIFORM:
+			resolution = Constants.uniResolution;
+			break;
+		case SMALL_TEST:
+			resolution = Constants.smallResolution;
+		case YELP:
+			resolution = Constants.yelpResolution;
+		}
+		rowCount = colCount = (int)(1.0/resolution);
+		System.out
+				.println("rowcount: " + rowCount + "    colCount:" + colCount);
+	}
+	/**
 	 * Lat to row idx.
 	 * 
 	 * @param lat
@@ -315,7 +341,7 @@ public abstract class Geocrowd {
 	 * @return the int
 	 */
 	public int latToRowIdx(double lat) {
-		return (int) ((lat - minLatitude) / resolution);
+		return (int) (1/resolution * (lat - minLatitude) / (maxLatitude - minLatitude));
 	}
 
 	/**
@@ -326,9 +352,8 @@ public abstract class Geocrowd {
 	 * @return the int
 	 */
 	public int lngToColIdx(double lng) {
-		return (int) ((lng - minLongitude) / resolution);
+		return (int) ((lng - minLongitude) / (resolution * (maxLongitude- minLongitude)));
 	}
-
 	
 	/**
 	 * Compute cost.

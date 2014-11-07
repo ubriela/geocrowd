@@ -108,13 +108,7 @@ public class Constants {
 
 	// real dataset gowalla
 	/** The gowalla resolution. */
-	public static double gowallaResolution = 0.0002; // this means that every
-														// grid
-														// cell
-														// is 0.0002 by 0.0002
-														// in
-														// lat
-														// and lon formats
+	public static double gowallaResolution = 0.0002; // 0.0002 is approximately 30x30 metres
 	/** The gowalla file name. */
 	public static String gowallaFileName = "dataset/real/gowalla/gowalla_totalCheckins.txt";
 

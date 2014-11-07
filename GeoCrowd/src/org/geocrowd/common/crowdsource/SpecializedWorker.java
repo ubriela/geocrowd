@@ -91,7 +91,7 @@ public class SpecializedWorker extends RegionWorker {
 	public String toStr() {
 		String str = getUserID() + "," + getLatitude() + "," + getLongitude() + ","
 				+ getMaxTaskNo() + ",[" + getMBR().getMinLat() + "," + getMBR().getMinLng()
-				+ "," + getMBR().getMaxLat() + "," + getMBR().getMaxLng() + "],[" + super.toString() + "]";
+				+ "," + getMBR().getMaxLat() + "," + getMBR().getMaxLng() + "],[" + toString() + "]";
 		return str;
 	}
 

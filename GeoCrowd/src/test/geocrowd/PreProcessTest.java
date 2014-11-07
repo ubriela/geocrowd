@@ -44,6 +44,10 @@ public class PreProcessTest extends PreProcess {
 	@Test
 	public void computeLocationEntropy() {
 		PreProcess prep = new PreProcess();
+		PreProcess.DATA_SET = DatasetEnum.GOWALLA;
+		
+		prep.readBoundary(PreProcess.DATA_SET);
+		prep.createGrid(PreProcess.DATA_SET);
 		
 		// compute occurrences of each location id from Gowalla
 		// each location id is associated with a grid 
@@ -54,6 +58,7 @@ public class PreProcessTest extends PreProcess {
 		prep.computeLocationEntropy(occurances);
 		
 		// compute index (row, col) of each location id
+		prep.debug();
 		Hashtable<Integer, Coord> gridIndices = prep.locIdToCellIndices();
 		prep.saveLocationEntropy(gridIndices);
 	}
@@ -93,7 +98,6 @@ public class PreProcessTest extends PreProcess {
 		prep.computeBoundary("dataset/real/gowalla_LA");
 		prep.extractCoords("dataset/real/gowalla_LA");
 		prep.extractMBRs("dataset/real/gowalla_LA");
-		
 	}
 	
 

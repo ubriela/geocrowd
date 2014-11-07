@@ -44,7 +44,7 @@ public abstract class Geocrowd {
 	public double maxLongitude = -Double.MAX_VALUE;
 	
 	/** The resolution. */
-	public double resolution = 0;
+	public double resolution = 4656.612875245797e-12;
 	
 	/** The row count. */
 	public int rowCount = 0; // number of rows for the grid

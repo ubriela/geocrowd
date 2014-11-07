@@ -35,6 +35,11 @@ import org.junit.Test;
  * The Class GeocrowdTest.
  */
 public class GeocrowdTest {
+    
+    public static void main(String[] args){
+        GeocrowdTest geoCrowdTest = new GeocrowdTest();
+        geoCrowdTest.testGenerateGowallaTasks();
+    }
 	
 	/**
 	 * Test geo crowd.

@@ -29,6 +29,14 @@ import org.junit.Test;
  * The Class PreProcessTest.
  */
 public class PreProcessTest extends PreProcess {
+    
+    
+    public static void main(String[] args){
+        PreProcessTest preTest = new PreProcessTest();
+        preTest.testFilterInput();
+        preTest.generateWorkers();
+        preTest.computeLocationEntropy();
+    }
 
 	/**
 	 * Compute location entropy.
@@ -56,7 +64,7 @@ public class PreProcessTest extends PreProcess {
 	@Test
 	public void generateWorkers() {
 		PreProcess prep = new PreProcess();
-		PreProcess.DATA_SET = DatasetEnum.SKEWED;
+		PreProcess.DATA_SET = DatasetEnum.GOWALLA;
 		
 		prep.readBoundary(PreProcess.DATA_SET);
 		prep.createGrid(PreProcess.DATA_SET);

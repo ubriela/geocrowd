@@ -886,6 +886,7 @@ public class GeocrowdInstance extends Geocrowd {
 	public void readTasksWithEntropy(String fileName) {
 		int listCount = taskList.size();
 		try {
+                        Constants.TaskNo +=100;
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < Constants.TaskNo; i++) {

@@ -118,16 +118,6 @@ public class GeocrowdInstance extends Geocrowd {
 			mbr.setMaxLng(maxLongitude);
 	}
 
-	/**
-	 * for a given col , converts it back to longitude.
-	 * 
-	 * @param col
-	 *            the col
-	 * @return the double
-	 */
-	public double colToLng(int col) {
-		return ((col) * (maxLongitude - minLongitude)*resolution) + minLongitude;
-	}
 
 	// compute score of a tuple <w,t>
 	/**
@@ -886,7 +876,7 @@ public class GeocrowdInstance extends Geocrowd {
 	public void readTasksWithEntropy(String fileName) {
 		int listCount = taskList.size();
 		try {
-                        Constants.TaskNo +=100;
+                        Constants.TaskNo +=300;
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < Constants.TaskNo; i++) {
@@ -995,6 +985,17 @@ public class GeocrowdInstance extends Geocrowd {
 	 */
 	public double rowToLat(int row) {
 		return ((row) *  (maxLatitude - minLatitude)*resolution) + minLatitude;
+	}
+	
+	/**
+	 * for a given col , converts it back to longitude.
+	 * 
+	 * @param col
+	 *            the col
+	 * @return the double
+	 */
+	public double colToLng(int col) {
+		return ((col) * (maxLongitude - minLongitude)*resolution) + minLongitude;
 	}
 
 }

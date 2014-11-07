@@ -44,7 +44,7 @@ public abstract class Geocrowd {
 	public double maxLongitude = -Double.MAX_VALUE;
 	
 	/** The resolution. */
-	public double resolution = 4656.612875245797e-12;
+	public double resolution = 0.0002;
 	
 	/** The row count. */
 	public int rowCount = 0; // number of rows for the grid
@@ -223,33 +223,27 @@ public abstract class Geocrowd {
 			}
 		}
 	}
-	
-//	/**
-//	 * Creates the grid.
-//	 */
-//	public void createGrid() {
-//		double resolution = 0;
-//		switch (DATA_SET) {
-//		case GOWALLA:
-//			resolution = Constants.gowallaResolution;
-//			break;
-//		case SKEWED:
-//			resolution = Constants.skewedResolution;
-//			break;
-//		case UNIFORM:
-//			resolution = Constants.uniResolution;
-//			break;
-//		case SMALL_TEST:
-//			resolution = Constants.smallResolution;
-//			break;
-//		case YELP:
-//			resolution = Constants.yelpResolution;
-//			break;
-//		}
-//		rowCount = (int) ((maxLatitude - minLatitude) / resolution) + 1;
-//		colCount = (int) ((maxLongitude - minLongitude) / resolution) + 1;
-//		System.out.println("Grid resolution: " + rowCount + "x" + colCount);
-//	}
+
+public void createGrid(DatasetEnum dataset) {
+	switch (DATA_SET) {
+	case GOWALLA:
+		resolution = Constants.gowallaResolution;
+		break;
+	case SKEWED:
+		resolution = Constants.skewedResolution;
+		break;
+	case UNIFORM:
+		resolution = Constants.uniResolution;
+		break;
+	case SMALL_TEST:
+		resolution = Constants.smallResolution;
+	case YELP:
+		resolution = Constants.yelpResolution;
+	}
+	rowCount = colCount = (int)(1.0/resolution);
+	System.out
+			.println("rowcount: " + rowCount + "    colCount:" + colCount);
+}
 	
 	/**
 	 * Get a list of entropy records.

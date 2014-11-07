@@ -27,12 +27,12 @@ public class OnlineMTCTest {
 
     private static void test() throws IOException {
 
-        Integer[] listBudgetTest = new Integer[]{40,100, 200};
+        Integer[] listBudgetTest = new Integer[]{400,1000, 2000, 3000, 4000 };
 
         for (Integer j = 0; j < listBudgetTest.length; j++) {
             
             Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-            Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_BASIC;
+            Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_ADAPT_B;
             OnlineMTC onlineMTC = new OnlineMTC();
             /**
              * clear worker, task list 

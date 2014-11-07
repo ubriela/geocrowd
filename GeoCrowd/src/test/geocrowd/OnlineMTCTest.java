@@ -27,7 +27,7 @@ public class OnlineMTCTest {
 
     private static void test() throws IOException {
 
-        Integer[] listBudgetTest = new Integer[]{400,1000, 2000, 3000, 4000 };
+        Integer[] listBudgetTest = new Integer[]{400,1000, 2000, 3000, 4000, 8000 };
 
         for (Integer j = 0; j < listBudgetTest.length; j++) {
             
@@ -77,11 +77,11 @@ public class OnlineMTCTest {
 
                 //
                 onlineMTC.matchingTasksWorkers();
-                System.out.println("Number of workers: " + onlineMTC.workerList.size());
-
-                System.out.println("Number of tasks: " + onlineMTC.taskList.size());
-                
-                System.out.println("Number of arrival tasks: "+onlineMTC.numberArrivalTask);
+//                System.out.println("Number of workers: " + onlineMTC.workerList.size());
+//
+//                System.out.println("Number of tasks: " + onlineMTC.taskList.size());
+//                
+//                System.out.println("Number of arrival tasks: "+onlineMTC.numberArrivalTask);
 
                 HashSet<Integer> workerSet = onlineMTC.maxCoverage();
                 System.out.println(workerSet);

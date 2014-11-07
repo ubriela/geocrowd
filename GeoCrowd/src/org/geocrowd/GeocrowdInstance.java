@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import org.geocrowd.common.Cell;
 import org.geocrowd.common.Constants;
@@ -865,6 +866,9 @@ public class GeocrowdInstance extends Geocrowd {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
 
 	/**
 	 * spatial tasks are randomly generated for the given spots in the area
@@ -876,7 +880,7 @@ public class GeocrowdInstance extends Geocrowd {
 	public void readTasksWithEntropy(String fileName) {
 		int listCount = taskList.size();
 		try {
-                        Constants.TaskNo +=300;
+                        Constants.TaskNo +=300; //increase 300 tasks each time instance
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < Constants.TaskNo; i++) {
@@ -913,6 +917,108 @@ public class GeocrowdInstance extends Geocrowd {
 		}
 	}
 
+	
+	/**
+	 * random #tasks 
+	 * @param fileName
+	 *            the file name
+	 */
+	public void readTasksWithEntropy2(String fileName) {
+		int listCount = taskList.size();
+		try {
+			/*
+			 * calculate #tasks will be generated
+			 */
+			Random r = new Random();
+			int numTask = Constants.TaskNo+r.nextInt(Constants.TaskNo*5);
+			FileWriter writer = new FileWriter(fileName);
+			BufferedWriter out = new BufferedWriter(writer);
+			for (int i = 0; i < numTask; i++) {
+				int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
+						entropyList.size()), true);
+				EntropyRecord dR = entropyList.get(randomIdx);
+				// generate a task inside this cell
+				int row = dR.getCoord().getRowId();
+				double startLat = rowToLat(row);
+				double endLat = rowToLat(row + 1);
+				double lat = UniformGenerator.randomValue(new Range(startLat,
+						endLat), false);
+				int col = dR.getCoord().getColId();
+				double startLng = colToLng(col);
+				double endLng = colToLng(col + 1);
+				double lng = UniformGenerator.randomValue(new Range(startLng,
+						endLng), false);
+				double entropy = dR.getEntropy();
+				int time = TimeInstance;
+				int taskType = (int) UniformGenerator.randomValue(new Range(0,
+						Constants.TaskTypeNo), true);
+				SpecializedTask t = new SpecializedTask(lat, lng, time,
+						entropy, taskType);
+				out.write(lat + "," + lng + "," + time + "," + entropy + ","
+						+ taskType + "\n");
+				taskList.add(listCount, t);
+				listCount++;
+			}
+			TaskCount += Constants.TaskNo;
+			System.out.println("#Total tasks:" + TaskCount);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param fileName
+	 *            the file name
+	 */
+	public static int time=0;
+	public void readTasksWithEntropy3(String fileName) {
+		int listCount = taskList.size();
+		try {
+			/*
+			 * calculate #tasks will be generated
+			 */
+			time++;
+			int numTask = (int) (Constants.TaskNo+Math.pow(-1, time)*Constants.TaskNo*2/3);
+			FileWriter writer = new FileWriter(fileName);
+			BufferedWriter out = new BufferedWriter(writer);
+			for (int i = 0; i < numTask; i++) {
+				int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
+						entropyList.size()), true);
+				EntropyRecord dR = entropyList.get(randomIdx);
+				// generate a task inside this cell
+				int row = dR.getCoord().getRowId();
+				double startLat = rowToLat(row);
+				double endLat = rowToLat(row + 1);
+				double lat = UniformGenerator.randomValue(new Range(startLat,
+						endLat), false);
+				int col = dR.getCoord().getColId();
+				double startLng = colToLng(col);
+				double endLng = colToLng(col + 1);
+				double lng = UniformGenerator.randomValue(new Range(startLng,
+						endLng), false);
+				double entropy = dR.getEntropy();
+				int time = TimeInstance;
+				int taskType = (int) UniformGenerator.randomValue(new Range(0,
+						Constants.TaskTypeNo), true);
+				SpecializedTask t = new SpecializedTask(lat, lng, time,
+						entropy, taskType);
+				out.write(lat + "," + lng + "," + time + "," + entropy + ","
+						+ taskType + "\n");
+				taskList.add(listCount, t);
+				listCount++;
+			}
+			TaskCount += Constants.TaskNo;
+			System.out.println("#Total tasks:" + TaskCount);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	/**
 	 * Read workers from file Working region of each worker is computed from his
 	 * past history.

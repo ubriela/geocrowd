@@ -76,7 +76,7 @@ public class OnlineMTC extends GeocrowdSensing {
 
 			numberCoveredTask += maxCoverPro.assignedTasks;
 			numberSelectedWorker += assignedWorker.size();
-
+			usedBudget += assignedWorker.size();
 			maxCover = maxCoverPro;
 			break;
 
@@ -106,8 +106,9 @@ public class OnlineMTC extends GeocrowdSensing {
 			} else {
 				if (TimeInstance == 10) {
 					lamda = lamda / 10;
-					beta = beta / 9 ;
-					if(beta == 0) beta =1;
+					beta = beta / 9;
+					if (beta == 0)
+						beta = 1;
 				}
 
 				MaxCoverAdapt maxCoverAdapt = new MaxCoverAdapt(
@@ -316,7 +317,9 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_PRO_S:
 		case MAX_COVER_PRO_T:
 		case MAX_COVER_PRO_ST:
-			return totalBudget * numberArrivalTask / totalNumberTasks;
+			 return totalBudget * numberArrivalTask / totalNumberTasks;
+//			return (totalBudget - usedBudget) * taskList.size()
+//					/ (totalNumberTasks - numberCoveredTask);
 
 		}
 		return 0;

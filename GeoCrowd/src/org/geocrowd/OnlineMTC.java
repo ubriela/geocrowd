@@ -350,11 +350,19 @@ public class OnlineMTC extends GeocrowdSensing {
 	public void printWorkerCounts() {
 		System.out.println("\nWorker counts:");
 		int max = 0;
+		HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
 		for (Integer count : workerCounts.values()) {
 			System.out.print(count + " ");
 			if (max < count)
 				max = count;
+			if (h.containsKey(count))
+				h.put(count, h.get(count) + 1);
+			else
+				h.put(count, 1);
 		}
+		System.out.println("count\tfreq");
+		for (Integer i : h.keySet())
+			System.out.println(i + "\t" + h.get(i));
 		System.out.println("\nMax count: " + max);
 	}
 

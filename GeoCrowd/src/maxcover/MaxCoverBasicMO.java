@@ -43,7 +43,7 @@ import org.moeaframework.util.io.CommentedLineReader;
 
 public class MaxCoverBasicMO extends MaxCover  implements Problem {
 
-	private ArrayList<Integer> indices = null;
+//	private ArrayList<Integer> indices = null;
 	
 	int[] workerCounts = null;
 
@@ -55,7 +55,7 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 			Integer currentTI, int[] selected, int budget) {
 		super(container, currentTI);
 		
-		indices = new ArrayList<Integer>(mapSets.keySet());
+//		indices = new ArrayList<Integer>(mapSets.keySet());
 		this.workerCounts = selected;
 		this.budget = budget;
 	}
@@ -73,11 +73,11 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 		for (int i = 0; i < mapSets.size(); i++) {
 			if (d[i]) {
 				usedBudget++;
-				HashMap<Integer, Integer> map = (HashMap<Integer, Integer>) mapSets.get(indices.get(i));
+				HashMap<Integer, Integer> map = mapSets.get(i);
 				coverage.addAll(map.keySet());
 				
-				if (workerCounts[indices.get(i)] + 1 > max)
-					max = workerCounts[indices.get(i)] + 1;
+				if (workerCounts[i] + 1 > max)
+					max = workerCounts[i] + 1;
 			}
 		}
 		
@@ -145,7 +145,6 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 				.withProblemClass(MaxCoverBasicMO.class, container, currentTI, workerCounts, budget)
 				.withAlgorithm("NSGAII")
 				.withMaxEvaluations(50000)
-				.withProperty("populationSize", 200)
 				.distributeOnAllCores()
 				.run();
 		
@@ -180,7 +179,7 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 			double coverage = -objectives[0];
 			double maxAssign = objectives[1];
 			
-			System.out.println(coverage + "\t" +  maxAssign);
+//			System.out.println(coverage + "\t" +  maxAssign);
 			// the smaller weight, the better
 			double weight = Constants.alpha * ((coverage + 0.0)/Constants.TaskNo) - (1-Constants.alpha) * (maxAssign + 0.0)/currentTimeInstance;
 			if (weight > largestWeight) {

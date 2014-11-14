@@ -56,13 +56,12 @@ public class OfflineMTCTest {
 
             System.out.println("Number of tasks: " + OfflineMTC.taskList.size());
         }
-
         
         offlineMTC.matchingTasksWorkers();
         
         HashSet<Integer> workerSet =  offlineMTC.maxTaskCoverage();
-        System.out.println(workerSet);
-
+        System.out.println("Assigned tasks: " + offlineMTC.TotalAssignedTasks);
+        System.out.println("Assigned workers: " + offlineMTC.TotalAssignedWorkers);
     }
 
 }

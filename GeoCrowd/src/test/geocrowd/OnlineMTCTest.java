@@ -100,12 +100,11 @@ public class OnlineMTCTest {
 					"CoveredTask", "TotalWorker", "SelectedWorker", "W/T");
 
 			System.out.printf("\n%-15d %-15d %-15d %-15d %-15d",
-					onlineMTC.TaskCount, onlineMTC.numberCoveredTask,
-					onlineMTC.totalBudget, onlineMTC.numberSelectedWorker,
-					onlineMTC.numberCoveredTask/onlineMTC.numberSelectedWorker);
+					onlineMTC.TaskCount, onlineMTC.TotalAssignedTasks,
+					onlineMTC.totalBudget, onlineMTC.TotalAssignedWorkers,
+					onlineMTC.TotalAssignedTasks/onlineMTC.TotalAssignedWorkers);
 			
 			onlineMTC.printWorkerCounts();
 		}
 	}
-
 }

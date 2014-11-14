@@ -36,12 +36,6 @@ public class OnlineMTC extends GeocrowdSensing {
 	public int numberArrivalTask = 0;
 	public int totalNumberArrivalTask = 0;
 
-	/**
-	 * Updated after run maxCover
-	 */
-	public int numberCoveredTask = 0;
-	public int numberSelectedWorker = 0;
-
 	public int lamda;
 	public int beta = 2;
 	public int usedBudget;
@@ -81,8 +75,8 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCoverPro.budget = getBudget(algorithm);
 			assignedWorker = maxCoverPro.maxCover();
 
-			numberCoveredTask += maxCoverPro.assignedTasks;
-			numberSelectedWorker += assignedWorker.size();
+			TotalAssignedTasks += maxCoverPro.assignedTasks;
+			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = maxCoverPro;
 			break;
@@ -100,8 +94,8 @@ public class OnlineMTC extends GeocrowdSensing {
 			}
 			assignedWorker = mc.maxCover(getContainerWithDeadline(), TimeInstance, _workerCounts, budget);
 
-			numberCoveredTask += mc.assignedTasks;
-			numberSelectedWorker += assignedWorker.size();
+			TotalAssignedTasks += mc.assignedTasks;
+			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = mc;
 			break;
@@ -126,8 +120,8 @@ public class OnlineMTC extends GeocrowdSensing {
 					budgetOneInstance = assignedWorker.size();
 				}
 
-				numberCoveredTask += maxCoverPro2.assignedTasks;
-				numberSelectedWorker += assignedWorker.size();
+				TotalAssignedTasks += maxCoverPro2.assignedTasks;
+				TotalAssignedWorkers += assignedWorker.size();
 				maxCover = maxCoverPro2;
 			} else {
 				if (TimeInstance == 10) {
@@ -143,8 +137,8 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCoverAdapt.lambda = lamda;
 				assignedWorker = maxCoverAdapt.maxCover();
 
-				numberCoveredTask += maxCoverAdapt.assignedTasks;
-				numberSelectedWorker += assignedWorker.size();
+				TotalAssignedTasks += maxCoverAdapt.assignedTasks;
+				TotalAssignedWorkers += assignedWorker.size();
 
 				maxCover = maxCoverAdapt;
 				usedBudget += assignedWorker.size();
@@ -167,8 +161,8 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCoverBasicT.budget = getBudget(algorithm);
 			assignedWorker = maxCoverBasicT.maxCover();
 
-			numberCoveredTask += maxCoverBasicT.assignedTasks;
-			numberSelectedWorker += assignedWorker.size();
+			TotalAssignedTasks += maxCoverBasicT.assignedTasks;
+			TotalAssignedWorkers += assignedWorker.size();
 			maxCover = maxCoverBasicT;
 			break;
 		case MAX_COVER_ADAPT_T:
@@ -181,8 +175,8 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCoverPro2.budget = getBudget(AlgorithmEnum.MAX_COVER_PRO_T);
 				assignedWorker = maxCoverPro2.maxCover();
 
-				numberCoveredTask += maxCoverPro2.assignedTasks;
-				numberSelectedWorker += assignedWorker.size();
+				TotalAssignedTasks += maxCoverPro2.assignedTasks;
+				TotalAssignedWorkers += assignedWorker.size();
 
 				lamda = maxCoverPro2.gain;
 				usedBudget += assignedWorker.size();
@@ -196,8 +190,8 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCoverAdapt.budget = totalBudget - usedBudget;
 				assignedWorker = maxCoverAdapt.maxCover();
 
-				numberCoveredTask += maxCoverAdapt.assignedTasks;
-				numberSelectedWorker += assignedWorker.size();
+				TotalAssignedTasks += maxCoverAdapt.assignedTasks;
+				TotalAssignedWorkers += assignedWorker.size();
 
 				maxCover = maxCoverAdapt;
 				usedBudget += assignedWorker.size();
@@ -231,8 +225,8 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCoverS.setEntropies(task_entropies);
 			assignedWorker = maxCoverS.maxCover();
 
-			numberCoveredTask += maxCoverS.assignedTasks;
-			numberSelectedWorker += assignedWorker.size();
+			TotalAssignedTasks += maxCoverS.assignedTasks;
+			TotalAssignedWorkers += assignedWorker.size();
 
 			maxCover = maxCoverS;
 			break;
@@ -258,8 +252,8 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCoverProS.setEntropies(task_entropies2);
 				assignedWorker = maxCoverProS.maxCover();
 
-				numberCoveredTask += maxCoverProS.assignedTasks;
-				numberSelectedWorker += assignedWorker.size();
+				TotalAssignedTasks += maxCoverProS.assignedTasks;
+				TotalAssignedWorkers += assignedWorker.size();
 
 				lamda = maxCoverProS.gain;
 				usedBudget += assignedWorker.size();
@@ -286,8 +280,8 @@ public class OnlineMTC extends GeocrowdSensing {
 
 				assignedWorker = maxCoverAdaptS.maxCover();
 
-				numberCoveredTask += maxCoverAdaptS.assignedTasks;
-				numberSelectedWorker += assignedWorker.size();
+				TotalAssignedTasks += maxCoverAdaptS.assignedTasks;
+				TotalAssignedWorkers += assignedWorker.size();
 				maxCover = maxCoverAdaptS;
 				usedBudget += assignedWorker.size();
 
@@ -345,14 +339,14 @@ public class OnlineMTC extends GeocrowdSensing {
 	}
 	
 	/**
-	 * Debug the number of requests for each worker
+	 * Debug the number of requests for each worker.
 	 */
 	public void printWorkerCounts() {
 		System.out.println("\nWorker counts:");
 		int max = 0;
 		HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
-		for (Integer count : workerCounts.values()) {
-			System.out.print(count + " ");
+		for (String key : workerCounts.keySet()) {
+			int count = workerCounts.get(key);
 			if (max < count)
 				max = count;
 			if (h.containsKey(count))
@@ -361,8 +355,12 @@ public class OnlineMTC extends GeocrowdSensing {
 				h.put(count, 1);
 		}
 		System.out.println("count\tfreq");
-		for (Integer i : h.keySet())
-			System.out.println(i + "\t" + h.get(i));
+//		int totalCount = 0;
+		for (Integer i : h.keySet()) {
+//			totalCount += i * h.get(i);
+			System.out.println(i + "\t" + i*h.get(i));
+		}
+//		System.out.println("total count : " + totalCount);
 		System.out.println("\nMax count: " + max);
 	}
 

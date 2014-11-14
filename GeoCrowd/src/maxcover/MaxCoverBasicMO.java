@@ -144,7 +144,7 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 		NondominatedPopulation result = new Executor()
 				.withProblemClass(MaxCoverBasicMO.class, container, currentTI, workerCounts, budget)
 				.withAlgorithm("NSGAII")
-				.withMaxEvaluations(50000)
+				.withMaxEvaluations(200000)
 				.distributeOnAllCores()
 				.run();
 		

@@ -19,6 +19,7 @@ import java.util.HashSet;
 
 import maxcover.MaxCoverAdapt;
 import maxcover.MaxCoverBasic;
+import maxcover.MaxCoverBasicMO;
 import maxcover.MaxCoverT;
 
 import org.geocrowd.setcover.SetCoverGreedy;
@@ -101,7 +102,7 @@ public class MaxCoverTest {
 		System.out.println(no_set);
 	}
 	
-	@Test
+//	@Test
 	public void testMaxCoverT() {
 		ArrayList<HashMap<Integer, Integer>> container = getContainer();
 		MaxCoverT mc = new MaxCoverT(container, 1);
@@ -112,5 +113,21 @@ public class MaxCoverTest {
 		
 		HashSet<Integer> no_set = mc.maxCover();
 		System.out.println(no_set);
+	}
+	
+	@Test
+	public void testMaxCoverBasicMO() {
+		ArrayList<HashMap<Integer, Integer>> container = getContainer();
+		HashMap<Integer, Integer> selected = new HashMap<Integer, Integer>();
+		selected.put(0, 4);
+		selected.put(1, 3);
+		selected.put(2, 2);
+		selected.put(3, 1);
+		selected.put(4, 0);
+		MaxCoverBasicMO mc = new MaxCoverBasicMO();
+		
+		
+//		HashSet<Integer> no_set = mc.maxCover(container, 1, selected, 2);
+//		System.out.println(no_set);
 	}
 }

@@ -18,8 +18,18 @@ package org.geocrowd.common;
  */
 public class Constants {
 
+	public static double alpha = 1;
+	
+	/** The Task no. */
+	public static int TaskNo = 1000; // 200; // number of tasks
+	
+	public static int WorkerNo = 1000;
+
+	/** The time instance. */
+	public static int TIME_INSTANCE = 20;
+	
 	/** The diameter. */
-	public static double diameter = 0.2; // task circle diameter
+	public static double diameter = 4; // task circle diameter
 	/** enable random k */
 	public static boolean IS_RANDOM_K = false;
 	
@@ -34,7 +44,7 @@ public class Constants {
 	/**
 	 * Time to deadline
 	 */
-	public static int T = 3;
+	public static int T = 5;
 	
 	public static boolean useLocationEntropy = true;
 	
@@ -50,11 +60,6 @@ public class Constants {
 	/** The Constant NON_EXPERTISE_MATCH_SCORE. */
 	public static final double NON_EXPERTISE_MATCH_SCORE = 1;
 
-	/** The Task no. */
-	public static int TaskNo = 300; // 200; // number of tasks
-
-	/** The time instance. */
-	public static int TIME_INSTANCE = 20;
 
 	/** The Task duration. */
 	public static int TaskDuration = 5;// 20000; //duration of all tasks before

@@ -55,6 +55,36 @@ public class MBR {
 		return new MBR(minLat, minLng, maxLat, maxLng);
 	}
 	
+
+	/**
+	 * Similar to computeMBR but for PointTime
+	 * @param pts
+	 * @return
+	 */
+	public static MBR computeMBR2(ArrayList<PointTime> pts) {
+		double minLat = Double.MAX_VALUE;
+		double maxLat = (-1) * Double.MAX_VALUE;
+		double minLng = Double.MAX_VALUE;
+		double maxLng = (-1) * Double.MAX_VALUE;
+		Iterator<PointTime> it = pts.iterator();
+		while (it.hasNext()) {
+			Point pt = it.next();
+			Double lat = pt.getX();
+			Double lng = pt.getY();
+
+			if (lat < minLat)
+				minLat = lat;
+			if (lat > maxLat)
+				maxLat = lat;
+			if (lng < minLng)
+				minLng = lng;
+			if (lng > maxLng)
+				maxLng = lng;
+		}
+
+		return new MBR(minLat, minLng, maxLat, maxLng);
+	}
+	
 	/**
 	 * Creates the mbr.
 	 * 
@@ -242,4 +272,5 @@ public class MBR {
 	public void setMinLng(double m) {
 		minLng = m;
 	}
+
 }

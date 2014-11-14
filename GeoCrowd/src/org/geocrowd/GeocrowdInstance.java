@@ -119,7 +119,6 @@ public class GeocrowdInstance extends Geocrowd {
 			mbr.setMaxLng(maxLongitude);
 	}
 
-
 	// compute score of a tuple <w,t>
 	/**
 	 * Compute score.
@@ -270,7 +269,7 @@ public class GeocrowdInstance extends Geocrowd {
 			} else
 				sumMaxT += workerList.get(i).getMaxTaskNo();
 		}
-		
+
 		for (int i = 0; i < containerPrune.length; i++) {
 			if (containerPrune[i] != null && containerPrune[i].size() > 0)
 				/* add non-empty elements to containerWorker */
@@ -298,11 +297,11 @@ public class GeocrowdInstance extends Geocrowd {
 
 		// sumMaxT is the number of logical workers
 		double[][] array = new double[sumMaxT][candidateTaskIndices.size()]; // row
-																		// represents
-																		// workers,
-																		// column
-																		// represents
-																		// tasks
+		// represents
+		// workers,
+		// column
+		// represents
+		// tasks
 		HashMap<Integer, Integer> logicalWorkerToWorker = new HashMap<Integer, Integer>();
 		int row = 0;
 		for (int i = 0; i < containerWorker.size(); i++) {
@@ -421,7 +420,8 @@ public class GeocrowdInstance extends Geocrowd {
 								break;
 							case NNP:
 								objectiveCoeff.add(distanceWorkerTask(worker,
-										taskList.get(candidateTaskIndices.get(t))));
+										taskList.get(candidateTaskIndices
+												.get(t))));
 								break;
 							}
 							matchingCoeff.add(computeScore(worker,
@@ -557,11 +557,11 @@ public class GeocrowdInstance extends Geocrowd {
 	 */
 	public double maxWeightedMatching2() {
 		double[][] array = new double[containerWorker.size()][taskList.size()]; // row
-																			// represents
-																			// workers,
-																			// column
-																			// represents
-																			// tasks
+		// represents
+		// workers,
+		// column
+		// represents
+		// tasks
 		for (int i = 0; i < containerWorker.size(); i++) {
 			ArrayList<Integer> tasks = containerWorker.get(i);
 			if (tasks != null)
@@ -688,8 +688,8 @@ public class GeocrowdInstance extends Geocrowd {
 															// first
 		}
 
-		//System.out.println(assignedTasks);
-		
+		// System.out.println(assignedTasks);
+
 		TotalAssignedTasks += assignedTasks.size();
 
 		System.out.println("#Assigned tasks: " + TotalAssignedTasks);
@@ -763,17 +763,20 @@ public class GeocrowdInstance extends Geocrowd {
 			 * if the task is not assigned and in the worker's working region
 			 */
 			if (task.isCoveredBy(w.getMBR())) {
-					
+
 				if (!taskSet.contains(t)) {
 					candidateTaskIndices.add(t);
 					taskSet.add(t);
 				}
-				
+
 				if (containerPrune[workerIdx] == null)
 					containerPrune[workerIdx] = new ArrayList();
-				/* the container contains task index of elements in candidate tasks */
+				/*
+				 * the container contains task index of elements in candidate
+				 * tasks
+				 */
 				containerPrune[workerIdx].add(candidateTaskIndices.indexOf(t));
-				
+
 				if (!invertedContainer.containsKey(t))
 					invertedContainer.put(t, new ArrayList() {
 						{
@@ -866,9 +869,6 @@ public class GeocrowdInstance extends Geocrowd {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
 
 	/**
 	 * spatial tasks are randomly generated for the given spots in the area
@@ -880,7 +880,7 @@ public class GeocrowdInstance extends Geocrowd {
 	public void readTasksWithEntropy(String fileName) {
 		int listCount = taskList.size();
 		try {
-                        Constants.TaskNo +=300; //increase 300 tasks each time instance
+//			Constants.TaskNo += 300; // increase 300 tasks each time instance
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < Constants.TaskNo; i++) {
@@ -917,9 +917,9 @@ public class GeocrowdInstance extends Geocrowd {
 		}
 	}
 
-	
 	/**
-	 * random #tasks 
+	 * random #tasks
+	 * 
 	 * @param fileName
 	 *            the file name
 	 */
@@ -930,7 +930,7 @@ public class GeocrowdInstance extends Geocrowd {
 			 * calculate #tasks will be generated
 			 */
 			Random r = new Random();
-			int numTask = Constants.TaskNo+r.nextInt(Constants.TaskNo*5);
+			int numTask = Constants.TaskNo + r.nextInt(Constants.TaskNo * 5);
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
@@ -966,14 +966,14 @@ public class GeocrowdInstance extends Geocrowd {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param fileName
 	 *            the file name
 	 */
-	public static int time=0;
+	public static int time = 0;
+
 	public void readTasksWithEntropy3(String fileName) {
 		int listCount = taskList.size();
 		try {
@@ -981,7 +981,8 @@ public class GeocrowdInstance extends Geocrowd {
 			 * calculate #tasks will be generated
 			 */
 			time++;
-			int numTask = (int) (Constants.TaskNo+Math.pow(-1, time)*Constants.TaskNo*2/3);
+			int numTask = (int) (Constants.TaskNo + Math.pow(-1, time)
+					* Constants.TaskNo * 2 / 3);
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
@@ -1017,8 +1018,7 @@ public class GeocrowdInstance extends Geocrowd {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * Read workers from file Working region of each worker is computed from his
 	 * past history.
@@ -1028,7 +1028,7 @@ public class GeocrowdInstance extends Geocrowd {
 	 */
 	@Override
 	public void readWorkers(String fileName) {
-		
+
 		/* create a new worker list at every instance */
 		workerList = new ArrayList();
 		WorkerCount += Parser.parseSpecializedWorkers(fileName, workerList);
@@ -1090,9 +1090,9 @@ public class GeocrowdInstance extends Geocrowd {
 	 * @return the double
 	 */
 	public double rowToLat(int row) {
-		return ((row) *  (maxLatitude - minLatitude)*resolution) + minLatitude;
+		return ((row) * (maxLatitude - minLatitude) * resolution) + minLatitude;
 	}
-	
+
 	/**
 	 * for a given col , converts it back to longitude.
 	 * 
@@ -1101,7 +1101,8 @@ public class GeocrowdInstance extends Geocrowd {
 	 * @return the double
 	 */
 	public double colToLng(int col) {
-		return ((col) * (maxLongitude - minLongitude)*resolution) + minLongitude;
+		return ((col) * (maxLongitude - minLongitude) * resolution)
+				+ minLongitude;
 	}
 
 }

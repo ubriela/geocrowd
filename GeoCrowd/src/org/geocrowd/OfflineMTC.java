@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import maxcover.MaxCoverBasic;
-import static org.geocrowd.Geocrowd.taskList;
-import static org.geocrowd.Geocrowd.workerList;
 import org.geocrowd.common.Constants;
-import org.geocrowd.common.crowdsource.GenericWorker;
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.SensingWorker;
 
@@ -112,10 +109,13 @@ public class OfflineMTC extends GeocrowdSensing {
 
     }
 
+    /**
+     * Solve the offline MTC problem
+     * @return
+     */
     public HashSet<Integer> maxTaskCoverage() {
         MaxCoverBasic maxCover = new MaxCoverBasic(getContainerWithDeadline(), TimeInstance);
         maxCover.budget = budget;
         return maxCover.maxCover();
     }
-
 }

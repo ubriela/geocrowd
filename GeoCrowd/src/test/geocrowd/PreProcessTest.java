@@ -77,7 +77,7 @@ public class PreProcessTest extends PreProcess {
 		// generating workers from Gowalla
 		Hashtable<Date, ArrayList<SpecializedWorker>> hashTable = prep
 				.generateRealWorkers(Constants.gowallaFileName_CA);
-		prep.saveRealWorkers(hashTable);
+		prep.saveRealWorkersMax(hashTable);
 	}
 	
 	// ------------------------------------------------------------
@@ -94,10 +94,10 @@ public class PreProcessTest extends PreProcess {
 		// Bay area: 37.246147,-122.67746, 37.990176,-121.839752
 		// SF: 37.711049,-122.51524, 37.832899,-122.360744
 		// Yelp: 
-		prep.filterInput("dataset/real/gowalla_LA", 33.699476,-118.570633, 34.319887,-118.192978);
-		prep.computeBoundary("dataset/real/gowalla_LA");
-		prep.extractCoords("dataset/real/gowalla_LA");
-		prep.extractMBRs("dataset/real/gowalla_LA");
+		prep.filterInput("dataset/real/gowalla_SF/gowalla_SF", 37.711049,-122.51524, 37.832899,-122.360744);
+		prep.computeBoundary("dataset/real/gowalla_SF/gowalla_SF");
+		prep.extractCoords("dataset/real/gowalla_SF/gowalla_SF");
+		prep.extractWorkersInstances("dataset/real/gowalla_SF/gowalla_SF", "dataset/real/gowalla_SF/worker/worker", 50);
 	}
 	
 

@@ -15,14 +15,19 @@ package org.geocrowd;
 import java.io.*;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Set;
 
+import org.datasets.yelp.Constant;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
 import org.geocrowd.common.Point;
+import org.geocrowd.common.PointTime;
 import org.geocrowd.common.Range;
 import org.geocrowd.common.UniformGenerator;
 import org.geocrowd.common.Utils;
@@ -438,6 +443,163 @@ public class PreProcess {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	/**
+	 * partition all_data_time into T instances based on timestamp
+	 * 
+	 * @param filename
+	 * @param instance: the number of time instance
+	 */
+	public void extractWorkersInstances(String filename, String outputPath, int instance) {
+		try {
+			FileReader reader = new FileReader(filename);
+			BufferedReader in = new BufferedReader(reader);
+			StringBuffer sb = new StringBuffer();
+			HashMap<Integer, ArrayList<PointTime>> data = new HashMap<Integer, ArrayList<PointTime>>();
+			ArrayList<PointTime> points = new ArrayList<PointTime>();
+			PriorityQueue<PointTime> sortedData = new PriorityQueue<>();
+			Integer prev_id = -1;
+			while (in.ready()) {
+				String line = in.readLine();
+				String[] parts = line.split("\\s");
+				Integer id = Integer.parseInt(parts[0]);
+				String time = parts[1];
+				String timeParts[] = time.split("-");
+				int year = Integer.valueOf(timeParts[0]); 
+				int month = Integer.valueOf(timeParts[1]); 
+				int day = Integer.valueOf(timeParts[2].substring(0, 2));
+				int hour = Integer.valueOf(timeParts[2].substring(3, 5));
+				int timestamp = ((year - 2005) * 365 + month*30 + day) * 24 + hour;
+				
+				Double lat = Double.parseDouble(parts[2]);
+				Double lng = Double.parseDouble(parts[3]);
+				
+				/**
+				 * Add point to queue
+				 */
+				PointTime pt = new PointTime(id, timestamp, lat, lng);
+				sortedData.add(pt);
+				
+				if (id.equals(prev_id)) { // add to current list
+					points.add(pt);
+				} else {
+					// create new list
+					points = new ArrayList<PointTime>();
+					points.add(pt);
+
+					// add current list to data
+					data.put(prev_id, points);
+
+					sb.append(lat + "\t" + lng + "\n");
+				}
+
+				prev_id = id;
+			}
+			data.put(prev_id, points);
+
+			FileWriter writer = new FileWriter(filename + ".dat");
+			BufferedWriter out = new BufferedWriter(writer);
+			out.write(sb.toString());
+			out.close();
+
+			// iterate through HashMap keys Enumeration
+			double sum = 0;
+			int count = 0;
+			double maxMBR = 0;
+			HashMap<Integer, PointTime> userLocs = new HashMap<Integer, PointTime>();
+			Iterator<Integer> it = data.keySet().iterator();
+			while (it.hasNext()) {
+				Integer t = it.next();
+				ArrayList<PointTime> pts = data.get(t);
+				MBR mbr = MBR.computeMBR2(pts);
+				userLocs.put(t, new PointTime(t, 0, (mbr.getMaxLat() + mbr.getMinLat())/2.0, (mbr.getMaxLng() + mbr.getMinLng())/2.0));
+			}
+			
+			/**
+			 * Create data for each time instance
+			 */
+			int width = sortedData.size()/instance;
+			ArrayList<PointTime> allDataArr = new ArrayList<PointTime>();
+			while (!sortedData.isEmpty()) {
+					allDataArr.add(sortedData.poll());
+			}
+			
+			for (int t = 0; t < instance; t++) {
+				HashMap<Integer, PointTime> currUserLocs = (HashMap<Integer, PointTime>) userLocs.clone();
+				
+				/**
+				 * construct a dictionary of users that update their locations
+				 */
+				HashMap<Integer, ArrayList<PointTime>> userUpdates = new HashMap<Integer, ArrayList<PointTime>>(); 
+				for (PointTime point : allDataArr.subList(t*width, t*width + width)) {
+					if (userUpdates.containsKey(point.getUserid()))
+						userUpdates.get(point.getUserid()).add(point);
+					else {
+						ArrayList<PointTime> arr = new ArrayList<PointTime>();
+						arr.add(point);
+						userUpdates.put(point.getUserid(), arr);
+					}
+				}
+				
+				/**
+				 * For each user
+				 */
+				int updateCount = 0; // number of users update their locations
+				Iterator currIter = currUserLocs.keySet().iterator();
+				while (currIter.hasNext()) {
+					Integer key = (Integer) currIter.next();
+					ArrayList<PointTime> new_locs = null;
+					if (userUpdates.containsKey(key))
+						new_locs = userUpdates.get(key);
+					else
+						continue;
+					
+					updateCount ++;
+					MBR mbr = MBR.computeMBR2(new_locs);
+					
+					PointTime p = new PointTime(key, 0, (mbr.getMaxLat() + mbr.getMinLat())/2.0, (mbr.getMaxLng() + mbr.getMinLng())/2.0);
+					currUserLocs.put(key, p);
+				}
+				
+				System.out.println("updates count " + updateCount);
+				saveWorkerInstance(outputPath, t, currUserLocs);
+				
+			}
+			
+
+			System.out.println("Number of users: " + data.keySet().size());
+			System.out.println("Average users' MBR size: " + sum / count);
+			System.out.println("Max users' MBR size: " + maxMBR);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void saveWorkerInstance(String path, int t, HashMap<Integer, PointTime> userLocs) {
+		StringBuffer sb = new StringBuffer();
+		for (PointTime p : userLocs.values()) {
+//			p.debug();
+//			System.out.println(p.getY());
+//			System.out.println(p.getX() + "\t" + p.getY());
+			sb.append(p.getUserid() + "\t"  + p.getX() + "\t" + p.getY() + "\n");
+		}
+		
+		FileWriter writer;
+		try {
+			writer = new FileWriter(path + String.format("%04d", t) + Constant.suffix);
+			BufferedWriter out = new BufferedWriter(writer);
+			out.write(sb.toString(), 0, sb.length() - 1);
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 
 	/**
 	 * Get subset of the gowalla dataset, within a rectangle.
@@ -911,30 +1073,93 @@ public class PreProcess {
 	/**
 	 * Save real workers.
 	 * 
+	 * Fix the number of time instances
+	 * 
 	 * @param hashTable
 	 *            the hash table
 	 */
 	public void saveRealWorkers(
 			Hashtable<Date, ArrayList<SpecializedWorker>> hashTable) {
 		try {
-			Set<Date> set = hashTable.keySet();
+			// sort key and iterate based on key
+			List<Date> dates = new ArrayList<Date>(hashTable.keySet());
+		    Collections.sort(dates);
 
-			Iterator<Date> itr = set.iterator();
-			Integer cnt = 0;
-			while (itr.hasNext()) {
-				FileWriter writer = new FileWriter(
-						Constants.gowallaWorkerFileNamePrefix + cnt.toString()
-								+ ".txt");
-				BufferedWriter out = new BufferedWriter(writer);
+			Integer instanceCnt = 0;
+			Integer dayCnt = 0;
+			int workerCount = 0;
+			int daysPerInstance = dates.size()/Constants.TIME_INSTANCE;
+			System.out.println("days per one instance: " + daysPerInstance);
+			BufferedWriter out = null;
+			for (Date date : dates) {
+				if (dayCnt == 0) {
+					FileWriter writer = new FileWriter(
+							Constants.gowallaWorkerFileNamePrefix + instanceCnt.toString()
+									+ ".txt");
+					out = new BufferedWriter(writer);
+				} else if (dayCnt == daysPerInstance){
+					instanceCnt++;
+					dayCnt = 0;
+					System.out.println("worker count: " + workerCount);
+					workerCount = 0;
+					out.close();
+					continue;
+				}
 
-				Date date = itr.next();
+				dayCnt++;
+
 				ArrayList<SpecializedWorker> workers = hashTable.get(date);
 				for (SpecializedWorker o : workers) {
 					out.write(o.toStr() + "\n");
+					workerCount++;
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Save real workers.
+	 * 
+	 * Given max online worker per instance
+	 * 
+	 * @param hashTable
+	 *            the hash table
+	 */
+	public void saveRealWorkersMax(
+			Hashtable<Date, ArrayList<SpecializedWorker>> hashTable) {
+		try {
+			// sort key and iterate based on key
+			List<Date> dates = new ArrayList<Date>(hashTable.keySet());
+		    Collections.sort(dates);
+
+			Integer instanceCnt = 0;
+			Integer workerCnt = 0;
+			BufferedWriter out = null;
+			for (Date date : dates) {
+				if (workerCnt == 0) {
+					FileWriter writer = new FileWriter(
+							Constants.gowallaWorkerFileNamePrefix + instanceCnt.toString()
+									+ ".txt");
+					out = new BufferedWriter(writer);
+				} else if (workerCnt > Constants.WorkerNo){
+					instanceCnt++;
+					System.out.println("worker count: " + workerCnt);
+					workerCnt = 0;
+					out.close();
+					continue;
 				}
 
-				cnt++;
-				out.close();
+				workerCnt++;
+
+				ArrayList<SpecializedWorker> workers = hashTable.get(date);
+				for (SpecializedWorker o : workers) {
+					out.write(o.toStr() + "\n");
+					workerCnt++;
+				}
 			}
 
 		} catch (Exception e) {

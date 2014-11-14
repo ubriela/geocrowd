@@ -31,13 +31,16 @@ public abstract class MaxCover {
 	 * contains a set of task ids that he is eligible to perform
 	 *
 	 */
-	public HashMap mapSets = null;
+	public HashMap<Integer, HashMap<Integer, Integer>> mapSets = null;
 
 	public int budget = 0; // budget
 
 	public int gain = 0; // this gain is updated at every stage of greedy
 							// algorithm
 	
+	public MaxCover() {
+		
+	}
 
 	/**
 	 * All the task index in the candidate tasks (not the task list).
@@ -70,16 +73,16 @@ public abstract class MaxCover {
 			// !!! this part may not in use
 			System.out.println("debug: without deadline info");
 			;
-			for (int i = 0; i < container.size(); i++) {
-
-				ArrayList<Integer> items = (ArrayList<Integer>) container
-						.get(i);
-				if (items != null) {
-					HashSet<Integer> itemSet = new HashSet<Integer>(items);
-					mapSets.put(k++, itemSet);
-					universe.addAll(itemSet);
-				}
-			}
+//			for (int i = 0; i < container.size(); i++) {
+//
+//				ArrayList<Integer> items = (ArrayList<Integer>) container
+//						.get(i);
+//				if (items != null) {
+//					HashSet<Integer> itemSet = new HashSet<Integer>(items);
+//					mapSets.put(k++, itemSet);
+//					universe.addAll(itemSet);
+//				}
+//			}
 		} else {
 			/**
 			 * In case each task has a deadline
@@ -91,6 +94,8 @@ public abstract class MaxCover {
 					HashMap<Integer, Integer> itemSet = new HashMap<>(items);
 					mapSets.put(k++, itemSet);
 					universe.addAll(itemSet.keySet());
+				} else {
+					System.out.println("NULL");
 				}
 			}
 		}

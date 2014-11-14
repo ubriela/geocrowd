@@ -28,6 +28,10 @@ import org.geocrowd.common.Constants;
  */
 public class MaxCoverBasic extends MaxCover {
 
+	public MaxCoverBasic() {
+		super();
+	}
+	
 	public MaxCoverBasic(ArrayList container,
 			Integer currentTI) {
 		super(container, currentTI);
@@ -99,8 +103,7 @@ public class MaxCoverBasic extends MaxCover {
 				}
 		}
 		assignedTasks = assignedTaskSet.size();
-		System.out.println("#Task assigned: " + assignedTasks);
-
+		System.out.println(universe.size() + "\t" + assignedTasks  + "\t" + assignWorkers.size() + "\t"  + assignedTasks/assignWorkers.size() );
 		return assignWorkers;
 	}
 }

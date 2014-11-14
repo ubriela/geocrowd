@@ -78,4 +78,8 @@ public class Point implements Serializable {
 	}
 	
 	
+	public void debug() {
+		System.out.println(X  + "\t" + Y);
+	}
+	
 }

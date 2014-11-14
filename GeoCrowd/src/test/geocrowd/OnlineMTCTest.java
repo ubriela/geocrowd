@@ -2,6 +2,7 @@ package test.geocrowd;
 
 import java.io.IOException;
 import java.util.HashSet;
+
 import org.datasets.yelp.Constant;
 import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.DatasetEnum;
@@ -21,81 +22,90 @@ import org.geocrowd.common.Constants;
  */
 public class OnlineMTCTest {
 
-    public static void main(String[] args) throws IOException {
-        test();
-    }
+	public static void main(String[] args) throws IOException {
+		test();
+	}
 
-    private static void test() throws IOException {
+	private static void test() throws IOException {
 
-        Integer[] listBudgetTest = new Integer[]{400,1000, 2000, 3000, 4000, 8000 };
+		Integer[] listBudgetTest = new Integer[] { 1000 };
 
-        for (Integer j = 0; j < listBudgetTest.length; j++) {
-            
-            Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-            Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_PRO_B;
-            OnlineMTC onlineMTC = new OnlineMTC();
-            /**
-             * clear worker, task list 
-             */
-            OnlineMTC.taskList.clear();
-            OnlineMTC.workerList.clear();
-            onlineMTC.totalBudget = listBudgetTest[j];
-            for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+		for (Integer j = 0; j < listBudgetTest.length; j++) {
 
-                switch (Geocrowd.DATA_SET) {
-                    case GOWALLA:
-                        onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
-                                + i + ".txt");
-                        onlineMTC.readWorkers(Constants.gowallaWorkerFileNamePrefix
-                                + i + ".txt");
-                        break;
-                    case YELP:
-                        onlineMTC.readTasks(Constants.yelpTaskFileNamePrefix + i
-                                + ".txt");
-                        onlineMTC.readWorkers(Constants.yelpWorkerFileNamePrefix
-                                + i + ".txt");
-                        break;
-                    case UNIFORM:
-                        onlineMTC.readTasks(Constants.uniTaskFileNamePrefix + i
-                                + ".txt");
-                        onlineMTC.readWorkers(Constants.uniWorkerFileNamePrefix
-                                + i + ".txt");
-                        break;
-                    case SKEWED:
-                        onlineMTC.readTasks(Constants.skewedTaskFileNamePrefix
-                                + i + ".txt");
-                        onlineMTC.readWorkers(Constants.skewedWorkerFileNamePrefix
-                                + i + ".txt");
-                        break;
-                    case SMALL_TEST:
-                        onlineMTC.readTasks(Constants.smallTaskFileNamePrefix
-                                + i + ".txt");
-                        onlineMTC.readWorkers(Constants.smallWorkerFileNamePrefix
-                                + i + ".txt");
-                        break;
-                }
+			Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+			Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_BASIC_MO;
+			OnlineMTC onlineMTC = new OnlineMTC();
+			/**
+			 * clear worker, task list
+			 */
+			OnlineMTC.taskList.clear();
+			OnlineMTC.workerList.clear();
+			onlineMTC.totalBudget = listBudgetTest[j];
+			System.out.println("ttasks\ttasks\tworkers\tT/W");
+			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 
-                //
-                onlineMTC.matchingTasksWorkers();
-//                System.out.println("Number of workers: " + onlineMTC.workerList.size());
-//
-//                System.out.println("Number of tasks: " + onlineMTC.taskList.size());
-//                
-//                System.out.println("Number of arrival tasks: "+onlineMTC.numberArrivalTask);
+				switch (Geocrowd.DATA_SET) {
+				case GOWALLA:
+					onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix + i
+							+ ".txt");
+					onlineMTC.readWorkers(Constants.gowallaWorkerFileNamePrefix
+							+ i + ".txt");
+					break;
+				case YELP:
+					onlineMTC.readTasks(Constants.yelpTaskFileNamePrefix + i
+							+ ".txt");
+					onlineMTC.readWorkers(Constants.yelpWorkerFileNamePrefix
+							+ i + ".txt");
+					break;
+				case UNIFORM:
+					onlineMTC.readTasks(Constants.uniTaskFileNamePrefix + i
+							+ ".txt");
+					onlineMTC.readWorkers(Constants.uniWorkerFileNamePrefix + i
+							+ ".txt");
+					break;
+				case SKEWED:
+					onlineMTC.readTasks(Constants.skewedTaskFileNamePrefix + i
+							+ ".txt");
+					onlineMTC.readWorkers(Constants.skewedWorkerFileNamePrefix
+							+ i + ".txt");
+					break;
+				case SMALL_TEST:
+					onlineMTC.readTasks(Constants.smallTaskFileNamePrefix + i
+							+ ".txt");
+					onlineMTC.readWorkers(Constants.smallWorkerFileNamePrefix
+							+ i + ".txt");
+					break;
+				}
 
-                HashSet<Integer> workerSet = onlineMTC.maxCoverage();
-                System.out.println(workerSet);
+				//
+				onlineMTC.matchingTasksWorkers();
+				// System.out.println("Number of workers: " +
+				// onlineMTC.workerList.size());
+				//
+				// System.out.println("Number of tasks: " +
+				// onlineMTC.taskList.size());
+				//
+				// System.out.println("Number of arrival tasks: "+onlineMTC.numberArrivalTask);
 
-                onlineMTC.TimeInstance++;
+				HashSet<Integer> workerSet = onlineMTC.maxCoverage();
+				// System.out.println(workerSet);
 
-            }
-            System.out.println("Total tasks: "+onlineMTC.TaskCount);
-            
-            System.out.println("Result of budget: "+onlineMTC.totalBudget);
-            System.out.println("Number covered tasks: "+ onlineMTC.numberCoveredTask);
-            System.out.println("Number selected workers: "+ onlineMTC.numberSelectedWorker);
-            
-        }
-    }
+				onlineMTC.TimeInstance++;
+				
+
+			}
+			System.out.println("##################");
+
+			System.out.printf("\n%-15s %-15s %-15s %-15s %-15s", "TotalTask",
+					"CoveredTask", "TotalWorker", "SelectedWorker", "W/T");
+
+			System.out.printf("\n%-15d %-15d %-15d %-15d %-15d",
+					onlineMTC.TaskCount, onlineMTC.numberCoveredTask,
+					onlineMTC.totalBudget, onlineMTC.numberSelectedWorker,
+					onlineMTC.numberCoveredTask/onlineMTC.numberSelectedWorker);
+			
+			onlineMTC.printWorkerCounts();
+		}
+	}
 
 }

@@ -6,23 +6,30 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+
 import maxcover.MaxCover;
 import maxcover.MaxCoverAdapt;
 import maxcover.MaxCoverAdaptS;
 import maxcover.MaxCoverAdaptT;
 import maxcover.MaxCoverBasic;
+import maxcover.MaxCoverBasicMO;
 import maxcover.MaxCoverS;
 import maxcover.MaxCoverT;
+
 import org.datasets.yelp.Constant;
+
 import static org.geocrowd.AlgorithmEnum.MAX_COVER_BASIC;
 import static org.geocrowd.Geocrowd.algorithm;
 import static org.geocrowd.Geocrowd.taskList;
+
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.GenericTask;
+import org.geocrowd.common.crowdsource.GenericWorker;
 
 public class OnlineMTC extends GeocrowdSensing {
 
 	public int totalBudget = 0;
+	public HashMap<String, Integer> workerCounts = new HashMap<String, Integer>();
 
 	public final int totalNumberTasks;
 
@@ -78,6 +85,25 @@ public class OnlineMTC extends GeocrowdSensing {
 			numberSelectedWorker += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = maxCoverPro;
+			break;
+			
+		case MAX_COVER_BASIC_MO:
+			MaxCoverBasicMO mc = new MaxCoverBasicMO();
+			int budget = getBudget(algorithm);
+			int[] _workerCounts = new int[workerList.size()];
+			int i = 0;
+			for (GenericWorker w : workerList) {
+				if (workerCounts.containsKey(w.getUserID()))
+					_workerCounts[i++] = workerCounts.get(w.getUserID());
+				else
+					_workerCounts[i++] = 0;
+			}
+			assignedWorker = mc.maxCover(getContainerWithDeadline(), TimeInstance, _workerCounts, budget);
+
+			numberCoveredTask += mc.assignedTasks;
+			numberSelectedWorker += assignedWorker.size();
+			usedBudget += assignedWorker.size();
+			maxCover = mc;
 			break;
 
 		case MAX_COVER_ADAPT_B:
@@ -296,14 +322,47 @@ public class OnlineMTC extends GeocrowdSensing {
 			/* remove the last elements first */
 			taskList.remove((int) assignedTasks.get(i));
 		}
-		return assignedWorker;
 
+		/**
+		 * update workerCounts
+		 */
+		updateWorkerCounts(assignedWorker);
+
+		return assignedWorker;
+	}
+
+	// update worker counts
+	private void updateWorkerCounts(HashSet<Integer> assignedWorker) {
+		for (Integer i : assignedWorker) {
+			GenericWorker w = workerList.get(i);
+			if (workerCounts.containsKey(w.getUserID())) {
+				workerCounts.put(w.getUserID(),
+						workerCounts.get(w.getUserID()) + 1);
+			} else {
+				workerCounts.put(w.getUserID(), 1);
+			}
+		}
+	}
+	
+	/**
+	 * Debug the number of requests for each worker
+	 */
+	public void printWorkerCounts() {
+		System.out.println("\nWorker counts:");
+		int max = 0;
+		for (Integer count : workerCounts.values()) {
+			System.out.print(count + " ");
+			if (max < count)
+				max = count;
+		}
+		System.out.println("\nMax count: " + max);
 	}
 
 	private int getBudget(AlgorithmEnum algorithm) {
 		switch (algorithm) {
 
 		case MAX_COVER_BASIC:
+		case MAX_COVER_BASIC_MO:
 		case MAX_COVER_BASIC_S:
 		case MAX_COVER_BASIC_T:
 		case MAX_COVER_BASIC_ST:
@@ -317,9 +376,9 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_PRO_S:
 		case MAX_COVER_PRO_T:
 		case MAX_COVER_PRO_ST:
-			 return totalBudget * numberArrivalTask / totalNumberTasks;
-//			return (totalBudget - usedBudget) * taskList.size()
-//					/ (totalNumberTasks - numberCoveredTask);
+			return totalBudget * numberArrivalTask / totalNumberTasks;
+			// return (totalBudget - usedBudget) * taskList.size()
+			// / (totalNumberTasks - numberCoveredTask);
 
 		}
 		return 0;

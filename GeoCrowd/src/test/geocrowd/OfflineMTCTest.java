@@ -18,7 +18,7 @@ public class OfflineMTCTest {
 
         OfflineMTC offlineMTC = new OfflineMTC();
         offlineMTC.budget = 100;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
             switch (Geocrowd.DATA_SET) {
                 case GOWALLA:
                     offlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix

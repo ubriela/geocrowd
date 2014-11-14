@@ -145,6 +145,7 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 				.withProblemClass(MaxCoverBasicMO.class, container, currentTI, workerCounts, budget)
 				.withAlgorithm("NSGAII")
 				.withMaxEvaluations(50000)
+				.withProperty("populationSize", 200)
 				.distributeOnAllCores()
 				.run();
 		
@@ -179,9 +180,9 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 			double coverage = -objectives[0];
 			double maxAssign = objectives[1];
 			
-//			System.out.println(coverage + "\t" +  maxAssign);
+			System.out.println(coverage + "\t" +  maxAssign);
 			// the smaller weight, the better
-			double weight = Constants.alpha * (coverage/Constants.TaskNo) - (1-Constants.alpha) * maxAssign/currentTimeInstance;
+			double weight = Constants.alpha * ((coverage + 0.0)/Constants.TaskNo) - (1-Constants.alpha) * (maxAssign + 0.0)/currentTimeInstance;
 			if (weight > largestWeight) {
 				largestWeight = weight;
 				bestSol = i;

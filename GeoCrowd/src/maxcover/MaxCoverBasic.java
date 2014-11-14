@@ -102,6 +102,7 @@ public class MaxCoverBasic extends MaxCover {
 					assignedTaskSet.add(taskidx);
 				}
 		}
+
 		assignedTasks = assignedTaskSet.size();
 		System.out.println(universe.size() + "\t" + assignedTasks  + "\t" + assignWorkers.size() + "\t"  + assignedTasks/assignWorkers.size() );
 		return assignWorkers;

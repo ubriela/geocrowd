@@ -27,7 +27,7 @@ import org.geocrowd.common.crowdsource.GenericTask;
  * 
  * @author Hien
  */
-public class MaxCoverT extends MaxCover {
+public class MaxCoverBasicT extends MaxCover {
 
 	/**
 	 * Instantiates a new sets the cover greedy combine deadline.
@@ -38,7 +38,7 @@ public class MaxCoverT extends MaxCover {
 	 *            the currentTI
 	 */
 
-	public MaxCoverT(ArrayList container, Integer currentTI) {
+	public MaxCoverBasicT(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
 	}
 
@@ -71,7 +71,7 @@ public class MaxCoverT extends MaxCover {
 					smallestAvgTimeToDead = wg.weight;
 					bestWorkerIndex = k;
 				}
-			}   
+			}
 //                        System.out.println("weight:"+smallestAvgTimeToDead);
                         
 			assignWorkers.add(bestWorkerIndex);
@@ -94,7 +94,7 @@ public class MaxCoverT extends MaxCover {
 			}
 		}
 		assignedTasks = assignedTaskSet.size();
-		System.out.println("#Task assigned: " + assignedTasks);
+		System.out.println(universe.size() + "\t" + assignedTasks  + "\t" + assignWorkers.size() + "\t"  + assignedTasks/assignWorkers.size() );
 		return assignWorkers;
 	}
 
@@ -132,13 +132,12 @@ public class MaxCoverT extends MaxCover {
 																			// smaller,
 																			// the
 																			// better
-
 				totalElapsedTime += elapsedTime;
 			}
 		}
 		/**
 		 * average time to deadline of new covered task
 		 */
-		return new WeightGain(totalElapsedTime*1.0 / uncoveredTasks, uncoveredTasks);
+		return new WeightGain(Constants.alpha*totalElapsedTime / (Constants.T*uncoveredTasks) - (1-Constants.alpha) * uncoveredTasks/100.0, uncoveredTasks);
 	}
 }

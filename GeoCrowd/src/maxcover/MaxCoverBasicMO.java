@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.geocrowd.common.Constants;
+import org.geocrowd.common.CoverageIndex;
 import org.geocrowd.common.WeightedSolution;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
@@ -41,54 +42,53 @@ import org.moeaframework.core.variable.EncodingUtils;
 import org.moeaframework.util.Vector;
 import org.moeaframework.util.io.CommentedLineReader;
 
-public class MaxCoverBasicMO extends MaxCover  implements Problem {
+public class MaxCoverBasicMO extends MaxCover implements Problem {
 
-//	private ArrayList<Integer> indices = null;
-	
+	// private ArrayList<Integer> indices = null;
+
 	int[] workerCounts = null;
 
 	public MaxCoverBasicMO() {
 		super();
 	}
-	
-	public MaxCoverBasicMO(ArrayList container,
-			Integer currentTI, int[] selected, int budget) {
+
+	public MaxCoverBasicMO(ArrayList container, Integer currentTI,
+			int[] selected, int budget) {
 		super(container, currentTI);
-		
-//		indices = new ArrayList<Integer>(mapSets.keySet());
+
+		// indices = new ArrayList<Integer>(mapSets.keySet());
 		this.workerCounts = selected;
 		this.budget = budget;
 	}
 
-
 	@Override
 	public void evaluate(Solution solution) {
 		boolean[] d = EncodingUtils.getBinary(solution.getVariable(0));
-		double [] f = new double[2];
+		double[] f = new double[2];
 		double[] g = new double[1];
 		int usedBudget = 0;
 		int max = 0;
 		HashSet<Integer> coverage = new HashSet<Integer>();
-		
+
 		for (int i = 0; i < mapSets.size(); i++) {
 			if (d[i]) {
 				usedBudget++;
 				HashMap<Integer, Integer> map = mapSets.get(i);
 				coverage.addAll(map.keySet());
-				
+
 				if (workerCounts[i] + 1 > max)
 					max = workerCounts[i] + 1;
 			}
 		}
-		
+
 		f[0] = coverage.size();
 		f[1] = max;
-		
+
 		if (usedBudget <= budget)
 			g[0] = 0.0;
 		else {
 			g[0] = usedBudget - budget;
-			//System.out.println(g);
+			// System.out.println(g);
 		}
 
 		// negate this objectives since maxcover is maximization
@@ -126,9 +126,8 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 
 	@Override
 	public void close() {
-		//do nothing
+		// do nothing
 	}
-	
 
 	/**
 	 * 
@@ -138,18 +137,16 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 	 * @param budget
 	 * @return
 	 */
-	public HashSet<Integer> maxCover(ArrayList container,
-			Integer currentTI, int[] workerCounts, int budget) {
+	public HashSet<Integer> maxCover(ArrayList container, Integer currentTI,
+			int[] workerCounts, int budget) {
 		// solve using NSGA-II
 		NondominatedPopulation result = new Executor()
-				.withProblemClass(MaxCoverBasicMO.class, container, currentTI, workerCounts, budget)
-				.withAlgorithm("NSGAII")
-				.withMaxEvaluations(200000)
-				.distributeOnAllCores()
-				.run();
-		
+				.withProblemClass(MaxCoverBasicMO.class, container, currentTI,
+						workerCounts, budget).withAlgorithm("NSGAII")
+				.withMaxEvaluations(200000).distributeOnAllCores().run();
+
 		int bestIndex = bestSolution(result);
-		
+
 		// pick the first solution
 		Solution solution = result.get(bestIndex);
 		String val = solution.getVariable(0).toString();
@@ -157,15 +154,67 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 			if (val.charAt(i) == '1')
 				assignWorkers.add(i);
 		}
-		
+
 		// update assignedTasks
 		assignedTaskSet = new HashSet<Integer>();
 		for (Integer i : assignWorkers) {
-			assignedTaskSet.addAll(((HashMap<Integer, Integer>) container.get(i)).keySet());
+			assignedTaskSet.addAll(((HashMap<Integer, Integer>) container
+					.get(i)).keySet());
 		}
-		assignedTasks = assignedTaskSet.size();
+
+		/**
+		 * If do not use all budget --> use the rest to select the worker with
+		 * less than MAX selected and maximize the total coverage
+		 */
+		int budgetLeft = budget - assignWorkers.size();
+		if (budgetLeft > 0) {
+			
+			int maxCount = 0;
+			int[] updatedWorkerCounts = new int[workerCounts.length];
+			HashSet<Integer> unselected = new HashSet<Integer>();
+			for (int i = 0; i < workerCounts.length; i++) {
+				// if the worker is not selected
+				updatedWorkerCounts[i] = workerCounts[i];
+				if (assignWorkers.contains(i)) {
+					updatedWorkerCounts[i] = updatedWorkerCounts[i] + 1;
+					if (updatedWorkerCounts[i] > maxCount)
+						maxCount = updatedWorkerCounts[i];
+				} else		
+					unselected.add(i);
+			}
+
+			System.out.println(budgetLeft);
+			PriorityQueue<CoverageIndex> pq = new PriorityQueue<CoverageIndex>();
+			for (int i : unselected) {
+				/**
+				 * do not select the worker with maximum selection
+				 */
+				if (updatedWorkerCounts[i] > maxCount)
+					continue;
+				HashSet<Integer> _assignedTasks = (HashSet<Integer>) assignedTaskSet
+						.clone();
+				_assignedTasks.addAll(((HashMap<Integer, Integer>) container
+						.get(i)).keySet());
+				int cover = _assignedTasks.size();
+				CoverageIndex ci = new CoverageIndex(cover, i);
+
+				pq.add(ci);
+				if (pq.size() > budgetLeft)
+					pq.poll();
+			}
+
+			for (CoverageIndex ci : pq) {
+				assignedTaskSet.addAll(((HashMap<Integer, Integer>) container
+						.get(ci.getIndex())).keySet());
+				assignWorkers.add(ci.getIndex());
+			}
+		}
 		
-		System.out.println("N/A\t" + assignedTasks  + "\t" + assignWorkers.size() + "\t"  + assignedTasks/assignWorkers.size() + "\t" + result.size());
+		assignedTasks = assignedTaskSet.size();
+
+		System.out.println("N/A\t" + assignedTasks + "\t"
+				+ assignWorkers.size() + "\t" + assignedTasks
+				/ assignWorkers.size() + "\t" + result.size());
 		return assignWorkers;
 	}
 
@@ -175,19 +224,22 @@ public class MaxCoverBasicMO extends MaxCover  implements Problem {
 		for (int i = 0; i < result.size(); i++) {
 			Solution sol = result.get(i);
 			double[] objectives = sol.getObjectives();
-					
+
 			double coverage = -objectives[0];
 			double maxAssign = objectives[1];
-			
-//			System.out.println(coverage + "\t" +  maxAssign);
+
+			// System.out.println(coverage + "\t" + maxAssign);
 			// the smaller weight, the better
-			double weight = Constants.alpha * ((coverage + 0.0)/Constants.TaskNo) - (1-Constants.alpha) * (maxAssign + 0.0)/currentTimeInstance;
+			double weight = Constants.alpha
+					* ((coverage + 0.0) / Constants.TaskNo)
+					- (1 - Constants.alpha) * (maxAssign + 0.0)
+					/ currentTimeInstance;
 			if (weight > largestWeight) {
 				largestWeight = weight;
 				bestSol = i;
 			}
 		}
-		
+
 		return bestSol;
 	}
 

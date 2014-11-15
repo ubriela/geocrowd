@@ -15,7 +15,7 @@ import org.geocrowd.common.Constants;
  * @author ubriela
  *
  */
-public class MaxCoverAdaptT extends MaxCoverT {
+public class MaxCoverAdaptT extends MaxCoverBasicT {
 
 	public int lambda; // algorithm stops when gain is less than lambda
 

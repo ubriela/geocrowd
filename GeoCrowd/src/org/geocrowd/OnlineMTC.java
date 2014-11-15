@@ -13,8 +13,8 @@ import maxcover.MaxCoverAdaptS;
 import maxcover.MaxCoverAdaptT;
 import maxcover.MaxCoverBasic;
 import maxcover.MaxCoverBasicMO;
-import maxcover.MaxCoverS;
-import maxcover.MaxCoverT;
+import maxcover.MaxCoverBasicS;
+import maxcover.MaxCoverBasicT;
 
 import org.datasets.yelp.Constant;
 
@@ -156,7 +156,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			break;
 		case MAX_COVER_BASIC_T:
 		case MAX_COVER_PRO_T:
-			MaxCoverT maxCoverBasicT = new MaxCoverT(
+			MaxCoverBasicT maxCoverBasicT = new MaxCoverBasicT(
 					getContainerWithDeadline(), TimeInstance);
 			maxCoverBasicT.budget = getBudget(algorithm);
 			assignedWorker = maxCoverBasicT.maxCover();
@@ -170,7 +170,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			 * compute lamda0
 			 */
 			if (TimeInstance == 0) {
-				MaxCoverT maxCoverPro2 = new MaxCoverT(
+				MaxCoverBasicT maxCoverPro2 = new MaxCoverBasicT(
 						getContainerWithDeadline(), TimeInstance);
 				maxCoverPro2.budget = getBudget(AlgorithmEnum.MAX_COVER_PRO_T);
 				assignedWorker = maxCoverPro2.maxCover();
@@ -207,14 +207,14 @@ public class OnlineMTC extends GeocrowdSensing {
 
 		case MAX_COVER_BASIC_S:
 		case MAX_COVER_PRO_S:
-			MaxCoverS maxCoverS = new MaxCoverS(getContainerWithDeadline(),
+			MaxCoverBasicS maxCoverS = new MaxCoverBasicS(getContainerWithDeadline(),
 					TimeInstance);
 			maxCoverS.budget = getBudget(algorithm);
 			maxCoverS.setTaskList(taskList);
 			/**
 			 * compute entropy for tasks
 			 */
-			printBoundaries();
+//			printBoundaries();
 			createGrid();
 			readEntropy();
 			HashMap<GenericTask, Double> task_entropies = new HashMap<GenericTask, Double>();
@@ -235,7 +235,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			 * compute lamda0
 			 */
 			if (TimeInstance == 0) {
-				MaxCoverS maxCoverProS = new MaxCoverS(
+				MaxCoverBasicS maxCoverProS = new MaxCoverBasicS(
 						getContainerWithDeadline(), TimeInstance);
 				maxCoverProS.budget = getBudget(AlgorithmEnum.MAX_COVER_PRO_S);
 				maxCoverProS.setTaskList(taskList);

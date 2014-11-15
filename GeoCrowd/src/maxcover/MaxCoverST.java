@@ -27,7 +27,7 @@ import org.geocrowd.common.crowdsource.GenericTask;
  * 
  * @author Hien
  */
-public class MaxCoverST extends MaxCoverS {
+public class MaxCoverST extends MaxCoverBasicS {
 
 	/**
 	 * Instantiates a new sets the cover greedy combine deadline.

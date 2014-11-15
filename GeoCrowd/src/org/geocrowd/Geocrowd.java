@@ -293,8 +293,8 @@ public void createGrid(DatasetEnum dataset) {
 				entropyList.add(dR);
 				sumEntropy += entropy;
 			}
-			System.out.println("Sum of entropy: " + sumEntropy
-					+ "; Max entropy: " + maxEntropy);
+//			System.out.println("Sum of entropy: " + sumEntropy
+//					+ "; Max entropy: " + maxEntropy);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -324,8 +324,8 @@ public void createGrid(DatasetEnum dataset) {
 			resolution = Constants.yelpResolution;
 		}
 		rowCount = colCount = (int)(1.0/resolution);
-		System.out
-				.println("rowcount: " + rowCount + "    colCount:" + colCount);
+//		System.out
+//				.println("rowcount: " + rowCount + "    colCount:" + colCount);
 	}
 	/**
 	 * Lat to row idx.

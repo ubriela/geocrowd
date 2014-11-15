@@ -27,7 +27,7 @@ import org.geocrowd.common.crowdsource.GenericTask;
  * 
  * @author Hien
  */
-public class MaxCoverS extends MaxCoverT {
+public class MaxCoverBasicS extends MaxCoverBasicT {
 
 	private HashMap<GenericTask, Double> entropies;
 	private ArrayList<GenericTask> taskList;
@@ -58,7 +58,7 @@ public class MaxCoverS extends MaxCoverT {
 	 *            the current_time_instance
 	 */
 
-	public MaxCoverS(ArrayList container, Integer currentTI) {
+	public MaxCoverBasicS(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
 	}
 

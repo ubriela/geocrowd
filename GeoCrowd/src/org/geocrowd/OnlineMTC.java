@@ -14,6 +14,7 @@ import maxcover.MaxCoverAdaptT;
 import maxcover.MaxCoverBasic;
 import maxcover.MaxCoverBasicMO;
 import maxcover.MaxCoverBasicS;
+import maxcover.MaxCoverBasicSMO;
 import maxcover.MaxCoverBasicT;
 
 import org.datasets.yelp.Constant;
@@ -82,7 +83,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			break;
 			
 		case MAX_COVER_BASIC_MO:
-			MaxCoverBasicMO mc = new MaxCoverBasicMO();
+			MaxCoverBasicMO mcBasicMo = new MaxCoverBasicMO();
 			int budget = getBudget(algorithm);
 			int[] _workerCounts = new int[workerList.size()];
 			int i = 0;
@@ -92,12 +93,23 @@ public class OnlineMTC extends GeocrowdSensing {
 				else
 					_workerCounts[i++] = 0;
 			}
-			assignedWorker = mc.maxCover(getContainerWithDeadline(), TimeInstance, _workerCounts, budget);
+			assignedWorker = mcBasicMo.maxCover(getContainerWithDeadline(), TimeInstance, _workerCounts, budget);
 
-			TotalAssignedTasks += mc.assignedTasks;
+			TotalAssignedTasks += mcBasicMo.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
-			maxCover = mc;
+			maxCover = mcBasicMo;
+			break;
+			
+		case MAX_COVER_BASIC_S_MO:
+			MaxCoverBasicSMO mcBasicSMO = new MaxCoverBasicSMO();
+			int budgetSMO = getBudget(algorithm);
+			assignedWorker = mcBasicSMO.maxCover(getContainerWithDeadline(), TimeInstance, budgetSMO);
+
+			TotalAssignedTasks += mcBasicSMO.assignedTasks;
+			TotalAssignedWorkers += assignedWorker.size();
+			usedBudget += assignedWorker.size();
+			maxCover = mcBasicSMO;
 			break;
 
 		case MAX_COVER_ADAPT_B:
@@ -369,6 +381,7 @@ public class OnlineMTC extends GeocrowdSensing {
 
 		case MAX_COVER_BASIC:
 		case MAX_COVER_BASIC_MO:
+		case MAX_COVER_BASIC_S_MO:
 		case MAX_COVER_BASIC_S:
 		case MAX_COVER_BASIC_T:
 		case MAX_COVER_BASIC_ST:

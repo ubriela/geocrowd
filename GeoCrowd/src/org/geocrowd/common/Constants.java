@@ -18,7 +18,7 @@ package org.geocrowd.common;
  */
 public class Constants {
 
-	public static double alpha = 0.1;
+	public static double alpha = 0.5;
 	
 	/** The Task no. */
 	public static int TaskNo = 1000; // 200; // number of tasks

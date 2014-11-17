@@ -48,7 +48,8 @@ public class OfflineMTC extends GeocrowdSensing {
              * not expired at worker's time instance
              */
             if ((workerOnlineTime - task.getEntryTime()) < Constants.TaskDuration
-                    && distanceWorkerTask(w, task) <= task.getRadius()) {
+                    && (workerOnlineTime - task.getEntryTime()) >=0 && 
+                    distanceWorkerTask(w, task) <= task.getRadius()) {
 
                 /* compute a list of candidate tasks */
                 if (!taskSet.contains(tid)) {
@@ -62,7 +63,6 @@ public class OfflineMTC extends GeocrowdSensing {
                 containerPrune[workerIdx].add(candidateTaskIndices.indexOf(tid));
 
             }// if not overlapped
-
             tid++;
         }// for loop
     }

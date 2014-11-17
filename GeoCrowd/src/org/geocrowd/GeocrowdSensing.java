@@ -641,11 +641,12 @@ public class GeocrowdSensing extends Geocrowd {
 			SensingTask task = (SensingTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getEntryTime()) >= (Constants.TaskDuration - 1)) {
+			if ((TimeInstance - task.getEntryTime()) >= (Constants.TaskDuration)
+				) {
 				task.setExpired();
 			}
 			/* if worker in task region */
-			if (distanceWorkerTask(w, task) <= task.getRadius()) {
+			else if (distanceWorkerTask(w, task) <= task.getRadius()) {
 
 				/* compute a list of candidate tasks */
 				if (!taskSet.contains(tid)) {

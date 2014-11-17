@@ -31,9 +31,8 @@ public class MaxCoverBasic extends MaxCover {
 	public MaxCoverBasic() {
 		super();
 	}
-	
-	public MaxCoverBasic(ArrayList container,
-			Integer currentTI) {
+
+	public MaxCoverBasic(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
 	}
 
@@ -57,7 +56,7 @@ public class MaxCoverBasic extends MaxCover {
 		 * Run until either running out of budget or no more tasks to cover
 		 */
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
-			int bestWorkerIndex = 0; // track index of the best worker in S
+			int bestWorkerIndex = -1; // track index of the best worker in S
 			int maxNoUncoveredTasks = 0;
 			/**
 			 * Iterate all workers, find the one which covers maximum number of
@@ -77,34 +76,39 @@ public class MaxCoverBasic extends MaxCover {
 					bestWorkerIndex = k;
 				}
 			}
-			
-//			System.out.print(S.get(bestWorkerIndex));
-//			System.out.println(maxNoUncoveredTasks);
-			/**
-			 * gain is reduced at every stage
-			 */
-			gain = maxNoUncoveredTasks;
-			
-			assignWorkers.add(bestWorkerIndex);
-			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
-			S.remove(bestWorkerIndex);
-			Q.removeAll(taskSet.keySet());
 
-			/**
-			 * compute average time to assign tasks in taskSet
-			 */
-			for (Integer taskidx : taskSet.keySet())
-				if (!assignedTaskSet.contains(taskidx)) {
+			// System.out.print(S.get(bestWorkerIndex));
+			// System.out.println(maxNoUncoveredTasks);
+			if (bestWorkerIndex > -1) {
+				/**
+				 * gain is reduced at every stage
+				 */
+				gain = maxNoUncoveredTasks;
 
-					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskidx) - Constants.TaskDuration)
-							+ 1;
-					assignedTaskSet.add(taskidx);
-				}
+				assignWorkers.add(bestWorkerIndex);
+				HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
+				S.remove(bestWorkerIndex);
+				Q.removeAll(taskSet.keySet());
+
+				/**
+				 * compute average time to assign tasks in taskSet
+				 */
+				for (Integer taskidx : taskSet.keySet())
+					if (!assignedTaskSet.contains(taskidx)) {
+
+						averageDelayTime += currentTimeInstance
+								- (taskSet.get(taskidx) - Constants.TaskDuration)
+								+ 1;
+						assignedTaskSet.add(taskidx);
+					}
+			}
+			else break;
 		}
 
 		assignedTasks = assignedTaskSet.size();
-		System.out.println(universe.size() + "\t" + assignedTasks  + "\t" + assignWorkers.size() + "\t"  + assignedTasks/assignWorkers.size() );
+		System.out.println(universe.size() + "\t" + assignedTasks + "\t"
+				+ assignWorkers.size() + "\t" + assignedTasks
+				/ assignWorkers.size());
 		return assignWorkers;
 	}
 }

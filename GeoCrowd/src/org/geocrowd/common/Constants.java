@@ -62,7 +62,7 @@ public class Constants {
 
 
 	/** The Task duration. */
-	public static int TaskDuration = 5;// 20000; //duration of all tasks before
+	public static int TaskDuration = 1;// 20000; //duration of all tasks before
 										// they expire are fixed to 1000ms
 	/** The Max tasks per worker. */
 	public static int MaxTasksPerWorker = 20; // maximum # of tasks that a

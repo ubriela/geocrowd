@@ -53,9 +53,9 @@ public class OfflineMTCTest {
                     break;
             }
 
-//            System.out.println("Number of workers: " + OfflineMTC.workerList.size());
-//
-//            System.out.println("Number of tasks: " + OfflineMTC.taskList.size());
+            System.out.println("Number of workers: " + OfflineMTC.workerList.size());
+
+            System.out.println("Number of tasks: " + OfflineMTC.taskList.size());
         }
 
         offlineMTC.matchingTasksWorkers();

@@ -131,6 +131,10 @@ public class MaxCoverFixedOffline extends MaxCover {
 					}
 				}
 			}
+			else {
+				System.out.println("Break here because best index = "+bestWorkerIndex);
+				break;
+			}
 		}
 
 		assignedTasks = assignedTaskSet.size();

@@ -1,5 +1,6 @@
 package test.geocrowd;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
@@ -17,7 +18,7 @@ public class OfflineMTCTest {
         Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
         OfflineMTC offlineMTC = new OfflineMTC();
-        offlineMTC.budget = 100;
+        offlineMTC.budget = 1000;
         for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
             switch (Geocrowd.DATA_SET) {
                 case GOWALLA:
@@ -52,16 +53,28 @@ public class OfflineMTCTest {
                     break;
             }
 
-            System.out.println("Number of workers: " + OfflineMTC.workerList.size());
-
-            System.out.println("Number of tasks: " + OfflineMTC.taskList.size());
+//            System.out.println("Number of workers: " + OfflineMTC.workerList.size());
+//
+//            System.out.println("Number of tasks: " + OfflineMTC.taskList.size());
         }
-        
+
         offlineMTC.matchingTasksWorkers();
+
+        HashSet<Integer> workerSet = offlineMTC.maxTaskCoverage();
+        System.out.println("ttasks\ttasks\tworkers\tT/W");
+//        System.out.println("Assigned tasks: " + offlineMTC.TotalAssignedTasks);
+//        System.out.println("Assigned workers: " + offlineMTC.TotalAssignedWorkers);
+        System.out.println("##################");
+
+        System.out.printf("\n%-15s %-15s %-15s %-15s %-15s", "TotalTask",
+                "CoveredTask", "TotalWorker", "SelectedWorker", "W/T");
+
+        System.out.printf("\n%-15d %-15d %-15d %-15d %-15d",
+                offlineMTC.TaskCount, offlineMTC.TotalAssignedTasks,
+                offlineMTC.budget, offlineMTC.TotalAssignedWorkers,
+                offlineMTC.TotalAssignedTasks / offlineMTC.TotalAssignedWorkers);
         
-        HashSet<Integer> workerSet =  offlineMTC.maxTaskCoverage();
-        System.out.println("Assigned tasks: " + offlineMTC.TotalAssignedTasks);
-        System.out.println("Assigned workers: " + offlineMTC.TotalAssignedWorkers);
     }
+    
 
 }

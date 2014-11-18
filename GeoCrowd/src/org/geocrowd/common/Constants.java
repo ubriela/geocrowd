@@ -113,7 +113,7 @@ public class Constants {
 
 	// real dataset gowalla
 	/** The gowalla resolution. */
-	public static double gowallaResolution = 0.0002; // 0.0002 is approximately 30x30 metres
+	public static double gowallaResolution = 0.0002; // 0.00002 is approximately 30x30 metres
 	/** The gowalla file name. */
 	public static String gowallaFileName = "dataset/real/gowalla/gowalla_totalCheckins.txt";
 
@@ -129,6 +129,8 @@ public class Constants {
 	/** The gowalla location entropy file name. */
 	public static String gowallaLocationEntropyFileName = "dataset/real/gowalla/gowalla_loc_entropy.txt";
 
+	public static String gowallaLocationDensityFileName = "dataset/real/gowalla/gowalla_loc_density.txt";
+	
 	/** The gowalla task file name prefix. */
 	public static String gowallaTaskFileNamePrefix = "dataset/real/gowalla/task/gowalla_tasks";
 
@@ -138,6 +140,8 @@ public class Constants {
 	/** The gowalla boundary. */
 	public static String gowallaBoundary = "dataset/real/gowalla/gowalla_CA_boundary.txt";
 
+	public static String gowallaFileName_CA_loc = "dataset/real/gowalla/gowalla_CA.dat";
+	
 	// synthetic dataset
 	/** The skewed resolution. */
 	public static double skewedResolution = 0.01;
@@ -182,4 +186,5 @@ public class Constants {
 
 	/** The uni boundary. */
 	public static String uniBoundary = "dataset/uni/uni_boundary.txt";
+
 }

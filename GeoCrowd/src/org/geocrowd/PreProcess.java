@@ -233,9 +233,8 @@ public class PreProcess {
 		try {
 			FileWriter writer = new FileWriter(Constants.gowallaEntropyFileName);
 			BufferedWriter out = new BufferedWriter(writer);
-			Set<Integer> set = hashTable.keySet();
 
-			Iterator<Integer> itr = set.iterator();
+			Iterator<Integer> itr = hashTable.keySet().iterator();
 			while (itr.hasNext()) {
 				int pointId = itr.next();
 				ArrayList<Observation> obs = hashTable.get(pointId);
@@ -263,24 +262,22 @@ public class PreProcess {
 	 * @return the hashtable
 	 */
 	public Hashtable<Integer, Hashtable<Integer, Integer>> computeSyncLocationDensity() {
-		String matlabWorkerFilePath = "";
+		String workerFilePath = "";
 		switch (DATA_SET) {
 		case SKEWED:
-			matlabWorkerFilePath = Constants.skewedMatlabWorkerFilePath;
+			workerFilePath = Constants.skewedMatlabWorkerFilePath;
 			break;
 		case UNIFORM:
-			matlabWorkerFilePath = Constants.uniMatlabWorkerFilePath;
+			workerFilePath = Constants.uniMatlabWorkerFilePath;
 			break;
 		case SMALL_TEST:
-			matlabWorkerFilePath = Constants.smallWorkerFilePath;
+			workerFilePath = Constants.smallWorkerFilePath;
 		}
 
 		Hashtable<Integer, Hashtable<Integer, Integer>> densities = new Hashtable<Integer, Hashtable<Integer, Integer>>();
-		int locId = 0;
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			try {
-				FileReader file = new FileReader(matlabWorkerFilePath + i
-						+ ".txt");
+				FileReader file = new FileReader(workerFilePath + i + ".txt");
 				BufferedReader in = new BufferedReader(file);
 				while (in.ready()) {
 					String line = in.readLine();
@@ -309,6 +306,48 @@ public class PreProcess {
 	}
 
 	/**
+	 * Compute sync location density.
+	 * 
+	 * @return the hashtable
+	 */
+	public Hashtable<Integer, Hashtable<Integer, Integer>> computeLocationDensity() {
+		String filePath = "";
+		switch (DATA_SET) {
+		case GOWALLA:
+			filePath = Constants.gowallaFileName_CA_loc;
+			break;
+		}
+
+		Hashtable<Integer, Hashtable<Integer, Integer>> densities = new Hashtable<Integer, Hashtable<Integer, Integer>>();
+		try {
+			FileReader file = new FileReader(filePath);
+			BufferedReader in = new BufferedReader(file);
+			while (in.ready()) {
+				String line = in.readLine();
+				String[] parts = line.split("\t");
+				Double lat = Double.parseDouble(parts[0]);
+				Double lng = Double.parseDouble(parts[1]);
+				int row = getRowIdx(lat);
+				int col = getColIdx(lng);
+				if (densities.containsKey(row)) {
+					if (densities.get(row).containsKey(col))
+						densities.get(row).put(col,
+								densities.get(row).get(col) + 1);
+					else
+						densities.get(row).put(col, 1);
+				} else {
+					Hashtable<Integer, Integer> rows = new Hashtable<Integer, Integer>();
+					rows.put(col, 1);
+					densities.put(row, rows);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return densities;
+	}
+
+	/**
 	 * compute grid granularity.
 	 * 
 	 * @param dataset
@@ -330,7 +369,7 @@ public class PreProcess {
 		case YELP:
 			resolution = Constants.yelpResolution;
 		}
-		rowCount = colCount = (int)(1.0/resolution);
+		rowCount = colCount = (int) (1.0 / resolution);
 		System.out
 				.println("rowcount: " + rowCount + "    colCount:" + colCount);
 	}
@@ -443,17 +482,16 @@ public class PreProcess {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
+
 	/**
 	 * partition all_data_time into T instances based on timestamp
 	 * 
 	 * @param filename
-	 * @param instance: the number of time instance
+	 * @param instance
+	 *            : the number of time instance
 	 */
-	public void extractWorkersInstances(String filename, String outputPath, int instance) {
+	public void extractWorkersInstances(String filename, String outputPath,
+			int instance) {
 		try {
 			FileReader reader = new FileReader(filename);
 			BufferedReader in = new BufferedReader(reader);
@@ -468,21 +506,22 @@ public class PreProcess {
 				Integer id = Integer.parseInt(parts[0]);
 				String time = parts[1];
 				String timeParts[] = time.split("-");
-				int year = Integer.valueOf(timeParts[0]); 
-				int month = Integer.valueOf(timeParts[1]); 
+				int year = Integer.valueOf(timeParts[0]);
+				int month = Integer.valueOf(timeParts[1]);
 				int day = Integer.valueOf(timeParts[2].substring(0, 2));
 				int hour = Integer.valueOf(timeParts[2].substring(3, 5));
-				int timestamp = ((year - 2005) * 365 + month*30 + day) * 24 + hour;
-				
+				int timestamp = ((year - 2005) * 365 + month * 30 + day) * 24
+						+ hour;
+
 				Double lat = Double.parseDouble(parts[2]);
 				Double lng = Double.parseDouble(parts[3]);
-				
+
 				/**
 				 * Add point to queue
 				 */
 				PointTime pt = new PointTime(id, timestamp, lat, lng);
 				sortedData.add(pt);
-				
+
 				if (id.equals(prev_id)) { // add to current list
 					points.add(pt);
 				} else {
@@ -515,26 +554,32 @@ public class PreProcess {
 				Integer t = it.next();
 				ArrayList<PointTime> pts = data.get(t);
 				MBR mbr = MBR.computeMBR2(pts);
-				userLocs.put(t, new PointTime(t, 0, (mbr.getMaxLat() + mbr.getMinLat())/2.0, (mbr.getMaxLng() + mbr.getMinLng())/2.0));
+				userLocs.put(
+						t,
+						new PointTime(t, 0,
+								(mbr.getMaxLat() + mbr.getMinLat()) / 2.0, (mbr
+										.getMaxLng() + mbr.getMinLng()) / 2.0));
 			}
-			
+
 			/**
 			 * Create data for each time instance
 			 */
-			int width = sortedData.size()/instance;
+			int width = sortedData.size() / instance;
 			ArrayList<PointTime> allDataArr = new ArrayList<PointTime>();
 			while (!sortedData.isEmpty()) {
-					allDataArr.add(sortedData.poll());
+				allDataArr.add(sortedData.poll());
 			}
-			
+
 			for (int t = 0; t < instance; t++) {
-				HashMap<Integer, PointTime> currUserLocs = (HashMap<Integer, PointTime>) userLocs.clone();
-				
+				HashMap<Integer, PointTime> currUserLocs = (HashMap<Integer, PointTime>) userLocs
+						.clone();
+
 				/**
 				 * construct a dictionary of users that update their locations
 				 */
-				HashMap<Integer, ArrayList<PointTime>> userUpdates = new HashMap<Integer, ArrayList<PointTime>>(); 
-				for (PointTime point : allDataArr.subList(t*width, t*width + width)) {
+				HashMap<Integer, ArrayList<PointTime>> userUpdates = new HashMap<Integer, ArrayList<PointTime>>();
+				for (PointTime point : allDataArr.subList(t * width, t * width
+						+ width)) {
 					if (userUpdates.containsKey(point.getUserid()))
 						userUpdates.get(point.getUserid()).add(point);
 					else {
@@ -543,7 +588,7 @@ public class PreProcess {
 						userUpdates.put(point.getUserid(), arr);
 					}
 				}
-				
+
 				/**
 				 * For each user
 				 */
@@ -556,19 +601,20 @@ public class PreProcess {
 						new_locs = userUpdates.get(key);
 					else
 						continue;
-					
-					updateCount ++;
+
+					updateCount++;
 					MBR mbr = MBR.computeMBR2(new_locs);
-					
-					PointTime p = new PointTime(key, 0, (mbr.getMaxLat() + mbr.getMinLat())/2.0, (mbr.getMaxLng() + mbr.getMinLng())/2.0);
+
+					PointTime p = new PointTime(key, 0,
+							(mbr.getMaxLat() + mbr.getMinLat()) / 2.0,
+							(mbr.getMaxLng() + mbr.getMinLng()) / 2.0);
 					currUserLocs.put(key, p);
 				}
-				
+
 				System.out.println("updates count " + updateCount);
 				saveWorkerInstance(outputPath, t, currUserLocs);
-				
+
 			}
-			
 
 			System.out.println("Number of users: " + data.keySet().size());
 			System.out.println("Average users' MBR size: " + sum / count);
@@ -577,19 +623,21 @@ public class PreProcess {
 			e.printStackTrace();
 		}
 	}
-	
-	private void saveWorkerInstance(String path, int t, HashMap<Integer, PointTime> userLocs) {
+
+	private void saveWorkerInstance(String path, int t,
+			HashMap<Integer, PointTime> userLocs) {
 		StringBuffer sb = new StringBuffer();
 		for (PointTime p : userLocs.values()) {
-//			p.debug();
-//			System.out.println(p.getY());
-//			System.out.println(p.getX() + "\t" + p.getY());
-			sb.append(p.getUserid() + "\t"  + p.getX() + "\t" + p.getY() + "\n");
+			// p.debug();
+			// System.out.println(p.getY());
+			// System.out.println(p.getX() + "\t" + p.getY());
+			sb.append(p.getUserid() + "\t" + p.getX() + "\t" + p.getY() + "\n");
 		}
-		
+
 		FileWriter writer;
 		try {
-			writer = new FileWriter(path + String.format("%04d", t) + Constant.suffix);
+			writer = new FileWriter(path + String.format("%04d", t)
+					+ Constant.suffix);
 			BufferedWriter out = new BufferedWriter(writer);
 			out.write(sb.toString(), 0, sb.length() - 1);
 			out.close();
@@ -599,7 +647,6 @@ public class PreProcess {
 		}
 
 	}
-
 
 	/**
 	 * Get subset of the gowalla dataset, within a rectangle.
@@ -908,7 +955,7 @@ public class PreProcess {
 	 * @return the row idx
 	 */
 	public int getRowIdx(double lat) {
-		return (int) (1/resolution * (lat - minLat) / (maxLat - minLat));
+		return (int) (1 / resolution * (lat - minLat) / (maxLat - minLat));
 	}
 
 	/**
@@ -1031,8 +1078,85 @@ public class PreProcess {
 				}
 				cnt++;
 			}
-			System.out.println("Hashtable <location, occurrences> size: "
-					+ hashTable.size()  + " (the number of cells with checkins)");
+			System.out
+					.println("Hashtable <location, occurrences> size: "
+							+ hashTable.size()
+							+ " (the number of cells with checkins)");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return hashTable;
+	}
+
+	/**
+	 * compute REGION entropy
+	 * 
+	 * @param datasetfile
+	 *            the datasetfile
+	 * @return a hashtable <row, <col, [observations]>>
+	 */
+	public Hashtable<Integer, Hashtable<Integer, ArrayList<Observation>>> readRegionEntropyData(
+			String datasetfile) {
+
+		Hashtable<Integer, Hashtable<Integer, ArrayList<Observation>>> hashTable = new Hashtable<Integer, Hashtable<Integer, ArrayList<Observation>>>();
+		System.out.println("xxxx");
+		try {
+			FileReader reader = new FileReader(datasetfile);
+			BufferedReader in = new BufferedReader(reader);
+			while (in.ready()) {
+				String line = in.readLine();
+				String[] parts = line.split("\\s");
+				Integer userID = Integer.parseInt(parts[0]);
+				Double lat = Double.parseDouble(parts[2]);
+				Double lng = Double.parseDouble(parts[3]);
+				int row = getRowIdx(lat);
+				int col = getColIdx(lng);
+
+				System.out.println(row + "\t" + col);
+
+				if (!hashTable.containsKey(row)) {
+					Hashtable<Integer, ArrayList<Observation>> cols = new Hashtable<Integer, ArrayList<Observation>>();
+					ArrayList<Observation> obs = new ArrayList<Observation>();
+					Observation o = new Observation(userID);
+					obs.add(o);
+					cols.put(col, obs);
+					hashTable.put(row, cols);
+				} else {
+					Hashtable<Integer, ArrayList<Observation>> cols = hashTable
+							.get(row);
+					if (!cols.contains(col)) {
+						ArrayList<Observation> obs = new ArrayList<Observation>();
+						Observation o = new Observation(userID);
+						obs.add(o);
+						cols.put(col, obs);
+						hashTable.put(row, cols);
+					} else {
+						ArrayList<Observation> obs = hashTable.get(row)
+								.get(col);
+						boolean found = false;
+						for (Observation o : obs) {
+							if (o.getUserId() == userID) {
+								o.incObserveCount();
+								obs.add(o);
+								cols.put(col, obs);
+								hashTable.put(row, cols);
+								found = true;
+								break;
+							}
+						}
+						if (!found) {
+							Observation o = new Observation(userID);
+							obs.add(o);
+							cols.put(col, obs);
+							hashTable.put(row, cols);
+						}
+					}
+				}
+			}
+			System.out
+					.println("Hashtable <location, occurrences> size: "
+							+ hashTable.size()
+							+ " (the number of cells with checkins)");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1083,21 +1207,21 @@ public class PreProcess {
 		try {
 			// sort key and iterate based on key
 			List<Date> dates = new ArrayList<Date>(hashTable.keySet());
-		    Collections.sort(dates);
+			Collections.sort(dates);
 
 			Integer instanceCnt = 0;
 			Integer dayCnt = 0;
 			int workerCount = 0;
-			int daysPerInstance = dates.size()/Constants.TIME_INSTANCE;
+			int daysPerInstance = dates.size() / Constants.TIME_INSTANCE;
 			System.out.println("days per one instance: " + daysPerInstance);
 			BufferedWriter out = null;
 			for (Date date : dates) {
 				if (dayCnt == 0) {
 					FileWriter writer = new FileWriter(
-							Constants.gowallaWorkerFileNamePrefix + instanceCnt.toString()
-									+ ".txt");
+							Constants.gowallaWorkerFileNamePrefix
+									+ instanceCnt.toString() + ".txt");
 					out = new BufferedWriter(writer);
-				} else if (dayCnt == daysPerInstance){
+				} else if (dayCnt == daysPerInstance) {
 					instanceCnt++;
 					dayCnt = 0;
 					System.out.println("worker count: " + workerCount);
@@ -1119,8 +1243,7 @@ public class PreProcess {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * Save real workers.
 	 * 
@@ -1134,7 +1257,7 @@ public class PreProcess {
 		try {
 			// sort key and iterate based on key
 			List<Date> dates = new ArrayList<Date>(hashTable.keySet());
-		    Collections.sort(dates);
+			Collections.sort(dates);
 
 			Integer instanceCnt = 0;
 			Integer workerCnt = 0;
@@ -1142,10 +1265,10 @@ public class PreProcess {
 			for (Date date : dates) {
 				if (workerCnt == 0) {
 					FileWriter writer = new FileWriter(
-							Constants.gowallaWorkerFileNamePrefix + instanceCnt.toString()
-									+ ".txt");
+							Constants.gowallaWorkerFileNamePrefix
+									+ instanceCnt.toString() + ".txt");
 					out = new BufferedWriter(writer);
-				} else if (workerCnt > Constants.WorkerNo){
+				} else if (workerCnt > Constants.WorkerNo) {
 					instanceCnt++;
 					System.out.println("worker count: " + workerCnt);
 					workerCnt = 0;
@@ -1173,10 +1296,13 @@ public class PreProcess {
 	 * @param densities
 	 *            the densities
 	 */
-	public void saveSynLocationDensity(
+	public void saveLocationDensity(
 			Hashtable<Integer, Hashtable<Integer, Integer>> densities) {
 		String locationDensityFileName = "";
 		switch (DATA_SET) {
+		case GOWALLA:
+			locationDensityFileName = Constants.gowallaLocationDensityFileName;
+			break;
 		case SKEWED:
 			locationDensityFileName = Constants.skewedLocationDensityFileName;
 			break;
@@ -1214,5 +1340,29 @@ public class PreProcess {
 		System.out.println("maxLat " + maxLat);
 		System.out.println("maxLng " + maxLng);
 		System.out.println("resolution " + resolution);
+	}
+
+	public void computeRegionEntropy() {
+		readBoundary(PreProcess.DATA_SET);
+		createGrid(PreProcess.DATA_SET);
+
+		// compute occurrences of each location id from Gowalla
+		// each location id is associated with a grid
+		Hashtable<Integer, Hashtable<Integer, ArrayList<Observation>>> regionOccurances = readRegionEntropyData(Constants.gowallaFileName_CA);
+
+		// for (Hashtable<Integer, ArrayList<Observation>> h :
+		// regionOccurances.values())
+		// for (ArrayList a : h.values()) {
+		// System.out.println(a.size());
+		// }
+
+		// compute entropy of each location id
+		// computeLocationEntropy(occurances);
+
+		// compute index (row, col) of each location id
+		// debug();
+		// Hashtable<Integer, Coord> gridIndices = locIdToCellIndices();
+		// saveLocationEntropy(gridIndices);
+
 	}
 }

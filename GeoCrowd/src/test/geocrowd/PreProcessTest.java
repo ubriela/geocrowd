@@ -33,9 +33,10 @@ public class PreProcessTest extends PreProcess {
     
     public static void main(String[] args){
         PreProcessTest preTest = new PreProcessTest();
-        preTest.testFilterInput();
-        preTest.generateWorkers();
-        preTest.computeLocationEntropy();
+//        preTest.testFilterInput();
+//        preTest.generateWorkers();
+//        preTest.computeLocationEntropy();
+        preTest.testExtractCoords();
     }
 
 	/**
@@ -99,7 +100,7 @@ public class PreProcessTest extends PreProcess {
 //		prep.extractCoords("dataset/real/gowalla/gowalla_CA");
 //		prep.extractWorkersInstances("dataset/real/gowalla/gowalla_CA", "dataset/real/gowalla/worker/worker", 50);
 		
-		prep.computeRegionEntropy();
+		prep.regionEntropy();
 	}
 	
 

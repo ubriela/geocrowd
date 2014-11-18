@@ -113,12 +113,12 @@ public class Constants {
 
 	// real dataset gowalla
 	/** The gowalla resolution. */
-	public static double gowallaResolution = 0.0002; // 0.00002 is approximately 30x30 metres
+	public static double gowallaResolution = 0.00002; // 0.00002 is approximately 30x30 metres
 	/** The gowalla file name. */
 	public static String gowallaFileName = "dataset/real/gowalla/gowalla_totalCheckins.txt";
 
 	/** The gowalla file name_ ca. */
-	public static String gowallaFileName_CA = "dataset/real/gowalla/gowalla_totalCheckins_CA.txt";
+	public static String gowallaFileName_CA = "dataset/real/gowalla/gowalla_CA";
 
 	/** The gowalla file name_ sa. */
 	public static String gowallaFileName_SA = "dataset/real/gowalla/gowalla_totalCheckins_SA.txt";

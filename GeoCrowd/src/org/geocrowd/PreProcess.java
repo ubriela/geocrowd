@@ -65,7 +65,7 @@ public class PreProcess {
 	public static int timeCounter = 0; // works as the clock for task generation
 
 	/** The resolution. */
-	public double resolution = 0.0002;
+	public double resolution = 0.00002;
 
 	/** The data set. */
 	public static DatasetEnum DATA_SET;
@@ -254,6 +254,38 @@ public class PreProcess {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void computeRegionEntropy(
+			Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances) {
+		try {
+			FileWriter writer = new FileWriter(Constants.gowallaEntropyFileName);
+			BufferedWriter out = new BufferedWriter(writer);
+
+			for (Integer row : regionOccurances.keySet()) {
+				for (Integer col : regionOccurances.get(row).keySet()) {
+					for (Integer userid : regionOccurances.get(row).get(col)
+							.keySet()) {
+						Hashtable<Integer, Integer> obs = regionOccurances.get(
+								row).get(col);
+						int totalObservation = 0;
+						double entropy = 0;
+						for (Integer val : obs.values()) {
+							totalObservation += val;
+						}
+						for (Integer val : obs.values()) {
+							double p = (double) val / totalObservation;
+							entropy -= p * Math.log(p) / Math.log(2);
+						}
+						out.write(row + "," + col + "," + entropy + "\n");
+					}
+				}
+			}
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -947,6 +979,10 @@ public class PreProcess {
 		return (int) ((lng - minLng) / (resolution * (maxLng - minLng)));
 	}
 
+	public double colIdxToLng(int col) {
+		return (col + 0.0) / resolution * (maxLng - minLng) + minLng;
+	}
+
 	/**
 	 * Gets the row idx.
 	 * 
@@ -956,6 +992,10 @@ public class PreProcess {
 	 */
 	public int getRowIdx(double lat) {
 		return (int) (1 / resolution * (lat - minLat) / (maxLat - minLat));
+	}
+
+	public double rowIdxToLat(int row) {
+		return (row + 0.0) / resolution * (maxLat - minLat) + minLat;
 	}
 
 	/**
@@ -1095,71 +1135,70 @@ public class PreProcess {
 	 *            the datasetfile
 	 * @return a hashtable <row, <col, [observations]>>
 	 */
-	public Hashtable<Integer, Hashtable<Integer, ArrayList<Observation>>> readRegionEntropyData(
+	public Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> readEntropyData(
 			String datasetfile) {
 
-		Hashtable<Integer, Hashtable<Integer, ArrayList<Observation>>> hashTable = new Hashtable<Integer, Hashtable<Integer, ArrayList<Observation>>>();
-		System.out.println("xxxx");
-		try {
-			FileReader reader = new FileReader(datasetfile);
-			BufferedReader in = new BufferedReader(reader);
-			while (in.ready()) {
-				String line = in.readLine();
-				String[] parts = line.split("\\s");
-				Integer userID = Integer.parseInt(parts[0]);
-				Double lat = Double.parseDouble(parts[2]);
-				Double lng = Double.parseDouble(parts[3]);
-				int row = getRowIdx(lat);
-				int col = getColIdx(lng);
+		String workerFilePath = "";
+		switch (DATA_SET) {
+		case GOWALLA:
+			workerFilePath = Constants.gowallaWorkerFileNamePrefix;
+			break;
+		case SKEWED:
+			workerFilePath = Constants.skewedMatlabWorkerFilePath;
+			break;
+		case UNIFORM:
+			workerFilePath = Constants.uniMatlabWorkerFilePath;
+			break;
+		case SMALL_TEST:
+			workerFilePath = Constants.smallWorkerFilePath;
+		}
 
-				System.out.println(row + "\t" + col);
+		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> hashTable = new Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>>();
 
-				if (!hashTable.containsKey(row)) {
-					Hashtable<Integer, ArrayList<Observation>> cols = new Hashtable<Integer, ArrayList<Observation>>();
-					ArrayList<Observation> obs = new ArrayList<Observation>();
-					Observation o = new Observation(userID);
-					obs.add(o);
-					cols.put(col, obs);
-					hashTable.put(row, cols);
-				} else {
-					Hashtable<Integer, ArrayList<Observation>> cols = hashTable
-							.get(row);
-					if (!cols.contains(col)) {
-						ArrayList<Observation> obs = new ArrayList<Observation>();
-						Observation o = new Observation(userID);
-						obs.add(o);
+		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+			try {
+				FileReader file = new FileReader(workerFilePath + i + ".txt");
+				BufferedReader in = new BufferedReader(file);
+				while (in.ready()) {
+					String line = in.readLine();
+					String[] parts = line.split(",");
+					Integer userID = Integer.parseInt(parts[0]);
+					Double lat = Double.parseDouble(parts[1]);
+					Double lng = Double.parseDouble(parts[2]);
+					int row = getRowIdx(lat);
+					int col = getColIdx(lng);
+
+					// System.out.println(row + "\t" + col);
+
+					if (!hashTable.containsKey(row)) {
+						Hashtable<Integer, Hashtable<Integer, Integer>> cols = new Hashtable<Integer, Hashtable<Integer, Integer>>();
+						Hashtable<Integer, Integer> obs = new Hashtable<Integer, Integer>();
+						obs.put(userID, 1);
 						cols.put(col, obs);
 						hashTable.put(row, cols);
 					} else {
-						ArrayList<Observation> obs = hashTable.get(row)
-								.get(col);
-						boolean found = false;
-						for (Observation o : obs) {
-							if (o.getUserId() == userID) {
-								o.incObserveCount();
-								obs.add(o);
-								cols.put(col, obs);
-								hashTable.put(row, cols);
-								found = true;
-								break;
-							}
-						}
-						if (!found) {
-							Observation o = new Observation(userID);
-							obs.add(o);
+						Hashtable<Integer, Hashtable<Integer, Integer>> cols = hashTable
+								.get(row);
+						if (!cols.containsKey(col)) {
+							Hashtable<Integer, Integer> obs = new Hashtable<Integer, Integer>();
+							obs.put(userID, 1);
 							cols.put(col, obs);
-							hashTable.put(row, cols);
+						} else {
+							Hashtable<Integer, Integer> obs = cols.get(col);
+							if (obs.containsKey(userID)) {
+								obs.put(userID, obs.get(userID) + 1);
+							} else
+								obs.put(userID, 1);
+							cols.put(col, obs);
 						}
+						hashTable.put(row, cols);
 					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			System.out
-					.println("Hashtable <location, occurrences> size: "
-							+ hashTable.size()
-							+ " (the number of cells with checkins)");
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
 		return hashTable;
 	}
 
@@ -1342,27 +1381,89 @@ public class PreProcess {
 		System.out.println("resolution " + resolution);
 	}
 
-	public void computeRegionEntropy() {
+	public void regionEntropy() {
 		readBoundary(PreProcess.DATA_SET);
 		createGrid(PreProcess.DATA_SET);
 
 		// compute occurrences of each location id from Gowalla
 		// each location id is associated with a grid
-		Hashtable<Integer, Hashtable<Integer, ArrayList<Observation>>> regionOccurances = readRegionEntropyData(Constants.gowallaFileName_CA);
+		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> occurances = readEntropyData(Constants.gowallaFileName_CA);
 
-		// for (Hashtable<Integer, ArrayList<Observation>> h :
-		// regionOccurances.values())
-		// for (ArrayList a : h.values()) {
-		// System.out.println(a.size());
-		// }
+		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances = regionEntropy(occurances);
 
+		for (Hashtable<Integer, Hashtable<Integer, Integer>> cols : regionOccurances
+				.values()) {
+			for (Hashtable<Integer, Integer> col : cols.values()) {
+				System.out.println(col.size());
+			}
+		}
 		// compute entropy of each location id
-		// computeLocationEntropy(occurances);
+		computeRegionEntropy(regionOccurances);
 
 		// compute index (row, col) of each location id
 		// debug();
 		// Hashtable<Integer, Coord> gridIndices = locIdToCellIndices();
 		// saveLocationEntropy(gridIndices);
 
+	}
+
+	private Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionEntropy(
+			Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> occurances) {
+
+		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances = (Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>>) occurances
+				.clone();
+
+		/**
+		 * init regionOccurances
+		 */
+		for (Integer row : regionOccurances.keySet()) {
+			for (Integer col : regionOccurances.get(row).keySet()) {
+				for (Integer userid : regionOccurances.get(row).get(col)
+						.keySet())
+					regionOccurances.get(row).get(col).put(userid, 0);
+			}
+		}
+
+		/**
+		 * For every cell, search for all cells that cover this
+		 */
+		for (Integer row : occurances.keySet()) {
+			Hashtable<Integer, Hashtable<Integer, Integer>> cols = occurances
+					.get(row);
+			for (Integer col : cols.keySet()) {
+				Hashtable<Integer, Integer> obs = cols.get(col);
+				double lat = rowIdxToLat(row);
+				double lng = colIdxToLng(col);
+
+				for (Integer row2 : occurances.keySet()) {
+					Hashtable<Integer, Hashtable<Integer, Integer>> cols2 = occurances
+							.get(row2);
+					for (Integer col2 : cols2.keySet()) {
+						Hashtable<Integer, Integer> obs2 = cols.get(col2);
+						double lat2 = rowIdxToLat(row2);
+						double lng2 = colIdxToLng(col2);
+
+						if (Utils.distance(lat, lng, lat2, lng2) < (Constants.diameter + 0.0) / 2) {
+							for (Integer userid : obs.keySet()) {
+								if (regionOccurances.get(row2).get(col2)
+										.containsKey(userid))
+									regionOccurances
+											.get(row2)
+											.get(col2)
+											.put(userid,
+													regionOccurances.get(row2)
+															.get(col2)
+															.get(userid)
+															+ obs.get(userid));
+								else
+									regionOccurances.get(row2).get(col2)
+											.put(userid, obs.get(userid));
+							}
+						}
+					}
+				}
+			}
+		}
+		return regionOccurances;
 	}
 }

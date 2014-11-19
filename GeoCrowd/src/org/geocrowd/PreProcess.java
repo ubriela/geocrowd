@@ -1391,12 +1391,12 @@ public class PreProcess {
 
 		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances = regionEntropy(occurances);
 
-		for (Hashtable<Integer, Hashtable<Integer, Integer>> cols : regionOccurances
-				.values()) {
-			for (Hashtable<Integer, Integer> col : cols.values()) {
-				System.out.println(col.size());
-			}
-		}
+//		for (Hashtable<Integer, Hashtable<Integer, Integer>> cols : regionOccurances
+//				.values()) {
+//			for (Hashtable<Integer, Integer> col : cols.values()) {
+//				System.out.println(col.size());
+//			}
+//		}
 		// compute entropy of each location id
 		computeRegionEntropy(regionOccurances);
 

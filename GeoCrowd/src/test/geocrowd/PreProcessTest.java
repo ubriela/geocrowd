@@ -95,10 +95,10 @@ public class PreProcessTest extends PreProcess {
 		// Bay area: 37.246147,-122.67746, 37.990176,-121.839752
 		// SF: 37.711049,-122.51524, 37.832899,-122.360744
 		// Yelp: 
-//		prep.filterInput("dataset/real/gowalla/gowalla_CA", 32.1713906, -124.3041035, 41.998434033, -114.0043464333);
-//		prep.computeBoundary("dataset/real/gowalla/gowalla_CA");
-//		prep.extractCoords("dataset/real/gowalla/gowalla_CA");
-//		prep.extractWorkersInstances("dataset/real/gowalla/gowalla_CA", "dataset/real/gowalla/worker/worker", 50);
+		prep.filterInput("dataset/real/gowalla/gowalla_CA", 32.1713906, -124.3041035, 41.998434033, -114.0043464333);
+		prep.computeBoundary("dataset/real/gowalla/gowalla_CA");
+		prep.extractCoords("dataset/real/gowalla/gowalla_CA");
+		prep.extractWorkersInstances("dataset/real/gowalla/gowalla_CA", "dataset/real/gowalla/worker/worker", 50);
 		
 		prep.regionEntropy();
 	}

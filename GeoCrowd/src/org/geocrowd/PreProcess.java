@@ -264,21 +264,22 @@ public class PreProcess {
 
 			for (Integer row : regionOccurances.keySet()) {
 				for (Integer col : regionOccurances.get(row).keySet()) {
-					for (Integer userid : regionOccurances.get(row).get(col)
-							.keySet()) {
-						Hashtable<Integer, Integer> obs = regionOccurances.get(
-								row).get(col);
-						int totalObservation = 0;
-						double entropy = 0;
-						for (Integer val : obs.values()) {
-							totalObservation += val;
-						}
-						for (Integer val : obs.values()) {
-							double p = (double) val / totalObservation;
+					Hashtable<Integer, Integer> obs = regionOccurances.get(row)
+							.get(col);
+					int totalObservation = 0;
+					double entropy = 0;
+					for (Integer val : obs.values()) {
+						totalObservation += val;
+					}
+
+					for (Integer val : obs.values()) {
+						if (val != 0) {
+							// System.out.println(totalObservation + " " + val);
+							double p = (val + 0.0) / totalObservation;
 							entropy -= p * Math.log(p) / Math.log(2);
 						}
-						out.write(row + "," + col + "," + entropy + "\n");
 					}
+					out.write(row + "," + col + "," + entropy + "\n");
 				}
 			}
 			out.close();
@@ -980,7 +981,7 @@ public class PreProcess {
 	}
 
 	public double colIdxToLng(int col) {
-		return (col + 0.0) / resolution * (maxLng - minLng) + minLng;
+		return col * resolution * (maxLng - minLng) + minLng;
 	}
 
 	/**
@@ -995,7 +996,7 @@ public class PreProcess {
 	}
 
 	public double rowIdxToLat(int row) {
-		return (row + 0.0) / resolution * (maxLat - minLat) + minLat;
+		return row * resolution * (maxLat - minLat) + minLat;
 	}
 
 	/**
@@ -1185,9 +1186,9 @@ public class PreProcess {
 							cols.put(col, obs);
 						} else {
 							Hashtable<Integer, Integer> obs = cols.get(col);
-							if (obs.containsKey(userID)) {
+							if (obs.containsKey(userID))
 								obs.put(userID, obs.get(userID) + 1);
-							} else
+							else
 								obs.put(userID, 1);
 							cols.put(col, obs);
 						}
@@ -1381,6 +1382,9 @@ public class PreProcess {
 		System.out.println("resolution " + resolution);
 	}
 
+	/**
+	 * Read data from multiple time instances. Then,
+	 */
 	public void regionEntropy() {
 		readBoundary(PreProcess.DATA_SET);
 		createGrid(PreProcess.DATA_SET);
@@ -1389,14 +1393,16 @@ public class PreProcess {
 		// each location id is associated with a grid
 		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> occurances = readEntropyData(Constants.gowallaFileName_CA);
 
+		// for (Hashtable<Integer, Hashtable<Integer, Integer>> cols :
+		// occurances
+		// .values()) {
+		// for (Hashtable<Integer, Integer> col : cols.values()) {
+		// System.out.println(col.keySet() + " " + col.values());
+		// }
+		// }
+
 		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances = regionEntropy(occurances);
 
-//		for (Hashtable<Integer, Hashtable<Integer, Integer>> cols : regionOccurances
-//				.values()) {
-//			for (Hashtable<Integer, Integer> col : cols.values()) {
-//				System.out.println(col.size());
-//			}
-//		}
 		// compute entropy of each location id
 		computeRegionEntropy(regionOccurances);
 
@@ -1410,17 +1416,23 @@ public class PreProcess {
 	private Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionEntropy(
 			Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> occurances) {
 
-		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances = (Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>>) occurances
-				.clone();
+		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances = new Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>>();
 
 		/**
 		 * init regionOccurances
 		 */
-		for (Integer row : regionOccurances.keySet()) {
-			for (Integer col : regionOccurances.get(row).keySet()) {
-				for (Integer userid : regionOccurances.get(row).get(col)
-						.keySet())
-					regionOccurances.get(row).get(col).put(userid, 0);
+		for (Integer row : occurances.keySet()) {
+			if (!regionOccurances.containsKey(row))
+				regionOccurances.put(row,
+						new Hashtable<Integer, Hashtable<Integer, Integer>>());
+			for (Integer col : occurances.get(row).keySet()) {
+				if (!regionOccurances.get(row).containsKey(col))
+					regionOccurances.get(row).put(col,
+							new Hashtable<Integer, Integer>());
+				for (Integer userid : occurances.get(row).get(col).keySet()) {
+					if (!regionOccurances.get(row).get(col).containsKey(userid))
+						regionOccurances.get(row).get(col).put(userid, 0);
+				}
 			}
 		}
 
@@ -1439,14 +1451,18 @@ public class PreProcess {
 					Hashtable<Integer, Hashtable<Integer, Integer>> cols2 = occurances
 							.get(row2);
 					for (Integer col2 : cols2.keySet()) {
-						Hashtable<Integer, Integer> obs2 = cols.get(col2);
+						// Hashtable<Integer, Integer> obs2 = cols.get(col2);
 						double lat2 = rowIdxToLat(row2);
 						double lng2 = colIdxToLng(col2);
 
+						// System.out.println(lat +" "+ lng +" "+ lat2 +" "+
+						// lng2);
 						if (Utils.distance(lat, lng, lat2, lng2) < (Constants.diameter + 0.0) / 2) {
+							// System.out.println(Utils.distance(lat, lng, lat2,
+							// lng2));
 							for (Integer userid : obs.keySet()) {
 								if (regionOccurances.get(row2).get(col2)
-										.containsKey(userid))
+										.containsKey(userid)) {
 									regionOccurances
 											.get(row2)
 											.get(col2)
@@ -1455,9 +1471,11 @@ public class PreProcess {
 															.get(col2)
 															.get(userid)
 															+ obs.get(userid));
-								else
+								} else {
 									regionOccurances.get(row2).get(col2)
 											.put(userid, obs.get(userid));
+									// System.out.println(regionOccurances.get(row2).get(col2));
+								}
 							}
 						}
 					}

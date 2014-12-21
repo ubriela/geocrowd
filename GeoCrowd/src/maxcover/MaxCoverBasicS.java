@@ -31,7 +31,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 
 	private HashMap<GenericTask, Double> entropies;
 	private ArrayList<GenericTask> taskList;
-
+	public double alpha=1;
 	public void setEntropies(HashMap<GenericTask, Double> entropies) {
 		this.entropies = entropies;
 	}
@@ -87,6 +87,9 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 		 */
 		int uncoveredTasks = 0;
 		double totalEntropy = 0;
+
+		
+
 		for (Integer t : tasksWithDeadlines.keySet()) {
 			/**
 			 * Only consider uncovered tasks
@@ -106,6 +109,8 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 		/**
 		 * average region entropy of new covered tasks
 		 */
-		return new WeightGain(totalEntropy*1.0 / uncoveredTasks, uncoveredTasks) ;
+//		return new WeightGain(alpha* totalEntropy*1.0/uncoveredTasks  -(1-alpha)* uncoveredTasks/maxNoUncoveredTasks, uncoveredTasks) ;
+		return new WeightGain(alpha* totalEntropy*1.0, uncoveredTasks) ;
+		
 	}
 }

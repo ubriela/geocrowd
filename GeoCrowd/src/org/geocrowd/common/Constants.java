@@ -18,7 +18,7 @@ package org.geocrowd.common;
  */
 public class Constants {
 
-	public static double alpha = 0.5;
+	public static double alpha = 0.15;
 	
 	/** The Task no. */
 	public static int TaskNo = 1000; // 200; // number of tasks
@@ -62,7 +62,7 @@ public class Constants {
 
 
 	/** The Task duration. */
-	public static int TaskDuration = 1;// 20000; //duration of all tasks before
+	public static int TaskDuration = 5;// 20000; //duration of all tasks before
 										// they expire are fixed to 1000ms
 	/** The Max tasks per worker. */
 	public static int MaxTasksPerWorker = 20; // maximum # of tasks that a

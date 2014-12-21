@@ -37,6 +37,8 @@ public class MaxCoverBasicT extends MaxCover {
 	 * @param current_time_instance
 	 *            the currentTI
 	 */
+	public double alpha = Constants.alpha;
+	int maxNoUncoveredTasks = 0;
 
 	public MaxCoverBasicT(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
@@ -59,8 +61,24 @@ public class MaxCoverBasicT extends MaxCover {
 			double smallestAvgTimeToDead = 10000000;
 
 			/**
-			 * Iterate all workers, find the one which covers maximum number of
-			 * uncovered tasks
+			 * find the maximum of number of uncovered task
+			 */
+			
+			for (int k : S.keySet()) {
+				HashMap<Integer, Integer> s = S.get(k); // task set covered by
+														// current worker
+				int noUncoveredTasks = 0;
+				for (Integer i : s.keySet()) {
+					if (!assignedTaskSet.contains(i)) {
+						noUncoveredTasks++;
+					}
+				}
+				if (noUncoveredTasks > maxNoUncoveredTasks) {
+					maxNoUncoveredTasks = noUncoveredTasks;
+				}
+			}
+			/**
+			 * Iterate all workers, find the one with the smallest weight
 			 */
 			for (int k : S.keySet()) {
 				HashMap<Integer, Integer> s = S.get(k);
@@ -138,6 +156,6 @@ public class MaxCoverBasicT extends MaxCover {
 		/**
 		 * average time to deadline of new covered task
 		 */
-		return new WeightGain(Constants.alpha*totalElapsedTime / (Constants.T*uncoveredTasks) - (1-Constants.alpha) * uncoveredTasks/100.0, uncoveredTasks);
+		return new WeightGain(alpha*totalElapsedTime / (Constants.T*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks, uncoveredTasks);
 	}
 }

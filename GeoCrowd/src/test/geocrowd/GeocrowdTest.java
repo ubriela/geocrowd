@@ -59,7 +59,7 @@ public class GeocrowdTest {
 		for (int k = 0; k < 1; k++) {
 
 			System.out.println("+++++++ Iteration: " + (k + 1));
-			Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+			Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 			Geocrowd.algorithm = AlgorithmEnum.ONLINE;
 			GeocrowdInstance geoCrowd = new GeocrowdInstance();
 			geoCrowd.printBoundaries();

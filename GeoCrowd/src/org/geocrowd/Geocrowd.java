@@ -32,16 +32,16 @@ import org.geocrowd.common.entropy.EntropyRecord;
 public abstract class Geocrowd {
 
 	/** The min latitude. */
-	public double minLatitude = Double.MAX_VALUE;
+	public double minLatitude = 32.1713906;
 
 	/** The max latitude. */
-	public double maxLatitude = -Double.MAX_VALUE;
+	public double maxLatitude = 41.998434033;
 
 	/** The min longitude. */
-	public double minLongitude = Double.MAX_VALUE;
+	public double minLongitude =-124.3041035;
 
 	/** The max longitude. */
-	public double maxLongitude = -Double.MAX_VALUE;
+	public double maxLongitude =  -114.0043464333;
 	
 	/** The resolution. */
 	public double resolution = 0.00002;
@@ -335,7 +335,7 @@ public void createGrid(DatasetEnum dataset) {
 	 * @return the int
 	 */
 	public int latToRowIdx(double lat) {
-		return (int) (1/resolution * (lat - minLatitude) / (maxLatitude - minLatitude));
+		return (int) (1.0/resolution * (lat - minLatitude) / (maxLatitude - minLatitude));
 	}
 
 	/**
@@ -366,7 +366,7 @@ public void createGrid(DatasetEnum dataset) {
 			Iterator it = h.keySet().iterator();
 
 			if (entropies.get(row).containsKey(col)) {
-				// System.out.println(row + " !!!!!!!  " + col);
+				System.out.println(row + " !!!!!!!  " + col);
 				entropy = entropies.get(row).get(col);
 			}
 		}

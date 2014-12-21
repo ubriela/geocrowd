@@ -66,7 +66,7 @@ public class OnlineMTC extends GeocrowdSensing {
 
 	public HashSet<Integer> maxCoverage() {
 		MaxCover maxCover = null;
-		HashSet<Integer> assignedWorker = null;
+		HashSet<Integer> assignedWorker = new HashSet<Integer>();
 		switch (algorithm) {
 
 		case MAX_COVER_BASIC:
@@ -168,14 +168,31 @@ public class OnlineMTC extends GeocrowdSensing {
 			break;
 		case MAX_COVER_BASIC_T:
 		case MAX_COVER_PRO_T:
+			
 			MaxCoverBasicT maxCoverBasicT = new MaxCoverBasicT(
 					getContainerWithDeadline(), TimeInstance);
 			maxCoverBasicT.budget = getBudget(algorithm);
+//			if(TimeInstance < Constants.TaskDuration)
+//			{
+//				MaxCoverBasic maxCoverPro2 = new MaxCoverBasic(
+//						getContainerWithDeadline(), TimeInstance);
+//				maxCoverPro2.budget = getBudget(algorithm);
+//				HashSet<Integer> assignedWorker2 = maxCoverPro2.maxCover();
+//
+//				TotalAssignedTasks += maxCoverPro2.assignedTasks;
+//				TotalAssignedWorkers += assignedWorker2.size();
+//				usedBudget += assignedWorker2.size(); 
+//				for(Integer s: assignedWorker2)
+//					assignedWorker.add(s);
+//				maxCover = maxCoverPro2;
+//			}
+//			else{
 			assignedWorker = maxCoverBasicT.maxCover();
 
 			TotalAssignedTasks += maxCoverBasicT.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
 			maxCover = maxCoverBasicT;
+//			}
 			break;
 		case MAX_COVER_ADAPT_T:
 			/**
@@ -230,8 +247,11 @@ public class OnlineMTC extends GeocrowdSensing {
 			createGrid();
 			readEntropy();
 			HashMap<GenericTask, Double> task_entropies = new HashMap<GenericTask, Double>();
+			
 			for (GenericTask t : taskList) {
 				task_entropies.put(t, computeCost(t));
+				if(computeCost(t)!=0)
+					System.out.println("fdsfs");
 			}
 
 			maxCoverS.setEntropies(task_entropies);
@@ -254,7 +274,7 @@ public class OnlineMTC extends GeocrowdSensing {
 				/**
 				 * compute entropy for tasks
 				 */
-				printBoundaries();
+//				printBoundaries();
 				createGrid();
 				readEntropy();
 				HashMap<GenericTask, Double> task_entropies2 = new HashMap<>();

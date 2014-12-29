@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.GenericTask;
+import org.geocrowd.common.crowdsource.GenericWorker;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -29,10 +30,10 @@ import org.geocrowd.common.crowdsource.GenericTask;
  */
 public class MaxCoverBasicS extends MaxCoverBasicT {
 
-	private HashMap<GenericTask, Double> entropies;
+	private HashMap<GenericWorker, Double> entropies;
 	private ArrayList<GenericTask> taskList;
-	public double alpha=1;
-	public void setEntropies(HashMap<GenericTask, Double> entropies) {
+	public double alpha=0.5;
+	public void setWorkerEntropies(HashMap<GenericWorker, Double> entropies) {
 		this.entropies = entropies;
 	}
 
@@ -41,7 +42,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 	}
 	
 
-	public HashMap<GenericTask, Double> getEntropies() {
+	public HashMap<GenericWorker, Double> getEntropies() {
 		return entropies;
 	}
 
@@ -86,9 +87,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 		 * denotes the number of unassigned tasks covered by worker
 		 */
 		int uncoveredTasks = 0;
-		double totalEntropy = 0;
-
-		
+		double regionEntropy = 0;
 
 		for (Integer t : tasksWithDeadlines.keySet()) {
 			/**

@@ -127,7 +127,7 @@ public class Constants {
 	public static String gowallaEntropyFileName = "dataset/real/gowalla/gowalla_entropy.txt";
 
 	/** The gowalla location entropy file name. */
-	public static String gowallaLocationEntropyFileName = "dataset/real/gowalla/gowalla_loc_entropy.txt";
+	public static String gowallaLocationEntropyFileName = "dataset/real/gowalla/gowalla_entropy.txt";
 
 	public static String gowallaLocationDensityFileName = "dataset/real/gowalla/gowalla_loc_density.txt";
 	

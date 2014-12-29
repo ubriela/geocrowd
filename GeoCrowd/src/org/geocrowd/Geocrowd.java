@@ -373,6 +373,31 @@ public void createGrid(DatasetEnum dataset) {
 		// System.out.println(score / (1.0 + entropy));
 		return entropy;
 	}
+	
+	/**
+	 * Compute cost.
+	 * 
+	 * @param t
+	 *            the t
+	 * @return the double
+	 */
+	public double computeCost(GenericWorker w) {
+		int row = latToRowIdx(w.getLatitude());
+		int col = lngToColIdx(w.getLongitude());
+		// System.out.println(row + " " + col);
+		double entropy = 0;
+		if (entropies.containsKey(row)) {
+			HashMap h = entropies.get(row);
+			Iterator it = h.keySet().iterator();
+
+			if (entropies.get(row).containsKey(col)) {
+				System.out.println(row + " !!!!!!!  " + col);
+				entropy = entropies.get(row).get(col);
+			}
+		}
+		// System.out.println(score / (1.0 + entropy));
+		return entropy;
+	}
 
 	/**
 	 * Prints the boundaries.

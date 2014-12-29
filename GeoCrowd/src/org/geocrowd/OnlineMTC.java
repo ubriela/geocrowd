@@ -246,15 +246,13 @@ public class OnlineMTC extends GeocrowdSensing {
 //			printBoundaries();
 			createGrid();
 			readEntropy();
-			HashMap<GenericTask, Double> task_entropies = new HashMap<GenericTask, Double>();
+			HashMap<GenericWorker, Double> worker_entropies = new HashMap<GenericWorker, Double>();
 			
-			for (GenericTask t : taskList) {
-				task_entropies.put(t, computeCost(t));
-				if(computeCost(t)!=0)
-					System.out.println("fdsfs");
+			for (GenericWorker t : workerList) {
+				worker_entropies.put(t, computeCost(t));
 			}
 
-			maxCoverS.setEntropies(task_entropies);
+			maxCoverS.setWorkerEntropies(worker_entropies);
 			assignedWorker = maxCoverS.maxCover();
 
 			TotalAssignedTasks += maxCoverS.assignedTasks;

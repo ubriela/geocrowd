@@ -100,7 +100,7 @@ public class PreProcessTest extends PreProcess {
 		prep.extractCoords("dataset/real/gowalla/gowalla_CA");
 		prep.extractWorkersInstances("dataset/real/gowalla/gowalla_CA", "dataset/real/gowalla/worker/worker", 50);
 		
-//		prep.regionEntropy();
+		prep.regionEntropy();
 	}
 	
 

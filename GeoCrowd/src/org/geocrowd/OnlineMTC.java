@@ -16,6 +16,7 @@ import maxcover.MaxCoverBasicMO;
 import maxcover.MaxCoverBasicS;
 import maxcover.MaxCoverBasicSMO;
 import maxcover.MaxCoverBasicT;
+import maxcover.MaxCoverST;
 
 import org.datasets.yelp.Constant;
 
@@ -241,7 +242,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCoverS.budget = getBudget(algorithm);
 			maxCoverS.setTaskList(taskList);
 			/**
-			 * compute entropy for tasks
+			 * compute entropy for workers
 			 */
 //			printBoundaries();
 			createGrid();
@@ -258,6 +259,29 @@ public class OnlineMTC extends GeocrowdSensing {
 			TotalAssignedWorkers += assignedWorker.size();
 
 			maxCover = maxCoverS;
+			break;
+		case MAX_COVER_BASIC_ST:
+			MaxCoverST maxCoverST = new MaxCoverST(getContainerWithDeadline(),
+					TimeInstance);
+			maxCoverST.budget = getBudget(algorithm);
+			maxCoverST.setTaskList(taskList);
+			/**
+			 * compute entropy for workers
+			 */
+			createGrid();
+			readEntropy();
+			HashMap<Integer, Double> worker_entropies4 = new HashMap<Integer, Double>();
+			
+			for (int idx = 0; idx < containerWorker.size(); idx++)
+				worker_entropies4.put(idx, computeCost(workerList.get(idx)));
+
+			maxCoverST.setWorkerEntropies(worker_entropies4);
+			assignedWorker = maxCoverST.maxCover();
+			
+			TotalAssignedTasks += maxCoverST.assignedTasks;
+			TotalAssignedWorkers += assignedWorker.size();
+
+			maxCover = maxCoverST;
 			break;
 		case MAX_COVER_ADAPT_S:
 			/**

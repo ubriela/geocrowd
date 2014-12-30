@@ -32,9 +32,9 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 
 	private HashMap<Integer, Double> entropies;
 	private ArrayList<GenericTask> taskList;
-	public double alpha=0.05;
+	public double alpha = Constants.alpha;
 	public double maxRegionEntropy = 0;
-	public double maxNoUncoveredTasks = 0;
+//	public double maxNoUncoveredTasks = 0;
 	public void setWorkerEntropies(HashMap<Integer, Double> entropies) {
 		this.entropies = entropies;
 	}
@@ -102,15 +102,15 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 			if (!completedTasks.contains(t))
 				uncoveredTasks++;
 		}
-		if (uncoveredTasks > maxNoUncoveredTasks) {
-			maxNoUncoveredTasks = uncoveredTasks;
-		}
+//		if (uncoveredTasks > maxNoUncoveredTasks) {
+//			maxNoUncoveredTasks = uncoveredTasks;
+//		}
 		/**
 		 * average region entropy of new covered tasks
 		 */
-		double weight = -alpha * regionEntropy/maxRegionEntropy + (1-alpha)*uncoveredTasks/10.0;
+		double weight = alpha * regionEntropy/maxRegionEntropy - (1-alpha)*uncoveredTasks/10.0;
 //		System.out.println(regionEntropy/maxRegionEntropy + " " + uncoveredTasks/10.0);
 //		System.out.println(weight);
-		return new WeightGain(-weight, uncoveredTasks);
+		return new WeightGain(weight, uncoveredTasks);
 	}
 }

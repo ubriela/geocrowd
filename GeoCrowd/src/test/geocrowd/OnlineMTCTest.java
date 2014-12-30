@@ -33,7 +33,7 @@ public class OnlineMTCTest {
 		for (Integer j = 0; j < listBudgetTest.length; j++) {
 
 			Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-			Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_BASIC_S;
+			Geocrowd.algorithm = AlgorithmEnum.MAX_COVER_BASIC_ST;
 			OnlineMTC onlineMTC = new OnlineMTC();
 			/**
 			 * clear worker, task list

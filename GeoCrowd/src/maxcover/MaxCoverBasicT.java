@@ -38,7 +38,7 @@ public class MaxCoverBasicT extends MaxCover {
 	 *            the currentTI
 	 */
 	public double alpha = Constants.alpha;
-	int maxNoUncoveredTasks = 0;
+	public int maxNoUncoveredTasks = 0;
 
 	public MaxCoverBasicT(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
@@ -63,7 +63,6 @@ public class MaxCoverBasicT extends MaxCover {
 			/**
 			 * find the maximum of number of uncovered task
 			 */
-			
 			for (int k : S.keySet()) {
 				HashMap<Integer, Integer> s = S.get(k); // task set covered by
 														// current worker
@@ -94,6 +93,7 @@ public class MaxCoverBasicT extends MaxCover {
                         
 			assignWorkers.add(bestWorkerIndex);
 
+//			System.out.println(S.size() + " " + bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
 //                        System.out.println("Task set size: "+taskSet.size());
 			S.remove(bestWorkerIndex);

@@ -77,22 +77,19 @@ public class OnlineMTCTest {
 					break;
 				}
 
-				//
 				onlineMTC.matchingTasksWorkers();
-				 System.out.println("Number of workers: " +
-				 onlineMTC.workerList.size());
-				
-				 System.out.println("Number of tasks: " +
-				 onlineMTC.taskList.size());
-				
-				 System.out.println("Number of arrival tasks: "+onlineMTC.numberArrivalTask);
+//				 System.out.println("Number of workers: " +
+//				 onlineMTC.workerList.size());
+//				
+//				 System.out.println("Number of tasks: " +
+//				 onlineMTC.taskList.size());
+//				
+//				 System.out.println("Number of arrival tasks: "+onlineMTC.numberArrivalTask);
 
 				HashSet<Integer> workerSet = onlineMTC.maxCoverage();
 				// System.out.println(workerSet);
 
 				onlineMTC.TimeInstance++;
-				
-
 			}
 			System.out.println("##################");
 

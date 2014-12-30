@@ -250,7 +250,7 @@ public class GeocrowdTest {
 		geoCrowd.readEntropy();
 		System.out.println("entropy list size: " + geoCrowd.entropyList.size());
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			geoCrowd.readTasksWithEntropy(Constants.gowallaTaskFileNamePrefix 
+			geoCrowd.readTasksWithEntropy2(Constants.gowallaTaskFileNamePrefix 
 					+ i + ".txt");
 			geoCrowd.TimeInstance++;
 		}

@@ -55,7 +55,7 @@ public class MaxCoverAdaptST extends MaxCoverST {
 			 */
 			for (int k : S.keySet()) {
 				HashMap<Integer, Integer> s = S.get(k);
-				WeightGain wg = weight(s, currentTimeInstance,
+				WeightGain wg = weight(k, s, currentTimeInstance,
 						assignedTaskSet);
 				if (wg.weight < smallestAvgWeight) {
 					smallestAvgWeight = wg.weight;

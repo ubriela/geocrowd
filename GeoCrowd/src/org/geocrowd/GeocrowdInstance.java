@@ -880,7 +880,6 @@ public class GeocrowdInstance extends Geocrowd {
 	public void readTasksWithEntropy(String fileName) {
 		int listCount = taskList.size();
 		try {
-//			Constants.TaskNo += 300; // increase 300 tasks each time instance
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < Constants.TaskNo; i++) {
@@ -930,25 +929,43 @@ public class GeocrowdInstance extends Geocrowd {
 			 * calculate #tasks will be generated
 			 */
 			Random r = new Random();
-			int numTask = Constants.TaskNo + r.nextInt(Constants.TaskNo * 5);
+			int numTask = Constants.TaskNo;// + r.nextInt(Constants.TaskNo * 5);
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
-				int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
+				
+				int row = 0;
+				int col = 0;
+				double entropy = 0;
+				if (r.nextFloat() < 0.5) {
+					int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
 						entropyList.size()), true);
-				EntropyRecord dR = entropyList.get(randomIdx);
+					EntropyRecord dR = entropyList.get(randomIdx);
+					row = dR.getCoord().getRowId();
+					col = dR.getCoord().getColId();
+					entropy = dR.getEntropy();
+				} else {
+					row = (int) UniformGenerator.randomValue(new Range(0, rowCount), true);
+					col = (int) UniformGenerator.randomValue(new Range(0, colCount), true);
+					if (entropies.containsKey(row)) 
+						if (entropies.get(row).containsKey(col))
+							entropy = entropies.get(row).get(col);
+				}
+				
+
 				// generate a task inside this cell
-				int row = dR.getCoord().getRowId();
+
 				double startLat = rowToLat(row);
 				double endLat = rowToLat(row + 1);
 				double lat = UniformGenerator.randomValue(new Range(startLat,
 						endLat), false);
-				int col = dR.getCoord().getColId();
+
 				double startLng = colToLng(col);
 				double endLng = colToLng(col + 1);
 				double lng = UniformGenerator.randomValue(new Range(startLng,
 						endLng), false);
-				double entropy = dR.getEntropy();
+
+				
 				int time = TimeInstance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
 						Constants.TaskTypeNo), true);

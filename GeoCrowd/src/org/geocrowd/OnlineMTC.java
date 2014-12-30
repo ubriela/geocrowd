@@ -246,15 +246,14 @@ public class OnlineMTC extends GeocrowdSensing {
 //			printBoundaries();
 			createGrid();
 			readEntropy();
-			HashMap<GenericWorker, Double> worker_entropies = new HashMap<GenericWorker, Double>();
+			HashMap<Integer, Double> worker_entropies = new HashMap<Integer, Double>();
 			
-			for (GenericWorker t : workerList) {
-				worker_entropies.put(t, computeCost(t));
-			}
+			for (int idx = 0; idx < containerWorker.size(); idx++)
+				worker_entropies.put(idx, computeCost(workerList.get(idx)));
 
 			maxCoverS.setWorkerEntropies(worker_entropies);
 			assignedWorker = maxCoverS.maxCover();
-
+			
 			TotalAssignedTasks += maxCoverS.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
 
@@ -275,11 +274,12 @@ public class OnlineMTC extends GeocrowdSensing {
 //				printBoundaries();
 				createGrid();
 				readEntropy();
-				HashMap<GenericTask, Double> task_entropies2 = new HashMap<>();
-				for (GenericTask t : taskList) {
-					task_entropies2.put(t, computeCost(t));
-				}
-				maxCoverProS.setEntropies(task_entropies2);
+				HashMap<Integer, Double> worker_entropies2 = new HashMap<Integer, Double>();
+				
+				for (int idx = 0; idx < containerWorker.size(); idx++)
+					worker_entropies2.put(idx, computeCost(workerList.get(idx)));
+				
+				maxCoverProS.setWorkerEntropies(worker_entropies2);
 				assignedWorker = maxCoverProS.maxCover();
 
 				TotalAssignedTasks += maxCoverProS.assignedTasks;
@@ -302,11 +302,12 @@ public class OnlineMTC extends GeocrowdSensing {
 				printBoundaries();
 				createGrid();
 				readEntropy();
-				HashMap<GenericTask, Double> task_entropies2 = new HashMap<>();
-				for (GenericTask t : taskList) {
-					task_entropies2.put(t, computeCost(t));
-				}
-				maxCoverAdaptS.setEntropies(task_entropies2);
+				HashMap<Integer, Double> worker_entropies3 = new HashMap<Integer, Double>();
+				
+				for (int idx = 0; idx < containerWorker.size(); idx++)
+					worker_entropies3.put(idx, computeCost(workerList.get(idx)));
+				
+				maxCoverAdaptS.setWorkerEntropies(worker_entropies3);
 
 				assignedWorker = maxCoverAdaptS.maxCover();
 

@@ -293,8 +293,7 @@ public void createGrid(DatasetEnum dataset) {
 				entropyList.add(dR);
 				sumEntropy += entropy;
 			}
-//			System.out.println("Sum of entropy: " + sumEntropy
-//					+ "; Max entropy: " + maxEntropy);
+//			System.out.println("Max entropy: " + maxEntropy);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -365,10 +364,8 @@ public void createGrid(DatasetEnum dataset) {
 			HashMap h = entropies.get(row);
 			Iterator it = h.keySet().iterator();
 
-			if (entropies.get(row).containsKey(col)) {
-				System.out.println(row + " !!!!!!!  " + col);
+			if (entropies.get(row).containsKey(col))
 				entropy = entropies.get(row).get(col);
-			}
 		}
 		// System.out.println(score / (1.0 + entropy));
 		return entropy;
@@ -377,8 +374,8 @@ public void createGrid(DatasetEnum dataset) {
 	/**
 	 * Compute cost.
 	 * 
-	 * @param t
-	 *            the t
+	 * @param w
+	 *            the w
 	 * @return the double
 	 */
 	public double computeCost(GenericWorker w) {
@@ -390,10 +387,8 @@ public void createGrid(DatasetEnum dataset) {
 			HashMap h = entropies.get(row);
 			Iterator it = h.keySet().iterator();
 
-			if (entropies.get(row).containsKey(col)) {
-				System.out.println(row + " !!!!!!!  " + col);
+			if (entropies.get(row).containsKey(col))
 				entropy = entropies.get(row).get(col);
-			}
 		}
 		// System.out.println(score / (1.0 + entropy));
 		return entropy;

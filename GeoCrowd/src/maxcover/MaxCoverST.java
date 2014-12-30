@@ -58,13 +58,13 @@ public class MaxCoverST extends MaxCoverBasicS {
 	 * @return
 	 */
 	@Override
-	public WeightGain weight(HashMap<Integer, Integer> tasksWithDeadlines,
+	public WeightGain weight(int workeridx, HashMap<Integer, Integer> tasksWithDeadlines,
 			int currentTI, HashSet<Integer> completedTasks) {
 		/**
 		 * denotes the number of unassigned tasks covered by worker
 		 */
 		int uncoveredTasks = 0;
-		double totalEntropy = 0;
+		double regionEntropy = getWorkerEntropies().get(workeridx);
 		double totalElapsedTime = 0;
 		for (Integer t : tasksWithDeadlines.keySet()) {
 			/**
@@ -72,14 +72,12 @@ public class MaxCoverST extends MaxCoverBasicS {
 			 */
 			if (!completedTasks.contains(t)) {
 				/**
-				 * !!!!!!!!! if the task will dead at next time instance, return
+				 * if the task will dead at next time instance, return
 				 * 1 so that it will be assigned
 				 */
 //				if (tasksWithDeadlines.get(t) - currentTI == 1)
 //					return 1;
 				uncoveredTasks++;
-
-				totalEntropy += getEntropies().get(getTaskList().get(t));
 
 				// the smaller the better
 				double elapsedTime = tasksWithDeadlines.get(t) - currentTI;
@@ -91,11 +89,9 @@ public class MaxCoverST extends MaxCoverBasicS {
 		 * ATD and ARE
 		 */
 		double ATD = totalElapsedTime*1.0 / uncoveredTasks;
-		double ARE = totalEntropy *1.0/ uncoveredTasks;
+		double ARE = regionEntropy *1.0/ uncoveredTasks;
 		double alpha = 0.5;
-		double maxATD = 10;
-		double maxARE = 10;
-		double weight = alpha*ATD/maxATD + (1-alpha)*ARE/maxARE;
+		double weight = alpha*ATD/Constants.T + (1-alpha)*ARE/maxRegionEntropy;
 		return new WeightGain(weight, uncoveredTasks);
 	}
 }

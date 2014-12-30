@@ -30,10 +30,12 @@ import org.geocrowd.common.crowdsource.GenericWorker;
  */
 public class MaxCoverBasicS extends MaxCoverBasicT {
 
-	private HashMap<GenericWorker, Double> entropies;
+	private HashMap<Integer, Double> entropies;
 	private ArrayList<GenericTask> taskList;
-	public double alpha=0.5;
-	public void setWorkerEntropies(HashMap<GenericWorker, Double> entropies) {
+	public double alpha=0.05;
+	public double maxRegionEntropy = 0;
+	public double maxNoUncoveredTasks = 0;
+	public void setWorkerEntropies(HashMap<Integer, Double> entropies) {
 		this.entropies = entropies;
 	}
 
@@ -42,7 +44,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 	}
 	
 
-	public HashMap<GenericWorker, Double> getEntropies() {
+	public HashMap<Integer, Double> getWorkerEntropies() {
 		return entropies;
 	}
 
@@ -81,35 +83,34 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 	 * @return
 	 */
 	@Override
-	public WeightGain weight(HashMap<Integer, Integer> tasksWithDeadlines,
+	public WeightGain weight(int workeridx, HashMap<Integer, Integer> tasksWithDeadlines,
 			int currentTI, HashSet<Integer> completedTasks) {
 		/**
 		 * denotes the number of unassigned tasks covered by worker
 		 */
 		int uncoveredTasks = 0;
-		double regionEntropy = 0;
+		double regionEntropy = entropies.get(workeridx);
+		
+		if (regionEntropy > maxRegionEntropy)
+			maxRegionEntropy = regionEntropy;
+		
 
 		for (Integer t : tasksWithDeadlines.keySet()) {
 			/**
 			 * Only consider uncovered tasks
 			 */
-			if (!completedTasks.contains(t)) {
-				/**
-				 * !!!!!!!!! if the task will dead at next time instance, return
-				 * 1 so that it will be assigned
-				 */
-//				if (tasksWithDeadlines.get(t) - currentTI == 1)
-//					return 1;
+			if (!completedTasks.contains(t))
 				uncoveredTasks++;
-
-				totalEntropy += entropies.get(taskList.get(t));
-			}
+		}
+		if (uncoveredTasks > maxNoUncoveredTasks) {
+			maxNoUncoveredTasks = uncoveredTasks;
 		}
 		/**
 		 * average region entropy of new covered tasks
 		 */
-//		return new WeightGain(alpha* totalEntropy*1.0/uncoveredTasks  -(1-alpha)* uncoveredTasks/maxNoUncoveredTasks, uncoveredTasks) ;
-		return new WeightGain(alpha* totalEntropy*1.0, uncoveredTasks) ;
-		
+		double weight = -alpha * regionEntropy/maxRegionEntropy + (1-alpha)*uncoveredTasks/10.0;
+//		System.out.println(regionEntropy/maxRegionEntropy + " " + uncoveredTasks/10.0);
+//		System.out.println(weight);
+		return new WeightGain(-weight, uncoveredTasks);
 	}
 }

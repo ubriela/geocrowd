@@ -28,29 +28,61 @@ public class OnlineMTCTest {
 
 	private static void test() throws IOException {
 
-		Double[] listAlpha = new Double[] { 0.1, 0.2, 0.3 };
+		Double[] listAlpha = new Double[] {0.01, 0.05, 0.1, 0.3,  0.5};
 
-		Integer[] listBudgetTest = new Integer[] { 1000 };
+		Integer[] listBudgetTest = new Integer[] {2000};
+
+		Double[] listDiameter = new Double[] {0.2};
+
+		Double[] listF = new Double[] {1.0};
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
-				AlgorithmEnum.MAX_COVER_BASIC_S };
-		
-		Integer[][][] coveredTasksResult = new Integer[listAlpha.length][algorithms.length][listBudgetTest.length];
-		Integer[][][] assignedWorkersResult =  new Integer[listAlpha.length][algorithms.length][listBudgetTest.length];
+				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T
+		 ,AlgorithmEnum.MAX_COVER_BASIC_S
+		};
 
-		// Iterate over alpha and algorithm
-		for (int al = 0; al < listAlpha.length; al++)
-			for (int g =0; g < algorithms.length; g++) {
-				Double alpha = listAlpha[al];
-				AlgorithmEnum algorithm = algorithms[g];
-				//update alpha for temporal, spatial algorithms.
-				Constants.alpha = alpha;
-				System.out.println("Alpha = "+Constants.alpha);
-				System.out.println("Algorithm = "+algorithm);
-				for (Integer j = 0; j < listBudgetTest.length; j++) {
+		// Iterate over alpha and algorithm, diameter, f, budget
+		int numLoops = listDiameter.length + listF.length
+				+ listBudgetTest.length;
+		for (int iter = 0; iter < numLoops; iter++) {
 
-					
+			Integer[][] coveredTasksResult = new Integer[listAlpha.length][algorithms.length];
+			Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
+
+			int totalBudget = 1000;
+			Double diameter = 4.0;
+			Double F = 1.0;
+			// vary diameter
+			if (iter < listDiameter.length) {
+				diameter = listDiameter[iter];
+			} else if (iter >= listDiameter.length
+					&& iter < listDiameter.length + listF.length)
+				F = listF[iter - listDiameter.length];
+			else if (iter >= listDiameter.length + listF.length)
+				totalBudget = listBudgetTest[iter - listDiameter.length
+						- listF.length];
+
+			Constants.F = F;
+			Constants.diameter = diameter;
+
+			// Regenerate data
+			if (iter < listDiameter.length + listF.length)
+				GeocrowdTest.main(null);
+
+			System.out.println("Diameter = " + Constants.diameter);
+			System.out.println("F = " + Constants.F);
+			System.out.println("Budget = " + totalBudget);
+			for (int al = 0; al < listAlpha.length; al++)
+				for (int g = 0; g < algorithms.length; g++) {
+					Double alpha = listAlpha[al];
+					AlgorithmEnum algorithm = algorithms[g];
+					// update alpha for temporal, spatial algorithms.
+					Constants.alpha = alpha;
+					// System.out.println("\nAlpha = "+Constants.alpha);
+					// System.out.println("\nAlgorithm = "+algorithm);
+
+					// for (Integer j = 0; j < listBudgetTest.length; j++) {
+
 					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 					Geocrowd.algorithm = algorithm;
 					OnlineMTC onlineMTC = new OnlineMTC();
@@ -61,8 +93,8 @@ public class OnlineMTCTest {
 					 */
 					OnlineMTC.taskList.clear();
 					OnlineMTC.workerList.clear();
-					onlineMTC.totalBudget = listBudgetTest[j];
-					System.out.println("ttasks\ttasks\tworkers\tT/W");
+					onlineMTC.totalBudget = totalBudget;
+					// System.out.println("ttasks\ttasks\tworkers\tT/W");
 					for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 
 						switch (Geocrowd.DATA_SET) {
@@ -121,42 +153,44 @@ public class OnlineMTCTest {
 
 						onlineMTC.TimeInstance++;
 					}
-					System.out.println("##################");
+//					System.out.println("##################");
+					/*
+					 * System.out.printf("\n%-15s %-15s %-15s %-15s %-15s",
+					 * "TotalTask", "CoveredTask", "TotalWorker",
+					 * "SelectedWorker", "W/T");
+					 * 
+					 * System.out.printf("\n%-15d %-15d %-15d %-15d %-15d",
+					 * onlineMTC.TaskCount, OnlineMTC.TotalAssignedTasks,
+					 * onlineMTC.totalBudget, OnlineMTC.TotalAssignedWorkers,
+					 * OnlineMTC.TotalAssignedTasks /
+					 * OnlineMTC.TotalAssignedWorkers);
+					 */
 
-					System.out.printf("\n%-15s %-15s %-15s %-15s %-15s",
-							"TotalTask", "CoveredTask", "TotalWorker",
-							"SelectedWorker", "W/T");
-
-					System.out.printf("\n%-15d %-15d %-15d %-15d %-15d",
-							onlineMTC.TaskCount, OnlineMTC.TotalAssignedTasks,
-							onlineMTC.totalBudget,
-							OnlineMTC.TotalAssignedWorkers,
-							OnlineMTC.TotalAssignedTasks
-									/ OnlineMTC.TotalAssignedWorkers);
-					
 					//
-					coveredTasksResult[al][g][j] = OnlineMTC.TotalAssignedTasks;
-					assignedWorkersResult[al][g][j] = OnlineMTC.TotalAssignedWorkers;
-					onlineMTC.printWorkerCounts();
+					coveredTasksResult[al][g] = OnlineMTC.TotalAssignedTasks;
+					assignedWorkersResult[al][g] = OnlineMTC.TotalAssignedWorkers;
+					// onlineMTC.printWorkerCounts();
+
+					// }
 				}
-			}
-		
-		/**
-		 * print result
-		 */
-		for(int i=0; i< listBudgetTest.length;i++){
+
+			/**
+			 * print result
+			 */
 			System.out.println("##################");
-			System.out.println("Budget = "+listBudgetTest[i]);
+			System.out.println("Budget = " + totalBudget);
 			System.out.println("#Covered Tasks");
-			System.out.printf("%-20s"," ");
-			for(int j = 0; j < algorithms.length; j++)
-				System.out.printf("%-20s", algorithms[j]);
-			for(int al = 0; al < listAlpha.length; al++){
-				System.out.printf("\n%-20s", "Alpha="+listAlpha[al]);
-				for(int g = 0; g < algorithms.length; g++){
-					System.out.printf("%-20d", coveredTasksResult[al][g][i]);
+			System.out.printf("%-20s", " ");
+			for (int j2 = 0; j2 < algorithms.length; j2++)
+				System.out.printf("%-20s", algorithms[j2]);
+			for (int al2 = 0; al2 < listAlpha.length; al2++) {
+				System.out.printf("\n%-20s", "Alpha=" + listAlpha[al2]);
+				for (int g2 = 0; g2 < algorithms.length; g2++) {
+					System.out.printf("%-20d", coveredTasksResult[al2][g2]);
 				}
 			}
+
 		}
+
 	}
 }

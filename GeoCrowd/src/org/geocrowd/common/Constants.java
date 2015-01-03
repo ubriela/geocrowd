@@ -60,6 +60,8 @@ public class Constants {
 	/** The Constant NON_EXPERTISE_MATCH_SCORE. */
 	public static final double NON_EXPERTISE_MATCH_SCORE = 1;
 
+	public static double F = 1.0;
+
 
 	/** The Task duration. */
 	public static int TaskDuration = 5;// 20000; //duration of all tasks before

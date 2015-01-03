@@ -937,9 +937,9 @@ public class GeocrowdInstance extends Geocrowd {
 				int row = 0;
 				int col = 0;
 				double entropy = 0;
-				if (r.nextFloat() < 0.5) {
+				if (r.nextFloat() < Constants.F) {
 					int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
-						entropyList.size()), true);
+						entropyList.size() - 1), true);
 					EntropyRecord dR = entropyList.get(randomIdx);
 					row = dR.getCoord().getRowId();
 					col = dR.getCoord().getColId();

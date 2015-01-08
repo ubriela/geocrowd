@@ -929,7 +929,9 @@ public class GeocrowdInstance extends Geocrowd {
 			 * calculate #tasks will be generated
 			 */
 			Random r = new Random();
-			int numTask = Constants.TaskNo;// + r.nextInt(Constants.TaskNo * 5);
+			int step = 100;
+			Constants.TaskNo = Constants.TaskNo + step;
+			int numTask = Constants.TaskNo;
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
@@ -976,7 +978,7 @@ public class GeocrowdInstance extends Geocrowd {
 				taskList.add(listCount, t);
 				listCount++;
 			}
-			TaskCount += Constants.TaskNo;
+			TaskCount += numTask;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {

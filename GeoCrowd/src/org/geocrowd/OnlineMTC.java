@@ -118,7 +118,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			/**
 			 * compute lamda0
 			 */
-			if (TimeInstance < 10) {
+			if (TimeInstance < 5) {
 				MaxCoverBasic maxCoverPro2 = new MaxCoverBasic(
 						getContainerWithDeadline(), TimeInstance);
 				maxCoverPro2.budget = getBudget(AlgorithmEnum.MAX_COVER_BASIC);
@@ -137,9 +137,9 @@ public class OnlineMTC extends GeocrowdSensing {
 				TotalAssignedWorkers += assignedWorker.size();
 				maxCover = maxCoverPro2;
 			} else {
-				if (TimeInstance == 10) {
-					lamda = lamda / 10;
-					beta = beta / 9;
+				if (TimeInstance == 5) {
+					lamda = lamda / 5;
+					beta = beta / 4;
 					if (beta == 0)
 						beta = 1;
 				}

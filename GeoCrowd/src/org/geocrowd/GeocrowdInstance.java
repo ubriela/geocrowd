@@ -929,7 +929,7 @@ public class GeocrowdInstance extends Geocrowd {
 			 * calculate #tasks will be generated
 			 */
 			Random r = new Random();
-			int step = 300;
+			int step = 200;
 			r.setSeed(System.nanoTime());
 			Constants.TaskNo = Constants.TaskNo + step;
 			int numTask = Constants.TaskNo;

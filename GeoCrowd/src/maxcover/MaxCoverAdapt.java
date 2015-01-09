@@ -20,6 +20,7 @@ public class MaxCoverAdapt extends MaxCover {
 
 	public double lambda; // algorithm stops when gain is less than lambda
 	public int deltaBudget;
+	public double eps;
 
 	public MaxCoverAdapt(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
@@ -75,14 +76,15 @@ public class MaxCoverAdapt extends MaxCover {
 				if (deltaGain < 0 && deltaBudget < 0) {
 					break;
 				} else if (deltaGain < 0 && deltaBudget > 0) {
+//					System.out.println("xxxxx");
 					Random r = new Random();
 					r.setSeed(System.nanoTime());
 					if (r.nextFloat() < 0.5)
 						break;
 				} else if (deltaGain > 0 && deltaBudget < 0) {
-					Random r = new Random();
+					Random r = new Random();	
 					r.setSeed(System.nanoTime());
-					if (r.nextFloat() < 0.5)
+					if (r.nextFloat() < eps)
 						break;
 				}
 			}

@@ -23,7 +23,7 @@ import org.geocrowd.common.Constants;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		vary_a();
+		vary_eps();
 	}
 
 	private static void vary_a() throws IOException {
@@ -31,13 +31,14 @@ public class OnlineMTCTest {
 		Double[] listAlpha = new Double[] { 0.1};
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				AlgorithmEnum.MAX_COVER_BASIC, 
-				AlgorithmEnum.MAX_COVER_ADAPT_B};
+//				AlgorithmEnum.MAX_COVER_BASIC, 
+				AlgorithmEnum.MAX_COVER_ADAPT_B
+				};
 
 		Integer[][] CTasksResult = new Integer[listAlpha.length][algorithms.length];
 		Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
 
-		int totalBudget = 1000;
+		int totalBudget = 400;
 		// Constants.diameter = 2;
 		Constants.F = 1.0;
 
@@ -45,7 +46,7 @@ public class OnlineMTCTest {
 		System.out.println("F = " + Constants.F);
 		System.out.println("Budget = " + totalBudget);
 
-		GeocrowdTest.main(null);
+//		GeocrowdTest.main(null);
 
 		for (int al = 0; al < listAlpha.length; al++)
 			for (int g = 0; g < algorithms.length; g++) {
@@ -142,6 +143,127 @@ public class OnlineMTCTest {
 		}
 	}
 
+	
+	private static void vary_eps() throws IOException {
+
+		Double[] listAlpha = new Double[] { 0.1};
+
+		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
+				AlgorithmEnum.MAX_COVER_BASIC, 
+				AlgorithmEnum.MAX_COVER_ADAPT_B
+				};
+
+		Integer[][] CTasksResult = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
+
+		int totalBudget = 400;
+		Constants.F = 1.0;
+		Double[] epss = new Double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 };
+
+		System.out.println("Diameter = " + Constants.diameter);
+		System.out.println("F = " + Constants.F);
+		System.out.println("Budget = " + totalBudget);
+
+//		GeocrowdTest.main(null);
+
+		for (double eps : epss) {
+			for (int al = 0; al < listAlpha.length; al++)
+				for (int g = 0; g < algorithms.length; g++) {
+					Double alpha = listAlpha[al];
+					AlgorithmEnum algorithm = algorithms[g];
+	
+					// update alpha for temporal, spatial algorithms.
+					Constants.alpha = alpha;
+	
+					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+					Geocrowd.algorithm = algorithm;
+					OnlineMTC onlineMTC = new OnlineMTC();
+					onlineMTC.eps = eps;
+					OnlineMTC.TotalAssignedTasks = 0;
+					OnlineMTC.TotalAssignedWorkers = 0;
+					/**
+					 * clear worker, task list
+					 */
+					OnlineMTC.taskList.clear();
+					OnlineMTC.workerList.clear();
+					onlineMTC.totalBudget = totalBudget;
+					System.out.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s", "Time",
+							"TTask", "CTask", "TWorker",
+							"SWorker", "W/T");
+					for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+	
+						switch (Geocrowd.DATA_SET) {
+						case GOWALLA:
+							onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
+									+ i + ".txt");
+							onlineMTC
+									.readWorkers(Constants.gowallaWorkerFileNamePrefix
+											+ i + ".txt");
+							break;
+						case YELP:
+							onlineMTC.readTasks(Constants.yelpTaskFileNamePrefix
+									+ i + ".txt");
+							onlineMTC
+									.readWorkers(Constants.yelpWorkerFileNamePrefix
+											+ i + ".txt");
+							break;
+						case UNIFORM:
+							onlineMTC.readTasks(Constants.uniTaskFileNamePrefix + i
+									+ ".txt");
+							onlineMTC.readWorkers(Constants.uniWorkerFileNamePrefix
+									+ i + ".txt");
+							break;
+						case SKEWED:
+							onlineMTC.readTasks(Constants.skewedTaskFileNamePrefix
+									+ i + ".txt");
+							onlineMTC
+									.readWorkers(Constants.skewedWorkerFileNamePrefix
+											+ i + ".txt");
+							break;
+						case SMALL_TEST:
+							onlineMTC.readTasks(Constants.smallTaskFileNamePrefix
+									+ i + ".txt");
+							onlineMTC
+									.readWorkers(Constants.smallWorkerFileNamePrefix
+											+ i + ".txt");
+							break;
+						}
+	
+						onlineMTC.matchingTasksWorkers();
+						HashSet<Integer> workerSet = onlineMTC.maxCoverage();
+	
+						onlineMTC.TimeInstance++;
+	
+						System.out.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
+								(i + 1), onlineMTC.TaskCount, onlineMTC.TotalAssignedTasks,
+								onlineMTC.totalBudget,
+								onlineMTC.TotalAssignedWorkers,
+								onlineMTC.TotalAssignedTasks
+										/ onlineMTC.TotalAssignedWorkers);
+					}
+	
+					CTasksResult[al][g] = OnlineMTC.TotalAssignedTasks;
+					assignedWorkersResult[al][g] = OnlineMTC.TotalAssignedWorkers;
+				}
+		}
+
+		/**
+		 * print result
+		 */
+		System.out.println("##################");
+		System.out.println("Budget = " + totalBudget);
+		System.out.println("#Covered Tasks");
+		System.out.printf("%-20s", " ");
+		for (int j2 = 0; j2 < algorithms.length; j2++)
+			System.out.printf("%-20s", algorithms[j2]);
+		for (int al2 = 0; al2 < listAlpha.length; al2++) {
+			System.out.printf("\n%-20s", "Alpha=" + listAlpha[al2]);
+			for (int g2 = 0; g2 < algorithms.length; g2++) {
+				System.out.printf("%-20d", CTasksResult[al2][g2]);
+			}
+		}
+	}
+	
 	private static void vary_d() throws IOException {
 
 		Double[] listAlpha = new Double[] { 0.1, 0.3, 0.5, 0.7 };

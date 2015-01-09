@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import maxcover.MaxCoverBasic;
-
+import maxcover.MaxCoverDynamicOffline;
 import maxcover.MaxCoverFixedOffline;
+
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.SensingWorker;
@@ -117,8 +118,10 @@ public class OfflineMTC extends GeocrowdSensing {
      * @return
      */
     public HashSet<Integer> maxTaskCoverage() {
-        MaxCoverFixedOffline maxCover = new MaxCoverFixedOffline(getContainerWithDeadline(), TimeInstance);
-        maxCover.budget = budget;
+//    	MaxCoverFixedOffline maxCover = new MaxCoverFixedOffline(getContainerWithDeadline(), TimeInstance);
+    	MaxCoverDynamicOffline maxCover = new MaxCoverDynamicOffline(getContainerWithDeadline(), TimeInstance);
+//        
+    	maxCover.budget = budget;
         maxCover.numberTimeInstance = Constants.TIME_INSTANCE;
         HashSet<Integer> workerSet = maxCover.maxCover();
         TotalAssignedTasks = maxCover.assignedTasks;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import maxcover.MaxCover;
 import maxcover.MaxCoverBasic;
 import maxcover.MaxCoverDynamicOffline;
 import maxcover.MaxCoverFixedOffline;
@@ -15,6 +16,7 @@ import org.geocrowd.common.crowdsource.SensingWorker;
 public class OfflineMTC extends GeocrowdSensing {
 
     public int budget = 0;
+    public boolean isFixed = true;
 
     /**
      * read worker and then add entry time
@@ -118,11 +120,19 @@ public class OfflineMTC extends GeocrowdSensing {
      * @return
      */
     public HashSet<Integer> maxTaskCoverage() {
-//    	MaxCoverFixedOffline maxCover = new MaxCoverFixedOffline(getContainerWithDeadline(), TimeInstance);
-    	MaxCoverDynamicOffline maxCover = new MaxCoverDynamicOffline(getContainerWithDeadline(), TimeInstance);
-//        
+    	MaxCover maxCover = null;
+    	
+    	System.out.println(isFixed);
+    	if (isFixed) {
+    		maxCover = new MaxCoverFixedOffline(getContainerWithDeadline(), TimeInstance);
+    		System.out.println("fix");
+    	} else {
+    		maxCover = new MaxCoverDynamicOffline(getContainerWithDeadline(), TimeInstance);
+    		System.out.println("dynamic");
+    	}
+
     	maxCover.budget = budget;
-        maxCover.numberTimeInstance = Constants.TIME_INSTANCE;
+//        maxCover.numberTimeInstance = Constants.TIME_INSTANCE;
         HashSet<Integer> workerSet = maxCover.maxCover();
         TotalAssignedTasks = maxCover.assignedTasks;
         TotalAssignedWorkers = workerSet.size();

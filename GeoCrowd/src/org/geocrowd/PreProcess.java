@@ -1302,7 +1302,11 @@ public class PreProcess {
 			Integer instanceCnt = 0;
 			Integer workerCnt = 0;
 			BufferedWriter out = null;
+			int i = 0;
 			for (Date date : dates) {
+				i++;
+				if (i < Constants.MIN_TIME)
+					continue;
 				if (workerCnt == 0) {
 					FileWriter writer = new FileWriter(
 							Constants.gowallaWorkerFileNamePrefix

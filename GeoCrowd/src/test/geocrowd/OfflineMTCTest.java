@@ -18,7 +18,9 @@ public class OfflineMTCTest {
         Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
         OfflineMTC offlineMTC = new OfflineMTC();
-        offlineMTC.budget = 1000;
+        offlineMTC.isFixed = true;
+//        offlineMTC.isFixed = false;
+        offlineMTC.budget = 100;
         for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
             switch (Geocrowd.DATA_SET) {
                 case GOWALLA:

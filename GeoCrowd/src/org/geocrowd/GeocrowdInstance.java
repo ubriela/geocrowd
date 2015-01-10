@@ -931,7 +931,7 @@ public class GeocrowdInstance extends Geocrowd {
 			Random r = new Random();
 			int step = 200;
 			r.setSeed(System.nanoTime());
-			Constants.TaskNo = Constants.TaskNo + step;
+//			Constants.TaskNo = Constants.TaskNo + step;
 			int numTask = Constants.TaskNo;
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);

@@ -19,7 +19,7 @@ import org.geocrowd.common.crowdsource.SensingWorker;
  */
 public class MaxCoverFixedOffline extends MaxCover {
 
-	public int numberTimeInstance = 0;
+//	public int numberTimeInstance = 0;
 	public int[] budgetPerInstance;
 	/**
 	 * limit number of workers selected at each time instance
@@ -41,12 +41,12 @@ public class MaxCoverFixedOffline extends MaxCover {
 	 */
 	@Override
 	public HashSet<Integer> maxCover() {
-		budgetPerInstance = new int[numberTimeInstance];
+		budgetPerInstance = new int[Constants.TIME_INSTANCE];
 		for (int i = 0; i < budgetPerInstance.length - 1; i++) {
-			budgetPerInstance[i] = budget / numberTimeInstance;
+			budgetPerInstance[i] = budget / Constants.TIME_INSTANCE;
 		}
 		budgetPerInstance[budgetPerInstance.length - 1] = budget - budget
-				/ numberTimeInstance * (numberTimeInstance - 1);
+				/ Constants.TIME_INSTANCE * (Constants.TIME_INSTANCE - 1);
 
 		HashMap<Integer, HashMap<Integer, Integer>> S = (HashMap<Integer, HashMap<Integer, Integer>>) mapSets
 				.clone();

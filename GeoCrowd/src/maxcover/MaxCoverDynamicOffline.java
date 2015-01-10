@@ -25,7 +25,7 @@ import org.geocrowd.common.crowdsource.SensingWorker;
  */
 public class MaxCoverDynamicOffline extends MaxCover {
 
-	public int numberTimeInstance = 0;
+//	public int numberTimeInstance = 0;
 	public int[] budgetPerInstance;
 	/**
 	 * limit number of workers selected at each time instance
@@ -47,7 +47,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 	 */
 	@Override
 	public HashSet<Integer> maxCover() {
-		budgetPerInstance = new int[numberTimeInstance];
+		budgetPerInstance = new int[Constants.TIME_INSTANCE];
 
 		HashMap<Integer, Integer> tasksPerInstance = new HashMap<>();
 		for (GenericTask t : OfflineMTC.taskList) {
@@ -61,7 +61,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 			budgetPerInstance[i] = budget * tasksPerInstance.get(i)/OfflineMTC.taskList.size();
 		}
 		budgetPerInstance[budgetPerInstance.length - 1] = budget - budget
-				/ numberTimeInstance * (numberTimeInstance - 1);
+				/ Constants.TIME_INSTANCE * (Constants.TIME_INSTANCE - 1);
 		HashMap<Integer, HashMap<Integer, Integer>> S = (HashMap<Integer, HashMap<Integer, Integer>>) mapSets
 				.clone();
 

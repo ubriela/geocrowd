@@ -47,21 +47,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 	 */
 	@Override
 	public HashSet<Integer> maxCover() {
-		budgetPerInstance = new int[Constants.TIME_INSTANCE];
 
-		HashMap<Integer, Integer> tasksPerInstance = new HashMap<>();
-		for (GenericTask t : OfflineMTC.taskList) {
-			if (tasksPerInstance.get(t.getEntryTime()) == null)
-				tasksPerInstance.put(t.getEntryTime(), 1);
-			else
-				tasksPerInstance.put(t.getEntryTime(),
-						tasksPerInstance.get(t.getEntryTime()) + 1);
-		}
-		for (int i = 0; i < budgetPerInstance.length - 1; i++) {
-			budgetPerInstance[i] = budget * tasksPerInstance.get(i)/OfflineMTC.taskList.size();
-		}
-		budgetPerInstance[budgetPerInstance.length - 1] = budget - budget
-				/ Constants.TIME_INSTANCE * (Constants.TIME_INSTANCE - 1);
 		HashMap<Integer, HashMap<Integer, Integer>> S = (HashMap<Integer, HashMap<Integer, Integer>>) mapSets
 				.clone();
 
@@ -90,12 +76,6 @@ public class MaxCoverDynamicOffline extends MaxCover {
 				 * worker <limit
 				 */
 				/* actual worker */
-				SensingWorker w = (SensingWorker) workerList.get(k);
-				if (selectedWorkerAtTimeInstance.get(w.getOnlineTime()) != null
-						&& selectedWorkerAtTimeInstance.get(w.getOnlineTime()) >= budgetPerInstance[w
-								.getOnlineTime()]) {
-					continue;
-				}
 				int noUncoveredTasks = 0;
 				for (Integer i : s.keySet()) {
 					if (!assignedTaskSet.contains(i)) {
@@ -108,8 +88,6 @@ public class MaxCoverDynamicOffline extends MaxCover {
 				}
 			}
 
-			// System.out.print(S.get(bestWorkerIndex));
-			// System.out.println(maxNoUncoveredTasks);
 			/**
 			 * gain is reduced at every stage
 			 */
@@ -120,17 +98,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 				HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
 				S.remove(bestWorkerIndex);
 				Q.removeAll(taskSet.keySet());
-				/* increase # selected worker of time instace */
-				SensingWorker w = (SensingWorker) workerList
-						.get(bestWorkerIndex);
-				if (selectedWorkerAtTimeInstance.get(w.getOnlineTime()) != null) {
-					selectedWorkerAtTimeInstance
-							.put(w.getOnlineTime(),
-									selectedWorkerAtTimeInstance.get(w
-											.getOnlineTime()) + 1);
-				} else {
-					selectedWorkerAtTimeInstance.put(w.getOnlineTime(), 1);
-				}
+				
 
 				/**
 				 * compute average time to assign tasks in taskSet
@@ -154,10 +122,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 		assignedTasks = assignedTaskSet.size();
 		// System.out.println(universe.size() + "\t" + assignedTasks + "\t" +
 		// assignWorkers.size() + "\t" + assignedTasks / assignWorkers.size());
-		for (Integer i : selectedWorkerAtTimeInstance.keySet()) {
-			System.out.println("#Selected workers in Time instance " + (i + 1)
-					+ ":" + selectedWorkerAtTimeInstance.get(i));
-		}
+		
 		return assignWorkers;
 	}
 

@@ -19,7 +19,7 @@ public class OfflineMTCTest {
 
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
-//		int[] budgets = { 20, 40, 80};
+//		int[] budgets = { 400 };
 		int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 };
 		boolean[] isFixes = { true, false };
 		

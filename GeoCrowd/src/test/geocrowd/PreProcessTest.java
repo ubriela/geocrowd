@@ -36,7 +36,7 @@ public class PreProcessTest extends PreProcess {
         preTest.testFilterInput();
         preTest.generateWorkers();
         preTest.computeLocationEntropy();
-//        preTest.testExtractCoords();
+        preTest.testExtractCoords();
     }
 
 	/**

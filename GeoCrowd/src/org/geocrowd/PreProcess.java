@@ -1292,7 +1292,7 @@ public class PreProcess {
 	 * @param hashTable
 	 *            the hash table
 	 */
-	public void saveRealWorkersMax(
+	public void saveRealWorkersMax2(
 			Hashtable<Date, ArrayList<SpecializedWorker>> hashTable) {
 		try {
 			// sort key and iterate based on key
@@ -1307,6 +1307,7 @@ public class PreProcess {
 				i++;
 				if (i < Constants.MIN_TIME)
 					continue;
+
 				if (workerCnt == 0) {
 					FileWriter writer = new FileWriter(
 							Constants.gowallaWorkerFileNamePrefix
@@ -1314,7 +1315,7 @@ public class PreProcess {
 					out = new BufferedWriter(writer);
 				} else if (workerCnt > Constants.WorkerNo) {
 					instanceCnt++;
-					System.out.println("worker count: " + workerCnt);
+					System.out.println("worker count " + i + " : " + workerCnt);
 					workerCnt = 0;
 					out.close();
 					continue;
@@ -1327,6 +1328,52 @@ public class PreProcess {
 					out.write(o.toStr() + "\n");
 					workerCnt++;
 				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Save real workers.
+	 * 
+	 * Given max online worker per instance
+	 * 
+	 * @param hashTable
+	 *            the hash table
+	 */
+	public void saveRealWorkersMax(
+			Hashtable<Date, ArrayList<SpecializedWorker>> hashTable) {
+		try {
+			// sort key and iterate based on key
+			List<Date> dates = new ArrayList<Date>(hashTable.keySet());
+			Collections.sort(dates);
+
+			Integer instanceCnt = 0;
+			
+			BufferedWriter out = null;
+			int i = 0;
+			for (Date date : dates) {
+				i++;
+				if (i < Constants.MIN_TIME)
+					continue;
+				
+				FileWriter writer = new FileWriter(
+						Constants.gowallaWorkerFileNamePrefix
+								+ instanceCnt.toString() + ".txt");
+				out = new BufferedWriter(writer);
+				Integer workerCnt = 0;
+
+				ArrayList<SpecializedWorker> workers = hashTable.get(date);
+				for (SpecializedWorker o : workers) {
+					out.write(o.toStr() + "\n");
+					workerCnt++;
+				}
+				
+				instanceCnt++;
+				System.out.println("worker count " + instanceCnt + " \t " + workerCnt);
+				out.close();
 			}
 
 		} catch (Exception e) {

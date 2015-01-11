@@ -125,10 +125,8 @@ public class OfflineMTC extends GeocrowdSensing {
     	System.out.println(isFixed);
     	if (isFixed) {
     		maxCover = new MaxCoverFixedOffline(getContainerWithDeadline(), TimeInstance);
-    		System.out.println("fix");
     	} else {
     		maxCover = new MaxCoverDynamicOffline(getContainerWithDeadline(), TimeInstance);
-    		System.out.println("dynamic");
     	}
 
     	maxCover.budget = budget;

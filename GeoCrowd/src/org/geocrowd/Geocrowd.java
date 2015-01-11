@@ -88,7 +88,7 @@ public abstract class Geocrowd {
         public static double AverageTimeToAssignTask = 0.0;
         
         /** num time instace tasks assigned */
-        public static int numTimeInstanceTaskAssign = 0;
+        public int numTimeInstanceTaskAssign = 0;
         
 	/** The Total expired task. */
 	public int TotalExpiredTask = 0;

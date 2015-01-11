@@ -23,7 +23,7 @@ import org.geocrowd.common.Constants;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		vary_eps();
+		vary_a();
 	}
 
 	private static void vary_a() throws IOException {
@@ -31,14 +31,14 @@ public class OnlineMTCTest {
 		Double[] listAlpha = new Double[] { 0.1};
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-//				AlgorithmEnum.MAX_COVER_BASIC, 
+				AlgorithmEnum.MAX_COVER_BASIC, 
 				AlgorithmEnum.MAX_COVER_ADAPT_B
 				};
 
-		Integer[][] CTasksResult = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
 
-		int totalBudget = 400;
+		int totalBudget = 40;
 		// Constants.diameter = 2;
 		Constants.F = 1.0;
 
@@ -122,8 +122,8 @@ public class OnlineMTCTest {
 									/ onlineMTC.TotalAssignedWorkers);
 				}
 
-				CTasksResult[al][g] = OnlineMTC.TotalAssignedTasks;
-				assignedWorkersResult[al][g] = OnlineMTC.TotalAssignedWorkers;
+				coveredTasks[al][g] = OnlineMTC.TotalAssignedTasks;
+				assignedWorkers[al][g] = OnlineMTC.TotalAssignedWorkers;
 			}
 
 		/**
@@ -138,7 +138,7 @@ public class OnlineMTCTest {
 		for (int al2 = 0; al2 < listAlpha.length; al2++) {
 			System.out.printf("\n%-20s", "Alpha=" + listAlpha[al2]);
 			for (int g2 = 0; g2 < algorithms.length; g2++) {
-				System.out.printf("%-20d", CTasksResult[al2][g2]);
+				System.out.printf("%-20d", coveredTasks[al2][g2]);
 			}
 		}
 	}
@@ -153,8 +153,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_ADAPT_B
 				};
 
-		Integer[][] CTasksResult = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
 
 		int totalBudget = 400;
 		Constants.F = 1.0;
@@ -242,8 +242,8 @@ public class OnlineMTCTest {
 										/ onlineMTC.TotalAssignedWorkers);
 					}
 	
-					CTasksResult[al][g] = OnlineMTC.TotalAssignedTasks;
-					assignedWorkersResult[al][g] = OnlineMTC.TotalAssignedWorkers;
+					coveredTasks[al][g] = OnlineMTC.TotalAssignedTasks;
+					assignedWorkers[al][g] = OnlineMTC.TotalAssignedWorkers;
 				}
 		}
 
@@ -259,7 +259,7 @@ public class OnlineMTCTest {
 		for (int al2 = 0; al2 < listAlpha.length; al2++) {
 			System.out.printf("\n%-20s", "Alpha=" + listAlpha[al2]);
 			for (int g2 = 0; g2 < algorithms.length; g2++) {
-				System.out.printf("%-20d", CTasksResult[al2][g2]);
+				System.out.printf("%-20d", coveredTasks[al2][g2]);
 			}
 		}
 	}
@@ -272,8 +272,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
 				AlgorithmEnum.MAX_COVER_BASIC_S };
 
-		Integer[][] CTasksResult = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
 
 		int totalBudget = 4000;
 		Double[] listDiameter = new Double[] { 0.1, 0.5, 1.0, 2.0 };
@@ -356,8 +356,8 @@ public class OnlineMTCTest {
 						onlineMTC.TimeInstance++;
 					}
 
-					CTasksResult[al][g] = OnlineMTC.TotalAssignedTasks;
-					assignedWorkersResult[al][g] = OnlineMTC.TotalAssignedWorkers;
+					coveredTasks[al][g] = OnlineMTC.TotalAssignedTasks;
+					assignedWorkers[al][g] = OnlineMTC.TotalAssignedWorkers;
 				}
 
 			/**
@@ -372,7 +372,7 @@ public class OnlineMTCTest {
 			for (int al2 = 0; al2 < listAlpha.length; al2++) {
 				System.out.printf("\n%-20s", "Alpha=" + listAlpha[al2]);
 				for (int g2 = 0; g2 < algorithms.length; g2++) {
-					System.out.printf("%-20d", CTasksResult[al2][g2]);
+					System.out.printf("%-20d", coveredTasks[al2][g2]);
 				}
 			}
 		}
@@ -386,8 +386,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
 				AlgorithmEnum.MAX_COVER_BASIC_S };
 
-		Integer[][] CTasksResult = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
 
 		int totalBudget = 4000;
 		Double[] listEn = new Double[] { 0.1, 0.4, 0.7, 1.0 };
@@ -470,8 +470,8 @@ public class OnlineMTCTest {
 						onlineMTC.TimeInstance++;
 					}
 
-					CTasksResult[al][g] = OnlineMTC.TotalAssignedTasks;
-					assignedWorkersResult[al][g] = OnlineMTC.TotalAssignedWorkers;
+					coveredTasks[al][g] = OnlineMTC.TotalAssignedTasks;
+					assignedWorkers[al][g] = OnlineMTC.TotalAssignedWorkers;
 				}
 
 			/**
@@ -486,7 +486,7 @@ public class OnlineMTCTest {
 			for (int al2 = 0; al2 < listAlpha.length; al2++) {
 				System.out.printf("\n%-20s", "Alpha=" + listAlpha[al2]);
 				for (int g2 = 0; g2 < algorithms.length; g2++) {
-					System.out.printf("%-20d", CTasksResult[al2][g2]);
+					System.out.printf("%-20d", coveredTasks[al2][g2]);
 				}
 			}
 		}
@@ -500,8 +500,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
 				AlgorithmEnum.MAX_COVER_BASIC_S };
 
-		Integer[][] CTasksResult = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
+		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
 
 		int totalBudget = 4000;
 		Constants.diameter = 2.0;
@@ -586,8 +586,8 @@ public class OnlineMTCTest {
 						onlineMTC.TimeInstance++;
 					}
 
-					CTasksResult[al][g] = OnlineMTC.TotalAssignedTasks;
-					assignedWorkersResult[al][g] = OnlineMTC.TotalAssignedWorkers;
+					coveredTasks[al][g] = OnlineMTC.TotalAssignedTasks;
+					assignedWorkers[al][g] = OnlineMTC.TotalAssignedWorkers;
 				}
 
 			/**
@@ -602,7 +602,7 @@ public class OnlineMTCTest {
 			for (int al2 = 0; al2 < listAlpha.length; al2++) {
 				System.out.printf("\n%-20s", "Alpha=" + listAlpha[al2]);
 				for (int g2 = 0; g2 < algorithms.length; g2++) {
-					System.out.printf("%-20d", CTasksResult[al2][g2]);
+					System.out.printf("%-20d", coveredTasks[al2][g2]);
 				}
 			}
 		}
@@ -627,8 +627,8 @@ public class OnlineMTCTest {
 				+ listBudgetTest.length;
 		for (int iter = 0; iter < numLoops; iter++) {
 
-			Integer[][] CTasksResult = new Integer[listAlpha.length][algorithms.length];
-			Integer[][] assignedWorkersResult = new Integer[listAlpha.length][algorithms.length];
+			Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
+			Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
 
 			int totalBudget = 1000;
 			Double diameter = 0.2;
@@ -747,8 +747,8 @@ public class OnlineMTCTest {
 					// onlineMTC.TotalAssignedTasks/onlineMTC.TotalAssignedWorkers);
 
 					//
-					CTasksResult[al][g] = OnlineMTC.TotalAssignedTasks;
-					assignedWorkersResult[al][g] = OnlineMTC.TotalAssignedWorkers;
+					coveredTasks[al][g] = OnlineMTC.TotalAssignedTasks;
+					assignedWorkers[al][g] = OnlineMTC.TotalAssignedWorkers;
 					// onlineMTC.printWorkerCounts();
 
 					// }
@@ -766,7 +766,7 @@ public class OnlineMTCTest {
 			for (int al2 = 0; al2 < listAlpha.length; al2++) {
 				System.out.printf("\n%-20s", "Alpha=" + listAlpha[al2]);
 				for (int g2 = 0; g2 < algorithms.length; g2++) {
-					System.out.printf("%-20d", CTasksResult[al2][g2]);
+					System.out.printf("%-20d", coveredTasks[al2][g2]);
 				}
 			}
 		}

@@ -140,10 +140,10 @@ public class MaxCoverFixedOffline extends MaxCover {
 		assignedTasks = assignedTaskSet.size();
 		// System.out.println(universe.size() + "\t" + assignedTasks + "\t" +
 		// assignWorkers.size() + "\t" + assignedTasks / assignWorkers.size());
-		for (Integer i : selectedWorkerAtTimeInstance.keySet()) {
-			System.out.println("#Selected workers in Time instance " + (i + 1)
-					+ ":" + selectedWorkerAtTimeInstance.get(i));
-		}
+//		for (Integer i : selectedWorkerAtTimeInstance.keySet()) {
+//			System.out.println("#Selected workers in Time instance " + (i + 1)
+//					+ ":" + selectedWorkerAtTimeInstance.get(i));
+//		}
 		return assignWorkers;
 	}
 

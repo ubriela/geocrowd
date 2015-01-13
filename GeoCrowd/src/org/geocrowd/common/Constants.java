@@ -21,7 +21,7 @@ public class Constants {
 	public static double alpha = 0.1;
 	
 	/** The Task no. */
-	public static int TaskNo = 1000; // 200; // number of tasks
+	public static int TaskNo = 100; // 200; // number of tasks
 	
 	public static int WorkerNo = 0;	// minimum worker count
 	public static final int MIN_TIME = 401;
@@ -30,7 +30,7 @@ public class Constants {
 	public static int TIME_INSTANCE = 49;
 	
 	/** The diameter. */
-	public static double diameter = 1; // task circle diameter
+	public static double radius = 2; // task circle diameter
 	/** enable random k */
 	public static boolean IS_RANDOM_K = false;
 	

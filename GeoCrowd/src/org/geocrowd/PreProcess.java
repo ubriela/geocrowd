@@ -1508,7 +1508,7 @@ public class PreProcess {
 
 						// System.out.println(lat +" "+ lng +" "+ lat2 +" "+
 						// lng2);
-						if (Utils.distance(lat, lng, lat2, lng2) < (Constants.diameter + 0.0) / 2) {
+						if (Utils.distance(lat, lng, lat2, lng2) < (Constants.radius + 0.0) / 2) {
 							// System.out.println(Utils.distance(lat, lng, lat2,
 							// lng2));
 							for (Integer userid : obs.keySet()) {

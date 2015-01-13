@@ -432,9 +432,9 @@ public class OnlineMTC extends GeocrowdSensing {
 //			System.out.println(TimeInstance);
 			if (TimeInstance < Constants.TIME_INSTANCE - 1) {
 				if (TimeInstance % 7 == 6 || TimeInstance % 7 == 0)
-					return (int) ((totalBudget / Constants.TIME_INSTANCE * (1 + 0.25)));
+					return (int) ((totalBudget / Constants.TIME_INSTANCE * (1 + eps*5)));
 				else
-					return (int) (totalBudget / Constants.TIME_INSTANCE * (1-0.1));
+					return (int) (totalBudget / Constants.TIME_INSTANCE * (1-eps*2));
 			} else {
 				return totalBudget - usedBudget;
 			}

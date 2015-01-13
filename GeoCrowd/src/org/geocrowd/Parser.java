@@ -115,7 +115,7 @@ public class Parser {
                 int time = Integer.parseInt(parts[2]);
                 Double entropy = Double.parseDouble(parts[3]);
                 SensingTask t = new SensingTask(lat, lng, time, entropy);
-                t.setRadius(Constants.diameter / 2);
+                t.setRadius(Constants.radius);
                 t.setK(Constants.K);
                 taskList.add(listCount, t);
                 listCount++;

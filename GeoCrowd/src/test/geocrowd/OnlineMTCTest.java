@@ -24,37 +24,34 @@ import org.geocrowd.common.Constants;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
+//		task_dist();
 //		vary_a();
-//		vary_eps();
+		vary_eps();
 //		vary_d();
 //		vary_b();
 //		vary_en();
 	}
 	
-	private static void vary_tdist() throws IOException {
+	private static void task_dist() throws IOException {
 
-//		Double[] epss = new Double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
-//				0.9 };
 
-		Double[] epss = new Double[] {0.1, 0.2};
+		Double[] epss = new Double[] {0.05, 0.1, 0.15, 0.2, 0.25};
 		
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD
-//				,
-//				AlgorithmEnum.MAX_COVER_BASIC 
 				};
 
 		Integer[][] coveredTasks = new Integer[epss.length][algorithms.length];
 		Integer[][] assignedWorkers = new Integer[epss.length][algorithms.length];
 
-		int totalBudget = 400;
+		int totalBudget = 200;
 		Constants.F = 1.0;
 
-		System.out.println("Diameter = " + Constants.diameter);
+		System.out.println("Diameter = " + Constants.radius);
 		System.out.println("F = " + Constants.F);
 		System.out.println("Budget = " + totalBudget);
 
-//		 GeocrowdTest.main(null);
+		 GeocrowdTest.main(null);
 
 		for (int eps = 0; eps < epss.length; eps++) {
 			for (int g = 0; g < algorithms.length; g++) {
@@ -139,6 +136,22 @@ public class OnlineMTCTest {
 				assignedWorkers[eps][g] = OnlineMTC.TotalAssignedWorkers;
 			}
 		}
+		
+		/**
+		 * print result
+		 */
+		System.out.println("##################");
+		System.out.println("Budget = " + totalBudget);
+		System.out.println("#Covered Tasks");
+		System.out.printf("%-20s \t", " ");
+		for (int j2 = 0; j2 < algorithms.length; j2++)
+			System.out.printf("%-20s \t", algorithms[j2]);
+		for (int eps = 0; eps < epss.length; eps++) {
+			System.out.printf("\n%-20f \t", epss[eps]);
+			for (int g2 = 0; g2 < algorithms.length; g2++) {
+				System.out.printf("%-20d \t", coveredTasks[eps][g2]);
+			}
+		}
 	}
 	
 	private static void vary_eps() throws IOException {
@@ -146,12 +159,12 @@ public class OnlineMTCTest {
 //		Double[] epss = new Double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
 //				0.9 };
 
-		Double[] epss = new Double[] {0.1, 0.2};
+		Double[] epss = new Double[] {0.3, 0.5, 0.7};
 		
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD
+//				AlgorithmEnum.MAX_COVER_BASIC
 //				,
-//				AlgorithmEnum.MAX_COVER_BASIC 
+				AlgorithmEnum.MAX_COVER_ADAPT_B
 				};
 
 		Integer[][] coveredTasks = new Integer[epss.length][algorithms.length];
@@ -160,7 +173,7 @@ public class OnlineMTCTest {
 		int totalBudget = 400;
 		Constants.F = 1.0;
 
-		System.out.println("Diameter = " + Constants.diameter);
+		System.out.println("Diameter = " + Constants.radius);
 		System.out.println("F = " + Constants.F);
 		System.out.println("Budget = " + totalBudget);
 
@@ -282,7 +295,7 @@ public class OnlineMTCTest {
 		int totalBudget = 160;
 		Constants.F = 1.0;
 
-		System.out.println("Diameter = " + Constants.diameter);
+		System.out.println("Diameter = " + Constants.radius);
 		System.out.println("F = " + Constants.F);
 		System.out.println("Budget = " + totalBudget);
 
@@ -412,8 +425,8 @@ public class OnlineMTCTest {
 		System.out.println("Budget = " + totalBudget);
 
 		for (double d : listDiameter) {
-			Constants.diameter = d;
-			System.out.println("\nDiameter = " + Constants.diameter);
+			Constants.radius = d;
+			System.out.println("\nDiameter = " + Constants.radius);
 			GeocrowdTest.main(null);
 			for (int al = 0; al < listAlpha.length; al++)
 				for (int g = 0; g < algorithms.length; g++) {
@@ -520,9 +533,9 @@ public class OnlineMTCTest {
 
 		int totalBudget = 160;
 		Double[] listEn = new Double[] { 0.1, 0.4, 0.7, 1.0 };
-		Constants.diameter = 2.0;
+		Constants.radius = 2.0;
 
-		System.out.println("Diameter = " + Constants.diameter);
+		System.out.println("Diameter = " + Constants.radius);
 		System.out.println("Budget = " + totalBudget);
 
 		for (double en : listEn) {
@@ -640,7 +653,7 @@ public class OnlineMTCTest {
 				2560 };
 
 		System.out.println("F = " + Constants.F);
-		System.out.println("Diameter = " + Constants.diameter);
+		System.out.println("Diameter = " + Constants.radius);
 
 		GeocrowdTest.main(null);
 
@@ -783,13 +796,13 @@ public class OnlineMTCTest {
 						- listF.length];
 
 			Constants.F = F;
-			Constants.diameter = diameter;
+			Constants.radius = diameter;
 
 			// Regenerate data
 			if (iter < listDiameter.length + listF.length)
 				GeocrowdTest.main(null);
 
-			System.out.println("Diameter = " + Constants.diameter);
+			System.out.println("Diameter = " + Constants.radius);
 			System.out.println("F = " + Constants.F);
 			System.out.println("Budget = " + totalBudget);
 			for (int al = 0; al < listAlpha.length; al++)

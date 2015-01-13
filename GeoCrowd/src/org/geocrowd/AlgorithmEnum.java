@@ -44,6 +44,7 @@ public enum AlgorithmEnum {
         
         /** Max cover greedy **/
         MAX_COVER_BASIC,
+        MAX_COVER_BASIC_WORKLOAD,
         MAX_COVER_BASIC_MO,
         MAX_COVER_BASIC_T,
         MAX_COVER_BASIC_S,

@@ -19,8 +19,8 @@ public class OfflineMTCTest {
 
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
-//		int[] budgets = { 400 };
-		int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 };
+		int[] budgets = { 160 };
+//		int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 };
 		boolean[] isFixes = { true, false };
 		
 		Integer[][] coveredTasks = new Integer[budgets.length][isFixes.length];
@@ -35,8 +35,8 @@ public class OfflineMTCTest {
 				offlineMTC.isFixed = isFixes[fix];
 				offlineMTC.budget = budgets[b];
 				offlineMTC.TaskCount = 0;
-				offlineMTC.TotalAssignedTasks = 0;
-				offlineMTC.TotalAssignedWorkers = 0;
+				OfflineMTC.TotalAssignedTasks = 0;
+				OfflineMTC.TotalAssignedWorkers = 0;
 				OfflineMTC.workerList = null;
 				OfflineMTC.workerList = new ArrayList<>();;
 				OfflineMTC.taskList = new ArrayList<>();
@@ -101,10 +101,10 @@ public class OfflineMTCTest {
 
 				System.out
 				.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d\n",
-						offlineMTC.TaskCount, offlineMTC.TotalAssignedTasks,
-						offlineMTC.budget, offlineMTC.TotalAssignedWorkers,
-						offlineMTC.TotalAssignedTasks
-								/ offlineMTC.TotalAssignedWorkers);
+						offlineMTC.TaskCount, OfflineMTC.TotalAssignedTasks,
+						offlineMTC.budget, OfflineMTC.TotalAssignedWorkers,
+						OfflineMTC.TotalAssignedTasks
+								/ OfflineMTC.TotalAssignedWorkers);
 			}
 
 		

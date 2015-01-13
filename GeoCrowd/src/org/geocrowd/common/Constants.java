@@ -24,10 +24,10 @@ public class Constants {
 	public static int TaskNo = 1000; // 200; // number of tasks
 	
 	public static int WorkerNo = 0;	// minimum worker count
-	public static final int MIN_TIME = 200;
+	public static final int MIN_TIME = 401;
 
 	/** The time instance. */
-	public static int TIME_INSTANCE = 20;
+	public static int TIME_INSTANCE = 49;
 	
 	/** The diameter. */
 	public static double diameter = 1; // task circle diameter

@@ -16,6 +16,7 @@ import maxcover.MaxCoverBasicMO;
 import maxcover.MaxCoverBasicS;
 import maxcover.MaxCoverBasicSMO;
 import maxcover.MaxCoverBasicT;
+import maxcover.MaxCoverBasicT2;
 import maxcover.MaxCoverST;
 
 import org.datasets.yelp.Constant;
@@ -71,6 +72,7 @@ public class OnlineMTC extends GeocrowdSensing {
 		switch (algorithm) {
 
 		case MAX_COVER_BASIC:
+		case MAX_COVER_BASIC_WORKLOAD:
 		case MAX_COVER_PRO_B:
 			MaxCoverBasic maxCoverPro = new MaxCoverBasic(
 					getContainerWithDeadline(), TimeInstance);
@@ -81,6 +83,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = maxCoverPro;
+			System.out.print("\t" + maxCoverPro.gain);
 			break;
 			
 		case MAX_COVER_BASIC_MO:
@@ -141,7 +144,7 @@ public class OnlineMTC extends GeocrowdSensing {
 					maxCoverAdapt.budget = totalBudget - usedBudget;
 				} else {
 					maxCoverAdapt.deltaBudget = getBudget(AlgorithmEnum.MAX_COVER_BASIC) * (TimeInstance + 1) - usedBudget;
-					maxCoverAdapt.budget = 2*getBudget(AlgorithmEnum.MAX_COVER_BASIC);
+					maxCoverAdapt.budget = (int)1.3*getBudget(AlgorithmEnum.MAX_COVER_BASIC);
 				}
 				
 				maxCoverAdapt.lambda = avgLamda;
@@ -153,7 +156,7 @@ public class OnlineMTC extends GeocrowdSensing {
 				usedBudget += assignedWorker.size();
 				avgLamda = (avgLamda * TimeInstance + maxCoverAdapt.gain + 0.0)/(TimeInstance + 1);
 //				avgLamda = maxCoverAdapt.gain;
-				System.out.print("\t" + maxCoverAdapt.deltaBudget + " , " + avgLamda);
+				System.out.print("\t" + maxCoverAdapt.deltaBudget + "\t" + avgLamda);
 
 				maxCover = maxCoverAdapt;
 			}
@@ -423,8 +426,17 @@ public class OnlineMTC extends GeocrowdSensing {
 			if (TimeInstance < Constants.TIME_INSTANCE - 1) {
 				return totalBudget / Constants.TIME_INSTANCE;
 			} else {
-				return totalBudget - totalBudget / Constants.TIME_INSTANCE
-						* (Constants.TIME_INSTANCE - 1);
+				return totalBudget - usedBudget;
+			}
+		case MAX_COVER_BASIC_WORKLOAD:
+//			System.out.println(TimeInstance);
+			if (TimeInstance < Constants.TIME_INSTANCE - 1) {
+				if (TimeInstance % 7 == 6 || TimeInstance % 7 == 0)
+					return (int) ((totalBudget / Constants.TIME_INSTANCE * (1 + 0.25)));
+				else
+					return (int) (totalBudget / Constants.TIME_INSTANCE * (1-0.1));
+			} else {
+				return totalBudget - usedBudget;
 			}
 		case MAX_COVER_PRO_B:
 		case MAX_COVER_PRO_S:

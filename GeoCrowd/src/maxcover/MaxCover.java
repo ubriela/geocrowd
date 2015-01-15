@@ -46,7 +46,7 @@ public abstract class MaxCover {
 	 * All the task index in the candidate tasks (not the task list).
 	 */
 	public HashSet<Integer> universe = null;
-	public HashSet<Integer> assignedTaskSet = null;
+	public HashSet<Integer> assignedTaskSet = new HashSet<Integer>();;
 
 	public double averageDelayTime = 0;
 	/**

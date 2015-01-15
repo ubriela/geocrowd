@@ -17,6 +17,7 @@ public class OfflineMTC extends GeocrowdSensing {
 
     public int budget = 0;
     public boolean isFixed = true;
+    public int [] counts;
 
     /**
      * read worker and then add entry time
@@ -133,6 +134,18 @@ public class OfflineMTC extends GeocrowdSensing {
 //        maxCover.numberTimeInstance = Constants.TIME_INSTANCE;
         HashSet<Integer> workerSet = maxCover.maxCover();
         TotalAssignedTasks = maxCover.assignedTasks;
+        
+        // print instances of the assigned workers
+		counts = new int[Constants.TIME_INSTANCE];
+		
+		for (int i : workerSet) {
+			int time = ((SensingWorker) workerList.get(i)).getOnlineTime();
+			counts[time]++;
+		}
+		
+//		for (int count : counts)
+//			System.out.println(count);
+        
         TotalAssignedWorkers = workerSet.size();
         return workerSet;
     }

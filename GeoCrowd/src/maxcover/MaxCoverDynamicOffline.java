@@ -55,7 +55,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 		 * Q is the universe of tasks
 		 */
 		HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
-		assignedTaskSet = new HashSet<Integer>();
+//		assignedTaskSet = new HashSet<Integer>();
 
 		/**
 		 * Run until either running out of budget or no more tasks to cover

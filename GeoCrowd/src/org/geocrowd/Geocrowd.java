@@ -97,7 +97,7 @@ public abstract class Geocrowd {
 	public double TotalTravelDistance = 0;
 
 	/** works as the clock for task generation. */
-	public int TimeInstance = 0;
+	public static int TimeInstance = 0;
 
 	/** current workers at one time instance. */
 	public static ArrayList<GenericWorker> workerList = new ArrayList<>();

@@ -41,7 +41,7 @@ public class MaxCoverAdapt extends MaxCover {
 		 * Q is the universe of tasks
 		 */
 		HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
-		assignedTaskSet = new HashSet<Integer>();
+//		assignedTaskSet = new HashSet<Integer>();
 
 		/**
 		 * Run until either the gain of adding one worker is less than a

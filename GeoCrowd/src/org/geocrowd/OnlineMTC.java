@@ -43,6 +43,7 @@ public class OnlineMTC extends GeocrowdSensing {
 	public int beta = 2;
 	public int usedBudget;
 	public double eps;
+	public int[] budgets;
 
 	public OnlineMTC() throws IOException {
 		if (AlgorithmEnum.BASIC != Geocrowd.algorithm) {
@@ -73,10 +74,12 @@ public class OnlineMTC extends GeocrowdSensing {
 
 		case MAX_COVER_BASIC:
 		case MAX_COVER_BASIC_WORKLOAD:
+		case MAX_COVER_BASIC_WORKLOAD2:
 		case MAX_COVER_PRO_B:
 			MaxCoverBasic maxCoverPro = new MaxCoverBasic(
 					getContainerWithDeadline(), TimeInstance);
 			maxCoverPro.budget = getBudget(algorithm);
+//			System.out.println("xxxx" + maxCoverPro.budget); 
 			assignedWorker = maxCoverPro.maxCover();
 
 			TotalAssignedTasks += maxCoverPro.assignedTasks;
@@ -351,11 +354,13 @@ public class OnlineMTC extends GeocrowdSensing {
 		 */
 		ArrayList<Integer> assignedTasks = new ArrayList<Integer>();
 		// Iterator it = sc.universe.iterator();
+		System.out.println(maxCover.assignedTaskSet);
+		if (maxCover.assignedTaskSet.size() > 0) {
 		Iterator it = maxCover.assignedTaskSet.iterator();
 		while (it.hasNext()) {
 			Integer candidateIndex = (Integer) it.next();
 			assignedTasks.add(candidateTaskIndices.get(candidateIndex));
-		}
+		}}
 
 		/**
 		 * sorting is necessary to make sure that we don't mess things up when
@@ -438,6 +443,9 @@ public class OnlineMTC extends GeocrowdSensing {
 			} else {
 				return totalBudget - usedBudget;
 			}
+			
+		case MAX_COVER_BASIC_WORKLOAD2:
+			return budgets[TimeInstance];
 		case MAX_COVER_PRO_B:
 		case MAX_COVER_PRO_S:
 		case MAX_COVER_PRO_T:

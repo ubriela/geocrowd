@@ -167,7 +167,7 @@ public class MaxCoverBasicSMO extends MaxCover implements Problem {
 		}
 
 		// update assignedTasks
-		assignedTaskSet = new HashSet<Integer>();
+//		assignedTaskSet = new HashSet<Integer>();
 		for (Integer i : assignWorkers) {
 			assignedTaskSet.addAll(((HashMap<Integer, Integer>) container
 					.get(i)).keySet());

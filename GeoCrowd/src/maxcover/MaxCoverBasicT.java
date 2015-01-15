@@ -55,7 +55,7 @@ public class MaxCoverBasicT extends MaxCover {
 		/**
 		 * store all assigned tasks
 		 */
-		assignedTaskSet = new HashSet<Integer>();
+//		assignedTaskSet = new HashSet<Integer>();
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = 0;
 			double smallestAvgTimeToDead = 10000000;

@@ -123,7 +123,6 @@ public class OfflineMTC extends GeocrowdSensing {
     public HashSet<Integer> maxTaskCoverage() {
     	MaxCover maxCover = null;
     	
-    	System.out.println(isFixed);
     	if (isFixed) {
     		maxCover = new MaxCoverFixedOffline(getContainerWithDeadline(), TimeInstance);
     	} else {
@@ -142,9 +141,6 @@ public class OfflineMTC extends GeocrowdSensing {
 			int time = ((SensingWorker) workerList.get(i)).getOnlineTime();
 			counts[time]++;
 		}
-		
-//		for (int count : counts)
-//			System.out.println(count);
         
         TotalAssignedWorkers = workerSet.size();
         return workerSet;

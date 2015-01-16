@@ -638,6 +638,8 @@ public class GeocrowdSensing extends Geocrowd {
 		/* task id, increasing from 0 to the number of task - 1 */
 		int tid = 0;
 		for (int i = 0; i < taskList.size(); i++) {
+//			System.out.println(i + "xxx" + taskList.size());
+//			System.out.println(taskList.get(i).getClass().toString() + i + " " + taskList.size());
 			SensingTask task = (SensingTask) taskList.get(i);
 
 			/* tick expired task */
@@ -661,7 +663,7 @@ public class GeocrowdSensing extends Geocrowd {
 						.add(candidateTaskIndices.indexOf(tid));
 
 				/**
-				 * /* inverted container need to update after compute
+				 * inverted container need to update after compute
 				 * containerWorker if (!invertedContainer.containsKey(tid)) {
 				 * invertedContainer.put(tid, new ArrayList() { {
 				 * add(workerIdx); } }); } else {

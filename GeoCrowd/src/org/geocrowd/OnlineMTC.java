@@ -354,7 +354,7 @@ public class OnlineMTC extends GeocrowdSensing {
 		 */
 		ArrayList<Integer> assignedTasks = new ArrayList<Integer>();
 		// Iterator it = sc.universe.iterator();
-		System.out.println(maxCover.assignedTaskSet);
+//		System.out.println(maxCover.assignedTaskSet);
 		if (maxCover.assignedTaskSet.size() > 0) {
 		Iterator it = maxCover.assignedTaskSet.iterator();
 		while (it.hasNext()) {

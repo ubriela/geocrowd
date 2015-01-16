@@ -107,7 +107,7 @@ public class OfflineMTCTest {
 		for (int j2 = 0; j2 < isFixes.length; j2++)
 			System.out.printf("%-20s \t", isFixes[j2]);
 		for (int b = 0; b < radii.length; b++) {
-			System.out.printf("\n%-20d \t", radii[b]);
+			System.out.printf("\n%-20f \t", radii[b]);
 			for (int j2 = 0; j2 < isFixes.length; j2++)
 				System.out.printf("%-20d \t", coveredTasks[b][j2]);
 		}

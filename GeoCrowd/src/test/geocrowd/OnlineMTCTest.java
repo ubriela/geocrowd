@@ -11,6 +11,7 @@ import org.geocrowd.Geocrowd;
 import org.geocrowd.OfflineMTC;
 import org.geocrowd.OnlineMTC;
 import org.geocrowd.common.Constants;
+import org.geocrowd.common.crowdsource.GenericTask;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,180 +25,154 @@ import org.geocrowd.common.Constants;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		task_dist();
-//		vary_a();
-//		vary_eps();
-//		vary_d();
-//		vary_b();
-//		vary_en();
+		task_dist_all();
+		// task_dist();
+		// vary_a();
+		// vary_eps();
+		// vary_d();
+		// vary_b();
+		// vary_en();
 	}
-	
-	public static int[] computeHistoryBudgets() {
+
+	private static int[] computeHistoryBudgets(boolean isFixed, int budget,
+			int start_time) {
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-		
+
 		OfflineMTC offlineMTC = new OfflineMTC();
-		offlineMTC.isFixed = false;
-		offlineMTC.budget = 42;
+		offlineMTC.TimeInstance = 0;
+		offlineMTC.isFixed = isFixed;
+		offlineMTC.budget = budget;
 		offlineMTC.TaskCount = 0;
-		OfflineMTC.TotalAssignedTasks = 0;
-		OfflineMTC.TotalAssignedWorkers = 0;
-		OfflineMTC.workerList = null;
-		OfflineMTC.workerList = new ArrayList<>();;
-		OfflineMTC.taskList = new ArrayList<>();
-	
+		offlineMTC.TotalAssignedTasks = 0;
+		offlineMTC.TotalAssignedWorkers = 0;
+		offlineMTC.workerList = new ArrayList<>();
+		offlineMTC.taskList = new ArrayList<GenericTask>();
+
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			switch (Geocrowd.DATA_SET) {
 			case GOWALLA:
-				offlineMTC
-						.readTasks(Constants.gowallaTaskFileNamePrefix
-								+ i + ".txt");
-				offlineMTC.readWorkers(
-						Constants.gowallaWorkerFileNamePrefix + i
-								+ ".txt", i);
+				offlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix + i
+						+ ".txt");
+				offlineMTC.readWorkers(Constants.gowallaWorkerFileNamePrefix
+						+ (i + start_time) + ".txt", i);
 				break;
 			case YELP:
-				offlineMTC.readTasks(Constants.yelpTaskFileNamePrefix
-						+ i + ".txt");
-				offlineMTC
-						.readWorkers(Constants.yelpWorkerFileNamePrefix
-								+ i + ".txt", i);
+				offlineMTC.readTasks(Constants.yelpTaskFileNamePrefix + i
+						+ ".txt");
+				offlineMTC.readWorkers(Constants.yelpWorkerFileNamePrefix
+						+ (i + start_time) + ".txt", i);
 				break;
 			case UNIFORM:
-				offlineMTC.readTasks(Constants.uniTaskFileNamePrefix
-						+ i + ".txt");
-				offlineMTC.readWorkers(
-						Constants.uniWorkerFileNamePrefix + i + ".txt",
-						i);
+				offlineMTC.readTasks(Constants.uniTaskFileNamePrefix + i
+						+ ".txt");
+				offlineMTC.readWorkers(Constants.uniWorkerFileNamePrefix
+						+ (i + start_time) + ".txt", i);
 				break;
 			case SKEWED:
-				offlineMTC.readTasks(Constants.skewedTaskFileNamePrefix
-						+ i + ".txt");
-				offlineMTC.readWorkers(
-						Constants.skewedWorkerFileNamePrefix + i
-								+ ".txt", i);
+				offlineMTC.readTasks(Constants.skewedTaskFileNamePrefix + i
+						+ ".txt");
+				offlineMTC.readWorkers(Constants.skewedWorkerFileNamePrefix
+						+ (i + start_time) + ".txt", i);
 				break;
 			case SMALL_TEST:
-				offlineMTC.readTasks(Constants.smallTaskFileNamePrefix
-						+ i + ".txt");
-				offlineMTC.readWorkers(
-						Constants.smallWorkerFileNamePrefix + i
-								+ ".txt", i);
+				offlineMTC.readTasks(Constants.smallTaskFileNamePrefix + i
+						+ ".txt");
+				offlineMTC.readWorkers(Constants.smallWorkerFileNamePrefix
+						+ (i + start_time) + ".txt", i);
 				break;
 			}
 		}
-		
+
 		offlineMTC.matchingTasksWorkers();
 
 		HashSet<Integer> workerSet = offlineMTC.maxTaskCoverage();
-		
+		System.out.println("\nCoverage : " + offlineMTC.TotalAssignedTasks);
+		System.out.println("Counts :");
 		for (int count : offlineMTC.counts)
-			System.out.println(count);
+			System.out.print(count + "\t");
+		System.out.println();
 		return offlineMTC.counts;
 	}
-	
-	private static void task_dist() throws IOException {
 
-		int totalBudget = 42;
+	/**
+	 * Varying all tasks
+	 * 
+	 * @throws IOException
+	 */
+	private static void task_dist_all() throws IOException {
 
-		System.out.println("Diameter = " + Constants.radius);
-		System.out.println("F = " + Constants.F);
+		int cycle_length = 7;
+		int workload_size = 2;
+
+		Constants.TIME_INSTANCE = cycle_length * workload_size;
+
+		int totalBudget = 84;
+		int start_time = 200;
+		int W = 25;
+
+		System.out.println("\nDiameter = " + Constants.radius);
 		System.out.println("Budget = " + totalBudget);
 
-//		GeocrowdTest.main(null);
-		
-		
-//		int[] counts = computeHistoryBudgets();
-//		int[] counts = {
-//				0,
-//				0,
-//				0,
-//				0,
-//				6,
-//				3,
-//				3,
-//				1,
-//				0,
-//				1,
-//				4,
-//				2,
-//				4,
-//				3,
-//				0,
-//				2,
-//				2,
-//				1,
-//				1,
-//				1,
-//				8};
-		
-		int[] counts = {
-				0,
-				0,
-				0,
-				1,
-				5,
-				4,
-				3,
-				0,
-				2,
-				2,
-				2,
-				2,
-				3,
-				2,
-				3,
-				2,
-				2,
-				0,
-				0,
-				3,
-				6
-		};
-
-
-//		Double[] epss = new Double[] {0.05, 0.1, 0.15, 0.2, 0.25};
-		Double[] epss = new Double[] {0.1};
-		
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2
-				};
+				AlgorithmEnum.MAX_COVER_BASIC,
+				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2 };
 
-		Integer[][] coveredTasks = new Integer[epss.length][algorithms.length];
-		Integer[][] assignedWorkers = new Integer[epss.length][algorithms.length];
+		Integer[][] coveredTasks = new Integer[W][algorithms.length + 2];
+		Integer[][] assignedWorkers = new Integer[W][algorithms.length + 2];
 
-		for (int eps = 0; eps < epss.length; eps++) {
+		/**
+		 * Iterate all possible workloads
+		 */
+		for (int w = 0; w < W; w++) {
+
+			Geocrowd.TimeInstance = 0;
+			GeocrowdTest.main(null);
+
+			System.out.println("start time " + start_time);
+
+			int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
+
+			GeocrowdTest.main(null); // generate set of tasks for next period
+
+			// apply offline method to next period
+			int next_time_period = start_time + Constants.TIME_INSTANCE + 1;
+
+			computeHistoryBudgets(true, totalBudget, next_time_period);
+			int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
+			computeHistoryBudgets(false, totalBudget, next_time_period);
+			int dynamic_offline_cov = Geocrowd.TotalAssignedTasks;
+
+			// use the same set of workers/tasks for all following period
 			for (int g = 0; g < algorithms.length; g++) {
 				AlgorithmEnum algorithm = algorithms[g];
-
-				// update alpha for temporal, spatial algorithms.
 
 				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
-				OnlineMTC.TimeInstance = 0;
-				onlineMTC.eps = epss[eps];
-				OnlineMTC.TotalAssignedTasks = 0;
-				OnlineMTC.TotalAssignedWorkers = 0;
+				onlineMTC.TimeInstance = 0;
+				onlineMTC.eps = 0; // unused
 				onlineMTC.TaskCount = 0;
-				OnlineMTC.TotalAssignedTasks = 0;
-				OnlineMTC.TotalAssignedWorkers = 0;
-				OnlineMTC.workerList = null;
-				OnlineMTC.workerList = new ArrayList<>();
-				OnlineMTC.taskList = new ArrayList<>();
-				
-				onlineMTC.budgets = counts;
-				// update dataset
-//				Constants.MIN_TIME += Constants.TIME_INSTANCE;
-				
-//				GeocrowdTest.main(null);
+				onlineMTC.TotalAssignedTasks = 0;
+				onlineMTC.TotalAssignedWorkers = 0;
+				onlineMTC.workerList = null;
+				onlineMTC.taskList = null;
+				onlineMTC.workerList = new ArrayList<>();
+				onlineMTC.taskList = new ArrayList<>();
+				/**
+				 * clear worker, task list
+				 */
+				OnlineMTC.taskList.clear();
+				OnlineMTC.workerList.clear();
 
-				
+				onlineMTC.budgets = counts;
 				onlineMTC.totalBudget = totalBudget;
+
 				System.out
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+					int next_time = (i + start_time + Constants.TIME_INSTANCE);
 
 					switch (Geocrowd.DATA_SET) {
 					case GOWALLA:
@@ -205,34 +180,34 @@ public class OnlineMTCTest {
 								+ i + ".txt");
 						onlineMTC
 								.readWorkers(Constants.gowallaWorkerFileNamePrefix
-										+ i + ".txt");
+										+ next_time + ".txt");
 						break;
 					case YELP:
 						onlineMTC.readTasks(Constants.yelpTaskFileNamePrefix
 								+ i + ".txt");
 						onlineMTC
 								.readWorkers(Constants.yelpWorkerFileNamePrefix
-										+ i + ".txt");
+										+ next_time + ".txt");
 						break;
 					case UNIFORM:
 						onlineMTC.readTasks(Constants.uniTaskFileNamePrefix + i
 								+ ".txt");
 						onlineMTC.readWorkers(Constants.uniWorkerFileNamePrefix
-								+ i + ".txt");
+								+ next_time + ".txt");
 						break;
 					case SKEWED:
 						onlineMTC.readTasks(Constants.skewedTaskFileNamePrefix
 								+ i + ".txt");
 						onlineMTC
 								.readWorkers(Constants.skewedWorkerFileNamePrefix
-										+ i + ".txt");
+										+ next_time + ".txt");
 						break;
 					case SMALL_TEST:
 						onlineMTC.readTasks(Constants.smallTaskFileNamePrefix
 								+ i + ".txt");
 						onlineMTC
 								.readWorkers(Constants.smallWorkerFileNamePrefix
-										+ i + ".txt");
+										+ next_time + ".txt");
 						break;
 					}
 
@@ -243,23 +218,171 @@ public class OnlineMTCTest {
 
 					System.out
 							.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
-									(i + 1), onlineMTC.TaskCount,
+									(i + 1),
+									onlineMTC.TaskCount,
 									onlineMTC.TotalAssignedTasks,
 									onlineMTC.totalBudget,
 									onlineMTC.TotalAssignedWorkers,
 									onlineMTC.TotalAssignedTasks
-											/ Math.max(1, onlineMTC.TotalAssignedWorkers));
+											/ Math.max(
+													1,
+													onlineMTC.TotalAssignedWorkers));
+				}
+
+				coveredTasks[w][g] = OnlineMTC.TotalAssignedTasks;
+				assignedWorkers[w][g] = OnlineMTC.TotalAssignedWorkers;
+			}
+
+			coveredTasks[w][algorithms.length] = fixed_offline_cov;
+			coveredTasks[w][algorithms.length + 1] = dynamic_offline_cov;
+
+			// update start_time
+			start_time = next_time_period;
+		}
+
+		/**
+		 * print result
+		 */
+		System.out.println("\n\n##################");
+		System.out.println("Budget = " + totalBudget);
+		System.out.println("#Covered Tasks");
+		System.out.printf("%-20s \t", " ");
+		for (int j2 = 0; j2 < algorithms.length; j2++)
+			System.out.printf("%-20s \t", algorithms[j2]);
+		System.out.printf("%-20s \t", "FixedOffline");
+		System.out.printf("%-20s \t", "DynamicOffline");
+		for (int w = 0; w < W; w++) {
+			System.out.printf("\n%-20d \t", w);
+			for (int g2 = 0; g2 < algorithms.length + 2; g2++)
+				System.out.printf("%-20d \t", coveredTasks[w][g2]);
+		}
+	}
+
+	private static void task_dist() throws IOException {
+
+		GeocrowdTest.main(null);
+
+		int totalBudget = 42;
+		int start_time = 200;
+		int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
+
+		System.out.println("\nDiameter = " + Constants.radius);
+		System.out.println("Budget = " + totalBudget);
+
+		// Double[] epss = new Double[] {0.05, 0.1, 0.15, 0.2, 0.25};
+		Double[] epss = new Double[] { 0.1 };
+
+		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
+				AlgorithmEnum.MAX_COVER_BASIC,
+				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2 };
+
+		Integer[][] coveredTasks = new Integer[epss.length][algorithms.length];
+		Integer[][] assignedWorkers = new Integer[epss.length][algorithms.length];
+
+		GeocrowdTest.main(null); // generate set of tasks for next period
+
+		// apply offline method to next period
+		int next_time_period = start_time + Constants.TIME_INSTANCE + 1;
+		computeHistoryBudgets(true, totalBudget, next_time_period);
+		computeHistoryBudgets(false, totalBudget, next_time_period);
+
+		// use the same set of workers/tasks for all following period
+		for (int eps = 0; eps < epss.length; eps++) {
+			for (int g = 0; g < algorithms.length; g++) {
+				AlgorithmEnum algorithm = algorithms[g];
+
+				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+				Geocrowd.algorithm = algorithm;
+				OnlineMTC onlineMTC = new OnlineMTC();
+				onlineMTC.TimeInstance = 0;
+				onlineMTC.eps = epss[eps];
+				onlineMTC.TaskCount = 0;
+				onlineMTC.TotalAssignedTasks = 0;
+				onlineMTC.TotalAssignedWorkers = 0;
+				onlineMTC.workerList = null;
+				onlineMTC.taskList = null;
+				onlineMTC.workerList = new ArrayList<>();
+				onlineMTC.taskList = new ArrayList<>();
+				/**
+				 * clear worker, task list
+				 */
+				OnlineMTC.taskList.clear();
+				OnlineMTC.workerList.clear();
+
+				onlineMTC.budgets = counts;
+				onlineMTC.totalBudget = totalBudget;
+
+				System.out
+						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
+								"Time", "TTask", "CTask", "TWorker", "SWorker",
+								"W/T");
+				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+					int next_time = (i + start_time + Constants.TIME_INSTANCE + 1);
+
+					switch (Geocrowd.DATA_SET) {
+					case GOWALLA:
+						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
+								+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.gowallaWorkerFileNamePrefix
+										+ next_time + ".txt");
+						break;
+					case YELP:
+						onlineMTC.readTasks(Constants.yelpTaskFileNamePrefix
+								+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.yelpWorkerFileNamePrefix
+										+ next_time + ".txt");
+						break;
+					case UNIFORM:
+						onlineMTC.readTasks(Constants.uniTaskFileNamePrefix + i
+								+ ".txt");
+						onlineMTC.readWorkers(Constants.uniWorkerFileNamePrefix
+								+ next_time + ".txt");
+						break;
+					case SKEWED:
+						onlineMTC.readTasks(Constants.skewedTaskFileNamePrefix
+								+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.skewedWorkerFileNamePrefix
+										+ next_time + ".txt");
+						break;
+					case SMALL_TEST:
+						onlineMTC.readTasks(Constants.smallTaskFileNamePrefix
+								+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.smallWorkerFileNamePrefix
+										+ next_time + ".txt");
+						break;
+					}
+
+					onlineMTC.matchingTasksWorkers();
+					HashSet<Integer> workerSet = onlineMTC.maxCoverage();
+
+					onlineMTC.TimeInstance++;
+
+					System.out
+							.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
+									(i + 1),
+									onlineMTC.TaskCount,
+									onlineMTC.TotalAssignedTasks,
+									onlineMTC.totalBudget,
+									onlineMTC.TotalAssignedWorkers,
+									onlineMTC.TotalAssignedTasks
+											/ Math.max(
+													1,
+													onlineMTC.TotalAssignedWorkers));
 				}
 
 				coveredTasks[eps][g] = OnlineMTC.TotalAssignedTasks;
 				assignedWorkers[eps][g] = OnlineMTC.TotalAssignedWorkers;
 			}
 		}
-		
+
 		/**
 		 * print result
 		 */
-		System.out.println("##################");
+		System.out.println("\n\n##################");
 		System.out.println("Budget = " + totalBudget);
 		System.out.println("#Covered Tasks");
 		System.out.printf("%-20s \t", " ");
@@ -272,19 +395,19 @@ public class OnlineMTCTest {
 			}
 		}
 	}
-	
+
 	private static void vary_eps() throws IOException {
 
-//		Double[] epss = new Double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
-//				0.9 };
+		// Double[] epss = new Double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7,
+		// 0.8,
+		// 0.9 };
 
-		Double[] epss = new Double[] {0.3, 0.5, 0.7};
-		
+		Double[] epss = new Double[] { 0.3, 0.5, 0.7 };
+
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-//				AlgorithmEnum.MAX_COVER_BASIC
-//				,
-				AlgorithmEnum.MAX_COVER_ADAPT_B
-				};
+		// AlgorithmEnum.MAX_COVER_BASIC
+		// ,
+		AlgorithmEnum.MAX_COVER_ADAPT_B };
 
 		Integer[][] coveredTasks = new Integer[epss.length][algorithms.length];
 		Integer[][] assignedWorkers = new Integer[epss.length][algorithms.length];
@@ -296,7 +419,7 @@ public class OnlineMTCTest {
 		System.out.println("F = " + Constants.F);
 		System.out.println("Budget = " + totalBudget);
 
-//		 GeocrowdTest.main(null);
+		// GeocrowdTest.main(null);
 
 		for (int eps = 0; eps < epss.length; eps++) {
 			for (int g = 0; g < algorithms.length; g++) {
@@ -308,8 +431,6 @@ public class OnlineMTCTest {
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.eps = epss[eps];
-				OnlineMTC.TotalAssignedTasks = 0;
-				OnlineMTC.TotalAssignedWorkers = 0;
 				onlineMTC.TaskCount = 0;
 				OnlineMTC.TotalAssignedTasks = 0;
 				OnlineMTC.TotalAssignedWorkers = 0;
@@ -317,7 +438,6 @@ public class OnlineMTCTest {
 				OnlineMTC.workerList = new ArrayList<>();
 				OnlineMTC.taskList = new ArrayList<>();
 
-				
 				onlineMTC.totalBudget = totalBudget;
 				System.out
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
@@ -385,7 +505,7 @@ public class OnlineMTCTest {
 		/**
 		 * print result
 		 */
-		System.out.println("##################");
+		System.out.println("\n##################");
 		System.out.println("Budget = " + totalBudget);
 		System.out.println("#Covered Tasks");
 		System.out.printf("%-20s \t", " ");
@@ -398,7 +518,6 @@ public class OnlineMTCTest {
 			}
 		}
 	}
-
 
 	private static void vary_a() throws IOException {
 
@@ -435,7 +554,6 @@ public class OnlineMTCTest {
 				onlineMTC.TaskCount = 0;
 				OnlineMTC.TotalAssignedTasks = 0;
 				OnlineMTC.TotalAssignedWorkers = 0;
-				OnlineMTC.workerList = null;
 				OnlineMTC.workerList = new ArrayList<>();
 				OnlineMTC.taskList = new ArrayList<>();
 
@@ -510,7 +628,7 @@ public class OnlineMTCTest {
 		/**
 		 * print result
 		 */
-		System.out.println("##################");
+		System.out.println("\n##################");
 		System.out.println("Budget = " + totalBudget);
 		System.out.println("#Covered Tasks");
 		System.out.printf("%-20s \t", " ");
@@ -524,7 +642,6 @@ public class OnlineMTCTest {
 		}
 	}
 
-	
 	private static void vary_d() throws IOException {
 
 		Double[] listAlpha = new Double[] { 0.1, 0.3, 0.5, 0.7 };
@@ -537,7 +654,7 @@ public class OnlineMTCTest {
 		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
 
 		int totalBudget = 160;
-		Double[] listDiameter = new Double[] { 0.1, 0.5, 1.0, 2.0};
+		Double[] listDiameter = new Double[] { 0.1, 0.5, 1.0, 2.0 };
 		Constants.F = 1.0;
 
 		System.out.println("F = " + Constants.F);
@@ -624,7 +741,7 @@ public class OnlineMTCTest {
 			/**
 			 * print result
 			 */
-			System.out.println("##################");
+			System.out.println("\n##################");
 			System.out.println("Budget = " + totalBudget);
 			System.out.println("#Covered Tasks");
 			System.out.printf("%-20s \t", " ");
@@ -738,7 +855,7 @@ public class OnlineMTCTest {
 			/**
 			 * print result
 			 */
-			System.out.println("##################");
+			System.out.println("\n##################");
 			System.out.println("Budget = " + totalBudget);
 			System.out.println("#Covered Tasks");
 			System.out.printf("%-20s \t", " ");
@@ -794,9 +911,7 @@ public class OnlineMTCTest {
 					onlineMTC.TaskCount = 0;
 					OnlineMTC.TotalAssignedTasks = 0;
 					OnlineMTC.TotalAssignedWorkers = 0;
-					OnlineMTC.workerList = null;
 					OnlineMTC.workerList = new ArrayList<>();
-					;
 					OnlineMTC.taskList = new ArrayList<>();
 
 					/**
@@ -863,7 +978,7 @@ public class OnlineMTCTest {
 			/**
 			 * print result
 			 */
-			System.out.println("##################");
+			System.out.println("\n##################");
 			System.out.println("Budget = " + totalBudget);
 			System.out.println("#Covered Tasks");
 			System.out.printf("%-20s \t", " ");
@@ -1005,7 +1120,7 @@ public class OnlineMTCTest {
 
 						onlineMTC.TimeInstance++;
 					}
-					System.out.println("##################");
+					System.out.println("\n##################");
 					//
 					// System.out.printf("\n%-10s %-10s %-10s %-10s %-10s",
 					// "TTask",
@@ -1027,7 +1142,7 @@ public class OnlineMTCTest {
 			/**
 			 * print result
 			 */
-			System.out.println("##################");
+			System.out.println("\n##################");
 			System.out.println("Budget = " + totalBudget);
 			System.out.println("#Covered Tasks");
 			System.out.printf("%-20s", " ");

@@ -42,7 +42,7 @@ public class GeocrowdTest {
     }
 	
 	/**
-	 * Test geo crowd.
+	 * Test geocrowd.
 	 */
 	@Test
 	public void testGeoCrowd() {
@@ -243,12 +243,10 @@ public class GeocrowdTest {
 	public void testGenerateGowallaTasks() {
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 		GeocrowdInstance geoCrowd = new GeocrowdInstance();
-		System.out.println(Geocrowd.algorithm + "  assignment    with "
-				+ Constants.TaskDuration + "  task duration");
 		geoCrowd.printBoundaries();
 		geoCrowd.createGrid();
 		geoCrowd.readEntropy();
-		System.out.println("entropy list size: " + geoCrowd.entropyList.size());
+//		System.out.println("entropy list size: " + geoCrowd.entropyList.size());
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			geoCrowd.readTasksWithEntropy2(Constants.gowallaTaskFileNamePrefix 
 					+ i + ".txt");

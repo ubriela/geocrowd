@@ -398,7 +398,7 @@ public void createGrid(DatasetEnum dataset) {
 	 * Prints the boundaries.
 	 */
 	public void printBoundaries() {
-		System.out.println("minLat:" + minLatitude + "   maxLat:" + maxLatitude
+		System.out.println("\nminLat:" + minLatitude + "   maxLat:" + maxLatitude
 				+ "   minLng:" + minLongitude + "   maxLng:" + maxLongitude);
 	}
 	

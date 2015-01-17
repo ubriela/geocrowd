@@ -64,7 +64,6 @@ public class OnlineMTC extends GeocrowdSensing {
 		this.numberArrivalTask = Parser.parseSensingTasks(fileName, taskList);
 		totalNumberArrivalTask += numberArrivalTask;
 		TaskCount += this.numberArrivalTask;
-
 	}
 
 	public HashSet<Integer> maxCoverage() {

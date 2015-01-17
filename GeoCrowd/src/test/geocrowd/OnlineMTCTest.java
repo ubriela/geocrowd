@@ -25,7 +25,7 @@ import org.geocrowd.common.crowdsource.GenericTask;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		workload_vary_r();
+//		workload_vary_r();
 		workload_vary_b();
 //		workload_vary_delta();
 //		workload_all();
@@ -282,7 +282,7 @@ public class OnlineMTCTest {
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
 
-			int start_time = 200;
+			int start_time = 400;
 			int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
 
 			GeocrowdTest.main(null); // generate set of tasks for next period
@@ -404,7 +404,7 @@ public class OnlineMTCTest {
 		System.out.printf("%-20s \t", "DynamicOffline");
 		for (int d = 0; d < delta.length; d++) {
 			System.out.printf("\n%-20d \t", delta[d]);
-			for (int g2 = 0; g2 < algorithms.length; g2++) {
+			for (int g2 = 0; g2 < algorithms.length + 2; g2++) {
 				System.out.printf("%-20d \t", coveredTasks[d][g2]);
 			}
 		}
@@ -552,7 +552,7 @@ public class OnlineMTCTest {
 		System.out.printf("%-20s \t", "DynamicOffline");
 		for (int d = 0; d < radii.length; d++) {
 			System.out.printf("\n%-20f \t", radii[d]);
-			for (int g2 = 0; g2 < algorithms.length; g2++) {
+			for (int g2 = 0; g2 < algorithms.length + 2; g2++) {
 				System.out.printf("%-20d \t", coveredTasks[d][g2]);
 			}
 		}
@@ -575,7 +575,7 @@ public class OnlineMTCTest {
 
 		for (int b = 0; b < budgets.length; b++) {
 			totalBudget = budgets[b];
-			System.out.println("Budget = " + totalBudget);
+			System.out.println("\nBudget = " + totalBudget);
 			System.out.println("radius " + Constants.radius);
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
@@ -701,8 +701,8 @@ public class OnlineMTCTest {
 		System.out.printf("%-20s \t", "FixedOffline");
 		System.out.printf("%-20s \t", "DynamicOffline");
 		for (int b = 0; b < budgets.length; b++) {
-			System.out.printf("\n%-20f \t", budgets[b]);
-			for (int g2 = 0; g2 < algorithms.length; g2++) {
+			System.out.printf("\n%-20d \t", budgets[b]);
+			for (int g2 = 0; g2 < algorithms.length + 2; g2++) {
 				System.out.printf("%-20d \t", coveredTasks[b][g2]);
 			}
 		}

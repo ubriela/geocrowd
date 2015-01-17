@@ -28,7 +28,7 @@ public class Constants {
 //	public static int W = 0;	// current workload
 
 	/** The time instance. */
-	public static int TIME_INSTANCE = 7;
+	public static int TIME_INSTANCE = 28;
 //	public static final int MAX_TIME_INSTANCE = 500;
 	
 	/** The diameter. */

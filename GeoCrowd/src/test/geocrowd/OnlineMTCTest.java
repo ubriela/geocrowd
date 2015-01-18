@@ -26,8 +26,8 @@ public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
 //		workload_vary_r();
-		workload_vary_b();
-//		workload_vary_delta();
+//		workload_vary_b();
+		workload_vary_delta();
 //		workload_all();
 		// workload();
 		// vary_a();
@@ -277,8 +277,8 @@ public class OnlineMTCTest {
 		Integer[][] assignedWorkers = new Integer[delta.length][algorithms.length + 2];
 
 		for (int d = 0; d < delta.length; d++) {
-			Constants.T = delta[d];
-			System.out.println("delta " + Constants.T);
+			Constants.TaskDuration = delta[d];
+			System.out.println("delta " + Constants.TaskDuration);
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
 

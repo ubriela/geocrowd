@@ -47,7 +47,7 @@ public class Constants {
 	/**
 	 * Time to deadline
 	 */
-	public static int T = 5;
+//	public static int T = 5;
 	
 	public static boolean useLocationEntropy = true;
 	

@@ -85,7 +85,7 @@ public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
 				double avgTimeToDead = avgTimeToDead(s, currentTimeInstance,
 						assignedTaskSet);
 				if (avgTimeToDead < smallestAvgTimeToDead
-						&& (avgTimeToDead <= Constants.T || currentTimeInstance == Constants.TIME_INSTANCE - 1)) {
+						&& (avgTimeToDead <= Constants.TaskDuration || currentTimeInstance == Constants.TIME_INSTANCE - 1)) {
 					smallestAvgTimeToDead = avgTimeToDead;
 					bestWorkerIndex = j;
 				}

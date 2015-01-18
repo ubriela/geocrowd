@@ -228,7 +228,7 @@ public class MaxCoverBasicSMO extends MaxCover implements Problem {
 			double weight = -Constants.alpha
 					* ((coverage + 0.0) / Constants.TaskNo)
 					+ (1 - Constants.alpha) * (TTD + 0.0)
-					/ (Constants.T * budget);
+					/ (Constants.TaskDuration * budget);
 			if (weight < smallestWeight) {
 				smallestWeight = weight;
 				bestSol = i;

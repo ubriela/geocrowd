@@ -93,7 +93,7 @@ public class MaxCoverST extends MaxCoverBasicS {
 		 */
 		
 //		System.out.println(maxRegionEntropy);
-		double weight = 0.15*totalElapsedTime / (Constants.T*uncoveredTasks) + 0.05*regionEntropy/maxRegionEntropy - 0.8*uncoveredTasks/10.0;
+		double weight = 0.15*totalElapsedTime / (Constants.TaskDuration*uncoveredTasks) + 0.05*regionEntropy/maxRegionEntropy - 0.8*uncoveredTasks/10.0;
 //		System.out.println(weight);
 		return new WeightGain(weight, uncoveredTasks);
 	}

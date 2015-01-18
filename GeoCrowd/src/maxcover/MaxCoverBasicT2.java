@@ -70,7 +70,7 @@ public class MaxCoverBasicT2 extends MaxCover {
 				double avgTimeToDead = avgTimeToDead(s, currentTimeInstance,
 						assignedTaskSet);
 				if (avgTimeToDead < smallestAvgTimeToDead
-						&& (avgTimeToDead <= Constants.T || currentTimeInstance == Constants.TIME_INSTANCE - 1)) {
+						&& (avgTimeToDead <= Constants.TaskDuration || currentTimeInstance == Constants.TIME_INSTANCE - 1)) {
 					smallestAvgTimeToDead = avgTimeToDead;
 					bestWorkerIndex = k;
 				}
@@ -182,7 +182,7 @@ public class MaxCoverBasicT2 extends MaxCover {
 		/**
 		 * average time to deadline of new covered task
 		 */
-		double weight = alpha*totalElapsedTime / (Constants.T*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks;
+		double weight = alpha*totalElapsedTime / (Constants.TaskDuration*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks;
 		return new WeightGain(weight, uncoveredTasks);
 	}
 }

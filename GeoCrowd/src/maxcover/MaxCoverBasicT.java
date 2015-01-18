@@ -156,7 +156,7 @@ public class MaxCoverBasicT extends MaxCover {
 		/**
 		 * average time to deadline of new covered task
 		 */
-		double weight = alpha*totalElapsedTime / (Constants.T*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks;
+		double weight = alpha*totalElapsedTime / (Constants.TaskDuration*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks;
 		return new WeightGain(weight, uncoveredTasks);
 	}
 }

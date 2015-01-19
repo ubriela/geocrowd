@@ -221,6 +221,7 @@ public class MaxCoverBasicMO extends MaxCover implements Problem {
 	private int bestSolution(NondominatedPopulation result) {
 		int bestSol = 0;
 		double largestWeight = Double.MIN_VALUE;
+		System.out.println(result.size());
 		for (int i = 0; i < result.size(); i++) {
 			Solution sol = result.get(i);
 			double[] objectives = sol.getObjectives();
@@ -230,6 +231,7 @@ public class MaxCoverBasicMO extends MaxCover implements Problem {
 
 			// System.out.println(coverage + "\t" + maxAssign);
 			// the smaller weight, the better
+//			System.out.println("here");
 			double weight = Constants.alpha
 					* ((coverage + 0.0) / Constants.TaskNo)
 					- (1 - Constants.alpha) * (maxAssign + 0.0)

@@ -85,7 +85,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = maxCoverPro;
-			System.out.print("\t" + maxCoverPro.gain);
+//			System.out.print("\t" + maxCoverPro.gain);
 			break;
 			
 		case MAX_COVER_BASIC_MO:
@@ -395,7 +395,7 @@ public class OnlineMTC extends GeocrowdSensing {
 	/**
 	 * Debug the number of requests for each worker.
 	 */
-	public void printWorkerCounts() {
+	public int printWorkerCounts() {
 		System.out.println("\nWorker counts:");
 		int max = 0;
 		HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
@@ -416,6 +416,7 @@ public class OnlineMTC extends GeocrowdSensing {
 		}
 //		System.out.println("total count : " + totalCount);
 		System.out.println("\nMax count: " + max);
+		return max;
 	}
 
 	private int getBudget(AlgorithmEnum algorithm) {

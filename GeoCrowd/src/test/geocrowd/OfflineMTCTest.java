@@ -12,16 +12,21 @@ import org.geocrowd.common.Constants;
 public class OfflineMTCTest {
 
 	public static void main(String[] args) {
-//		varying_budget();
-		varying_radius();
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		
+		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+//		int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 };
+		varying_budget(budgets);
+		
+		
+//		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
+		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
+		varying_radius(radii);
 	}
 	
-	public static void varying_radius() {
-
-		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
-
-//		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
-		double[] radii = {0.5};
+	public static void varying_radius(double[] radii) {
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		
 		boolean[] isFixes = { true , false};
 		
 		Integer[][] coveredTasks = new Integer[radii.length][isFixes.length];
@@ -33,7 +38,7 @@ public class OfflineMTCTest {
 				OfflineMTC offlineMTC = new OfflineMTC();
 				offlineMTC.isFixed = isFixes[fix];
 				offlineMTC.TaskCount = 0;
-				offlineMTC.budget = 144;
+				offlineMTC.budget = 48;
 				OfflineMTC.TotalAssignedTasks = 0;
 				OfflineMTC.TotalAssignedWorkers = 0;
 				OfflineMTC.workerList = null;
@@ -122,17 +127,16 @@ public class OfflineMTCTest {
 		}
 	}
 
-	public static void varying_budget() {
+	public static void varying_budget(int[] budgets) {
 
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-
-		int[] budgets = { 42 };
-//		int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 };
-		boolean[] isFixes = { false };
+//		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		boolean[] isFixes = { true , false };
 		
 		Integer[][] coveredTasks = new Integer[budgets.length][isFixes.length];
 		Integer[][] assignedWorkers = new Integer[budgets.length][isFixes.length];
 
+		Constants.radius = 0.01;
+		
 		for (int b = 0; b < budgets.length; b++)
 			for (int fix = 0 ; fix < isFixes.length; fix++) {
 				
@@ -148,6 +152,14 @@ public class OfflineMTCTest {
 			
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						offlineMTC
+						.readTasks(Constants.foursquareTaskFileNamePrefix
+								+ i + ".txt");
+						offlineMTC.readWorkers(
+						Constants.foursquareWorkerFileNamePrefix + i
+								+ ".txt", i);
+						break;
 					case GOWALLA:
 						offlineMTC
 								.readTasks(Constants.gowallaTaskFileNamePrefix

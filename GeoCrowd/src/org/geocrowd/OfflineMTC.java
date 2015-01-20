@@ -79,8 +79,11 @@ public class OfflineMTC extends GeocrowdSensing {
         containerWorker = new ArrayList<>();
         containerPrune = new ArrayList[workerList.size()];
 
+//        System.out.println(workerList.size());
+//        System.out.println(taskList.size());
         for (int workeridx = 0; workeridx < workerList.size(); workeridx++) {
             reverseRangeQuery(workeridx);
+            
         }
 
         // remove workers with no tasks

@@ -32,7 +32,7 @@ public class Constants {
 //	public static final int MAX_TIME_INSTANCE = 500;
 	
 	/** The diameter. */
-	public static double radius = 1; // task circle diameter
+	public static double radius = 0.01;; // task circle diameter
 	/** enable random k */
 	public static boolean IS_RANDOM_K = false;
 	

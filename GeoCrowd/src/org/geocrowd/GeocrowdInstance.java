@@ -1018,6 +1018,17 @@ public class GeocrowdInstance extends Geocrowd {
 				double lat = venues.get(taskid).getX();
 				double lng = venues.get(taskid).getY();
 
+				// generate a task inside this cell
+
+//				double startLat = minLatitude;
+//				double endLat = maxLatitude;
+//				double lat = UniformGenerator.randomValue(new Range(startLat,
+//						endLat), false);
+//
+//				double startLng = minLongitude;
+//				double endLng = maxLongitude;
+//				double lng = UniformGenerator.randomValue(new Range(startLng,
+//						endLng), false);
 				
 				double entropy = 0;
 				int time = TimeInstance;
@@ -1031,7 +1042,7 @@ public class GeocrowdInstance extends Geocrowd {
 				listCount++;
 			}
 			TaskCount += numTask;
-			System.out.println("#Total tasks:" + TaskCount);
+//			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -25,23 +25,62 @@ import org.geocrowd.common.crowdsource.GenericTask;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 //		overloading();
-		// workload_vary_r();
-		// workload_vary_b();
-		 workload_vary_delta();
-		// workload_all();
-		// workload();
-		// vary_a();
-		// vary_eps();
-		// vary_r();
-		// vary_b();
-		// vary_en();
+		
+		
+//		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
+//		int totalBudget = 42;
+//		int start_time = 200;
+		
+		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
+		int totalBudget = 48;
+		int start_time = 0;
+		workload_vary_r(radii, totalBudget, start_time);
+		
+//		int[] budgets = new int[] { 21, 42, 84, 168, 336, 672, 1344 };
+//		start_time = 200;
+		
+		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+		start_time = 0;
+		workload_vary_b(budgets, start_time);
+		
+		
+//		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//		int totalBudget = 42;
+//		int start_time = 200;
+		
+		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		totalBudget = 48;
+		start_time = 0;
+		workload_vary_delta(delta, totalBudget, start_time);
+		
+//		int cycle_length = 7;
+//		int workload_size = 4;
+//		int totalBudget = 168;
+//		int workloadCount = 12;
+//		start_time = 0;
+
+		
+		int cycle_length = 24;
+		int workload_size = 1;
+		totalBudget = 48;
+		int workloadCount = 50;
+		start_time = 0;
+		workload_all(cycle_length, workload_size, totalBudget, start_time, workloadCount);
+		
+		
+//		workload();
+//		vary_a();
+//		vary_eps();
+//		vary_r();
+//		vary_b();
+//		vary_en();
 	}
 
 	private static int[] computeHistoryBudgets(boolean isFixed, int budget,
 			int start_time) {
-		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
-
+//		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 		OfflineMTC offlineMTC = new OfflineMTC();
 		offlineMTC.TimeInstance = 0;
 		offlineMTC.isFixed = isFixed;
@@ -97,9 +136,9 @@ public class OnlineMTCTest {
 
 		HashSet<Integer> workerSet = offlineMTC.maxTaskCoverage();
 		System.out.println("\nCoverage : " + offlineMTC.TotalAssignedTasks);
-		System.out.println("Counts :");
-		for (int count : offlineMTC.counts)
-			System.out.print(count + "\t");
+//		System.out.println("Counts :");
+//		for (int count : offlineMTC.counts)
+//			System.out.print(count + "\t");
 		System.out.println();
 		return offlineMTC.counts;
 	}
@@ -109,16 +148,11 @@ public class OnlineMTCTest {
 	 * 
 	 * @throws IOException
 	 */
-	private static void workload_all() throws IOException {
-
-		int cycle_length = 7;
-		int workload_size = 4;
+	private static void workload_all(int cycle_length, int workload_size, int totalBudget, int starttime, int w_count) throws IOException {
 
 		Constants.TIME_INSTANCE = cycle_length * workload_size;
-
-		int totalBudget = 168;
-		int start_time = 0;
-		int W = 12;
+		int start_time = starttime;
+		int workloadCount = w_count;
 
 		System.out.println("\nRadius = " + Constants.radius);
 		System.out.println("Budget = " + totalBudget);
@@ -127,13 +161,13 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC,
 				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2 };
 
-		Integer[][] coveredTasks = new Integer[W][algorithms.length + 2];
-		Integer[][] assignedWorkers = new Integer[W][algorithms.length + 2];
+		int[][] coveredTasks = new int[workloadCount][algorithms.length + 2];
+		int[][] assignedWorkers = new int[workloadCount][algorithms.length + 2];
 
 		/**
 		 * Iterate all possible workloads
 		 */
-		for (int w = 0; w < W; w++) {
+		for (int w = 0; w < workloadCount; w++) {
 
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
@@ -156,7 +190,7 @@ public class OnlineMTCTest {
 			for (int g = 0; g < algorithms.length; g++) {
 				AlgorithmEnum algorithm = algorithms[g];
 
-				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.TimeInstance = 0;
@@ -185,6 +219,12 @@ public class OnlineMTCTest {
 					int next_time = (i + start_time + Constants.TIME_INSTANCE);
 
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						onlineMTC.readTasks(Constants.foursquareTaskFileNamePrefix + i
+								+ ".txt");
+						onlineMTC.readWorkers(Constants.foursquareWorkerFileNamePrefix
+								+ (i + next_time) + ".txt");
+						break;
 					case GOWALLA:
 						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
 								+ i + ".txt");
@@ -261,16 +301,14 @@ public class OnlineMTCTest {
 			System.out.printf("%-20s \t", algorithms[j2]);
 		System.out.printf("%-20s \t", "FixedOffline");
 		System.out.printf("%-20s \t", "DynamicOffline");
-		for (int w = 0; w < W; w++) {
+		for (int w = 0; w < workloadCount; w++) {
 			System.out.printf("\n%-20d \t", w);
 			for (int g2 = 0; g2 < algorithms.length + 2; g2++)
 				System.out.printf("%-20d \t", coveredTasks[w][g2]);
 		}
 	}
 
-	private static void workload_vary_delta() throws IOException {
-
-		int totalBudget = 42;
+	private static void workload_vary_delta(int[] delta, int totalBudget, int starttime) throws IOException {
 
 		System.out.println("\nRadius = " + Constants.radius);
 		System.out.println("Budget = " + totalBudget);
@@ -279,9 +317,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC,
 				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2 };
 
-		Integer[] delta = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		Integer[][] coveredTasks = new Integer[delta.length][algorithms.length + 2];
-		Integer[][] assignedWorkers = new Integer[delta.length][algorithms.length + 2];
+		int[][] coveredTasks = new int[delta.length][algorithms.length + 2];
+		int[][] assignedWorkers = new int[delta.length][algorithms.length + 2];
 
 		for (int d = 0; d < delta.length; d++) {
 			Constants.TaskDuration = delta[d];
@@ -289,7 +326,7 @@ public class OnlineMTCTest {
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
 
-			int start_time = 400;
+			int start_time = starttime;
 			int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
 
 			GeocrowdTest.main(null); // generate set of tasks for next period
@@ -305,7 +342,7 @@ public class OnlineMTCTest {
 			for (int g = 0; g < algorithms.length; g++) {
 				AlgorithmEnum algorithm = algorithms[g];
 
-				Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+//				Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.TimeInstance = 0;
@@ -332,8 +369,9 @@ public class OnlineMTCTest {
 
 					switch (Geocrowd.DATA_SET) {
 					case FOURSQUARE:
-						onlineMTC.readTasks(Constants.foursquareTaskFileNamePrefix
-								+ i + ".txt");
+						onlineMTC
+								.readTasks(Constants.foursquareTaskFileNamePrefix
+										+ i + ".txt");
 						onlineMTC
 								.readWorkers(Constants.foursquareWorkerFileNamePrefix
 										+ next_time + ".txt");
@@ -421,9 +459,7 @@ public class OnlineMTCTest {
 		}
 	}
 
-	private static void workload_vary_r() throws IOException {
-
-		int totalBudget = 42;
+	private static void workload_vary_r(double[] radii, int totalBudget, int starttime) throws IOException {
 
 		System.out.println("Budget = " + totalBudget);
 
@@ -431,17 +467,16 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC,
 				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2 };
 
-		double[] radii = new double[] { 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
-		Integer[][] coveredTasks = new Integer[radii.length][algorithms.length + 2];
-		Integer[][] assignedWorkers = new Integer[radii.length][algorithms.length + 2];
+		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
+		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
 
 		for (int d = 0; d < radii.length; d++) {
 			Constants.radius = radii[d];
-			System.out.println("radius " + Constants.radius);
+			System.out.println("\nRadius " + Constants.radius);
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
 
-			int start_time = 200;
+			int start_time = starttime;
 			int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
 
 			GeocrowdTest.main(null); // generate set of tasks for next period
@@ -457,7 +492,7 @@ public class OnlineMTCTest {
 			for (int g = 0; g < algorithms.length; g++) {
 				AlgorithmEnum algorithm = algorithms[g];
 
-				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.TimeInstance = 0;
@@ -486,6 +521,14 @@ public class OnlineMTCTest {
 					int next_time = (i + start_time + Constants.TIME_INSTANCE + 1);
 
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						onlineMTC
+								.readTasks(Constants.foursquareTaskFileNamePrefix
+										+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.foursquareWorkerFileNamePrefix
+										+ next_time + ".txt");
+						break;
 					case GOWALLA:
 						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
 								+ i + ".txt");
@@ -569,9 +612,7 @@ public class OnlineMTCTest {
 		}
 	}
 
-	private static void workload_vary_b() throws IOException {
-
-		int totalBudget = 0;
+	private static void workload_vary_b(int[] budgets, int starttime) throws IOException {
 
 		System.out.println("radius = " + Constants.radius);
 
@@ -579,18 +620,17 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC,
 				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2 };
 
-		Integer[] budgets = new Integer[] { 21, 42, 84, 168, 336, 672, 1344 };
-		Integer[][] coveredTasks = new Integer[budgets.length][algorithms.length + 2];
-		Integer[][] assignedWorkers = new Integer[budgets.length][algorithms.length + 2];
+		int[][] coveredTasks = new int[budgets.length][algorithms.length + 2];
+		int[][] assignedWorkers = new int[budgets.length][algorithms.length + 2];
 
 		for (int b = 0; b < budgets.length; b++) {
-			totalBudget = budgets[b];
+			int totalBudget = budgets[b];
 			System.out.println("\nBudget = " + totalBudget);
 			System.out.println("radius " + Constants.radius);
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
 
-			int start_time = 200;
+			int start_time = starttime;
 			int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
 
 			GeocrowdTest.main(null); // generate set of tasks for next period
@@ -606,7 +646,7 @@ public class OnlineMTCTest {
 			for (int g = 0; g < algorithms.length; g++) {
 				AlgorithmEnum algorithm = algorithms[g];
 
-				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.TimeInstance = 0;
@@ -635,6 +675,14 @@ public class OnlineMTCTest {
 					int next_time = (i + start_time + Constants.TIME_INSTANCE + 1);
 
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						onlineMTC
+								.readTasks(Constants.foursquareTaskFileNamePrefix
+										+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.foursquareWorkerFileNamePrefix
+										+ next_time + ".txt");
+						break;
 					case GOWALLA:
 						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
 								+ i + ".txt");
@@ -703,7 +751,6 @@ public class OnlineMTCTest {
 		 * print result
 		 */
 		System.out.println("\n\n##################");
-		System.out.println("Budget = " + totalBudget);
 		System.out.println("#Covered Tasks");
 		System.out.printf("%-20s \t", " ");
 		for (int j2 = 0; j2 < algorithms.length; j2++)
@@ -736,8 +783,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC,
 				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2 };
 
-		Integer[][] coveredTasks = new Integer[epss.length][algorithms.length];
-		Integer[][] assignedWorkers = new Integer[epss.length][algorithms.length];
+		int[][] coveredTasks = new int[epss.length][algorithms.length];
+		int[][] assignedWorkers = new int[epss.length][algorithms.length];
 
 		GeocrowdTest.main(null); // generate set of tasks for next period
 
@@ -751,7 +798,7 @@ public class OnlineMTCTest {
 			for (int g = 0; g < algorithms.length; g++) {
 				AlgorithmEnum algorithm = algorithms[g];
 
-				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.TimeInstance = 0;
@@ -780,6 +827,14 @@ public class OnlineMTCTest {
 					int next_time = (i + start_time + Constants.TIME_INSTANCE + 1);
 
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						onlineMTC
+								.readTasks(Constants.foursquareTaskFileNamePrefix
+										+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.foursquareWorkerFileNamePrefix
+										+ next_time + ".txt");
+						break;
 					case GOWALLA:
 						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
 								+ i + ".txt");
@@ -869,8 +924,8 @@ public class OnlineMTCTest {
 		// ,
 		AlgorithmEnum.MAX_COVER_ADAPT_B };
 
-		Integer[][] coveredTasks = new Integer[epss.length][algorithms.length];
-		Integer[][] assignedWorkers = new Integer[epss.length][algorithms.length];
+		int[][] coveredTasks = new int[epss.length][algorithms.length];
+		int[][] assignedWorkers = new int[epss.length][algorithms.length];
 
 		int totalBudget = 400;
 		Constants.F = 1.0;
@@ -887,7 +942,7 @@ public class OnlineMTCTest {
 
 				// update alpha for temporal, spatial algorithms.
 
-				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.eps = epss[eps];
@@ -906,6 +961,14 @@ public class OnlineMTCTest {
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						onlineMTC
+								.readTasks(Constants.foursquareTaskFileNamePrefix
+										+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.foursquareWorkerFileNamePrefix
+										+ i + ".txt");
+						break;
 					case GOWALLA:
 						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
 								+ i + ".txt");
@@ -987,8 +1050,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
 				AlgorithmEnum.MAX_COVER_BASIC_S };
 
-		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
+		int[][] coveredTasks = new int[listAlpha.length][algorithms.length];
+		int[][] assignedWorkers = new int[listAlpha.length][algorithms.length];
 
 		int totalBudget = 160;
 		Constants.F = 1.0;
@@ -1007,7 +1070,7 @@ public class OnlineMTCTest {
 				// update alpha for temporal, spatial algorithms.
 				Constants.alpha = alpha;
 
-				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 
@@ -1030,6 +1093,14 @@ public class OnlineMTCTest {
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						onlineMTC
+								.readTasks(Constants.foursquareTaskFileNamePrefix
+										+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.foursquareWorkerFileNamePrefix
+										+ i + ".txt");
+						break;
 					case GOWALLA:
 						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
 								+ i + ".txt");
@@ -1110,8 +1181,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
 				AlgorithmEnum.MAX_COVER_BASIC_S };
 
-		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
+		int[][] coveredTasks = new int[listAlpha.length][algorithms.length];
+		int[][] assignedWorkers = new int[listAlpha.length][algorithms.length];
 
 		int totalBudget = 160;
 		double[] listRadius = new double[] { 0.1, 0.5, 1.0, 2.0 };
@@ -1132,7 +1203,7 @@ public class OnlineMTCTest {
 					// update alpha for temporal, spatial algorithms.
 					Constants.alpha = alpha;
 
-					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 					Geocrowd.algorithm = algorithm;
 					OnlineMTC onlineMTC = new OnlineMTC();
 					OnlineMTC.TotalAssignedTasks = 0;
@@ -1147,6 +1218,14 @@ public class OnlineMTCTest {
 					for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 
 						switch (Geocrowd.DATA_SET) {
+						case FOURSQUARE:
+							onlineMTC
+									.readTasks(Constants.foursquareTaskFileNamePrefix
+											+ i + ".txt");
+							onlineMTC
+									.readWorkers(Constants.foursquareWorkerFileNamePrefix
+											+ i + ".txt");
+							break;
 						case GOWALLA:
 							onlineMTC
 									.readTasks(Constants.gowallaTaskFileNamePrefix
@@ -1224,8 +1303,8 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
 				AlgorithmEnum.MAX_COVER_BASIC_S };
 
-		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
+		int[][] coveredTasks = new int[listAlpha.length][algorithms.length];
+		int[][] assignedWorkers = new int[listAlpha.length][algorithms.length];
 
 		int totalBudget = 160;
 		double[] listEn = new double[] { 0.1, 0.4, 0.7, 1.0 };
@@ -1246,7 +1325,7 @@ public class OnlineMTCTest {
 					// update alpha for temporal, spatial algorithms.
 					Constants.alpha = alpha;
 
-					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 					Geocrowd.algorithm = algorithm;
 					OnlineMTC onlineMTC = new OnlineMTC();
 					OnlineMTC.TotalAssignedTasks = 0;
@@ -1261,6 +1340,14 @@ public class OnlineMTCTest {
 					for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 
 						switch (Geocrowd.DATA_SET) {
+						case FOURSQUARE:
+							onlineMTC
+									.readTasks(Constants.foursquareTaskFileNamePrefix
+											+ i + ".txt");
+							onlineMTC
+									.readWorkers(Constants.foursquareWorkerFileNamePrefix
+											+ i + ".txt");
+							break;
 						case GOWALLA:
 							onlineMTC
 									.readTasks(Constants.gowallaTaskFileNamePrefix
@@ -1338,14 +1425,14 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
 				AlgorithmEnum.MAX_COVER_BASIC_S };
 
-		Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
-		Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
+		int[][] coveredTasks = new int[listAlpha.length][algorithms.length];
+		int[][] assignedWorkers = new int[listAlpha.length][algorithms.length];
 
 		int totalBudget = 0;
 		// Constants.Radius = 2.0;
 		Constants.F = 1.0;
 
-		Integer[] listBudget = new Integer[] { 40, 80, 160, 320, 640, 1280,
+		int[] listBudget = new int[] { 40, 80, 160, 320, 640, 1280,
 				2560 };
 
 		System.out.println("F = " + Constants.F);
@@ -1364,7 +1451,7 @@ public class OnlineMTCTest {
 					// update alpha for temporal, spatial algorithms.
 					Constants.alpha = alpha;
 
-					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 					Geocrowd.algorithm = algorithm;
 					OnlineMTC onlineMTC = new OnlineMTC();
 
@@ -1384,6 +1471,14 @@ public class OnlineMTCTest {
 					for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 
 						switch (Geocrowd.DATA_SET) {
+						case FOURSQUARE:
+							onlineMTC
+									.readTasks(Constants.foursquareTaskFileNamePrefix
+											+ i + ".txt");
+							onlineMTC
+									.readWorkers(Constants.foursquareWorkerFileNamePrefix
+											+ i + ".txt");
+							break;
 						case GOWALLA:
 							onlineMTC
 									.readTasks(Constants.gowallaTaskFileNamePrefix
@@ -1456,12 +1551,12 @@ public class OnlineMTCTest {
 	private static void overloading() throws IOException {
 
 		int budget = 1000;
-		 double[] alpha = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7,
-		 0.8, 0.9, 1.0 };
-//		double[] alpha = new double[] { 0.1 };
+		double[] alpha = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
+				0.9, 1.0 };
+		// double[] alpha = new double[] { 0.1 };
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-//				AlgorithmEnum.MAX_COVER_BASIC, 
-				AlgorithmEnum.MAX_COVER_BASIC_MO };
+		// AlgorithmEnum.MAX_COVER_BASIC,
+		AlgorithmEnum.MAX_COVER_BASIC_MO };
 
 		int[][] coveredTasks = new int[alpha.length][algorithms.length];
 		int[][] maxAssignments = new int[alpha.length][algorithms.length];
@@ -1470,12 +1565,12 @@ public class OnlineMTCTest {
 		System.out.println("ttasks\ttasks\tworkers\tT/W");
 		for (int d = 0; d < alpha.length; d++) {
 			Constants.alpha = alpha[d];
-			
+
 			for (int g = 0; g < algorithms.length; g++) {
 
 				OnlineMTC onlineMTC = new OnlineMTC();
 
-				Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+//				Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 				Geocrowd.algorithm = algorithms[g];
 				onlineMTC.TimeInstance = 0;
 				onlineMTC.TaskCount = 0;
@@ -1494,8 +1589,9 @@ public class OnlineMTCTest {
 
 					switch (Geocrowd.DATA_SET) {
 					case FOURSQUARE:
-						onlineMTC.readTasks(Constants.foursquareTaskFileNamePrefix
-								+ i + ".txt");
+						onlineMTC
+								.readTasks(Constants.foursquareTaskFileNamePrefix
+										+ i + ".txt");
 						onlineMTC
 								.readWorkers(Constants.foursquareWorkerFileNamePrefix
 										+ i + ".txt");
@@ -1592,7 +1688,7 @@ public class OnlineMTCTest {
 
 		double[] listAlpha = new double[] { 0.05 };
 
-		Integer[] listBudgetTest = new Integer[] { 2000 };
+		int[] listBudgetTest = new int[] { 2000 };
 
 		double[] listRadius = new double[] {};
 
@@ -1606,8 +1702,8 @@ public class OnlineMTCTest {
 		int numLoops = listRadius.length + listF.length + listBudgetTest.length;
 		for (int iter = 0; iter < numLoops; iter++) {
 
-			Integer[][] coveredTasks = new Integer[listAlpha.length][algorithms.length];
-			Integer[][] assignedWorkers = new Integer[listAlpha.length][algorithms.length];
+			int[][] coveredTasks = new int[listAlpha.length][algorithms.length];
+			int[][] assignedWorkers = new int[listAlpha.length][algorithms.length];
 
 			int totalBudget = 1000;
 			double Radius = 0.2;
@@ -1644,7 +1740,7 @@ public class OnlineMTCTest {
 
 					// for (Integer j = 0; j < listBudgetTest.length; j++) {
 
-					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+//					Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 					Geocrowd.algorithm = algorithm;
 					OnlineMTC onlineMTC = new OnlineMTC();
 					OnlineMTC.TotalAssignedTasks = 0;

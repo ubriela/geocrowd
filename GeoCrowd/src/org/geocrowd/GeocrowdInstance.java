@@ -25,6 +25,7 @@ import java.util.Random;
 import org.geocrowd.common.Cell;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
+import org.geocrowd.common.Point;
 import org.geocrowd.common.Range;
 import org.geocrowd.common.UniformGenerator;
 import org.geocrowd.common.crowdsource.GenericTask;
@@ -76,6 +77,9 @@ public class GeocrowdInstance extends Geocrowd {
 	public GeocrowdInstance() {
 		String boundaryFile = "";
 		switch (DATA_SET) {
+		case FOURSQUARE:
+			boundaryFile = Constants.foursquareBoundary;
+			break;
 		case GOWALLA:
 			boundaryFile = Constants.gowallaBoundary;
 			break;
@@ -988,6 +992,51 @@ public class GeocrowdInstance extends Geocrowd {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void readTasksFoursquare(String fileName, ArrayList<Point> venues) {
+		int listCount = taskList.size();
+		try {
+			/*
+			 * calculate #tasks will be generated
+			 */
+			Random r = new Random();
+			int step = 200;
+			r.setSeed(System.nanoTime());
+//			Constants.TaskNo = Constants.TaskNo + step;
+			int numTask = Constants.TaskNo;
+//			if (TimeInstance % 2 == 0)
+//				numTask = 10;
+//			int numTask = Constants.TaskNo + r.nextInt(1000) - 500;
+			FileWriter writer = new FileWriter(fileName);
+			BufferedWriter out = new BufferedWriter(writer);
+			for (int i = 0; i < numTask; i++) {
+				
+				int taskid = (int) UniformGenerator.randomValue(new Range(0,
+						venues.size() - 1), true);
+
+				double lat = venues.get(taskid).getX();
+				double lng = venues.get(taskid).getY();
+
+				
+				double entropy = 0;
+				int time = TimeInstance;
+				int taskType = (int) UniformGenerator.randomValue(new Range(0,
+						Constants.TaskTypeNo), true);
+				SpecializedTask t = new SpecializedTask(lat, lng, time,
+						entropy, taskType);
+				out.write(lat + "," + lng + "," + time + "," + entropy + ","
+						+ taskType + "\n");
+				taskList.add(listCount, t);
+				listCount++;
+			}
+			TaskCount += numTask;
+			System.out.println("#Total tasks:" + TaskCount);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**

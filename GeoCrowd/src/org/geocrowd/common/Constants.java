@@ -28,7 +28,7 @@ public class Constants {
 //	public static int W = 0;	// current workload
 
 	/** The time instance. */
-	public static int TIME_INSTANCE = 10;
+	public static int TIME_INSTANCE = 24;
 //	public static final int MAX_TIME_INSTANCE = 500;
 	
 	/** The diameter. */
@@ -146,6 +146,13 @@ public class Constants {
 	public static String gowallaBoundary = "dataset/real/gowalla/gowalla_CA_boundary.txt";
 
 	public static String gowallaFileName_CA_loc = "dataset/real/gowalla/gowalla_CA.dat";
+	
+	/** Foursquare */
+	public static String foursquareTaskFileNamePrefix = "dataset/real/foursquare/task/tasks";
+
+	public static String foursquareWorkerFileNamePrefix = "dataset/real/foursquare/worker/workers";
+	
+	public static String foursquareBoundary = "dataset/real/foursquare/foursquare_boundary.txt";
 	
 	// synthetic dataset
 	/** The skewed resolution. */

@@ -1,18 +1,21 @@
 /*******************************************************************************
-* @ Year 2013
-* This is the source code of the following papers. 
-* 
-* 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
-* 
-* 
-* Please contact the author Hien To, ubriela@gmail.com if you have any question.
-*
-* Contributors:
-* Hien To - initial implementation
-*******************************************************************************/
+ * @ Year 2013
+ * This is the source code of the following papers. 
+ * 
+ * 1) Geocrowd: A Server-Assigned Crowdsourcing Framework. Hien To, Leyla Kazemi, Cyrus Shahabi.
+ * 
+ * 
+ * Please contact the author Hien To, ubriela@gmail.com if you have any question.
+ *
+ * Contributors:
+ * Hien To - initial implementation
+ *******************************************************************************/
 package test.geocrowd;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.GeocrowdOnline;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
+import org.geocrowd.common.Point;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.junit.Test;
@@ -35,12 +39,57 @@ import org.junit.Test;
  * The Class GeocrowdTest.
  */
 public class GeocrowdTest {
-    
-    public static void main(String[] args){
-        GeocrowdTest geoCrowdTest = new GeocrowdTest();
-        geoCrowdTest.testGenerateGowallaTasks();
-    }
-	
+
+	public static void main(String[] args) {
+		GeocrowdTest geoCrowdTest = new GeocrowdTest();
+		// geoCrowdTest.testGenerateGowallaTasks();
+		geoCrowdTest.testGenerateFoursquareTasks();
+	}
+
+	@Test
+	private void testGenerateFoursquareTasks() {
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		GeocrowdInstance geoCrowd = new GeocrowdInstance();
+		// geoCrowd.printBoundaries();
+		// geoCrowd.createGrid();
+		// geoCrowd.readEntropy();
+		// System.out.println("entropy list size: " +
+		// geoCrowd.entropyList.size());
+
+		ArrayList<Point> venues = readFoursquareVenues("dataset/real/foursquare/venue_locs.txt");
+		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+			geoCrowd.readTasksFoursquare(Constants.foursquareTaskFileNamePrefix
+					+ i + ".txt", venues);
+			geoCrowd.TimeInstance++;
+		}
+	}
+
+	private ArrayList<Point> readFoursquareVenues(String filename) {
+		FileReader reader;
+		ArrayList<Point> points = new ArrayList<Point>();
+		try {
+			reader = new FileReader(filename);
+			BufferedReader in = new BufferedReader(reader);
+			StringBuffer sb = new StringBuffer();
+			
+			while (in.ready()) {
+				String line = in.readLine();
+				String[] parts = line.split("\\s");
+				Double lat = Double.parseDouble(parts[0]);
+				Double lng = Double.parseDouble(parts[1]);
+				points.add(new Point(lat, lng));
+
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NumberFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return points;
+	}
+
 	/**
 	 * Test geocrowd.
 	 */
@@ -78,8 +127,8 @@ public class GeocrowdTest {
 				case SKEWED:
 					geoCrowd.readTasks(Constants.skewedTaskFileNamePrefix + i
 							+ ".txt");
-					geoCrowd.readWorkers(Constants.skewedWorkerFileNamePrefix + i
-							+ ".txt");
+					geoCrowd.readWorkers(Constants.skewedWorkerFileNamePrefix
+							+ i + ".txt");
 					break;
 				case UNIFORM:
 					geoCrowd.readTasks(Constants.uniTaskFileNamePrefix + i
@@ -136,8 +185,8 @@ public class GeocrowdTest {
 					+ "   # of rounds:" + (k + 1) + "  avg: "
 					+ avgAssignedTasks);
 			System.out.println("Total expertise matches: "
-					+ totalExpertiseAssignedTasks + "   # of rounds: " + (k + 1)
-					+ "  avg: " + avgExpertiseAssignedTasks);
+					+ totalExpertiseAssignedTasks + "   # of rounds: "
+					+ (k + 1) + "  avg: " + avgExpertiseAssignedTasks);
 			System.out.println("Total time: " + totalTime + "   # of rounds: "
 					+ (k + 1) + "  avg time:" + avgTime);
 			double avgDist = totalSumDist / totalAssignedTasks;
@@ -150,8 +199,7 @@ public class GeocrowdTest {
 					+ "   with variance: " + avgVarWT);
 		} // end of for loop
 	}
-	
-	
+
 	@Test
 	public void testGeocrowdOnline() {
 		double totalAssignedTasks = 0;
@@ -167,12 +215,13 @@ public class GeocrowdTest {
 			System.out.println("+++++++ Iteration: " + (k + 1));
 			Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 			Geocrowd.algorithm = AlgorithmEnum.BASIC;
-			GeocrowdOnline geoCrowd = new GeocrowdOnline("dataset/real/gowalla/worker/gowalla_workers0.txt");
+			GeocrowdOnline geoCrowd = new GeocrowdOnline(
+					"dataset/real/gowalla/worker/gowalla_workers0.txt");
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
 
 				switch (Geocrowd.DATA_SET) {
-				case GOWALLA: 
+				case GOWALLA:
 					geoCrowd.readTasks(Constants.gowallaTaskFileNamePrefix + i
 							+ ".txt");
 					break;
@@ -201,9 +250,9 @@ public class GeocrowdTest {
 				System.out.println("#Workers: " + geoCrowd.workerList.size());
 				System.out.println("scheduling...");
 				double startTime = System.nanoTime();
-				
+
 				geoCrowd.onlineMatching();
-				
+
 				double runtime = (System.nanoTime() - startTime) / 1000000000.0;
 				totalTime += runtime;
 				System.out.println("Time: " + runtime);
@@ -235,7 +284,7 @@ public class GeocrowdTest {
 					+ "   with variance: " + avgVarWT);
 		} // end of for loop
 	}
-	
+
 	/**
 	 * Test generate gowalla tasks.
 	 */
@@ -246,9 +295,10 @@ public class GeocrowdTest {
 		geoCrowd.printBoundaries();
 		geoCrowd.createGrid();
 		geoCrowd.readEntropy();
-//		System.out.println("entropy list size: " + geoCrowd.entropyList.size());
+		// System.out.println("entropy list size: " +
+		// geoCrowd.entropyList.size());
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			geoCrowd.readTasksWithEntropy2(Constants.gowallaTaskFileNamePrefix 
+			geoCrowd.readTasksWithEntropy2(Constants.gowallaTaskFileNamePrefix
 					+ i + ".txt");
 			geoCrowd.TimeInstance++;
 		}
@@ -273,7 +323,8 @@ public class GeocrowdTest {
 			int count = 0;
 			double maxMBR = 0;
 			for (int i = 0; i < geoCrowd.workerList.size(); i++) {
-				SpecializedWorker w = (SpecializedWorker) geoCrowd.workerList.get(i);
+				SpecializedWorker w = (SpecializedWorker) geoCrowd.workerList
+						.get(i);
 				sb.append(w.getLatitude() + "\t" + w.getLongitude() + "\n");
 				double d = w.getMBR().diagonalLength();
 				sum += d;
@@ -281,13 +332,14 @@ public class GeocrowdTest {
 				if (d > maxMBR)
 					maxMBR = d;
 			}
-			
+
 			out = new BufferedWriter(writer);
 			out.write(sb.toString());
 			out.close();
-			MBR mbr = new MBR(geoCrowd.minLatitude, geoCrowd.minLongitude, geoCrowd.maxLatitude, geoCrowd.maxLongitude);
+			MBR mbr = new MBR(geoCrowd.minLatitude, geoCrowd.minLongitude,
+					geoCrowd.maxLatitude, geoCrowd.maxLongitude);
 			System.out.println("Region MBR size: " + mbr.diagonalLength());
-			
+
 			System.out.println("Area: " + mbr.area());
 			System.out.println("Number of users: " + count);
 			System.out.println("Average users' MBR size: " + sum / count);
@@ -304,29 +356,28 @@ public class GeocrowdTest {
 	@Test
 	public void testGeocrowdOnline_small() {
 		ArrayList<Integer> workers = new ArrayList<>();
-		
+
 		workers.add(new Integer(10));
 		workers.add(new Integer(11));
 		workers.add(new Integer(12));
 		workers.add(new Integer(13));
-		
+
 		OnlineBipartiteMatching obm = new OnlineBipartiteMatching(workers);
-		
+
 		HashMap<Integer, ArrayList> container = new HashMap<>();
 		container.put(0, new ArrayList<Integer>(Arrays.asList(10)));
 		container.put(1, new ArrayList<Integer>(Arrays.asList(10)));
 		container.put(2, new ArrayList<Integer>(Arrays.asList(11, 12)));
-		
+
 		System.out.println(obm.onlineMatching(container));
-		
+
 		container = new HashMap<>();
 		container.put(0, new ArrayList<Integer>(Arrays.asList(11)));
 		container.put(1, new ArrayList<Integer>(Arrays.asList(13)));
 		container.put(2, new ArrayList<Integer>(Arrays.asList(10)));
-		
+
 		System.out.println(obm.onlineMatching(container));
 	}
-
 
 	/**
 	 * Test geo crowd_ small.

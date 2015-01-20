@@ -25,10 +25,10 @@ import org.geocrowd.common.crowdsource.GenericTask;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		overloading();
+//		overloading();
 		// workload_vary_r();
 		// workload_vary_b();
-		// workload_vary_delta();
+		 workload_vary_delta();
 		// workload_all();
 		// workload();
 		// vary_a();
@@ -40,7 +40,7 @@ public class OnlineMTCTest {
 
 	private static int[] computeHistoryBudgets(boolean isFixed, int budget,
 			int start_time) {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 
 		OfflineMTC offlineMTC = new OfflineMTC();
 		offlineMTC.TimeInstance = 0;
@@ -54,6 +54,12 @@ public class OnlineMTCTest {
 
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			switch (Geocrowd.DATA_SET) {
+			case FOURSQUARE:
+				offlineMTC.readTasks(Constants.foursquareTaskFileNamePrefix + i
+						+ ".txt");
+				offlineMTC.readWorkers(Constants.foursquareWorkerFileNamePrefix
+						+ (i + start_time) + ".txt", i);
+				break;
 			case GOWALLA:
 				offlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix + i
 						+ ".txt");
@@ -299,7 +305,7 @@ public class OnlineMTCTest {
 			for (int g = 0; g < algorithms.length; g++) {
 				AlgorithmEnum algorithm = algorithms[g];
 
-				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+				Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.TimeInstance = 0;
@@ -325,6 +331,13 @@ public class OnlineMTCTest {
 					int next_time = (i + start_time + Constants.TIME_INSTANCE + 1);
 
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						onlineMTC.readTasks(Constants.foursquareTaskFileNamePrefix
+								+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.foursquareWorkerFileNamePrefix
+										+ next_time + ".txt");
+						break;
 					case GOWALLA:
 						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
 								+ i + ".txt");
@@ -1462,7 +1475,7 @@ public class OnlineMTCTest {
 
 				OnlineMTC onlineMTC = new OnlineMTC();
 
-				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+				Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 				Geocrowd.algorithm = algorithms[g];
 				onlineMTC.TimeInstance = 0;
 				onlineMTC.TaskCount = 0;
@@ -1480,6 +1493,13 @@ public class OnlineMTCTest {
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						onlineMTC.readTasks(Constants.foursquareTaskFileNamePrefix
+								+ i + ".txt");
+						onlineMTC
+								.readWorkers(Constants.foursquareWorkerFileNamePrefix
+										+ i + ".txt");
+						break;
 					case GOWALLA:
 						onlineMTC.readTasks(Constants.gowallaTaskFileNamePrefix
 								+ i + ".txt");

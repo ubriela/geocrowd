@@ -1043,6 +1043,9 @@ public class PreProcess {
 	public void readBoundary(DatasetEnum dataset) {
 		String boundaryFile = "";
 		switch (dataset) {
+		case FOURSQUARE:
+			boundaryFile = Constants.foursquareBoundary;
+			break;
 		case GOWALLA:
 			boundaryFile = Constants.gowallaBoundary;
 			break;

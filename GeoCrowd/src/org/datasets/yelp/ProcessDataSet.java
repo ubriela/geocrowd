@@ -155,7 +155,9 @@ public class ProcessDataSet {
                 JSONObject jsonObject = (JSONObject) obj;
                 String user = jsonObject.get("user_id").toString();
                 String business = jsonObject.get("business_id").toString();
-                int time_instance = DateIt(jsonObject.get("date").toString());
+                int time_instance = DayIt(jsonObject.get("date").toString());
+                
+//                System.out.println(time_instance + "\t" + jsonObject.get("date").toString());
 
                 if (Review.keySet().contains(user)) {
                     int t = Review.get(user).size();
@@ -312,6 +314,25 @@ public class ProcessDataSet {
                 break;
             default:
                 to_return = (int) (Constant.TimeInstance * (number[2] + number[1]*30 + (number[0] - 2006) * 356)/((2015 - 2006) * 356));
+                break;
+        }
+        return to_return;
+    }
+    
+    public static int DayIt(String t) {
+        int to_return = 0;
+        String[] temp = t.split("-");
+        int[] number = new int[temp.length];
+        for (int i = 0; i < temp.length; i++) {
+            number[i] = Integer.parseInt(temp[i]);
+        }
+        
+        switch (number[0]) {
+            case 2005:
+                to_return = 0;
+                break;
+            default:
+                to_return = (int) ((number[2] + number[1]*30 + (number[0] - 2006) * 356));
                 break;
         }
         return to_return;
@@ -818,6 +839,115 @@ public class ProcessDataSet {
                             Review_Date.get(instance).get(u_id).get(col))) {
                     	// there might be the case some business in reviews but not in business
                     	System.out.println("This business does not exist in Business_Location: " + Review_Date.get(instance).get(u_id).get(col));
+                    	continue;
+                    }
+                    
+//                    if (Business_Location.contains(
+//                            Review_Date.get(instance).get(u_id).get(col)))
+//                    	continue;	// there might be the case some business in reviews but not in business
+                    
+                    double temp_lat = Business_Location.get(
+                            Review_Date.get(instance).get(u_id).get(col).toString()).get("lat");
+                    double temp_lng = Business_Location.get(
+                            Review_Date.get(instance).get(u_id).get(col).toString()).get("lng");
+
+                    if (temp_lat < minLatitude) {
+                        minLatitude = temp_lat;
+                    }
+                    if (temp_lat > maxLatitude) {
+                        maxLatitude = temp_lat;
+                    }
+                    if (temp_lng < minLongitude) {
+                        minLongitude = temp_lng;
+                    }
+                    if (temp_lng > maxLongitude) {
+                        maxLongitude = temp_lng;
+                    }
+
+                    // System.out.print (Review.get(u_id).get(col).toString());
+
+                    if (Business_Categories.keySet().contains(
+                            Review_Date.get(instance).get(u_id).get(col).toString())) {
+                        for (int j = 0; j < Business_Categories.get(
+                                Review_Date.get(instance).get(u_id).get(col).toString()).size(); j++) {
+                            String expertise = Business_Categories
+                                    .get(Review_Date.get(instance).get(u_id).get(col).toString())
+                                    .get(j).toString();
+                            if (!User_Categories.get(u_id).contains(expertise)) {
+                                User_Categories.get(u_id).add(expertise);
+                            }
+                        }
+                    }
+
+                }
+
+                double lat = (minLatitude + maxLatitude) / 2;
+                double lon = (minLongitude + maxLongitude) / 2;
+                sb_temp.append(u_id + "," + lat + "," + lon);
+
+
+                sb_temp.append("," + Review_Date.get(instance).get(u_id).size());
+
+
+                sb_temp.append(",[" + minLatitude + "," + minLongitude + ","
+                        + maxLatitude + "," + maxLongitude + "]");
+
+                if (User_Categories.get(u_id).size() != 0) {
+
+                    sb_temp.append(",[");
+                    for (int j = 0; j < User_Categories.get(u_id).size(); j++) {
+                        if (j > 0 && j < User_Categories.get(u_id).size()) {
+                            sb_temp.append(',');
+                        }
+                        sb_temp.append(String.valueOf(Expertise
+                                .indexOf(User_Categories.get(u_id).get(j))));
+                    }
+
+                    sb_temp.append("]\n");
+
+                    sb.append(sb_temp);
+
+                    //  total_expertise_user++;
+                } else {
+                    // System.out.println(u_id + "-one empty here");
+                }
+            }
+            Utils.writefile2(sb.toString(), Constant.SplitWorkerByTime + instance + Constant.suffix);
+        }
+
+
+    }
+    
+    /**
+	 * Split_ worker_by_time.
+	 */
+    public static void split_Worker_by_time3() {
+
+        Random gen = new Random();
+        Iterator time_instance = Review_Date.keySet().iterator();
+        StringBuilder sb = new StringBuilder();
+        while (time_instance.hasNext()) {
+            sb.delete(0, sb.length());
+            int instance = (Integer) time_instance.next();
+            
+            Iterator users = Review_Date.get(instance).keySet().iterator();
+            System.out.println(instance + "\t" + Review_Date.get(instance).keySet().size());
+            while (users.hasNext()) {
+                StringBuilder sb_temp = new StringBuilder();
+                String u_id = (String) users.next();
+                Iterator businesses = Review_Date.get(instance).get(u_id).keySet().iterator();
+                double minLatitude = Double.MAX_VALUE;
+                double maxLatitude = (-1) * Double.MAX_VALUE;
+                double minLongitude = Double.MAX_VALUE;
+                double maxLongitude = (-1) * Double.MAX_VALUE;
+                while (businesses.hasNext()) {
+                    int col = (Integer) businesses.next();
+//                    System.out.println(col + "\t" + Review_Date.get(instance).get(u_id).get(col));
+                    
+                    if (!Business_Location.containsKey(
+                            Review_Date.get(instance).get(u_id).get(col))) {
+                    	// there might be the case some business in reviews but not in business
+//                    	System.out.println("This business does not exist in Business_Location: " + Review_Date.get(instance).get(u_id).get(col));
                     	continue;
                     }
                     

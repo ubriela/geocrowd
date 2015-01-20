@@ -12,6 +12,8 @@
 *******************************************************************************/
 package org.datasets.yelp;
 
+import java.util.Iterator;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,6 +36,8 @@ public class Execute {
         ProcessDataSet.Access_Business();
         ProcessDataSet.Access_User();
         ProcessDataSet.Access_Review();
+        
+        
 //        
 //
         ProcessDataSet.saveBusiness_Task();
@@ -48,7 +52,7 @@ public class Execute {
 //                .computeLocationDensity());
 //        ProcessDataSet.save_Statistic();
 
-        ProcessDataSet.split_Worker_by_time();
+        ProcessDataSet.split_Worker_by_time3();
         
         
 //        ProcessDataSet.process_TI();

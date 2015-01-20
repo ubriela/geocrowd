@@ -18,9 +18,10 @@ public class OfflineMTCTest {
 	
 	public static void varying_radius() {
 
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 
-		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
+//		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
+		double[] radii = {0.5};
 		boolean[] isFixes = { true , false};
 		
 		Integer[][] coveredTasks = new Integer[radii.length][isFixes.length];
@@ -32,7 +33,7 @@ public class OfflineMTCTest {
 				OfflineMTC offlineMTC = new OfflineMTC();
 				offlineMTC.isFixed = isFixes[fix];
 				offlineMTC.TaskCount = 0;
-				offlineMTC.budget = 160;
+				offlineMTC.budget = 144;
 				OfflineMTC.TotalAssignedTasks = 0;
 				OfflineMTC.TotalAssignedWorkers = 0;
 				OfflineMTC.workerList = null;
@@ -43,6 +44,14 @@ public class OfflineMTCTest {
 			
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 					switch (Geocrowd.DATA_SET) {
+					case FOURSQUARE:
+						offlineMTC
+						.readTasks(Constants.foursquareTaskFileNamePrefix
+								+ i + ".txt");
+						offlineMTC.readWorkers(
+						Constants.foursquareWorkerFileNamePrefix + i
+								+ ".txt", i);
+						break;
 					case GOWALLA:
 						offlineMTC
 								.readTasks(Constants.gowallaTaskFileNamePrefix

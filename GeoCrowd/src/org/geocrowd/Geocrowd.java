@@ -68,7 +68,7 @@ public abstract class Geocrowd {
 	
 	
 	/** The data set. */
-	public static DatasetEnum DATA_SET;
+	public static DatasetEnum DATA_SET = DatasetEnum.GOWALLA;
 
 	/** The algorithm. */
 	public static AlgorithmEnum algorithm = AlgorithmEnum.BASIC;

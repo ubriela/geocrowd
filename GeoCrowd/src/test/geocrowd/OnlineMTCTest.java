@@ -25,17 +25,17 @@ import org.geocrowd.common.crowdsource.GenericTask;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 //		overloading();
 		
 		
-//		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
-//		int totalBudget = 42;
-//		int start_time = 200;
+		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
+		int totalBudget = 168;
+		int start_time = 200;
 		
-		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
-		int totalBudget = 48;
-		int start_time = 0;
+//		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
+//		int totalBudget = 192;
+//		int start_time = 0;
 		workload_vary_r(radii, totalBudget, start_time);
 		
 //		int[] budgets = new int[] { 21, 42, 84, 168, 336, 672, 1344 };
@@ -136,9 +136,9 @@ public class OnlineMTCTest {
 
 		HashSet<Integer> workerSet = offlineMTC.maxTaskCoverage();
 		System.out.println("\nCoverage : " + offlineMTC.TotalAssignedTasks);
-//		System.out.println("Counts :");
-//		for (int count : offlineMTC.counts)
-//			System.out.print(count + "\t");
+		System.out.println("Counts :");
+		for (int count : offlineMTC.counts)
+			System.out.print(count + "\t");
 		System.out.println();
 		return offlineMTC.counts;
 	}

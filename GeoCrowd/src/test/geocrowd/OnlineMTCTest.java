@@ -30,7 +30,7 @@ public class OnlineMTCTest {
 		
 		
 		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
-		int totalBudget = 168;
+		int totalBudget = 42;
 		int start_time = 200;
 		
 //		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
@@ -41,18 +41,18 @@ public class OnlineMTCTest {
 //		int[] budgets = new int[] { 21, 42, 84, 168, 336, 672, 1344 };
 //		start_time = 200;
 		
-		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
-		start_time = 0;
-		workload_vary_b(budgets, start_time);
+//		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+//		start_time = 0;
+//		workload_vary_b(budgets, start_time);
 		
-		
-//		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-//		int totalBudget = 42;
-//		int start_time = 200;
 		
 		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		totalBudget = 48;
-		start_time = 0;
+		totalBudget = 42;
+		start_time = 200;
+		
+//		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//		totalBudget = 48;
+//		start_time = 0;
 		workload_vary_delta(delta, totalBudget, start_time);
 		
 //		int cycle_length = 7;
@@ -62,12 +62,12 @@ public class OnlineMTCTest {
 //		start_time = 0;
 
 		
-		int cycle_length = 24;
-		int workload_size = 1;
-		totalBudget = 48;
-		int workloadCount = 50;
-		start_time = 0;
-		workload_all(cycle_length, workload_size, totalBudget, start_time, workloadCount);
+//		int cycle_length = 24;
+//		int workload_size = 1;
+//		totalBudget = 48;
+//		int workloadCount = 50;
+//		start_time = 0;
+//		workload_all(cycle_length, workload_size, totalBudget, start_time, workloadCount);
 		
 		
 //		workload();
@@ -472,7 +472,7 @@ public class OnlineMTCTest {
 
 		for (int d = 0; d < radii.length; d++) {
 			Constants.radius = radii[d];
-			System.out.println("\nRadius " + Constants.radius);
+			System.out.println("\n----\nRadius " + Constants.radius);
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
 

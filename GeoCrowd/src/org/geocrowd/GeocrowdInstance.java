@@ -987,7 +987,7 @@ public class GeocrowdInstance extends Geocrowd {
 				listCount++;
 			}
 			TaskCount += numTask;
-			System.out.println("#Total tasks:" + TaskCount);
+//			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();

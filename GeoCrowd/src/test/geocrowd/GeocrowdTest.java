@@ -42,8 +42,14 @@ public class GeocrowdTest {
 
 	public static void main(String[] args) {
 		GeocrowdTest geoCrowdTest = new GeocrowdTest();
-		// geoCrowdTest.testGenerateGowallaTasks();
-		geoCrowdTest.testGenerateFoursquareTasks();
+		switch (Geocrowd.DATA_SET) {
+		case GOWALLA:
+			geoCrowdTest.testGenerateGowallaTasks();
+			break;
+		case FOURSQUARE:
+			geoCrowdTest.testGenerateFoursquareTasks();
+			break;
+		}	
 	}
 
 	@Test

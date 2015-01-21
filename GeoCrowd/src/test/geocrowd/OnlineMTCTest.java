@@ -12,6 +12,7 @@ import org.geocrowd.OfflineMTC;
 import org.geocrowd.OnlineMTC;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.GenericTask;
+import org.junit.Test;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -765,23 +766,27 @@ public class OnlineMTCTest {
 		}
 	}
 
-	private static void workload() throws IOException {
+	@Test
+	public void testWorkload() throws IOException {
 
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		
 		GeocrowdTest.main(null);
 
-		int totalBudget = 42;
+		int totalBudget = 168;
 		int start_time = 200;
 		int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
 
 		System.out.println("\nRadius = " + Constants.radius);
 		System.out.println("Budget = " + totalBudget);
 
-		// Double[] epss = new Double[] {0.05, 0.1, 0.15, 0.2, 0.25};
+//		 Double[] epss = new Double[] {0.05, 0.1, 0.15, 0.2, 0.25};
 		double[] epss = new double[] { 0.1 };
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				AlgorithmEnum.MAX_COVER_BASIC,
-				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2 };
+//				AlgorithmEnum.MAX_COVER_BASIC,
+				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2,
+				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD_T};
 
 		int[][] coveredTasks = new int[epss.length][algorithms.length];
 		int[][] assignedWorkers = new int[epss.length][algorithms.length];
@@ -790,15 +795,15 @@ public class OnlineMTCTest {
 
 		// apply offline method to next period
 		int next_time_period = start_time + Constants.TIME_INSTANCE + 1;
-		computeHistoryBudgets(true, totalBudget, next_time_period);
+//		computeHistoryBudgets(true, totalBudget, next_time_period);
+//		int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
 		computeHistoryBudgets(false, totalBudget, next_time_period);
+		int dynamic_offline_cov = Geocrowd.TotalAssignedTasks;
 
 		// use the same set of workers/tasks for all following period
 		for (int eps = 0; eps < epss.length; eps++) {
 			for (int g = 0; g < algorithms.length; g++) {
 				AlgorithmEnum algorithm = algorithms[g];
-
-//				Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 				Geocrowd.algorithm = algorithm;
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.TimeInstance = 0;

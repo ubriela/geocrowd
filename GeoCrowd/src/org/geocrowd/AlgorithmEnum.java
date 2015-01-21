@@ -58,7 +58,7 @@ public enum AlgorithmEnum {
         MAX_COVER_ADAPT_B,
         MAX_COVER_ADAPT_T,
         MAX_COVER_ADAPT_S,
-        MAX_COVER_ADAPT_ST
+        MAX_COVER_ADAPT_ST, MAX_COVER_BASIC_WORKLOAD_T
         
        
 	

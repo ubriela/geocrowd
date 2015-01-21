@@ -165,26 +165,12 @@ public class OnlineMTC extends GeocrowdSensing {
 
 			break;
 		case MAX_COVER_BASIC_T:
+		case MAX_COVER_BASIC_WORKLOAD_T:
 		case MAX_COVER_PRO_T:
-			
+		
 			MaxCoverBasicT maxCoverBasicT = new MaxCoverBasicT(
 					getContainerWithDeadline(), TimeInstance);
 			maxCoverBasicT.budget = getBudget(algorithm);
-//			if(TimeInstance < Constants.TaskDuration)
-//			{
-//				MaxCoverBasic maxCoverPro2 = new MaxCoverBasic(
-//						getContainerWithDeadline(), TimeInstance);
-//				maxCoverPro2.budget = getBudget(algorithm);
-//				HashSet<Integer> assignedWorker2 = maxCoverPro2.maxCover();
-//
-//				TotalAssignedTasks += maxCoverPro2.assignedTasks;
-//				TotalAssignedWorkers += assignedWorker2.size();
-//				usedBudget += assignedWorker2.size(); 
-//				for(Integer s: assignedWorker2)
-//					assignedWorker.add(s);
-//				maxCover = maxCoverPro2;
-//			}
-//			else{
 			assignedWorker = maxCoverBasicT.maxCover();
 
 			TotalAssignedTasks += maxCoverBasicT.assignedTasks;
@@ -445,6 +431,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			}
 			
 		case MAX_COVER_BASIC_WORKLOAD2:
+		case MAX_COVER_BASIC_WORKLOAD_T:
 			return budgets[TimeInstance];
 		case MAX_COVER_PRO_B:
 		case MAX_COVER_PRO_S:

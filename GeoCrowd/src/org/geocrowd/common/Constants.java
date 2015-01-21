@@ -28,11 +28,11 @@ public class Constants {
 //	public static int W = 0;	// current workload
 
 	/** The time instance. */
-	public static int TIME_INSTANCE = 7;
+	public static int TIME_INSTANCE = 24;
 //	public static final int MAX_TIME_INSTANCE = 500;
 	
 	/** The diameter. */
-	public static double radius = 1; // task circle diameter
+	public static double radius = 0.05; // task circle diameter
 	/** enable random k */
 	public static boolean IS_RANDOM_K = false;
 	

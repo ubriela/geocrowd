@@ -25,34 +25,34 @@ import org.geocrowd.common.crowdsource.GenericTask;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 //		overloading();
 		
 		
-		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
-		int totalBudget = 42;
-		int start_time = 200;
+//		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
+//		int totalBudget = 42;
+//		int start_time = 200;
 		
-//		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
-//		int totalBudget = 192;
-//		int start_time = 0;
+		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
+		int totalBudget = 144;
+		int start_time = 0;
 		workload_vary_r(radii, totalBudget, start_time);
 		
-//		int[] budgets = new int[] { 21, 42, 84, 168, 336, 672, 1344 };
+//		int[] budgets = new int[] { 21, 42, 84, 168, 336, 672, 1344, 2688 };
 //		start_time = 200;
 		
-//		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
-//		start_time = 0;
-//		workload_vary_b(budgets, start_time);
+		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+		start_time = 0;
+		workload_vary_b(budgets, start_time);
 		
-		
-		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		totalBudget = 42;
-		start_time = 200;
 		
 //		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-//		totalBudget = 48;
-//		start_time = 0;
+//		totalBudget = 42;
+//		start_time = 200;
+		
+		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		totalBudget = 144;
+		start_time = 0;
 		workload_vary_delta(delta, totalBudget, start_time);
 		
 //		int cycle_length = 7;
@@ -62,12 +62,12 @@ public class OnlineMTCTest {
 //		start_time = 0;
 
 		
-//		int cycle_length = 24;
-//		int workload_size = 1;
-//		totalBudget = 48;
-//		int workloadCount = 50;
-//		start_time = 0;
-//		workload_all(cycle_length, workload_size, totalBudget, start_time, workloadCount);
+		int cycle_length = 24;
+		int workload_size = 1;
+		totalBudget = 144;
+		int workloadCount = 40;
+		start_time = 0;
+		workload_all(cycle_length, workload_size, totalBudget, start_time, workloadCount);
 		
 		
 //		workload();
@@ -322,7 +322,7 @@ public class OnlineMTCTest {
 
 		for (int d = 0; d < delta.length; d++) {
 			Constants.TaskDuration = delta[d];
-			System.out.println("delta " + Constants.TaskDuration);
+			System.out.println("\n----\ndelta: " + Constants.TaskDuration);
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);
 
@@ -625,7 +625,7 @@ public class OnlineMTCTest {
 
 		for (int b = 0; b < budgets.length; b++) {
 			int totalBudget = budgets[b];
-			System.out.println("\nBudget = " + totalBudget);
+			System.out.println("\n----\nBudget = " + totalBudget);
 			System.out.println("radius " + Constants.radius);
 			Geocrowd.TimeInstance = 0;
 			GeocrowdTest.main(null);

@@ -64,5 +64,12 @@ public class ScatterPlot extends ApplicationFrame {
         setContentPane(panel);
 
     }
-
+    
+    public static void main(String[] args) {
+		DataProvider md = new DataProvider("./res/dataset/twod/test.txt", DataTypeEnum.NORMAL_POINT);
+        final ScatterPlot demo = new ScatterPlot("Fast Scatter Plot Demo", md.points);
+        demo.pack();
+        RefineryUtilities.centerFrameOnScreen(demo);
+        demo.setVisible(true);
+    }
 }

@@ -1,8 +1,7 @@
 package org.datasets.plot;
 
-
-
 import java.awt.RenderingHints;
+import java.util.List;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -10,6 +9,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.FastScatterPlot;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
+import org.datasets.syn.dtype.Point;
 
 /**
  * A demo of the fast scatter plot.
@@ -24,6 +24,19 @@ public class ScatterPlot extends ApplicationFrame {
     private float[][] data = new float[2][COUNT];
 
     /**
+     * Populates the data array with random values.
+     */
+    public ScatterPlot(List<Point> points) {
+    	super();
+   
+        for (int i = 0; i < point.size(); i++) {
+            final float x = (float) i + 100000;
+            this.data[0][i] = x;
+            this.data[1][i] = 100000 + (float) Math.random() * COUNT;
+        }
+    }
+    
+    /**
      * Creates a new fast scatter plot demo.
      *
      * @param title  the frame title.
@@ -31,7 +44,6 @@ public class ScatterPlot extends ApplicationFrame {
     public ScatterPlot(final String title) {
 
         super(title);
-        populateData();
         final NumberAxis domainAxis = new NumberAxis("X");
         domainAxis.setAutoRangeIncludesZero(false);
         final NumberAxis rangeAxis = new NumberAxis("Y");
@@ -54,19 +66,6 @@ public class ScatterPlot extends ApplicationFrame {
         panel.setMaximumDrawWidth(2000);
         
         setContentPane(panel);
-
-    }
-
-    /**
-     * Populates the data array with random values.
-     */
-    private void populateData() {
-
-        for (int i = 0; i < this.data[0].length; i++) {
-            final float x = (float) i + 100000;
-            this.data[0][i] = x;
-            this.data[1][i] = 100000 + (float) Math.random() * COUNT;
-        }
 
     }
 

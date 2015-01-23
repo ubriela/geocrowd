@@ -17,7 +17,7 @@ public class DatasetGeneratorTest {
 
 	@Test
 	public final void testGenerate2DPoints() {
-		DatasetGenerator dg = new DatasetGenerator("./dataset/out/test.txt");
+		DatasetGenerator dg = new DatasetGenerator("./res/dataset/twod/test.txt");
 		dg.generate2DDataset(1000, new Rectangle(0, 0, 999, 999), Distribution2DEnum.UNIFORM_2D);
 	}
 	

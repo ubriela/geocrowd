@@ -6,11 +6,12 @@ import javax.swing.JFrame;
 
 import org.datasets.plot.PlottingGraph;
 import org.datasets.plot.PlottingPoint;
+import org.datasets.plot.ScatterPlot;
 import org.datasets.syn.DataProvider;
 import org.datasets.syn.dtype.DataTypeEnum;
+import org.jfree.ui.RefineryUtilities;
 import org.junit.Test;
 
-import test.geocrowd.GeocrowdTest;
 
 
 public class PlottingGraphTest {
@@ -33,5 +34,14 @@ public class PlottingGraphTest {
 		PlottingGraph p = new PlottingGraph();
 		PlottingGraph.filePrefix = "./res/graph/hists/oned/";
 		p.createHistogramFromValFreqs(dp.valueFreqs, 100000, "", "Values", "Percent (%)", "rzipf_uniform_1000.jpeg", true);
+	}
+	
+	@Test
+	public final void testScatter() {
+		DataProvider md = new DataProvider("./res/dataset/twod/test.txt", DataTypeEnum.NORMAL_POINT);
+        final ScatterPlot demo = new ScatterPlot("Fast Scatter Plot Demo", md.points);
+        demo.pack();
+        RefineryUtilities.centerFrameOnScreen(demo);
+        demo.setVisible(true);
 	}
 }

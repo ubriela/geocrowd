@@ -19,11 +19,8 @@ import org.datasets.syn.dtype.Point;
  */
 public class ScatterPlot extends ApplicationFrame {
 
-    /** A constant for the number of items in the sample dataset. */
-    private static final int COUNT = 5000;
-
     /** The data. */
-    private float[][] data = new float[2][COUNT];
+    private float[][] data = null;
     
     /**
      * Creates a new fast scatter plot demo.
@@ -36,6 +33,7 @@ public class ScatterPlot extends ApplicationFrame {
         /**
          * Populates the data array with random values.
          */
+        data = new float[2][points.size()];
         for (int i = 0; i < points.size(); i++) {
         	Point p = points.get(i);
             this.data[0][i] = (float) p.getX();
@@ -64,21 +62,6 @@ public class ScatterPlot extends ApplicationFrame {
         panel.setMaximumDrawWidth(2000);
         
         setContentPane(panel);
-
-    }
-
-    /**
-     * Starting point for the demonstration application.
-     *
-     * @param args  ignored.
-     */
-    public static void main(final String[] args) {
-
-		DataProvider md = new DataProvider("./res/dataset/twod/test.txt", DataTypeEnum.NORMAL_POINT);
-        final ScatterPlot demo = new ScatterPlot("Fast Scatter Plot Demo", md.points);
-        demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
 
     }
 

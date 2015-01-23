@@ -17,11 +17,11 @@ public class OfflineMTCTest {
 		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };	// foursquare
 //		int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 };	// 
 		
-//		varying_budget(budgets);
+		varying_budget(budgets, 5); 
 		
 		
 //		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
-//		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
+//		double[] radii = {0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
 		double[] radii = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 		varying_radius(radii, 48);
 	}
@@ -129,10 +129,12 @@ public class OfflineMTCTest {
 		}
 	}
 
-	public static void varying_budget(int[] budgets) {
+	public static void varying_budget(int[] budgets, double radius) {
 
 //		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		Constants.radius = radius;
 		boolean[] isFixes = { true , false };
+		
 		
 		Integer[][] coveredTasks = new Integer[budgets.length][isFixes.length];
 		Integer[][] assignedWorkers = new Integer[budgets.length][isFixes.length];

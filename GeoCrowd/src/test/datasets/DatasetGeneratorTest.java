@@ -35,11 +35,11 @@ public class DatasetGeneratorTest {
 		// for (int i : counts)
 		// System.out.println(i);
 
-		InstancesGenerator ig = new InstancesGenerator(168, WTCycleEnum.COSINE,
-				WTCycleEnum.CONSTANT, 100, 1000, new Rectangle(0, 0, 99,
-						99), Distribution2DEnum.GAUSSIAN_2D,
-				Distribution2DEnum.GAUSSIAN_2D, "./res/dataset/worker/",
-				"./res/dataset/task/");
+		InstancesGenerator ig = new InstancesGenerator(
+		168, WTCycleEnum.CONSTANT, WTCycleEnum.CONSTANT, 
+		100, 1000, new Rectangle(0, 0, 99, 99),
+		Distribution2DEnum.UNIFORM_2D, Distribution2DEnum.UNIFORM_2D,
+				"./res/dataset/worker/", "./res/dataset/task/");
 	}
 
 	@Test

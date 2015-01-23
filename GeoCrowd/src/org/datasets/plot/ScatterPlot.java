@@ -66,7 +66,7 @@ public class ScatterPlot extends ApplicationFrame {
     }
     
     public static void main(String[] args) {
-		DataProvider md = new DataProvider("./res/dataset/worker/workers0.txt", DataTypeEnum.NORMAL_POINT);
+		DataProvider md = new DataProvider("./res/dataset/task/tasks0.txt", DataTypeEnum.NORMAL_POINT);
         final ScatterPlot demo = new ScatterPlot("Fast Scatter Plot Demo", md.points);
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);

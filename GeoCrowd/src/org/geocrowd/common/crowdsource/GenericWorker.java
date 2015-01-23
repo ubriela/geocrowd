@@ -12,7 +12,7 @@
 *******************************************************************************/
 package org.geocrowd.common.crowdsource;
 
-import org.geocrowd.common.Utils;
+import org.geocrowd.common.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**

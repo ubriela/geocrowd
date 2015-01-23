@@ -10,12 +10,16 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.common;
+package org.datasets.syn;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+
+import org.datasets.syn.dtype.Point;
+import org.datasets.syn.dtype.Range;
+import org.datasets.syn.dtype.Rectangle;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -197,5 +201,173 @@ public class UniformGenerator {
 			list.add(values.get(r.nextInt(values.size())));
 		}
 		return list;
+	}
+	
+	
+	
+	
+	/**
+	 * Generate a random point within the universe
+	 * 
+	 * @param boundary
+	 * @return
+	 */
+	public static Point randomPoint(Rectangle boundary, boolean isInteger) {
+		Random r = new Random();
+		r.setSeed(System.nanoTime());
+		double x1 = r.nextDouble() * boundary.deltaX() + boundary.getLowPoint().getX();
+		r.setSeed(System.nanoTime());
+		double y1 = r.nextDouble() * boundary.deltaY() + boundary.getLowPoint().getY();
+
+		if (isInteger)
+			return new Point(Math.round(x1), Math.round(y1));
+		else
+			return new Point(x1, y1);
+	}
+
+	/**
+	 * Generate a random rectangle within the universe
+	 * 
+	 * @param boundary
+	 * @return
+	 */
+	public static Rectangle randomRectangle(Rectangle boundary) {
+		// Random range query (rectangle)
+		double x1, y1, x2, y2;
+		Random r = new Random();
+		r.setSeed(System.nanoTime());
+		while (true) {
+			x1 = r.nextDouble() * boundary.deltaX()
+					+ boundary.getLowPoint().getX();
+			r.setSeed(System.nanoTime());
+			x2 = r.nextDouble() * (boundary.getHighPoint().getX() - x1) + x1;
+			r.setSeed(System.nanoTime());
+			y1 = r.nextDouble() * boundary.deltaY()
+					+ boundary.getLowPoint().getY();
+			r.setSeed(System.nanoTime());
+			y2 = r.nextDouble() * (boundary.getHighPoint().getY() - y1) + y1;
+
+			if (x2 > x1 && y2 > y1)
+				break;
+		}
+
+		return new Rectangle(x1, y1, x2, y2);
+	}
+
+	/**
+	 * Generate a random rectangle within the universe that satisfies a
+	 * threshold (each dimension >= threshold * dimension size)
+	 * 
+	 * @param boundary
+	 * @param threshold
+	 * @return
+	 */
+	public static Rectangle randomRectangle(Rectangle boundary, double threshold) {
+		// Random range query (rectangle)
+		double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+		Random r = new Random();
+		r.setSeed(System.nanoTime());
+		while (true) {
+			x1 = r.nextDouble() * boundary.deltaX()
+					+ boundary.getLowPoint().getX();
+			r.setSeed(System.nanoTime());
+			x2 = r.nextDouble() * (boundary.getHighPoint().getX() - x1) + x1;
+			r.setSeed(System.nanoTime());
+			y1 = r.nextDouble() * (boundary.deltaY())
+					+ boundary.getLowPoint().getY();
+			r.setSeed(System.nanoTime());
+			y2 = r.nextDouble() * (boundary.getHighPoint().getY() - y1) + y1;
+
+			if ((x2 - x1) / (boundary.deltaX()) < threshold
+					|| (y2 - y1) / (boundary.deltaY()) < threshold)
+				break;
+		}
+		return new Rectangle(x1, y1, x2, y2);
+	}
+
+	/**
+	 * Generate a number of random rectangles within the Universe
+	 * 
+	 * @param number
+	 * @param boundary
+	 * @return
+	 */
+	public static Vector<Rectangle> randomRectangles(int number,
+			Rectangle boundary) {
+		Vector<Rectangle> rectangles = new Vector<Rectangle>();
+
+		for (int i = 0; i < number; i++) {
+			rectangles.add(UniformGenerator.randomRectangle(boundary));
+		}
+		return rectangles;
+	}
+
+	/**
+	 * Generate a number of random rectangles within the Universe that satisfies
+	 * a threshold
+	 * 
+	 * @param number
+	 * @param boundary
+	 * @param threshold
+	 * @return
+	 */
+	public static Vector<Rectangle> randomRectangles(int number,
+			Rectangle boundary, double threshold) {
+		Vector<Rectangle> rectangles = new Vector<Rectangle>();
+
+		for (int i = 0; i < number; i++) {
+			rectangles.add(UniformGenerator.randomRectangle(boundary,
+					threshold));
+		}
+		return rectangles;
+	}
+
+	/**
+	 * generate a random rectangle query within the universe such that its
+	 * center is in our data points and its size is bounded by an offset
+	 * 
+	 * @param number
+	 * @param offset_x
+	 * @param offset_y
+	 * @param isFixOffset
+	 * @param points
+	 * @param boundary
+	 * @param isInteger
+	 * @return
+	 */
+	public static Vector<Rectangle> randomRectanglesWithOffsets(int number,
+			double offset_x, double offset_y, boolean isFixOffset,
+			List<Point> points, Rectangle boundary, boolean isInteger) {
+		Vector<Rectangle> recs = new Vector<Rectangle>();
+		int size = points.size();
+		Random generator = new Random();
+		double _offset_x = 0.0, _offset_y = 0.0;
+		if (isFixOffset) {
+			_offset_x = offset_x;
+			_offset_y = offset_y;
+		} else {
+			generator.setSeed(System.nanoTime());
+			_offset_x = generator.nextDouble() * offset_x;
+			generator.setSeed(System.nanoTime());
+			_offset_y = generator.nextDouble() * offset_y;
+		}
+		for (int i = 0; i < number; i++) {
+			generator.setSeed(System.nanoTime());
+			int r = generator.nextInt(size);
+			double x1, y1, x2, y2;
+			x1 = Math.max(boundary.getLowPoint().getX(), points.get(r).getX()
+					- _offset_x);
+			y1 = Math.max(boundary.getLowPoint().getY(), points.get(r).getY()
+					- _offset_y);
+			x2 = Math.min(boundary.getHighPoint().getX(), points.get(r).getX()
+					+ _offset_x);
+			y2 = Math.min(boundary.getHighPoint().getY(), points.get(r).getY()
+					+ _offset_y);
+			Rectangle rec = new Rectangle(x1, y1, x2, y2);
+			if (isInteger)
+				rec.roundingRectangle();
+			recs.add(rec);
+		}
+		return recs;
 	}
 }

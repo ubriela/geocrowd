@@ -22,12 +22,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import org.datasets.syn.UniformGenerator;
+import org.datasets.syn.dtype.Point;
+import org.datasets.syn.dtype.Range;
 import org.geocrowd.common.Cell;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
-import org.geocrowd.common.Point;
-import org.geocrowd.common.Range;
-import org.geocrowd.common.UniformGenerator;
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.MatchPair;
 import org.geocrowd.common.crowdsource.SpecializedTask;

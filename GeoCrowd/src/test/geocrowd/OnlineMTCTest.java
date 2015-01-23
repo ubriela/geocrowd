@@ -780,12 +780,12 @@ public class OnlineMTCTest {
 		System.out.println("\nRadius = " + Constants.radius);
 		System.out.println("Budget = " + totalBudget);
 
-//		 Double[] epss = new Double[] {0.05, 0.1, 0.15, 0.2, 0.25};
-		double[] epss = new double[] { 0.1 };
+		 Double[] epss = new Double[] {0.05, 0.1, 0.15, 0.2, 0.25};
+//		double[] epss = new double[] { 0.1 };
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 //				AlgorithmEnum.MAX_COVER_BASIC,
-				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2,
+//				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD2,
 				AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD_T};
 
 		int[][] coveredTasks = new int[epss.length][algorithms.length];

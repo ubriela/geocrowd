@@ -31,7 +31,6 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import org.geocrowd.common.Constants;
-import org.geocrowd.common.Utils;
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
 import org.geocrowd.common.crowdsource.SensingTask;
@@ -52,7 +51,9 @@ import org.paukov.combinatorics.ICombinatoricsVector;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.PrimitiveSink;
+
 import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.common.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**

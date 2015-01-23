@@ -1,4 +1,4 @@
-package org.geocrowd.common;
+package org.datasets.syn.dtype;
 
 import org.moeaframework.core.Solution;
 

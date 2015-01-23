@@ -10,11 +10,9 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.common;
+package org.datasets.syn.dtype;
 
 import java.io.Serializable;
-
-import org.datasets.syn.dtype.Point;
 
 // TODO: Auto-generated Javadoc
 /**

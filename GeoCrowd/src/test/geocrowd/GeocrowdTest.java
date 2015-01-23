@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.datasets.syn.dtype.Point;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdInstance;
@@ -29,7 +30,6 @@ import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.GeocrowdOnline;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
-import org.geocrowd.common.Point;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.junit.Test;

@@ -15,6 +15,10 @@ package org.geocrowd.common;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.datasets.syn.dtype.Point;
+import org.datasets.syn.dtype.PointTime;
+import org.geocrowd.common.utils.Utils;
+
 
 // TODO: Auto-generated Javadoc
 /**

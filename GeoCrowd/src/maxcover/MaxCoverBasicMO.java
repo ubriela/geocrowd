@@ -30,9 +30,9 @@ import java.util.PriorityQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.datasets.syn.dtype.WeightedSolution;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.CoverageIndex;
-import org.geocrowd.common.WeightedSolution;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;

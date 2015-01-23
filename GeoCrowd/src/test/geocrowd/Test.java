@@ -20,8 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.geocrowd.common.Utils;
 import org.geocrowd.common.crowdsource.SpecializedTask;
+import org.geocrowd.common.utils.Utils;
 import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;

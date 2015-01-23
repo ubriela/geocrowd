@@ -24,9 +24,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import org.datasets.syn.dtype.Point;
 import org.geocrowd.Parser;
-import org.geocrowd.common.Point;
 import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.utils.Utils;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
@@ -689,7 +690,7 @@ public class ProcessDataSet {
             }
             
             // compute MCD
-            double mcd = org.geocrowd.common.Utils.MCD(points.get(0), points);
+            double mcd = org.geocrowd.common.utils.Utils.MCD(points.get(0), points);
             sb.append(mcd + "\n");
         }
         

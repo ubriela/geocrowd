@@ -23,18 +23,18 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import org.datasets.syn.UniformGenerator;
+import org.datasets.syn.dtype.Point;
+import org.datasets.syn.dtype.PointTime;
+import org.datasets.syn.dtype.Range;
 import org.datasets.yelp.Constant;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
-import org.geocrowd.common.Point;
-import org.geocrowd.common.PointTime;
-import org.geocrowd.common.Range;
-import org.geocrowd.common.UniformGenerator;
-import org.geocrowd.common.Utils;
 import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.Observation;
+import org.geocrowd.common.utils.Utils;
 
 /**
  * The Class PreProcess.

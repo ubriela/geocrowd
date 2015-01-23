@@ -1,4 +1,5 @@
-package org.geocrowd.common;
+package org.datasets.syn.dtype;
+
 
 
 public class PointTime extends Point implements Comparable<PointTime> {

@@ -9,6 +9,8 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.FastScatterPlot;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
+import org.datasets.syn.DataProvider;
+import org.datasets.syn.dtype.DataTypeEnum;
 import org.datasets.syn.dtype.Point;
 
 /**
@@ -22,28 +24,24 @@ public class ScatterPlot extends ApplicationFrame {
 
     /** The data. */
     private float[][] data = new float[2][COUNT];
-
-    /**
-     * Populates the data array with random values.
-     */
-    public ScatterPlot(List<Point> points) {
-    	super();
-   
-        for (int i = 0; i < point.size(); i++) {
-            final float x = (float) i + 100000;
-            this.data[0][i] = x;
-            this.data[1][i] = 100000 + (float) Math.random() * COUNT;
-        }
-    }
     
     /**
      * Creates a new fast scatter plot demo.
      *
      * @param title  the frame title.
      */
-    public ScatterPlot(final String title) {
-
+    public ScatterPlot(final String title, List<Point> points) {
         super(title);
+        
+        /**
+         * Populates the data array with random values.
+         */
+        for (int i = 0; i < points.size(); i++) {
+        	Point p = points.get(i);
+            this.data[0][i] = (float) p.getX();
+            this.data[1][i] = (float) p.getY();
+        }
+        
         final NumberAxis domainAxis = new NumberAxis("X");
         domainAxis.setAutoRangeIncludesZero(false);
         final NumberAxis rangeAxis = new NumberAxis("Y");
@@ -76,7 +74,8 @@ public class ScatterPlot extends ApplicationFrame {
      */
     public static void main(final String[] args) {
 
-        final ScatterPlot demo = new ScatterPlot("Fast Scatter Plot Demo");
+		DataProvider md = new DataProvider("./res/dataset/twod/test.txt", DataTypeEnum.NORMAL_POINT);
+        final ScatterPlot demo = new ScatterPlot("Fast Scatter Plot Demo", md.points);
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);

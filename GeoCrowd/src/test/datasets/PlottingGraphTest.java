@@ -30,10 +30,10 @@ public class PlottingGraphTest {
 	
 	@Test
 	public final void testPlotHistogram() {
-		DataProvider dp = new DataProvider("./dataset/out/test.txt", DataTypeEnum.VALUE_FREQ);
-		PlottingGraph p = new PlottingGraph();
-		PlottingGraph.filePrefix = "./res/graph/hists/oned/";
-		p.createHistogramFromValFreqs(dp.valueFreqs, 100000, "", "Values", "Percent (%)", "rzipf_uniform_1000.jpeg", true);
+//		DataProvider dp = new DataProvider("./dataset/out/test.txt", DataTypeEnum.VALUE_FREQ);
+//		PlottingGraph p = new PlottingGraph();
+//		PlottingGraph.filePrefix = "./res/graph/hists/oned/";
+//		p.createHistogramFromValFreqs(dp.valueFreqs, 100000, "", "Values", "Percent (%)", "rzipf_uniform_1000.jpeg", true);
 	}
 	
 	@Test

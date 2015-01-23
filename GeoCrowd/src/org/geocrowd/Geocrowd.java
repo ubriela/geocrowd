@@ -200,7 +200,7 @@ public abstract class Geocrowd {
 	 * @return the double
 	 */
 	public double distanceWorkerTask(GenericWorker worker, GenericTask task) {
-		if (DATA_SET == DatasetEnum.GOWALLA || DATA_SET == DatasetEnum.YELP)
+		if (DATA_SET == DatasetEnum.GOWALLA || DATA_SET == DatasetEnum.YELP || DATA_SET == DatasetEnum.FOURSQUARE)
 			return worker.distanceToTask(task);
 
 		// not geographical coordinates
@@ -208,6 +208,8 @@ public abstract class Geocrowd {
 				* (worker.getLatitude() - task.getLat())
 				+ (worker.getLongitude() - task.getLng())
 				* (worker.getLongitude() - task.getLng()));
+		
+//		System.out.println(distance);
 		return distance;
 	}
 

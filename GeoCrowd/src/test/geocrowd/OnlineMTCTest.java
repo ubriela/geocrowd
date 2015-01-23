@@ -26,7 +26,7 @@ import org.junit.Test;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
 //		overloading();
 		
 		

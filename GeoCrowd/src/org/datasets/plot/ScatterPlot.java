@@ -53,9 +53,9 @@ public class ScatterPlot extends ApplicationFrame {
             (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         final ChartPanel panel = new ChartPanel(chart, true);
-        panel.setPreferredSize(new java.awt.Dimension(500, 270));
-  //      panel.setHorizontalZoom(true);
-    //    panel.setVerticalZoom(true);
+        panel.setPreferredSize(new java.awt.Dimension(500, 500));
+//        panel.setHorizontalZoom(true);
+//        panel.setVerticalZoom(true);
         panel.setMinimumDrawHeight(10);
         panel.setMaximumDrawHeight(2000);
         panel.setMinimumDrawWidth(20);
@@ -66,7 +66,7 @@ public class ScatterPlot extends ApplicationFrame {
     }
     
     public static void main(String[] args) {
-		DataProvider md = new DataProvider("./res/dataset/twod/test.txt", DataTypeEnum.NORMAL_POINT);
+		DataProvider md = new DataProvider("./res/dataset/worker/workers0.txt", DataTypeEnum.NORMAL_POINT);
         final ScatterPlot demo = new ScatterPlot("Fast Scatter Plot Demo", md.points);
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);

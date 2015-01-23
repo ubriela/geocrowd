@@ -28,11 +28,11 @@ public class Constants {
 //	public static int W = 0;	// current workload
 
 	/** The time instance. */
-	public static int TIME_INSTANCE = 49;
+	public static int TIME_INSTANCE = 24;
 //	public static final int MAX_TIME_INSTANCE = 500;
 	
 	/** The diameter. */
-	public static double radius = 1; // task circle diameter
+	public static double radius = 5; // task circle diameter
 	/** enable random k */
 	public static boolean IS_RANDOM_K = false;
 	
@@ -161,14 +161,12 @@ public class Constants {
 	/** The uni resolution. */
 	public static double uniResolution = 0.01;
 
-	/** The skewed matlab worker file path. */
-	public static String skewedMatlabWorkerFilePath = "C:/Users/ubriela/Documents/MATLAB/sync-workers";
+	/** The worker file path. */
+	public static String inputWorkerFilePath = "./res/dataset/worker/workers";
 
-	/** The uni matlab worker file path. */
-	public static String uniMatlabWorkerFilePath = "C:/Users/ubriela/Documents/MATLAB/uni-workers";
 
 	/** The matlab task file path. */
-	public static String matlabTaskFilePath = "C:/Users/ubriela/Documents/MATLAB/uni-tasks";
+	public static String inputTaskFilePath = "./res/dataset/task/tasks";
 
 	// public static String skewedMatlabWorkerFilePath =
 	// "B:/Dropbox/_USC/_Research/_Crowdsourcing/Privacy/PrivateGeoCrowd/src/dataset/taskworker/workers";

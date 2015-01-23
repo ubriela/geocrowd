@@ -12,20 +12,22 @@ import org.geocrowd.common.Constants;
 public class OfflineMTCTest {
 
 	public static void main(String[] args) {
-		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
 		
-		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
-//		int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 };
-		varying_budget(budgets);
+		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };	// foursquare
+//		int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 };	// 
+		
+//		varying_budget(budgets);
 		
 		
 //		double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
-		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
-		varying_radius(radii);
+//		double[] radii = {0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5};
+		double[] radii = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+		varying_radius(radii, 48);
 	}
 	
-	public static void varying_radius(double[] radii) {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+	public static void varying_radius(double[] radii, int budget) {
+//		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 		
 		boolean[] isFixes = { true , false};
 		
@@ -38,11 +40,11 @@ public class OfflineMTCTest {
 				OfflineMTC offlineMTC = new OfflineMTC();
 				offlineMTC.isFixed = isFixes[fix];
 				offlineMTC.TaskCount = 0;
-				offlineMTC.budget = 48;
+				offlineMTC.budget = budget;
 				OfflineMTC.TotalAssignedTasks = 0;
 				OfflineMTC.TotalAssignedWorkers = 0;
 				OfflineMTC.workerList = null;
-				OfflineMTC.workerList = new ArrayList<>();;
+				OfflineMTC.workerList = new ArrayList<>();
 				OfflineMTC.taskList = new ArrayList<>();
 				
 				Constants.radius = radii[r];
@@ -113,7 +115,7 @@ public class OfflineMTCTest {
 						offlineMTC.TaskCount, OfflineMTC.TotalAssignedTasks,
 						offlineMTC.budget, OfflineMTC.TotalAssignedWorkers,
 						OfflineMTC.TotalAssignedTasks
-								/ OfflineMTC.TotalAssignedWorkers);
+								/ Math.max(1, OfflineMTC.TotalAssignedWorkers));
 			}
 
 		
@@ -134,8 +136,6 @@ public class OfflineMTCTest {
 		
 		Integer[][] coveredTasks = new Integer[budgets.length][isFixes.length];
 		Integer[][] assignedWorkers = new Integer[budgets.length][isFixes.length];
-
-		Constants.radius = 0.01;
 		
 		for (int b = 0; b < budgets.length; b++)
 			for (int fix = 0 ; fix < isFixes.length; fix++) {
@@ -221,7 +221,7 @@ public class OfflineMTCTest {
 						offlineMTC.TaskCount, OfflineMTC.TotalAssignedTasks,
 						offlineMTC.budget, OfflineMTC.TotalAssignedWorkers,
 						OfflineMTC.TotalAssignedTasks
-								/ OfflineMTC.TotalAssignedWorkers);
+								/ Math.max(1, OfflineMTC.TotalAssignedWorkers));
 			}
 
 		

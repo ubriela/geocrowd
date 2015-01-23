@@ -33,10 +33,11 @@ public class PreProcessTest extends PreProcess {
     
     public static void main(String[] args){
         PreProcessTest preTest = new PreProcessTest();
-        preTest.testFilterInput();
-        preTest.generateWorkers();
-        preTest.computeLocationEntropy();
-        preTest.testExtractCoords();
+//        preTest.testFilterInput();
+//        preTest.generateWorkers();
+//        preTest.computeLocationEntropy();
+//        preTest.testExtractCoords();
+        preTest.testGenerateSynWorkersTasks();
     }
 
 	/**
@@ -124,8 +125,9 @@ public class PreProcessTest extends PreProcess {
 	public void testGenerateSynWorkersTasks() {
 
 		PreProcess prep = new PreProcess();
-		PreProcess.DATA_SET = DatasetEnum.UNIFORM;
+		PreProcess.DATA_SET = DatasetEnum.SKEWED;
 		
+		Constants.TIME_INSTANCE = 168;
 		prep.computeBoundary(Constants.skewedBoundary);
 		prep.readBoundary(PreProcess.DATA_SET);
 		prep.createGrid(PreProcess.DATA_SET);

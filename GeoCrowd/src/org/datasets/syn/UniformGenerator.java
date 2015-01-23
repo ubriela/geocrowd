@@ -70,15 +70,15 @@ public class UniformGenerator {
 		Vector<Range> ranges = new Vector<Range>();
 		int size = values.size();
 		Random generator = new Random();
+		generator.setSeed(System.nanoTime());
 		double _offset = 0.0;
 		if (isFixOffset) {
 			_offset = offset;
 		} else {
-			generator.setSeed(System.nanoTime());
+			
 			_offset = generator.nextDouble() * offset;
 		}
 		for (int i = 0; i < number; i++) {
-			generator.setSeed(System.nanoTime());
 			int r = generator.nextInt(size);
 			double start, end;
 			start = Math.max(boundary.getStart(), values.get(r) - _offset);
@@ -104,8 +104,9 @@ public class UniformGenerator {
 		Vector<Rectangle> recs = new Vector<Rectangle>();
 		int size = points.size();
 		Random generator = new Random();
+		generator.setSeed(System.nanoTime());
 		for (int i = 0; i < number; i++) {
-			generator.setSeed(System.nanoTime());
+			
 			int index_1 = generator.nextInt(size);
 			int index_2 = generator.nextInt(size);
 			double x1, y1, x2, y2;
@@ -195,11 +196,10 @@ public class UniformGenerator {
 	public static Vector<Double> randomValues(int test_size, List<Double> values) {
 		// TODO Auto-generated method stub
 		Random r = new Random();
+		r.setSeed(System.nanoTime());
 		Vector<Double> list = new Vector<Double>();
-		for (int i = 0; i < test_size; i++) {
-			r.setSeed(System.nanoTime());
+		for (int i = 0; i < test_size; i++)
 			list.add(values.get(r.nextInt(values.size())));
-		}
 		return list;
 	}
 	
@@ -216,7 +216,6 @@ public class UniformGenerator {
 		Random r = new Random();
 		r.setSeed(System.nanoTime());
 		double x1 = r.nextDouble() * boundary.deltaX() + boundary.getLowPoint().getX();
-		r.setSeed(System.nanoTime());
 		double y1 = r.nextDouble() * boundary.deltaY() + boundary.getLowPoint().getY();
 
 		if (isInteger)
@@ -224,6 +223,25 @@ public class UniformGenerator {
 		else
 			return new Point(x1, y1);
 	}
+	
+	/**
+	 * Generate a random point within the universe
+	 * 
+	 * @param boundary
+	 * @return
+	 */
+	public static Point randomPoint(Rectangle boundary, boolean isInteger, long seed) {
+		Random r = new Random();
+		r.setSeed(seed);
+		double x1 = r.nextDouble() * boundary.deltaX() + boundary.getLowPoint().getX();
+		double y1 = r.nextDouble() * boundary.deltaY() + boundary.getLowPoint().getY();
+
+		if (isInteger)
+			return new Point(Math.round(x1), Math.round(y1));
+		else
+			return new Point(x1, y1);
+	}
+	
 
 	/**
 	 * Generate a random rectangle within the universe
@@ -239,12 +257,9 @@ public class UniformGenerator {
 		while (true) {
 			x1 = r.nextDouble() * boundary.deltaX()
 					+ boundary.getLowPoint().getX();
-			r.setSeed(System.nanoTime());
 			x2 = r.nextDouble() * (boundary.getHighPoint().getX() - x1) + x1;
-			r.setSeed(System.nanoTime());
 			y1 = r.nextDouble() * boundary.deltaY()
 					+ boundary.getLowPoint().getY();
-			r.setSeed(System.nanoTime());
 			y2 = r.nextDouble() * (boundary.getHighPoint().getY() - y1) + y1;
 
 			if (x2 > x1 && y2 > y1)
@@ -270,12 +285,9 @@ public class UniformGenerator {
 		while (true) {
 			x1 = r.nextDouble() * boundary.deltaX()
 					+ boundary.getLowPoint().getX();
-			r.setSeed(System.nanoTime());
 			x2 = r.nextDouble() * (boundary.getHighPoint().getX() - x1) + x1;
-			r.setSeed(System.nanoTime());
 			y1 = r.nextDouble() * (boundary.deltaY())
 					+ boundary.getLowPoint().getY();
-			r.setSeed(System.nanoTime());
 			y2 = r.nextDouble() * (boundary.getHighPoint().getY() - y1) + y1;
 
 			if ((x2 - x1) / (boundary.deltaX()) < threshold
@@ -341,18 +353,17 @@ public class UniformGenerator {
 		Vector<Rectangle> recs = new Vector<Rectangle>();
 		int size = points.size();
 		Random generator = new Random();
+		generator.setSeed(System.nanoTime());
 		double _offset_x = 0.0, _offset_y = 0.0;
 		if (isFixOffset) {
 			_offset_x = offset_x;
 			_offset_y = offset_y;
 		} else {
-			generator.setSeed(System.nanoTime());
+			
 			_offset_x = generator.nextDouble() * offset_x;
-			generator.setSeed(System.nanoTime());
 			_offset_y = generator.nextDouble() * offset_y;
 		}
 		for (int i = 0; i < number; i++) {
-			generator.setSeed(System.nanoTime());
 			int r = generator.nextInt(size);
 			double x1, y1, x2, y2;
 			x1 = Math.max(boundary.getLowPoint().getX(), points.get(r).getX()

@@ -42,6 +42,8 @@ import org.geocrowd.common.utils.Utils;
  * @author Leyla & Hien To
  */
 public class PreProcess {
+	
+	Character delimiter = '\t';
 
 	/** The min lat. */
 	public static double minLat = Double.MAX_VALUE;
@@ -136,15 +138,16 @@ public class PreProcess {
 			}
 			break;
 		case SKEWED:
+		case UNIFORM:
 			int cnt = 0;
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				try {
 					FileReader reader = new FileReader(
-							Constants.skewedMatlabWorkerFilePath + i + ".txt");
+							Constants.inputWorkerFilePath + i + ".txt");
 					BufferedReader in = new BufferedReader(reader);
 					while (in.ready()) {
 						String line = in.readLine();
-						String[] parts = line.split(",");
+						String[] parts = line.split(delimiter.toString());
 						Double lat = Double.parseDouble(parts[0]);
 						Double lng = Double.parseDouble(parts[1]);
 
@@ -160,45 +163,6 @@ public class PreProcess {
 					}
 
 					FileWriter writer = new FileWriter(Constants.skewedBoundary);
-					BufferedWriter out = new BufferedWriter(writer);
-					out.write(minLat + " " + minLng + " " + maxLat + " "
-							+ maxLng);
-					out.close();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			System.out.println("Boundary [minLat:" + minLat + "   maxLat:"
-					+ maxLat + "   minLng:" + minLng + "   maxLng:" + maxLng
-					+ "]");
-			break;
-
-		case UNIFORM:
-			cnt = 0;
-			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-				try {
-					FileReader reader = new FileReader(
-							Constants.uniMatlabWorkerFilePath + i + ".txt");
-					BufferedReader in = new BufferedReader(reader);
-					while (in.ready()) {
-						String line = in.readLine();
-						String[] parts = line.split(",");
-						Double lat = Double.parseDouble(parts[0]);
-						Double lng = Double.parseDouble(parts[1]);
-
-						if (lat < minLat)
-							minLat = lat;
-						if (lat > maxLat)
-							maxLat = lat;
-						if (lng < minLng)
-							minLng = lng;
-						if (lng > maxLng)
-							maxLng = lng;
-						cnt++;
-					}
-
-					FileWriter writer = new FileWriter(Constants.uniBoundary);
 					BufferedWriter out = new BufferedWriter(writer);
 					out.write(minLat + " " + minLng + " " + maxLat + " "
 							+ maxLng);
@@ -298,10 +262,8 @@ public class PreProcess {
 		String workerFilePath = "";
 		switch (DATA_SET) {
 		case SKEWED:
-			workerFilePath = Constants.skewedMatlabWorkerFilePath;
-			break;
 		case UNIFORM:
-			workerFilePath = Constants.uniMatlabWorkerFilePath;
+			workerFilePath = Constants.inputWorkerFilePath;
 			break;
 		case SMALL_TEST:
 			workerFilePath = Constants.smallWorkerFilePath;
@@ -314,7 +276,7 @@ public class PreProcess {
 				BufferedReader in = new BufferedReader(file);
 				while (in.ready()) {
 					String line = in.readLine();
-					String[] parts = line.split(",");
+					String[] parts = line.split(delimiter.toString());
 					Double lat = Double.parseDouble(parts[0]);
 					Double lng = Double.parseDouble(parts[1]);
 					int row = getRowIdx(lat);
@@ -357,7 +319,7 @@ public class PreProcess {
 			BufferedReader in = new BufferedReader(file);
 			while (in.ready()) {
 				String line = in.readLine();
-				String[] parts = line.split("\t");
+				String[] parts = line.split(delimiter.toString());
 				Double lat = Double.parseDouble(parts[0]);
 				Double lng = Double.parseDouble(parts[1]);
 				int row = getRowIdx(lat);
@@ -707,7 +669,7 @@ public class PreProcess {
 			int cnt = 0;
 			while (in.ready()) {
 				String line = in.readLine();
-				String[] parts = line.split("\t");
+				String[] parts = line.split(delimiter.toString());
 				Integer userID = Integer.parseInt(parts[0]);
 				Double lat = Double.parseDouble(parts[2]);
 				Double lng = Double.parseDouble(parts[3]);
@@ -752,7 +714,7 @@ public class PreProcess {
 			int cnt = 0;
 			while (in.ready()) {
 				String line = in.readLine();
-				String[] parts = line.split("\t");
+				String[] parts = line.split(delimiter.toString());
 				String userID = parts[0];
 				String[] DateTimeStr = parts[1].split("T");
 				Date date = Date.valueOf(DateTimeStr[0]);
@@ -821,22 +783,21 @@ public class PreProcess {
 	/**
 	 * Generate SYN dataset.
 	 * 
-	 * @param fileName
+	 * @param outputFile
 	 *            : output
-	 * @param matlabFile
+	 * @param inputFile
 	 *            : distributing tasks into four Gaussian clusters
 	 */
-	private void generateSyncTasksFromMatlab(String fileName, String matlabFile) {
-		System.out.println("Tasks:");
-		int countTask = 0;
+	private void generateSyncTasksFromMatlab(String outputFile, String inputFile) {
+		int taskCount = 0;
 		try {
-			FileWriter writer = new FileWriter(fileName);
+			FileWriter writer = new FileWriter(outputFile);
 			BufferedWriter out = new BufferedWriter(writer);
-			FileReader reader = new FileReader(matlabFile);
+			FileReader reader = new FileReader(inputFile);
 			BufferedReader in = new BufferedReader(reader);
 			while (in.ready()) {
 				String line = in.readLine();
-				String[] parts = line.split(",");
+				String[] parts = line.split(delimiter.toString());
 				double lat = Double.parseDouble(parts[0]);
 				double lng = Double.parseDouble(parts[1]);
 				int time = timeCounter;
@@ -846,20 +807,20 @@ public class PreProcess {
 						taskType);
 				out.write(lat + "," + lng + "," + time + "," + -1 + ","
 						+ taskType + "\n");
-				countTask++;
+				taskCount++;
 			}
 			out.close();
 		} catch (Exception e) {
 		}
-		System.out.println(countTask + " tasks generated");
+		System.out.println(taskCount);
 	}
 
 	/**
 	 * Generate SYN dataset.
 	 * 
-	 * @param fileName
+	 * @param outputFile
 	 *            : output
-	 * @param matlabFile
+	 * @param inputFile
 	 *            : the workers are formed into four Gaussian clusters
 	 * @param isConstantMBR
 	 *            the is constant mbr
@@ -867,20 +828,22 @@ public class PreProcess {
 	 *            the is constant max t
 	 * @maxT is randomly generated
 	 */
-	private void generateSyncWorkersFromMatlab(String fileName,
-			String matlabFile, boolean isConstantMBR, boolean isConstantMaxT) {
+	private void generateSyncWorkersFromMatlab(String outputFile,
+			String inputFile, boolean isConstantMBR, boolean isConstantMaxT) {
 		int maxSumTaskWorkers = 0;
-		System.out.println("Workers:");
+		int workerCount = 0;
 		double maxRangeX = (maxLat - minLat) * (Constants.MaxRangePerc);
 		double maxRangeY = (maxLng - minLng) * Constants.MaxRangePerc;
 		try {
-			FileWriter writer = new FileWriter(fileName);
+			FileWriter writer = new FileWriter(outputFile);
 			BufferedWriter out = new BufferedWriter(writer);
-			FileReader reader = new FileReader(matlabFile);
+			StringBuffer sb = new StringBuffer();
+			FileReader reader = new FileReader(inputFile);
 			BufferedReader in = new BufferedReader(reader);
 			while (in.ready()) {
+				workerCount ++;
 				String line = in.readLine();
-				String[] parts = line.split(",");
+				String[] parts = line.split(delimiter.toString());
 				double lat = Double.parseDouble(parts[0]);
 				double lng = Double.parseDouble(parts[1]);
 				int maxT = 0;
@@ -908,16 +871,17 @@ public class PreProcess {
 				SpecializedWorker w = new SpecializedWorker("dump", lat, lng,
 						maxT, mbr);
 				w.addExpertise(exp);
-				out.write(-1 + "," + lat + "," + lng + "," + maxT + "," + "["
+				sb.append(-1 + "," + lat + "," + lng + "," + maxT + "," + "["
 						+ mbr.getMinLat() + "," + mbr.getMinLng() + ","
 						+ mbr.getMaxLat() + "," + mbr.getMaxLng() + "],[" + exp
 						+ "]\n");
 			}
+			out.write(sb.toString());
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Sum of all maxTask:" + maxSumTaskWorkers);
+		System.out.println(workerCount);
 	}
 
 	/**
@@ -934,9 +898,11 @@ public class PreProcess {
 			outputFileFrefix = Constants.uniTaskFileNamePrefix;
 			break;
 		}
+		
+		System.out.println("Tasks:");
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			generateSyncTasksFromMatlab(outputFileFrefix + i + ".txt",
-					Constants.matlabTaskFilePath + i + ".txt");
+					Constants.inputTaskFilePath + i + ".txt");
 			timeCounter++;
 		}
 	}
@@ -950,22 +916,22 @@ public class PreProcess {
 	 *            the is constant max t
 	 */
 	public void generateSynWorkers(boolean isConstantMBR, boolean isConstantMaxT) {
+		String outputFileFrefix = "";
 		switch (DATA_SET) {
 		case SKEWED:
-			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-				generateSyncWorkersFromMatlab(
-						Constants.skewedWorkerFileNamePrefix + i + ".txt",
-						Constants.skewedMatlabWorkerFilePath + i + ".txt",
-						isConstantMBR, isConstantMaxT);
-			}
+			outputFileFrefix = Constants.skewedWorkerFileNamePrefix;
 			break;
 		case UNIFORM:
-			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-				generateSyncWorkersFromMatlab(Constants.uniWorkerFileNamePrefix
-						+ i + ".txt", Constants.uniMatlabWorkerFilePath + i
-						+ ".txt", isConstantMBR, isConstantMaxT);
-			}
+			outputFileFrefix = Constants.uniWorkerFileNamePrefix;
 			break;
+		}
+		
+		System.out.println("Workers:");
+		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+			generateSyncWorkersFromMatlab(
+					outputFileFrefix + i + ".txt",
+					Constants.inputWorkerFilePath + i + ".txt",
+					isConstantMBR, isConstantMaxT);
 		}
 	}
 
@@ -1148,10 +1114,8 @@ public class PreProcess {
 			workerFilePath = Constants.gowallaWorkerFileNamePrefix;
 			break;
 		case SKEWED:
-			workerFilePath = Constants.skewedMatlabWorkerFilePath;
-			break;
 		case UNIFORM:
-			workerFilePath = Constants.uniMatlabWorkerFilePath;
+			workerFilePath = Constants.inputWorkerFilePath;
 			break;
 		case SMALL_TEST:
 			workerFilePath = Constants.smallWorkerFilePath;

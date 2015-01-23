@@ -15,6 +15,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.datasets.syn.dtype.DataTypeEnum;
 import org.datasets.syn.dtype.Point;
 import org.datasets.syn.dtype.Rectangle;
@@ -33,12 +34,17 @@ import org.geocrowd.common.utils.Utils;
  * 
  */
 public class DatasetGenerator {
+	public static int time = 0;
+	public static int gaussianCluster = 4;
+	public static ArrayList<Long> seeds;
+	
 	private String filePath = "";
 	private Character delimiter = '\t';
 
 	public DatasetGenerator(String filePath) {
 		this.filePath = filePath;
 	}
+
 
 	/**
 	 * Generate uniform points
@@ -50,11 +56,45 @@ public class DatasetGenerator {
 	public Vector<Point> generateUniformPoints(int n, Rectangle boundary) {
 		Vector<Point> points = new Vector<Point>();
 
-		for (int i = 1; i <= n; i++) {
+		for (int i = 0; i < n; i++) {
 			Point point = UniformGenerator.randomPoint(boundary, false);
 			points.add(point);
 		}
 
+		return points;
+	}
+
+	/**
+	 * Each Gaussian cluster has n/gaussianCluster data points
+	 * @param n
+	 * @param boundary
+	 * @return
+	 */
+	private Vector<Point> generateMultivarDataset(int n, Rectangle boundary) {
+		Vector<Point> points = new Vector<Point>();
+		if (n == 0)
+			return points;
+		for (int c = 0; c < gaussianCluster; c++) {
+			Point mPoint = UniformGenerator.randomPoint(boundary, false, seeds.get(c) * time);
+			double[] means = { mPoint.getX(), mPoint.getY() };
+//			mPoint.debug();
+			double[][] covariances = { { boundary.getHighPoint().getX(), 0 }, { 0, boundary.getHighPoint().getY() } };
+			
+			MultivariateNormalDistribution mvd = new MultivariateNormalDistribution(
+					means, covariances);
+			int samples = 0;
+			if (c == gaussianCluster - 1)
+				samples = n - ((int)(n/gaussianCluster)) * (gaussianCluster-1);
+			else
+				samples = n/gaussianCluster;
+			if (samples == 0)
+				continue;
+			double[][] data = mvd.sample(samples);
+			for (int i = 0; i < samples; i++) {
+				Point point = new Point(data[i][0], data[i][1]);
+				points.add(point);
+			}
+		}
 		return points;
 	}
 
@@ -293,7 +333,7 @@ public class DatasetGenerator {
 
 		ZipfDistribution zipf = new ZipfDistribution(2, 1);
 		double factor = 1 / zipf.getProbability(n);
-		
+
 		if (!isRandomDist) {
 			Iterator it = sortedValues.iterator();
 			for (int i = 1; i <= 1000 && it.hasNext(); i++) {
@@ -536,8 +576,8 @@ public class DatasetGenerator {
 						.getHighPoint().getY(), isInteger);
 
 		Random r = new Random();
+		r.setSeed(System.nanoTime());
 		for (int i = 1; i <= n; i++) {
-			r.setSeed(System.nanoTime());
 			Point point = new Point(distinct_x.get(r.nextInt(uni_x_count)),
 					distinct_y.get(r.nextInt(uni_y_count)));
 			points.add(point);
@@ -549,14 +589,16 @@ public class DatasetGenerator {
 	/**
 	 * Generate two-dimensional datasets
 	 * 
-	 * @param n : the number of data points
+	 * @param n
+	 *            : the number of data points
 	 * @param min_x
 	 * @param max_x
 	 * @param min_y
 	 * @param max_y
 	 * @param dist
 	 */
-	public void generate2DDataset(int n, Rectangle boundary, Distribution2DEnum dist) {
+	public void generate2DDataset(int n, Rectangle boundary,
+			Distribution2DEnum dist) {
 		Vector<Point> points = null;
 
 		switch (dist) {
@@ -569,12 +611,15 @@ public class DatasetGenerator {
 		case CHARMINAR_2D: // charminar two-dimensional dataset
 			points = generateCharminarPoints(n, boundary, 100, 100);
 			break;
-		case NON_DISTINCT_2D: // non-distinct two-dimensional dataset
+		case UNIFORM_INT_2D: // non-distinct two-dimensional dataset
 			points = generateNonDistinctDataset(n, boundary, 100, 100, true);
+			break;
+		case GAUSSIAN_2D: // multivariate gaussian distribution
+			points = generateMultivarDataset(n, boundary);
 			break;
 		}
 		writePointsToFile(points, filePath);
-		writePointsToFileWithKey(points, filePath + ".key.txt");
+//		writePointsToFileWithKey(points, filePath + ".key.txt");
 	}
 
 	/**
@@ -688,7 +733,8 @@ public class DatasetGenerator {
 			boolean isInteger) {
 		// TODO Auto-generated method stub
 		Vector<Double> values = new Vector<Double>();
-		DataProvider dp = new DataProvider(twoDimInputFile, DataTypeEnum.NORMAL_POINT);
+		DataProvider dp = new DataProvider(twoDimInputFile,
+				DataTypeEnum.NORMAL_POINT);
 		Iterator it = dp.points.iterator();
 		while (it.hasNext()) {
 			Point point = (Point) it.next();
@@ -704,7 +750,8 @@ public class DatasetGenerator {
 			String twoDimInputFile, boolean isInteger) {
 		// TODO Auto-generated method stub
 		List<Double> values = new Vector<Double>();
-		DataProvider dp = new DataProvider(twoDimInputFile, DataTypeEnum.NORMAL_POINT);
+		DataProvider dp = new DataProvider(twoDimInputFile,
+				DataTypeEnum.NORMAL_POINT);
 		Iterator it = dp.points.iterator();
 		while (it.hasNext()) {
 			Point point = (Point) it.next();
@@ -728,8 +775,9 @@ public class DatasetGenerator {
 	 */
 	private List<ValueFreq<Double>> generateOneDimFromValues(
 			String twoDimInputFile) {
-		DataProvider dp = new DataProvider(twoDimInputFile, DataTypeEnum.VALUE_LIST); // read a list
-																// of values
+		DataProvider dp = new DataProvider(twoDimInputFile,
+				DataTypeEnum.VALUE_LIST); // read a list
+		// of values
 		List<Double> values = dp.values;
 		Collections.sort(values);
 		Stats stat = new Stats();
@@ -751,7 +799,7 @@ public class DatasetGenerator {
 			while (it.hasNext()) {
 				Point point = (Point) it.next();
 				sb.append(point.getX() + delimiter.toString() + point.getY());
-				
+
 				if (it.hasNext())
 					sb.append("\n");
 			}
@@ -763,7 +811,7 @@ public class DatasetGenerator {
 		}
 		System.out.println("Dataset created!");
 	}
-	
+
 	/**
 	 * Write a list of points to a file with a primary key
 	 * 
@@ -781,8 +829,9 @@ public class DatasetGenerator {
 			Iterator<Point> it = points.iterator();
 			while (it.hasNext()) {
 				Point point = (Point) it.next();
-				sb.append(i++ + delimiter.toString() + + point.getX() + delimiter.toString() + + point.getY());
-				
+				sb.append(i++ + delimiter.toString() + +point.getX()
+						+ delimiter.toString() + +point.getY());
+
 				if (it.hasNext())
 					sb.append('\n');
 			}
@@ -823,7 +872,6 @@ public class DatasetGenerator {
 		System.out.println("Dataset created!");
 
 	}
-
 
 	/**
 	 * Write a list of integer to a file

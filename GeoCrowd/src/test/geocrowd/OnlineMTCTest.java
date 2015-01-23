@@ -26,7 +26,7 @@ import org.junit.Test;
 public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 //		overloading();
 		
 		
@@ -1553,8 +1553,10 @@ public class OnlineMTCTest {
 		}
 	}
 
-	private static void overloading() throws IOException {
+	@Test
+	public void testOverloading() throws IOException {
 
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 		int budget = 1000;
 		double[] alpha = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
 				0.9, 1.0 };
@@ -1584,7 +1586,7 @@ public class OnlineMTCTest {
 				onlineMTC.workerList = new ArrayList<>();
 				onlineMTC.taskList = new ArrayList<>();
 
-				/**
+				/** 
 				 * clear worker, task list
 				 */
 				OnlineMTC.taskList.clear();

@@ -675,5 +675,20 @@ public class GeocrowdSensing extends Geocrowd {
 			tid++;
 		}// for loop
 	}
+	
+    /**
+     * Re-initialize all parameters
+     */
+	public void reset() {
+		TimeInstance = 0;
+		TaskCount = 0;
+		WorkerCount = 0;
+		TotalAssignedTasks = 0;
+		TotalAssignedWorkers = 0;
+		workerList = null;
+		workerList = new ArrayList<>();
+		taskList = new ArrayList<>();
+		
+	}
 
 }

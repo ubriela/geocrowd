@@ -33,6 +33,7 @@ import java.util.Set;
 import org.datasets.syn.dtype.GenericPoint;
 import org.datasets.syn.dtype.Point;
 import org.datasets.syn.dtype.ValueFreq;
+import org.geocrowd.DatasetEnum;
 import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;
@@ -589,5 +590,37 @@ public class Utils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static String foursquareTaskFileNamePrefix = "dataset/real/foursquare/task/tasks";
+
+	public static String foursquareWorkerFileNamePrefix = "dataset/real/foursquare/worker/workers";
+	
+	public static String datasetToWorkerPath(DatasetEnum dataset) {
+		switch (dataset) {
+		case GOWALLA:
+			return "dataset/real/gowalla/worker/gowalla_workers";
+		case FOURSQUARE:
+			return "dataset/real/foursquare/worker/foursquare_workers";
+		case SKEWED:
+			return "dataset/skew/worker/skew_workers";
+		case UNIFORM:
+			return "dataset/uni/worker/uni_workers";
+		}
+		return "";
+	}
+	
+	public static String datasetToTaskPath(DatasetEnum dataset) {
+		switch (dataset) {
+		case GOWALLA:
+			return "dataset/real/gowalla/task/gowalla_tasks";
+		case FOURSQUARE:
+			return "dataset/real/foursquare/task/foursquare_tasks";
+		case SKEWED:
+			return "dataset/skew/task/skew_tasks";
+		case UNIFORM:
+			return "dataset/uni/task/uni_tasks";
+		}
+		return "";
 	}
 }

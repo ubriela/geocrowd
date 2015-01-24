@@ -8,6 +8,7 @@ import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.OfflineMTC;
 import org.geocrowd.common.Constants;
+import org.geocrowd.common.utils.Utils;
 
 public class OfflineMTCTest {
 
@@ -27,7 +28,6 @@ public class OfflineMTCTest {
 	}
 	
 	public static void varying_radius(double[] radii, int budget) {
-//		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 		
 		boolean[] isFixes = { true , false};
 		
@@ -39,64 +39,17 @@ public class OfflineMTCTest {
 				
 				OfflineMTC offlineMTC = new OfflineMTC();
 				offlineMTC.isFixed = isFixes[fix];
-				offlineMTC.TaskCount = 0;
 				offlineMTC.budget = budget;
-				OfflineMTC.TotalAssignedTasks = 0;
-				OfflineMTC.TotalAssignedWorkers = 0;
-				OfflineMTC.workerList = null;
-				OfflineMTC.workerList = new ArrayList<>();
-				OfflineMTC.taskList = new ArrayList<>();
-				
 				Constants.radius = radii[r];
+				
+				offlineMTC.reset();
 			
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-					switch (Geocrowd.DATA_SET) {
-					case FOURSQUARE:
-						offlineMTC
-						.readTasks(Constants.foursquareTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC.readWorkers(
-						Constants.foursquareWorkerFileNamePrefix + i
-								+ ".txt", i);
-						break;
-					case GOWALLA:
-						offlineMTC
-								.readTasks(Constants.gowallaTaskFileNamePrefix
-										+ i + ".txt");
-						offlineMTC.readWorkers(
-								Constants.gowallaWorkerFileNamePrefix + i
-										+ ".txt", i);
-						break;
-					case YELP:
-						offlineMTC.readTasks(Constants.yelpTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC
-								.readWorkers(Constants.yelpWorkerFileNamePrefix
-										+ i + ".txt", i);
-						break;
-					case UNIFORM:
-						offlineMTC.readTasks(Constants.uniTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC.readWorkers(
-								Constants.uniWorkerFileNamePrefix + i + ".txt",
-								i);
-						break;
-					case SKEWED:
-						offlineMTC.readTasks(Constants.skewedTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC.readWorkers(
-								Constants.skewedWorkerFileNamePrefix + i
-										+ ".txt", i);
-						break;
-					case SMALL_TEST:
-						offlineMTC.readTasks(Constants.smallTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC.readWorkers(
-								Constants.smallWorkerFileNamePrefix + i
-										+ ".txt", i);
-						break;
-					}
-
+					offlineMTC
+					.readTasks(Utils.datasetToTaskPath(Geocrowd.DATA_SET)
+							+ i + ".txt");
+					offlineMTC.readWorkers(Utils.datasetToWorkerPath(Geocrowd.DATA_SET) + i
+							+ ".txt", i);
 				}
 
 				System.out.print("\nbudget = " + radii[r] + ", isFixed = " + isFixes[fix]);
@@ -105,10 +58,10 @@ public class OfflineMTCTest {
 				
 				offlineMTC.matchingTasksWorkers();
 
-				HashSet<Integer> workerSet = offlineMTC.maxTaskCoverage();
+				offlineMTC.maxTaskCoverage();
 				
-				assignedWorkers[r][fix] = offlineMTC.TotalAssignedWorkers;
-				coveredTasks[r][fix] = offlineMTC.TotalAssignedTasks;
+				assignedWorkers[r][fix] = OfflineMTC.TotalAssignedWorkers;
+				coveredTasks[r][fix] = OfflineMTC.TotalAssignedTasks;
 
 				System.out
 				.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d\n",
@@ -131,7 +84,6 @@ public class OfflineMTCTest {
 
 	public static void varying_budget(int[] budgets, double radius) {
 
-//		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 		Constants.radius = radius;
 		boolean[] isFixes = { true , false };
 		
@@ -145,66 +97,14 @@ public class OfflineMTCTest {
 				OfflineMTC offlineMTC = new OfflineMTC();
 				offlineMTC.isFixed = isFixes[fix];
 				offlineMTC.budget = budgets[b];
-				offlineMTC.TaskCount = 0;
-				OfflineMTC.TotalAssignedTasks = 0;
-				OfflineMTC.TotalAssignedWorkers = 0;
-				OfflineMTC.workerList = null;
-				OfflineMTC.workerList = new ArrayList<>();;
-				OfflineMTC.taskList = new ArrayList<>();
+				offlineMTC.reset();
 			
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-					switch (Geocrowd.DATA_SET) {
-					case FOURSQUARE:
-						offlineMTC
-						.readTasks(Constants.foursquareTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC.readWorkers(
-						Constants.foursquareWorkerFileNamePrefix + i
-								+ ".txt", i);
-						break;
-					case GOWALLA:
-						offlineMTC
-								.readTasks(Constants.gowallaTaskFileNamePrefix
-										+ i + ".txt");
-						offlineMTC.readWorkers(
-								Constants.gowallaWorkerFileNamePrefix + i
-										+ ".txt", i);
-						break;
-					case YELP:
-						offlineMTC.readTasks(Constants.yelpTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC
-								.readWorkers(Constants.yelpWorkerFileNamePrefix
-										+ i + ".txt", i);
-						break;
-					case UNIFORM:
-						offlineMTC.readTasks(Constants.uniTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC.readWorkers(
-								Constants.uniWorkerFileNamePrefix + i + ".txt",
-								i);
-						break;
-					case SKEWED:
-						offlineMTC.readTasks(Constants.skewedTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC.readWorkers(
-								Constants.skewedWorkerFileNamePrefix + i
-										+ ".txt", i);
-						break;
-					case SMALL_TEST:
-						offlineMTC.readTasks(Constants.smallTaskFileNamePrefix
-								+ i + ".txt");
-						offlineMTC.readWorkers(
-								Constants.smallWorkerFileNamePrefix + i
-										+ ".txt", i);
-						break;
-					}
-
-//					System.out.println("Number of workers: "
-//							+ OfflineMTC.workerList.size());
-//
-//					System.out.println("Number of tasks: "
-//							+ OfflineMTC.taskList.size());
+					offlineMTC
+					.readTasks(Utils.datasetToTaskPath(Geocrowd.DATA_SET)
+							+ i + ".txt");
+					offlineMTC.readWorkers(Utils.datasetToWorkerPath(Geocrowd.DATA_SET) + i
+							+ ".txt", i);
 				}
 
 				System.out.print("\nbudget = " + budgets[b] + ", isFixed = " + isFixes[fix]);
@@ -212,11 +112,10 @@ public class OfflineMTCTest {
 						"CoveredTask", "TotalWorker", "SelectedWorker", "W/T");
 				
 				offlineMTC.matchingTasksWorkers();
-
-				HashSet<Integer> workerSet = offlineMTC.maxTaskCoverage();
+				offlineMTC.maxTaskCoverage();
 				
-				assignedWorkers[b][fix] = offlineMTC.TotalAssignedWorkers;
-				coveredTasks[b][fix] = offlineMTC.TotalAssignedTasks;
+				assignedWorkers[b][fix] = OfflineMTC.TotalAssignedWorkers;
+				coveredTasks[b][fix] = OfflineMTC.TotalAssignedTasks;
 
 				System.out
 				.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d\n",

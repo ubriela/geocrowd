@@ -947,21 +947,12 @@ public class GeocrowdInstance extends Geocrowd {
 				int row = 0;
 				int col = 0;
 				double entropy = 0;
-				if (r.nextFloat() < Constants.F) {
-					int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
-						entropyList.size() - 1), true);
-					EntropyRecord dR = entropyList.get(randomIdx);
-					row = dR.getCoord().getRowId();
-					col = dR.getCoord().getColId();
-					entropy = dR.getEntropy();
-				} else {
-					row = (int) UniformGenerator.randomValue(new Range(0, rowCount), true);
-					col = (int) UniformGenerator.randomValue(new Range(0, colCount), true);
-					if (entropies.containsKey(row)) 
-						if (entropies.get(row).containsKey(col))
-							entropy = entropies.get(row).get(col);
-				}
-				
+				int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
+					entropyList.size() - 1), true);
+				EntropyRecord dR = entropyList.get(randomIdx);
+				row = dR.getCoord().getRowId();
+				col = dR.getCoord().getColId();
+				entropy = dR.getEntropy();
 
 				// generate a task inside this cell
 

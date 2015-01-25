@@ -31,6 +31,7 @@ import org.geocrowd.GeocrowdOnline;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
+import org.geocrowd.common.utils.Utils;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.junit.Test;
 
@@ -122,39 +123,12 @@ public class GeocrowdTest {
 			geoCrowd.readEntropy();
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
-
-				switch (Geocrowd.DATA_SET) {
-				case GOWALLA:
-					geoCrowd.readTasks(Constants.gowallaTaskFileNamePrefix + i
-							+ ".txt");
-					geoCrowd.readWorkers(Constants.gowallaWorkerFileNamePrefix
-							+ i + ".txt");
-					break;
-				case SKEWED:
-					geoCrowd.readTasks(Constants.skewedTaskFileNamePrefix + i
-							+ ".txt");
-					geoCrowd.readWorkers(Constants.skewedWorkerFileNamePrefix
-							+ i + ".txt");
-					break;
-				case UNIFORM:
-					geoCrowd.readTasks(Constants.uniTaskFileNamePrefix + i
-							+ ".txt");
-					geoCrowd.readWorkers(Constants.uniWorkerFileNamePrefix + i
-							+ ".txt");
-					break;
-				case SMALL_TEST:
-					geoCrowd.readTasks(Constants.smallTaskFileNamePrefix + i
-							+ ".txt");
-					geoCrowd.readWorkers(Constants.smallWorkerFileNamePrefix
-							+ i + ".txt");
-					break;
-				case YELP:
-					geoCrowd.readTasks(Constants.yelpTaskFileNamePrefix + i
-							+ ".txt");
-					geoCrowd.readWorkers(Constants.yelpWorkerFileNamePrefix + i
-							+ ".txt");
-					break;
-				}
+				geoCrowd.readTasks(Utils
+						.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
+				geoCrowd.readWorkers(Utils
+						.datasetToWorkerPath(Geocrowd.DATA_SET)
+						+ i
+						+ ".txt");
 
 				geoCrowd.matchingTasksWorkers();
 
@@ -225,29 +199,12 @@ public class GeocrowdTest {
 					"dataset/real/gowalla/worker/gowalla_workers0.txt");
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
-
-				switch (Geocrowd.DATA_SET) {
-				case GOWALLA:
-					geoCrowd.readTasks(Constants.gowallaTaskFileNamePrefix + i
-							+ ".txt");
-					break;
-				case SKEWED:
-					geoCrowd.readTasks(Constants.skewedTaskFileNamePrefix + i
-							+ ".txt");
-					break;
-				case UNIFORM:
-					geoCrowd.readTasks(Constants.uniTaskFileNamePrefix + i
-							+ ".txt");
-					break;
-				case SMALL_TEST:
-					geoCrowd.readTasks(Constants.smallTaskFileNamePrefix + i
-							+ ".txt");
-					break;
-				case YELP:
-					geoCrowd.readTasks(Constants.yelpTaskFileNamePrefix + i
-							+ ".txt");
-					break;
-				}
+				geoCrowd.readTasks(Utils
+						.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
+				geoCrowd.readWorkers(Utils
+						.datasetToWorkerPath(Geocrowd.DATA_SET)
+						+ i
+						+ ".txt");
 
 				geoCrowd.matchingTasksWorkers();
 

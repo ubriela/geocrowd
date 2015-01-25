@@ -34,6 +34,7 @@ import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.EntropyRecord;
+import org.geocrowd.common.utils.Utils;
 import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.geocrowd.matching.Utility;
@@ -75,31 +76,9 @@ public class GeocrowdInstance extends Geocrowd {
 	 * Instantiates a new geocrowd.
 	 */
 	public GeocrowdInstance() {
-		String boundaryFile = "";
-		switch (DATA_SET) {
-		case FOURSQUARE:
-			boundaryFile = Constants.foursquareBoundary;
-			break;
-		case GOWALLA:
-			boundaryFile = Constants.gowallaBoundary;
-			break;
-		case SKEWED:
-			boundaryFile = Constants.skewedBoundary;
-			break;
-		case UNIFORM:
-			boundaryFile = Constants.uniBoundary;
-			break;
-		case SMALL_TEST:
-			boundaryFile = Constants.smallBoundary;
-			break;
-		case YELP:
-			boundaryFile = Constants.yelpBoundary;
-			break;
-		}
-
 		PreProcess prep = new PreProcess();
 		PreProcess.DATA_SET = DATA_SET;
-		prep.readBoundary(PreProcess.DATA_SET);
+		prep.readBoundary();
 		minLatitude = PreProcess.minLat;
 		maxLatitude = PreProcess.maxLat;
 		minLongitude = PreProcess.minLng;
@@ -1164,7 +1143,7 @@ public class GeocrowdInstance extends Geocrowd {
 	 * @return the double
 	 */
 	public double rowToLat(int row) {
-		return ((row) * (maxLatitude - minLatitude) * resolution) + minLatitude;
+		return ((row) * (maxLatitude - minLatitude) / resolution) + minLatitude;
 	}
 
 	/**
@@ -1175,7 +1154,7 @@ public class GeocrowdInstance extends Geocrowd {
 	 * @return the double
 	 */
 	public double colToLng(int col) {
-		return ((col) * (maxLongitude - minLongitude) * resolution)
+		return ((col) * (maxLongitude - minLongitude) / resolution)
 				+ minLongitude;
 	}
 

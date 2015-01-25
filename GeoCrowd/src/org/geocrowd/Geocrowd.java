@@ -14,6 +14,7 @@ package org.geocrowd;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
 import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.EntropyRecord;
+import org.geocrowd.common.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -32,41 +34,40 @@ import org.geocrowd.common.entropy.EntropyRecord;
 public abstract class Geocrowd {
 
 	/** The min latitude. */
-	public double minLatitude = 32.1713906;
+	public double minLatitude = 0;
 
 	/** The max latitude. */
-	public double maxLatitude = 41.998434033;
+	public double maxLatitude = 0;
 
 	/** The min longitude. */
-	public double minLongitude =-124.3041035;
+	public double minLongitude = 0;
 
 	/** The max longitude. */
-	public double maxLongitude =  -114.0043464333;
-	
+	public double maxLongitude = 0;
+
 	/** The resolution. */
-	public double resolution = 0.00002;
-	
+	public int resolution = 0;
+
 	/** The row count. */
 	public int rowCount = 0; // number of rows for the grid
 
 	/** The col count. */
 	public int colCount = 0; // number of cols for the grid
-	
+
 	/** The entropies. */
 	public HashMap<Integer, HashMap<Integer, Double>> entropies = null;
 
 	/** The max entropy. */
 	public double maxEntropy = 0;
-	
+
 	/** The sum entropy. */
 	public int sumEntropy = 0;
-	
+
 	// ---------------
 
 	/** The entropy list. */
 	public ArrayList<EntropyRecord> entropyList = new ArrayList();
-	
-	
+
 	/** The data set. */
 	public static DatasetEnum DATA_SET = DatasetEnum.GOWALLA;
 
@@ -78,18 +79,18 @@ public abstract class Geocrowd {
 
 	/** number of workers generated so far. */
 	public int WorkerCount = 0;
-        /** number of assigned tasks. */
+	/** number of assigned tasks. */
 	public static int TotalAssignedTasks = 0;
 
-        /** number of assigned tasks. */
+	/** number of assigned tasks. */
 	public static int TotalAssignedWorkers = 0;
-	
-        /** average time to assign tasks. */
-        public static double AverageTimeToAssignTask = 0.0;
-        
-        /** num time instace tasks assigned */
-        public int numTimeInstanceTaskAssign = 0;
-        
+
+	/** average time to assign tasks. */
+	public static double AverageTimeToAssignTask = 0.0;
+
+	/** num time instace tasks assigned */
+	public int numTimeInstanceTaskAssign = 0;
+
 	/** The Total expired task. */
 	public int TotalExpiredTask = 0;
 
@@ -200,7 +201,8 @@ public abstract class Geocrowd {
 	 * @return the double
 	 */
 	public double distanceWorkerTask(GenericWorker worker, GenericTask task) {
-		if (DATA_SET == DatasetEnum.GOWALLA || DATA_SET == DatasetEnum.YELP || DATA_SET == DatasetEnum.FOURSQUARE)
+		if (DATA_SET == DatasetEnum.GOWALLA || DATA_SET == DatasetEnum.YELP
+				|| DATA_SET == DatasetEnum.FOURSQUARE)
 			return worker.distanceToTask(task);
 
 		// not geographical coordinates
@@ -208,8 +210,8 @@ public abstract class Geocrowd {
 				* (worker.getLatitude() - task.getLat())
 				+ (worker.getLongitude() - task.getLng())
 				* (worker.getLongitude() - task.getLng()));
-		
-//		System.out.println(distance);
+
+		// System.out.println(distance);
 		return distance;
 	}
 
@@ -226,50 +228,18 @@ public abstract class Geocrowd {
 		}
 	}
 
-public void createGrid(DatasetEnum dataset) {
-	switch (DATA_SET) {
-	case GOWALLA:
-		resolution = Constants.gowallaResolution;
-		break;
-	case SKEWED:
-		resolution = Constants.skewedResolution;
-		break;
-	case UNIFORM:
-		resolution = Constants.uniResolution;
-		break;
-	case SMALL_TEST:
-		resolution = Constants.smallResolution;
-	case YELP:
-		resolution = Constants.yelpResolution;
+	public void createGrid(DatasetEnum dataset) {
+		resolution = Utils.datasetToResolution(DATA_SET);
+		rowCount = colCount = resolution;
+		System.out
+				.println("rowcount: " + rowCount + "    colCount:" + colCount);
 	}
-	rowCount = colCount = (int)(1.0/resolution);
-	System.out
-			.println("rowcount: " + rowCount + "    colCount:" + colCount);
-}
-	
+
 	/**
 	 * Get a list of entropy records.
 	 */
 	public void readEntropy() {
-		String filePath = "";
-		switch (DATA_SET) {
-		case GOWALLA:
-			filePath = Constants.gowallaLocationEntropyFileName;
-			break;
-		case SKEWED:
-			filePath = Constants.skewedLocationDensityFileName;
-			break;
-		case UNIFORM:
-			filePath = Constants.uniLocationDensityFileName;
-			break;
-		case SMALL_TEST:
-			filePath = Constants.smallLocationDensityFileName;
-			break;
-		case YELP:
-			filePath = Constants.yelpLocationEntropyFileName;
-			break;
-		}
-
+		String filePath = Utils.datasetToEntropyPath(DATA_SET);
 		entropies = new HashMap<Integer, HashMap<Integer, Double>>();
 		try {
 			FileReader file = new FileReader(filePath);
@@ -295,12 +265,11 @@ public void createGrid(DatasetEnum dataset) {
 				entropyList.add(dR);
 				sumEntropy += entropy;
 			}
-//			System.out.println("Max entropy: " + maxEntropy);
+			// System.out.println("Max entropy: " + maxEntropy);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
 
 	/**
 	 * compute grid granularity.
@@ -309,25 +278,12 @@ public void createGrid(DatasetEnum dataset) {
 	 *            the dataset
 	 */
 	public void createGrid() {
-		switch (DATA_SET) {
-		case GOWALLA:
-			resolution = Constants.gowallaResolution;
-			break;
-		case SKEWED:
-			resolution = Constants.skewedResolution;
-			break;
-		case UNIFORM:
-			resolution = Constants.uniResolution;
-			break;
-		case SMALL_TEST:
-			resolution = Constants.smallResolution;
-		case YELP:
-			resolution = Constants.yelpResolution;
-		}
-		rowCount = colCount = (int)(1.0/resolution);
-//		System.out
-//				.println("rowcount: " + rowCount + "    colCount:" + colCount);
+		resolution = Utils.datasetToResolution(DATA_SET);
+		rowCount = colCount = resolution;
+//		 System.out
+//		 .println("rowcount: " + rowCount + "    colCount:" + colCount);
 	}
+
 	/**
 	 * Lat to row idx.
 	 * 
@@ -336,7 +292,7 @@ public void createGrid(DatasetEnum dataset) {
 	 * @return the int
 	 */
 	public int latToRowIdx(double lat) {
-		return (int) (1.0/resolution * (lat - minLatitude) / (maxLatitude - minLatitude));
+		return (int) (resolution * (lat - minLatitude) / (maxLatitude - minLatitude));
 	}
 
 	/**
@@ -347,9 +303,9 @@ public void createGrid(DatasetEnum dataset) {
 	 * @return the int
 	 */
 	public int lngToColIdx(double lng) {
-		return (int) ((lng - minLongitude) / (resolution * (maxLongitude- minLongitude)));
+		return (int) (resolution * (lng - minLongitude) / (maxLongitude - minLongitude));
 	}
-	
+
 	/**
 	 * Compute cost.
 	 * 
@@ -372,7 +328,7 @@ public void createGrid(DatasetEnum dataset) {
 		// System.out.println(score / (1.0 + entropy));
 		return entropy;
 	}
-	
+
 	/**
 	 * Compute cost.
 	 * 
@@ -383,7 +339,7 @@ public void createGrid(DatasetEnum dataset) {
 	public double computeCost(GenericWorker w) {
 		int row = latToRowIdx(w.getLatitude());
 		int col = lngToColIdx(w.getLongitude());
-		// System.out.println(row + " " + col);
+//		System.out.println(row + " " + col);
 		double entropy = 0;
 		if (entropies.containsKey(row)) {
 			HashMap h = entropies.get(row);
@@ -392,18 +348,42 @@ public void createGrid(DatasetEnum dataset) {
 			if (entropies.get(row).containsKey(col))
 				entropy = entropies.get(row).get(col);
 		}
-		// System.out.println(score / (1.0 + entropy));
+//		System.out.println(entropy);
 		return entropy;
 	}
 
 	/**
+	 * Read boundary from file.
+	 * 
+	 * @param dataset
+	 *            the dataset
+	 */
+	public void readBoundary() {
+		String boundaryFile = Utils.datasetToBoundary(DATA_SET);
+		try {
+			FileReader reader = new FileReader(boundaryFile);
+			BufferedReader in = new BufferedReader(reader);
+			if (in.ready()) {
+				String line = in.readLine();
+				String[] parts = line.split(" ");
+				minLatitude = Double.valueOf(parts[0]);
+				minLongitude = Double.valueOf(parts[1]);
+				maxLatitude = Double.valueOf(parts[2]);
+				maxLongitude = Double.valueOf(parts[3]);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
 	 * Prints the boundaries.
 	 */
 	public void printBoundaries() {
-		System.out.println("\nminLat:" + minLatitude + "   maxLat:" + maxLatitude
-				+ "   minLng:" + minLongitude + "   maxLng:" + maxLongitude);
+		System.out.println("\nminLat:" + minLatitude + "   maxLat:"
+				+ maxLatitude + "   minLng:" + minLongitude + "   maxLng:"
+				+ maxLongitude);
 	}
-	
+
 	/**
 	 * Matching tasks workers.
 	 */

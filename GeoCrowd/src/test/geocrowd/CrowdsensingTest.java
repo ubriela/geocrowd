@@ -19,6 +19,7 @@ import org.geocrowd.GeocrowdSensing;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.common.Constants;
+import org.geocrowd.common.utils.Utils;
 import org.junit.Test;
 
 // TODO: Auto-generated Javadoc
@@ -50,43 +51,11 @@ public class CrowdsensingTest {
 			// for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
-
-				switch (Geocrowd.DATA_SET) {
-				case GOWALLA:
-					crowdsensing.readTasks(Constants.gowallaTaskFileNamePrefix
-							+ i + ".txt");
-					crowdsensing
-							.readWorkers(Constants.gowallaWorkerFileNamePrefix
-									+ k + ".txt");
-					break;
-				case YELP:
-					crowdsensing.readTasks(Constants.yelpTaskFileNamePrefix + i
-							+ ".txt");
-					crowdsensing.readWorkers(Constants.yelpWorkerFileNamePrefix
-							+ k + ".txt");
-					break;
-				case UNIFORM:
-					crowdsensing.readTasks(Constants.uniTaskFileNamePrefix + i
-							+ ".txt");
-					crowdsensing.readWorkers(Constants.uniWorkerFileNamePrefix
-							+ i + ".txt");
-					break;
-				case SKEWED:
-					crowdsensing.readTasks(Constants.skewedTaskFileNamePrefix
-							+ i + ".txt");
-					crowdsensing
-							.readWorkers(Constants.skewedWorkerFileNamePrefix
-									+ i + ".txt");
-					break;
-				case SMALL_TEST:
-					crowdsensing.readTasks(Constants.smallTaskFileNamePrefix
-							+ i + ".txt");
-					crowdsensing
-							.readWorkers(Constants.smallWorkerFileNamePrefix
-									+ i + ".txt");
-					break;
-				}
-
+				crowdsensing.readTasks(Utils
+						.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
+				crowdsensing.readWorkers(Utils
+						.datasetToWorkerPath(Geocrowd.DATA_SET) + k + ".txt");
+				
 				crowdsensing.matchingTasksWorkers();
 				crowdsensing.computeAverageTaskPerWorker();
 				crowdsensing.computeAverageWorkerPerTask();

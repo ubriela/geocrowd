@@ -91,8 +91,8 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 		int uncoveredTasks = 0;
 		double regionEntropy = entropies.get(workeridx);
 		
-		if (regionEntropy > maxRegionEntropy)
-			maxRegionEntropy = regionEntropy;
+//		if (regionEntropy > maxRegionEntropy)
+//			maxRegionEntropy = regionEntropy;
 		
 
 		for (Integer t : tasksWithDeadlines.keySet()) {

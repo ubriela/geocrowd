@@ -28,6 +28,7 @@ import static org.geocrowd.Geocrowd.taskList;
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.utils.Utils;
 
 public class OnlineMTC extends GeocrowdSensing {
 
@@ -52,6 +53,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			this.totalNumberTasks = -1;
 		}
 	}
+
 
 	/**
 	 * Read tasks from file.
@@ -175,6 +177,7 @@ public class OnlineMTC extends GeocrowdSensing {
 
 			TotalAssignedTasks += maxCoverBasicT.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
+			usedBudget += assignedWorker.size();
 			maxCover = maxCoverBasicT;
 //			}
 			break;
@@ -228,18 +231,20 @@ public class OnlineMTC extends GeocrowdSensing {
 			 * compute entropy for workers
 			 */
 //			printBoundaries();
-			createGrid();
-			readEntropy();
+//			createGrid();
+//			readEntropy();
 			HashMap<Integer, Double> worker_entropies = new HashMap<Integer, Double>();
 			
 			for (int idx = 0; idx < containerWorker.size(); idx++)
 				worker_entropies.put(idx, computeCost(workerList.get(idx)));
 
 			maxCoverS.setWorkerEntropies(worker_entropies);
+			maxCoverS.maxRegionEntropy = maxEntropy;
 			assignedWorker = maxCoverS.maxCover();
 			
 			TotalAssignedTasks += maxCoverS.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
+			usedBudget += assignedWorker.size();
 
 			maxCover = maxCoverS;
 			break;
@@ -263,6 +268,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			
 			TotalAssignedTasks += maxCoverST.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
+			usedBudget += assignedWorker.size();
 
 			maxCover = maxCoverST;
 			break;
@@ -446,33 +452,10 @@ public class OnlineMTC extends GeocrowdSensing {
 	private int computeTotalTasks() throws IOException {
 		int numberTasks = 0;
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			switch (Geocrowd.DATA_SET) {
-			case GOWALLA:
-				numberTasks += Parser
-						.readNumberOfTasks(Constants.gowallaTaskFileNamePrefix
-								+ i + ".txt");
-				break;
-			case YELP:
-				numberTasks += Parser
-						.readNumberOfTasks(Constants.yelpTaskFileNamePrefix + i
-								+ ".txt");
-				break;
-			case UNIFORM:
-				numberTasks += Parser
-						.readNumberOfTasks(Constants.uniTaskFileNamePrefix + i
-								+ ".txt");
-				break;
-			case SKEWED:
-				numberTasks += Parser
-						.readNumberOfTasks(Constants.skewedTaskFileNamePrefix
-								+ i + ".txt");
-				break;
-			case SMALL_TEST:
-				numberTasks += Parser
-						.readNumberOfTasks(Constants.smallTaskFileNamePrefix
-								+ i + ".txt");
-				break;
-			}
+			String taskPath = Utils.datasetToTaskPath(DATA_SET);
+			numberTasks += Parser
+					.readNumberOfTasks(taskPath
+							+ i + ".txt");
 		}
 		return numberTasks;
 	}

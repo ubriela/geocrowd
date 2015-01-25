@@ -34,11 +34,12 @@ public class PreProcessTest extends PreProcess {
     
     public static void main(String[] args){
         PreProcessTest preTest = new PreProcessTest();
-//        preTest.testFilterInput();
-//        preTest.generateWorkers();
-//        preTest.computeLocationEntropy();
-//        preTest.testExtractCoords();
         preTest.testGenerateSynWorkersTasks();
+        
+//      preTest.testFilterInput();
+//      preTest.generateWorkers();
+//      preTest.computeLocationEntropy();
+//      preTest.testExtractCoords();
     }
 
 	/**
@@ -49,8 +50,8 @@ public class PreProcessTest extends PreProcess {
 		PreProcess prep = new PreProcess();
 		PreProcess.DATA_SET = DatasetEnum.GOWALLA;
 		
-		prep.readBoundary(PreProcess.DATA_SET);
-		prep.createGrid(PreProcess.DATA_SET);
+		prep.readBoundary();
+		prep.createGrid();
 		
 		// compute occurrences of each location id from Gowalla
 		// each location id is associated with a grid 
@@ -72,10 +73,10 @@ public class PreProcessTest extends PreProcess {
 	@Test
 	public void generateWorkers() {
 		PreProcess prep = new PreProcess();
-		PreProcess.DATA_SET = DatasetEnum.GOWALLA;
+		PreProcess.DATA_SET = DatasetEnum.SKEWED;
 		
-		prep.readBoundary(PreProcess.DATA_SET);
-		prep.createGrid(PreProcess.DATA_SET);
+		prep.readBoundary();
+		prep.createGrid();
 
 		// generating workers from Gowalla
 		Hashtable<Date, ArrayList<SpecializedWorker>> hashTable = prep
@@ -98,7 +99,7 @@ public class PreProcessTest extends PreProcess {
 		// SF: 37.711049,-122.51524, 37.832899,-122.360744
 		// Yelp: 
 		prep.filterInput("dataset/real/gowalla/gowalla_CA", 32.1713906, -124.3041035, 41.998434033, -114.0043464333);
-		prep.computeBoundary("dataset/real/gowalla/gowalla_CA");
+		prep.computeBoundary();
 		prep.extractCoords("dataset/real/gowalla/gowalla_CA");
 		prep.extractWorkersInstances("dataset/real/gowalla/gowalla_CA", "dataset/real/gowalla/worker/worker", 50);
 		
@@ -116,7 +117,7 @@ public class PreProcessTest extends PreProcess {
 		
 		prep.filterInput(Constants.gowallaFileName_CA, 32.1713906, -124.3041035, 41.998434033, -114.0043464333);
 
-		prep.computeBoundary(Constants.gowallaFileName_CA);
+		prep.computeBoundary();
 	}
 
 	/**
@@ -127,20 +128,22 @@ public class PreProcessTest extends PreProcess {
 
 		PreProcess prep = new PreProcess();
 		PreProcess.DATA_SET = DatasetEnum.SKEWED;
-		
-		Constants.TIME_INSTANCE = 168;
-		prep.computeBoundary(Constants.skewedBoundary);
-		prep.readBoundary(PreProcess.DATA_SET);
-		prep.createGrid(PreProcess.DATA_SET);
+		Constants.TIME_INSTANCE = 24;
 
+		prep.computeBoundary();
+		prep.readBoundary();
+		prep.createGrid();
+		
 		// generating workers
 		prep.workerIdDist = Distribution1DEnum.ZIFFIAN_1D;
 		prep.generateSynWorkers(true, true);
+		
+		// generate tasks
+		prep.generateSynTasks();
 
 		// generating location density
 		prep.saveLocationDensity(prep.computeSyncLocationDensity());
 
-		// generate tasks
-		prep.generateSynTasks();
+		prep.regionEntropy();
 	}
 }

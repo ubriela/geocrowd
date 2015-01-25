@@ -71,7 +71,7 @@ public class PreProcess {
 	public static int timeCounter = 0; // works as the clock for task generation
 
 	/** The resolution. */
-	public double resolution = 0.00002;
+	public int resolution = 0;
 
 	/** The data set. */
 	public static DatasetEnum DATA_SET;
@@ -105,11 +105,12 @@ public class PreProcess {
 	 * @param datafile
 	 *            the datafile
 	 */
-	public void computeBoundary(String datafile) {
+	public void computeBoundary() {
+		System.out.println(DATA_SET);
 		switch (DATA_SET) {
 		case GOWALLA:
 			try {
-				FileReader reader = new FileReader(datafile);
+				FileReader reader = new FileReader(Constants.gowallaFileName_CA);
 				BufferedReader in = new BufferedReader(reader);
 				int cnt = 0;
 				while (in.ready()) {
@@ -128,26 +129,16 @@ public class PreProcess {
 						maxLng = lng;
 					cnt++;
 				}
-
-				FileWriter writer = new FileWriter(Constants.gowallaBoundary);
-				BufferedWriter out = new BufferedWriter(writer);
-				out.write(minLat + " " + minLng + " " + maxLat + " " + maxLng);
-				out.close();
-
-				System.out.println("Boundary [minLat:" + minLat + "   maxLat:"
-						+ maxLat + "   minLng:" + minLng + "   maxLng:"
-						+ maxLng + "]");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			break;
 		case SKEWED:
 		case UNIFORM:
-			int cnt = 0;
+			String workersPath = Utils.datasetToWorkerPointPath();
 			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 				try {
-					FileReader reader = new FileReader(
-							Constants.inputWorkerFilePath + i + ".txt");
+					FileReader reader = new FileReader(workersPath + i + ".txt");
 					BufferedReader in = new BufferedReader(reader);
 					while (in.ready()) {
 						String line = in.readLine();
@@ -163,31 +154,32 @@ public class PreProcess {
 							minLng = lng;
 						if (lng > maxLng)
 							maxLng = lng;
-						cnt++;
 					}
-
-					FileWriter writer = new FileWriter(Constants.skewedBoundary);
-					BufferedWriter out = new BufferedWriter(writer);
-					out.write(minLat + " " + minLng + " " + maxLat + " "
-							+ maxLng);
-					out.close();
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Boundary [minLat:" + minLat + "   maxLat:"
-					+ maxLat + "   minLng:" + minLng + "   maxLng:" + maxLng
-					+ "]");
 			break;
 		}
+
+		// dump boundary to file
+		String boundaryPath = Utils.datasetToBoundary(DATA_SET);
+		try {
+			FileWriter writer = new FileWriter(boundaryPath);
+			BufferedWriter out = new BufferedWriter(writer);
+			out.write(minLat + " " + minLng + " " + maxLat + " " + maxLng);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Boundary [minLat:" + minLat + "   maxLat:" + maxLat
+				+ "   minLng:" + minLng + "   maxLng:" + maxLng + "]");
 
 		MBR mbr = new MBR(minLat, minLng, maxLat, maxLng);
 		double x = Utils.distance(minLat, minLng, maxLat, minLng);
 		double y = Utils.distance(minLat, minLng, minLat, maxLng);
 		System.out.println("Area: " + x * y);
 		System.out.println("Region MBR size: " + mbr.diagonalLength());
-
 	}
 
 	/**
@@ -224,10 +216,11 @@ public class PreProcess {
 		}
 	}
 
-	private void computeRegionEntropy(
+	private void dumpRegionEntropy(
 			Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances) {
 		try {
-			FileWriter writer = new FileWriter(Constants.gowallaEntropyFileName);
+			String entropyPath = Utils.datasetToEntropyPath(DATA_SET);
+			FileWriter writer = new FileWriter(entropyPath);
 			BufferedWriter out = new BufferedWriter(writer);
 
 			for (Integer row : regionOccurances.keySet()) {
@@ -258,21 +251,12 @@ public class PreProcess {
 	}
 
 	/**
-	 * Compute sync location density.
+	 * Compute sync location density (i.e., the number of points).
 	 * 
 	 * @return the hashtable
 	 */
 	public Hashtable<Integer, Hashtable<Integer, Integer>> computeSyncLocationDensity() {
-		String workerFilePath = "";
-		switch (DATA_SET) {
-		case SKEWED:
-		case UNIFORM:
-			workerFilePath = Constants.inputWorkerFilePath;
-			break;
-		case SMALL_TEST:
-			workerFilePath = Constants.smallWorkerFilePath;
-		}
-
+		String workerFilePath = Utils.datasetToWorkerPointPath();
 		Hashtable<Integer, Hashtable<Integer, Integer>> densities = new Hashtable<Integer, Hashtable<Integer, Integer>>();
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			try {
@@ -352,23 +336,9 @@ public class PreProcess {
 	 * @param dataset
 	 *            the dataset
 	 */
-	public void createGrid(DatasetEnum dataset) {
-		switch (dataset) {
-		case GOWALLA:
-			resolution = Constants.gowallaResolution;
-			break;
-		case SKEWED:
-			resolution = Constants.skewedResolution;
-			break;
-		case UNIFORM:
-			resolution = Constants.uniResolution;
-			break;
-		case SMALL_TEST:
-			resolution = Constants.smallResolution;
-		case YELP:
-			resolution = Constants.yelpResolution;
-		}
-		rowCount = colCount = (int) (1.0 / resolution);
+	public void createGrid() {
+		resolution = Utils.datasetToResolution(DATA_SET);
+		rowCount = colCount = resolution;
 		System.out
 				.println("rowcount: " + rowCount + "    colCount:" + colCount);
 	}
@@ -726,8 +696,8 @@ public class PreProcess {
 				Double lng = Double.parseDouble(parts[3]);
 
 				// init MBR of each worker
-				MBR mbr = new MBR(lat - 2 * resolution, lng - 2 * resolution,
-						lat + 2 * resolution, lng + 2 * resolution);
+				MBR mbr = new MBR(lat - 2 / resolution, lng - 2 / resolution,
+						lat + 2 / resolution, lng + 2 / resolution);
 
 				// make sure the MBR is within the boundary
 				if (mbr.minLat < minLat)
@@ -834,13 +804,13 @@ public class PreProcess {
 	 */
 	private void generateSyncWorkersFromDataPoints(String outputFile,
 			String inputFile, boolean isConstantMBR, boolean isConstantMaxT) {
-		int maxSumTaskWorkers = 0;
 		int workerCount = 0;
 		double maxRangeX = (maxLat - minLat) * (Constants.MaxRangePerc);
 		double maxRangeY = (maxLng - minLng) * Constants.MaxRangePerc;
 		// generate worker id
-		WorkerIDGenerator idGenerator = new WorkerIDGenerator(workerIdDist, 1000, 0, 10000);
-				
+		WorkerIDGenerator idGenerator = new WorkerIDGenerator(workerIdDist,
+				1000, 0, 10000);
+
 		try {
 			FileWriter writer = new FileWriter(outputFile);
 			BufferedWriter out = new BufferedWriter(writer);
@@ -859,7 +829,6 @@ public class PreProcess {
 				else
 					maxT = (int) UniformGenerator.randomValue(new Range(0,
 							Constants.MaxTasksPerWorker), true) + 1;
-				maxSumTaskWorkers += maxT;
 				double rangeX = 0;
 				double rangeY = 0;
 				if (isConstantMBR) {
@@ -881,8 +850,8 @@ public class PreProcess {
 
 				int workerId = idGenerator.nextWorkerId();
 
-				sb.append(workerId + "," + lat + "," + lng + "," + maxT + "," + "["
-						+ mbr.getMinLat() + "," + mbr.getMinLng() + ","
+				sb.append(workerId + "," + lat + "," + lng + "," + maxT + ","
+						+ "[" + mbr.getMinLat() + "," + mbr.getMinLng() + ","
 						+ mbr.getMaxLat() + "," + mbr.getMaxLng() + "],[" + exp
 						+ "]\n");
 			}
@@ -891,7 +860,6 @@ public class PreProcess {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(workerCount);
 	}
 
 	/**
@@ -899,16 +867,7 @@ public class PreProcess {
 	 */
 	public void generateSynTasks() {
 		timeCounter = 0;
-		String outputFileFrefix = "";
-		switch (DATA_SET) {
-		case SKEWED:
-			outputFileFrefix = Constants.skewedTaskFileNamePrefix;
-			break;
-		case UNIFORM:
-			outputFileFrefix = Constants.uniTaskFileNamePrefix;
-			break;
-		}
-
+		String outputFileFrefix = Utils.datasetToTaskPath(DATA_SET);
 		System.out.println("Tasks:");
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			generateSyncTasksFromMatlab(outputFileFrefix + i + ".txt",
@@ -926,16 +885,7 @@ public class PreProcess {
 	 *            the is constant max t
 	 */
 	public void generateSynWorkers(boolean isConstantMBR, boolean isConstantMaxT) {
-		String outputFileFrefix = "";
-		switch (DATA_SET) {
-		case SKEWED:
-			outputFileFrefix = Constants.skewedWorkerFileNamePrefix;
-			break;
-		case UNIFORM:
-			outputFileFrefix = Constants.uniWorkerFileNamePrefix;
-			break;
-		}
-
+		String outputFileFrefix = Utils.datasetToWorkerPath(DATA_SET);
 		System.out.println("Workers:");
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			generateSyncWorkersFromDataPoints(outputFileFrefix + i + ".txt",
@@ -952,11 +902,11 @@ public class PreProcess {
 	 * @return the col idx
 	 */
 	public int getColIdx(double lng) {
-		return (int) ((lng - minLng) / (resolution * (maxLng - minLng)));
+		return (int) (resolution * (lng - minLng) / (maxLng - minLng));
 	}
 
 	public double colIdxToLng(int col) {
-		return col * resolution * (maxLng - minLng) + minLng;
+		return col * (maxLng - minLng) / resolution + minLng;
 	}
 
 	/**
@@ -967,11 +917,11 @@ public class PreProcess {
 	 * @return the row idx
 	 */
 	public int getRowIdx(double lat) {
-		return (int) (1 / resolution * (lat - minLat) / (maxLat - minLat));
+		return (int) (resolution * (lat - minLat) / (maxLat - minLat));
 	}
 
 	public double rowIdxToLat(int row) {
-		return row * resolution * (maxLat - minLat) + minLat;
+		return row * (maxLat - minLat) / resolution + minLat;
 	}
 
 	/**
@@ -1015,28 +965,8 @@ public class PreProcess {
 	 * @param dataset
 	 *            the dataset
 	 */
-	public void readBoundary(DatasetEnum dataset) {
-		String boundaryFile = "";
-		switch (dataset) {
-		case FOURSQUARE:
-			boundaryFile = Constants.foursquareBoundary;
-			break;
-		case GOWALLA:
-			boundaryFile = Constants.gowallaBoundary;
-			break;
-		case SKEWED:
-			boundaryFile = Constants.skewedBoundary;
-			break;
-		case UNIFORM:
-			boundaryFile = Constants.uniBoundary;
-			break;
-		case SMALL_TEST:
-			boundaryFile = Constants.smallBoundary;
-			break;
-		case YELP:
-			boundaryFile = Constants.yelpBoundary;
-			break;
-		}
+	public void readBoundary() {
+		String boundaryFile = Utils.datasetToBoundary(DATA_SET);
 		try {
 			FileReader reader = new FileReader(boundaryFile);
 			BufferedReader in = new BufferedReader(reader);
@@ -1114,24 +1044,10 @@ public class PreProcess {
 	 *            the datasetfile
 	 * @return a hashtable <row, <col, [observations]>>
 	 */
-	public Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> readEntropyData(
-			String datasetfile) {
+	private Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> readEntropyData() {
 
-		String workerFilePath = "";
-		switch (DATA_SET) {
-		case GOWALLA:
-			workerFilePath = Constants.gowallaWorkerFileNamePrefix;
-			break;
-		case SKEWED:
-		case UNIFORM:
-			workerFilePath = Constants.inputWorkerFilePath;
-			break;
-		case SMALL_TEST:
-			workerFilePath = Constants.smallWorkerFilePath;
-		}
-
+		String workerFilePath = Utils.datasetToWorkerPath(DATA_SET);
 		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> hashTable = new Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>>();
-
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			try {
 				FileReader file = new FileReader(workerFilePath + i + ".txt");
@@ -1144,8 +1060,6 @@ public class PreProcess {
 					Double lng = Double.parseDouble(parts[2]);
 					int row = getRowIdx(lat);
 					int col = getColIdx(lng);
-
-					// System.out.println(row + "\t" + col);
 
 					if (!hashTable.containsKey(row)) {
 						Hashtable<Integer, Hashtable<Integer, Integer>> cols = new Hashtable<Integer, Hashtable<Integer, Integer>>();
@@ -1191,8 +1105,8 @@ public class PreProcess {
 			FileReader reader = new FileReader(Constants.gowallaEntropyFileName);
 			BufferedReader in = new BufferedReader(reader);
 
-			FileWriter writer = new FileWriter(
-					Constants.gowallaLocationEntropyFileName);
+			String entropyPath = Utils.datasetToEntropyPath(DATA_SET);
+			FileWriter writer = new FileWriter(entropyPath);
 			BufferedWriter out = new BufferedWriter(writer);
 
 			while (in.ready()) {
@@ -1366,22 +1280,10 @@ public class PreProcess {
 	 */
 	public void saveLocationDensity(
 			Hashtable<Integer, Hashtable<Integer, Integer>> densities) {
-		String locationDensityFileName = "";
-		switch (DATA_SET) {
-		case GOWALLA:
-			locationDensityFileName = Constants.gowallaLocationDensityFileName;
-			break;
-		case SKEWED:
-			locationDensityFileName = Constants.skewedLocationDensityFileName;
-			break;
-		case UNIFORM:
-			locationDensityFileName = Constants.uniLocationDensityFileName;
-			break;
-		case SMALL_TEST:
-			locationDensityFileName = Constants.smallLocationDensityFileName;
-			break;
-		}
+		String locationDensityFileName = Utils
+				.datasetToLocationDensity(DATA_SET);
 
+		StringBuffer sb = new StringBuffer();
 		try {
 			FileWriter writer = new FileWriter(locationDensityFileName);
 			BufferedWriter out = new BufferedWriter(writer);
@@ -1392,10 +1294,11 @@ public class PreProcess {
 				Iterator col_it = densities.get(row).keySet().iterator();
 				while (col_it.hasNext()) {
 					int col = (Integer) col_it.next();
-					out.write(row + "," + col + ","
+					sb.append(row + "," + col + ","
 							+ densities.get(row).get(col) + "\n");
 				}
 			}
+			out.write(sb.toString());
 			out.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1414,31 +1317,17 @@ public class PreProcess {
 	 * Read data from multiple time instances. Then,
 	 */
 	public void regionEntropy() {
-		readBoundary(PreProcess.DATA_SET);
-		createGrid(PreProcess.DATA_SET);
+		readBoundary();
+		createGrid();
 
-		// compute occurrences of each location id from Gowalla
-		// each location id is associated with a grid
-		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> occurances = readEntropyData(Constants.gowallaFileName_CA);
-
-		// for (Hashtable<Integer, Hashtable<Integer, Integer>> cols :
-		// occurances
-		// .values()) {
-		// for (Hashtable<Integer, Integer> col : cols.values()) {
-		// System.out.println(col.keySet() + " " + col.values());
-		// }
-		// }
+		// compute occurrences of each location id
+		// each location id is associated with a grid cell
+		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> occurances = readEntropyData();
 
 		Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionOccurances = regionEntropy(occurances);
 
 		// compute entropy of each location id
-		computeRegionEntropy(regionOccurances);
-
-		// compute index (row, col) of each location id
-		// debug();
-		// Hashtable<Integer, Coord> gridIndices = locIdToCellIndices();
-		// saveLocationEntropy(gridIndices);
-
+		dumpRegionEntropy(regionOccurances);
 	}
 
 	private Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> regionEntropy(
@@ -1485,7 +1374,7 @@ public class PreProcess {
 
 						// System.out.println(lat +" "+ lng +" "+ lat2 +" "+
 						// lng2);
-						if (Utils.distance(lat, lng, lat2, lng2) < (Constants.radius + 0.0) / 2) {
+						if (Utils.distance(lat, lng, lat2, lng2) < Constants.radius) {
 							// System.out.println(Utils.distance(lat, lng, lat2,
 							// lng2));
 							for (Integer userid : obs.keySet()) {

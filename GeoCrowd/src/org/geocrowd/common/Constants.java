@@ -87,23 +87,23 @@ public class Constants {
 	public static String smallWorkerFileNamePrefix = "dataset/small/maxcover/worker/workers";
 
 	/** The small boundary. */
-	public static String smallBoundary = "dataset/small/small_boundary.txt";
+//	public static String smallBoundary = "dataset/small/small_boundary.txt";
 
 	/** The small location density file name. */
-	public static String smallLocationDensityFileName = "dataset/small/small_loc_entropy.txt";
+//	public static String smallLocationDensityFileName = "dataset/small/small_loc_entropy.txt";
 
 	/** The small resolution. */
-	public static double smallResolution = 1;
+	public static int smallResolution = 1;
 
 	// real dataset yelp
 	/** The yelp resolution. */
-	public static double yelpResolution = 0.001;
+	public static int yelpResolution = 1000;
 
 	/** The yelp entropy file name. */
 	public static String yelpEntropyFileName = "dataset/real/yelp/yelp_entropy.txt";
 
 	/** The yelp location entropy file name. */
-	public static String yelpLocationEntropyFileName = "dataset/real/yelp/yelp_entropy.txt";
+//	public static String yelpLocationEntropyFileName = "dataset/real/yelp/yelp_entropy.txt";
 
 	/** The yelp task file name prefix. */
 	public static String yelpTaskFileNamePrefix = "dataset/real/yelp/task/yelp_tasks";
@@ -112,11 +112,11 @@ public class Constants {
 	public static String yelpWorkerFileNamePrefix = "dataset/real/yelp/worker/yelp_workers";
 
 	/** The yelp boundary. */
-	public static String yelpBoundary = "dataset/real/yelp/yelp_boundary.txt";
+//	public static String yelpBoundary = "dataset/real/yelp/yelp_boundary.txt";
 
 	// real dataset gowalla
 	/** The gowalla resolution. */
-	public static double gowallaResolution = 0.00002; // 0.00002 is approximately 30x30 metres
+	public static int gowallaResolution = 50000; // 0.00002 is approximately 30x30 metres
 	/** The gowalla file name. */
 	public static String gowallaFileName = "dataset/real/gowalla/gowalla_totalCheckins.txt";
 
@@ -130,9 +130,9 @@ public class Constants {
 	public static String gowallaEntropyFileName = "dataset/real/gowalla/gowalla_entropy.txt";
 
 	/** The gowalla location entropy file name. */
-	public static String gowallaLocationEntropyFileName = "dataset/real/gowalla/gowalla_entropy.txt";
+//	public static String gowallaLocationEntropyFileName = "dataset/real/gowalla/gowalla_entropy.txt";
 
-	public static String gowallaLocationDensityFileName = "dataset/real/gowalla/gowalla_loc_density.txt";
+//	public static String gowallaLocationDensityFileName = "dataset/real/gowalla/gowalla_loc_density.txt";
 	
 	/** The gowalla task file name prefix. */
 	public static String gowallaTaskFileNamePrefix = "dataset/real/gowalla/task/gowalla_tasks";
@@ -141,7 +141,7 @@ public class Constants {
 	public static String gowallaWorkerFileNamePrefix = "dataset/real/gowalla/worker/gowalla_workers";
 
 	/** The gowalla boundary. */
-	public static String gowallaBoundary = "dataset/real/gowalla/gowalla_CA_boundary.txt";
+//	public static String gowallaBoundary = "dataset/real/gowalla/gowalla_CA_boundary.txt";
 
 	public static String gowallaFileName_CA_loc = "dataset/real/gowalla/gowalla_CA.dat";
 	
@@ -150,14 +150,14 @@ public class Constants {
 
 	public static String foursquareWorkerFileNamePrefix = "dataset/real/foursquare/worker/foursquare_workers";
 	
-	public static String foursquareBoundary = "dataset/real/foursquare/foursquare_boundary.txt";
+//	public static String foursquareBoundary = "dataset/real/foursquare/foursquare_boundary.txt";
 	
 	// synthetic dataset
 	/** The skewed resolution. */
-	public static double skewedResolution = 0.01;
+	public static int skewedResolution = 100;
 
 	/** The uni resolution. */
-	public static double uniResolution = 0.01;
+	public static int uniResolution = 100;
 
 	/** The worker file path. */
 	public static String inputWorkerFilePath = "./res/dataset/worker/workers";
@@ -172,27 +172,27 @@ public class Constants {
 	// "B:/Dropbox/_USC/_Research/_Crowdsourcing/Privacy/PrivateGeoCrowd/src/dataset/taskworker/tasks";
 
 	/** The skewed location density file name. */
-	public static String skewedLocationDensityFileName = "dataset/skew/skew_loc_entropy.txt";
+//	public static String skewedLocationDensityFileName = "dataset/skew/skew_loc_entropy.txt";
 
 	/** The skewed task file name prefix. */
-	public static String skewedTaskFileNamePrefix = "dataset/skew/task/skew_tasks";
+//	public static String skewedTaskFileNamePrefix = "dataset/skew/task/skew_tasks";
 
 	/** The skewed worker file name prefix. */
-	public static String skewedWorkerFileNamePrefix = "dataset/skew/worker/skew_workers";
+//	public static String skewedWorkerFileNamePrefix = "dataset/skew/worker/skew_workers";
 
 	/** The skewed boundary. */
-	public static String skewedBoundary = "dataset/skew/skew_boundary.txt";
+//	public static String skewedBoundary = "dataset/skew/skew_boundary.txt";
 
 	/** The uni location density file name. */
-	public static String uniLocationDensityFileName = "dataset/uni/uni_loc_entropy.txt";
+//	public static String uniLocationDensityFileName = "dataset/uni/uni_loc_entropy.txt";
 
 	/** The uni task file name prefix. */
-	public static String uniTaskFileNamePrefix = "dataset/uni/task/uni_tasks";
+//	public static String uniTaskFileNamePrefix = "dataset/uni/task/uni_tasks";
 
 	/** The uni worker file name prefix. */
-	public static String uniWorkerFileNamePrefix = "dataset/uni/worker/uni_workers";
+//	public static String uniWorkerFileNamePrefix = "dataset/uni/worker/uni_workers";
 
 	/** The uni boundary. */
-	public static String uniBoundary = "dataset/uni/uni_boundary.txt";
+//	public static String uniBoundary = "dataset/uni/uni_boundary.txt";
 
 }

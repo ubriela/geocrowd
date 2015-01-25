@@ -34,6 +34,7 @@ import org.datasets.syn.dtype.GenericPoint;
 import org.datasets.syn.dtype.Point;
 import org.datasets.syn.dtype.ValueFreq;
 import org.geocrowd.DatasetEnum;
+import org.geocrowd.common.Constants;
 import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
 import org.paukov.combinatorics.ICombinatoricsVector;
@@ -592,6 +593,7 @@ public class Utils {
 
 	/**
 	 * Zipf's law from Wiki
+	 * 
 	 * @param N
 	 * @param k
 	 * @param s
@@ -617,6 +619,14 @@ public class Utils {
 		}
 		return "";
 	}
+	
+	public static String datasetToWorkerPointPath() {
+		return "res/dataset/worker/workers";
+	}
+	
+	public static String datasetToTaskPointPath() {
+		return "res/dataset/task/tasks";
+	}
 
 	public static String datasetToTaskPath(DatasetEnum dataset) {
 		switch (dataset) {
@@ -630,5 +640,72 @@ public class Utils {
 			return "dataset/uni/task/uni_tasks";
 		}
 		return "";
+	}
+
+	public static String datasetToEntropyPath(DatasetEnum dataset) {
+		switch (dataset) {
+		case GOWALLA:
+			return "dataset/real/gowalla/gowalla_entropy.txt";
+		case FOURSQUARE:
+			return "dataset/real/foursquare/foursquare_entropy.txt";
+		case YELP:
+			return "dataset/real/yelp/yelp_entropy.txt";
+		case SKEWED:
+			return "dataset/skew/skew_entropy.txt";
+		case UNIFORM:
+			return "dataset/uni/uni_entropy.txt";
+		}
+		return "";
+	}
+
+	public static String datasetToLocationDensity(DatasetEnum dataset) {
+		switch (dataset) {
+		case GOWALLA:
+			return "dataset/real/gowalla/gowalla_loc_density.txt";
+		case FOURSQUARE:
+			return "dataset/real/foursquare/foursquare_loc_density.txt";
+		case SKEWED:
+			return "dataset/skew/skew_loc_density.txt";
+		case UNIFORM:
+			return "dataset/uni/uni_loc_density.txt";
+		case SMALL_TEST:
+			return "dataset/small/small_loc_entropy.txt";
+		}
+		return "";
+	}
+
+	public static String datasetToBoundary(DatasetEnum dataset) {
+		switch (dataset) {
+		case FOURSQUARE:
+			return "dataset/real/foursquare/foursquare_boundary.txt";
+		case GOWALLA:
+			return "dataset/real/gowalla/gowalla_boundary.txt";
+		case SKEWED:
+			return "dataset/skew/skew_boundary.txt";
+		case UNIFORM:
+			return "dataset/uni/uni_boundary.txt";
+		case SMALL_TEST:
+			return "dataset/small/small_boundary.txt";
+		case YELP:
+			return "dataset/real/yelp/yelp_boundary.txt";
+		}
+		return "";
+	}
+
+	public static int datasetToResolution(DatasetEnum dataset) {
+		switch (dataset) {
+
+		case GOWALLA:
+			return Constants.gowallaResolution;
+		case SKEWED:
+			return Constants.skewedResolution;
+		case UNIFORM:
+			return Constants.uniResolution;
+		case SMALL_TEST:
+			return Constants.smallResolution;
+		case YELP:
+			return Constants.yelpResolution;
+		}
+		return 0;
 	}
 }

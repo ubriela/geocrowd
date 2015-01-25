@@ -610,6 +610,13 @@ public class GeocrowdSensing extends Geocrowd {
 	public void readTasks(String fileName) {
 		TaskCount += Parser.parseSensingTasks(fileName, taskList);
 	}
+	
+	/**
+	 * workload
+	 */
+	public void readWorkloadTasks(String fileName, int startTime) {
+		TaskCount += Parser.parseSensingTasks(fileName, startTime, taskList);
+	}
 
 	/**
 	 * Read workers from file Working region of each worker is computed from his

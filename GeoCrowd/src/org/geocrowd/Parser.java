@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
 import org.geocrowd.common.crowdsource.GenericTask;
@@ -127,6 +128,37 @@ public class Parser {
         }
         return cnt;
     }
+    
+
+	public static int parseSensingTasks(String fileName, int startTime,
+			ArrayList<GenericTask> taskList) {
+        int cnt = 0;
+        int listCount = taskList.size();
+        try {
+            FileReader reader = new FileReader(fileName);
+            BufferedReader in = new BufferedReader(reader);
+            while (in.ready()) {
+                String line = in.readLine();
+                String[] parts = line.split(",");
+                if("".equals(line.trim()) || parts.length < 4)
+                    continue;
+                double lat = Double.parseDouble(parts[0]);
+                double lng = Double.parseDouble(parts[1]);
+                int time = Integer.parseInt(parts[2]) - startTime;
+                Double entropy = Double.parseDouble(parts[3]);
+                SensingTask t = new SensingTask(lat, lng, time, entropy);
+                t.setRadius(Constants.radius);
+                t.setK(Constants.K);
+                taskList.add(listCount, t);
+                listCount++;
+                cnt++;
+            }
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cnt;
+	}
 
     public static int parseGenericWorkers(String fileName,
             ArrayList<GenericWorker> workerList) {

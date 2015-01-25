@@ -1,9 +1,12 @@
 package test.geocrowd;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.apache.log4j.Logger;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.OfflineMTC;
@@ -11,7 +14,8 @@ import org.geocrowd.common.Constants;
 import org.geocrowd.common.utils.Utils;
 
 public class OfflineMTCTest {
-
+	static Logger logger = Logger.getLogger(OnlineMTCTest.class.getName());
+	
 	public static void main(String[] args) {
 		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
 		
@@ -41,7 +45,6 @@ public class OfflineMTCTest {
 				offlineMTC.isFixed = isFixes[fix];
 				offlineMTC.budget = budget;
 				Constants.radius = radii[r];
-				
 				offlineMTC.reset();
 			
 				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
@@ -72,14 +75,19 @@ public class OfflineMTCTest {
 			}
 
 		
-		System.out.printf("\n%-20s \t", "");
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter pw = new PrintWriter(stringWriter);
+		pw.printf("\n%-20s \t", "");
 		for (int j2 = 0; j2 < isFixes.length; j2++)
-			System.out.printf("%-20s \t", isFixes[j2]);
+			pw.printf("%-20s \t", isFixes[j2]);
 		for (int b = 0; b < radii.length; b++) {
-			System.out.printf("\n%-20f \t", radii[b]);
+			pw.printf("\n%-20f \t", radii[b]);
 			for (int j2 = 0; j2 < isFixes.length; j2++)
-				System.out.printf("%-20d \t", coveredTasks[b][j2]);
+				pw.printf("%-20d \t", coveredTasks[b][j2]);
 		}
+		
+		logger.info(stringWriter.toString());
+		System.out.println(stringWriter.toString());
 	}
 
 	public static void varying_budget(int[] budgets, double radius) {
@@ -126,13 +134,18 @@ public class OfflineMTCTest {
 			}
 
 		
-		System.out.printf("\n%-20s \t", "");
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter pw = new PrintWriter(stringWriter);
+		pw.printf("\n%-20s \t", "");
 		for (int j2 = 0; j2 < isFixes.length; j2++)
-			System.out.printf("%-20s \t", isFixes[j2]);
+			pw.printf("%-20s \t", isFixes[j2]);
 		for (int b = 0; b < budgets.length; b++) {
-			System.out.printf("\n%-20d \t", budgets[b]);
+			pw.printf("\n%-20d \t", budgets[b]);
 			for (int j2 = 0; j2 < isFixes.length; j2++)
-				System.out.printf("%-20d \t", coveredTasks[b][j2]);
+				pw.printf("%-20d \t", coveredTasks[b][j2]);
 		}
+		
+		logger.info(stringWriter.toString());
+		System.out.println(stringWriter.toString());
 	}
 }

@@ -154,10 +154,10 @@ public class Constants {
 	
 	// synthetic dataset
 	/** The skewed resolution. */
-	public static int skewedResolution = 100;
+	public static int skewedResolution = 1000;
 
 	/** The uni resolution. */
-	public static int uniResolution = 100;
+	public static int uniResolution = 1000;
 
 	/** The worker file path. */
 	public static String inputWorkerFilePath = "./res/dataset/worker/workers";

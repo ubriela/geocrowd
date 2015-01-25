@@ -16,6 +16,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.datasets.syn.Distribution1DEnum;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.PreProcess;
 import org.geocrowd.common.Constants;
@@ -133,6 +134,7 @@ public class PreProcessTest extends PreProcess {
 		prep.createGrid(PreProcess.DATA_SET);
 
 		// generating workers
+		prep.workerIdDist = Distribution1DEnum.ZIFFIAN_1D;
 		prep.generateSynWorkers(true, true);
 
 		// generating location density

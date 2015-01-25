@@ -82,9 +82,9 @@ public class Utils {
 
 	/**
 	 * Compute Mean Contribution Distance
-	 *
+	 * 
 	 * Ref: On the "localness" of user-generated content.
-	 *
+	 * 
 	 * @param contributer
 	 *            the contributer
 	 * @param contributions
@@ -160,9 +160,7 @@ public class Utils {
 		getSubsets(superSet, k, 0, new HashSet<Integer>(), res);
 		return res;
 	}
-	
-	
-	
+
 	/**
 	 * find the lower bound
 	 * 
@@ -540,15 +538,15 @@ public class Utils {
 		}
 		return b;
 	}
-	
+
 	public static String createKeyString(GenericPoint point) {
 		return point.getX().toString() + ";" + point.getY().toString();
 	}
-	
+
 	public static String createKeyString(Point point) {
 		return point.getX() + ";" + point.getY();
 	}
-	
+
 	/**
 	 * Writefile.
 	 * 
@@ -591,11 +589,21 @@ public class Utils {
 			e.printStackTrace();
 		}
 	}
-	
-	public static String foursquareTaskFileNamePrefix = "dataset/real/foursquare/task/tasks";
 
-	public static String foursquareWorkerFileNamePrefix = "dataset/real/foursquare/worker/workers";
-	
+	/**
+	 * Zipf's law from Wiki
+	 * @param N
+	 * @param k
+	 * @param s
+	 * @return
+	 */
+	public static double zipf_pmf(int n, int k, double s) {
+		double sum = 0;
+		for (int i = 1; i <= n; i++)
+			sum += 1.0 / Math.pow(i, s);
+		return (1.0 / Math.pow(k, s)) / sum;
+	}
+
 	public static String datasetToWorkerPath(DatasetEnum dataset) {
 		switch (dataset) {
 		case GOWALLA:
@@ -609,7 +617,7 @@ public class Utils {
 		}
 		return "";
 	}
-	
+
 	public static String datasetToTaskPath(DatasetEnum dataset) {
 		switch (dataset) {
 		case GOWALLA:

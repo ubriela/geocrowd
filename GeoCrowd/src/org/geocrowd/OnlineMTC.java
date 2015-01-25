@@ -395,12 +395,10 @@ public class OnlineMTC extends GeocrowdSensing {
 				h.put(count, 1);
 		}
 		System.out.println("count\tfreq");
-//		int totalCount = 0;
+
 		for (Integer i : h.keySet()) {
-//			totalCount += i * h.get(i);
 			System.out.println(i + "\t" + i*h.get(i));
 		}
-//		System.out.println("total count : " + totalCount);
 		System.out.println("\nMax count: " + max);
 		return max;
 	}

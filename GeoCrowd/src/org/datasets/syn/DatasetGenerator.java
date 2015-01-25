@@ -16,6 +16,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.datasets.syn.dtype.DataTypeEnum;
 import org.datasets.syn.dtype.Point;
 import org.datasets.syn.dtype.Rectangle;
@@ -37,14 +38,16 @@ public class DatasetGenerator {
 	public static int time = 0;
 	public static int gaussianCluster = 4;
 	public static ArrayList<Long> seeds;
-	
+
 	private String filePath = "";
 	private Character delimiter = '\t';
 
+	public DatasetGenerator() {
+	}
+	
 	public DatasetGenerator(String filePath) {
 		this.filePath = filePath;
 	}
-
 
 	/**
 	 * Generate uniform points
@@ -66,6 +69,7 @@ public class DatasetGenerator {
 
 	/**
 	 * Each Gaussian cluster has n/gaussianCluster data points
+	 * 
 	 * @param n
 	 * @param boundary
 	 * @return
@@ -75,18 +79,21 @@ public class DatasetGenerator {
 		if (n == 0)
 			return points;
 		for (int c = 0; c < gaussianCluster; c++) {
-			Point mPoint = UniformGenerator.randomPoint(boundary, false, seeds.get(c) * time);
+			Point mPoint = UniformGenerator.randomPoint(boundary, false,
+					seeds.get(c) * time);
 			double[] means = { mPoint.getX(), mPoint.getY() };
-//			mPoint.debug();
-			double[][] covariances = { { boundary.getHighPoint().getX(), 0 }, { 0, boundary.getHighPoint().getY() } };
-			
+			// mPoint.debug();
+			double[][] covariances = { { boundary.getHighPoint().getX(), 0 },
+					{ 0, boundary.getHighPoint().getY() } };
+
 			MultivariateNormalDistribution mvd = new MultivariateNormalDistribution(
 					means, covariances);
 			int samples = 0;
 			if (c == gaussianCluster - 1)
-				samples = n - ((int)(n/gaussianCluster)) * (gaussianCluster-1);
+				samples = n - ((int) (n / gaussianCluster))
+						* (gaussianCluster - 1);
 			else
-				samples = n/gaussianCluster;
+				samples = n / gaussianCluster;
 			if (samples == 0)
 				continue;
 			double[][] data = mvd.sample(samples);
@@ -213,6 +220,72 @@ public class DatasetGenerator {
 		}
 
 		return points;
+	}
+
+	/**
+	 * A twisted version of Gaussian distribution, in which when the value is
+	 * out of a range, we regenerate the value
+	 * 
+	 * @param count
+	 * @param min
+	 * @param max
+	 * @param isInteger
+	 * @param b
+	 * @return
+	 */
+	private Vector<Double> generate1DGaussianValues(int count, double min,
+			double max, boolean isInteger, boolean b) {
+		Vector<Double> values = new Vector<Double>();
+
+		int n = 0;
+		while (true) {
+			NormalDistribution nd = new NormalDistribution((max - min) / 2,
+					(max - min) / 4);
+			double val = nd.sample();
+			if (val > max || val < min)
+				continue;
+			if (isInteger) {
+				double tmp = (int) val;
+				values.add(tmp);
+			} else
+				values.add(val);
+
+			if (n++ == count)
+				break;
+		}
+
+		return values;
+	}
+
+	/**
+	 * Generate zipf distribution
+	 * 
+	 * @param n
+	 * @param min
+	 * @param max
+	 * @param b
+	 * @return
+	 */
+	private Vector<Double> generate1DZipfValues(int n, double min, double max,
+			boolean isInteger, boolean isSorted) {
+		Vector<Double> values = new Vector<Double>();
+
+		int count = 0;
+		while (true) {
+			if (count++ == n)
+				break;
+
+			int rand = (int) UniformGenerator.randomValue(new Range(0, max
+					- min), true);
+			double val = ((max - min) * Utils.zipf_pmf(n, rand, 1));
+			if (isInteger) {
+				double tmp = (int) val;
+				values.add(tmp);
+			} else
+				values.add(val);
+		}
+
+		return values;
 	}
 
 	/**
@@ -587,6 +660,41 @@ public class DatasetGenerator {
 	}
 
 	/**
+	 * Output is a list of values that follow a distribution
+	 * 
+	 * @param n
+	 * @param min
+	 * @param max
+	 * @param dist
+	 * @param isInteger
+	 */
+	public Vector<Double> generate1DDataset(int count, double min, double max,
+			Distribution1DEnum dist, boolean isInteger) {
+		Vector<Double> values = null;
+		switch (dist) {
+		case UNIFORM_1D: // uniform one-dimensional dataset
+			values = UniformGenerator
+					.randomSequence(count, min, max, isInteger);
+			break;
+		case ZIFFIAN_1D: // zipf distribution
+			values = generate1DZipfValues(count, min, max, isInteger, false);
+			break;
+		case GAUSSIAN_1D:
+			values = generate1DGaussianValues(count, min, max, isInteger, false);
+			break;
+		case TRANSFORM_FROM_2D: // create one-dimensional dataset from two
+								// dimensional dataset
+			values = generateOneDimFromPoints(
+					"./res/dataset/twod/mcdonald.txt", isInteger);
+			break;
+		}
+//		writeIntegersToFile(values, filePath);
+		// writeIntegersToFileWithKey(values, filePath + ".data");
+		
+		return values;
+	}
+
+	/**
 	 * Generate two-dimensional datasets
 	 * 
 	 * @param n
@@ -619,7 +727,7 @@ public class DatasetGenerator {
 			break;
 		}
 		writePointsToFile(points, filePath);
-//		writePointsToFileWithKey(points, filePath + ".key.txt");
+		// writePointsToFileWithKey(points, filePath + ".key.txt");
 	}
 
 	/**
@@ -656,35 +764,6 @@ public class DatasetGenerator {
 			break;
 		}
 		writeWeightedPointsToFile(points, filePath);
-	}
-
-	/**
-	 * Output is a list of values that follow a distribution
-	 * 
-	 * @param n
-	 * @param min
-	 * @param max
-	 * @param dist
-	 * @param isInteger
-	 */
-	public void generateOneDimDataset(int n, double min, double max, int dist,
-			boolean isInteger) {
-		Vector<Double> values = null;
-		switch (dist) {
-		case 1: // uniform one-dimensional dataset
-			values = UniformGenerator.randomSequence(n, min, max, isInteger);
-			break;
-		case 2: // zipf distribution
-			values = generateOneDimZipfValues(n, min, max, 1000, isInteger,
-					false);
-			break;
-		case 3: // create one-dimensional dataset from two dimensional dataset
-			values = generateOneDimFromPoints(
-					"./res/dataset/twod/mcdonald.txt", isInteger);
-			break;
-		}
-		writeIntegersToFile(values, filePath);
-		// writeIntegersToFileWithKey(values, filePath + ".data");
 	}
 
 	/**

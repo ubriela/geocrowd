@@ -183,7 +183,6 @@ public class MaxCoverBasicMO extends MaxCover implements Problem {
 					unselected.add(i);
 			}
 
-			System.out.println(budgetLeft);
 			PriorityQueue<CoverageIndex> pq = new PriorityQueue<CoverageIndex>();
 			for (int i : unselected) {
 				/**
@@ -214,14 +213,13 @@ public class MaxCoverBasicMO extends MaxCover implements Problem {
 
 		System.out.println("N/A\t" + assignedTasks + "\t"
 				+ assignWorkers.size() + "\t" + assignedTasks
-				/ assignWorkers.size() + "\t" + result.size());
+				/ Math.max(1, assignWorkers.size()) + "\t" + result.size());
 		return assignWorkers;
 	}
 
 	private int bestSolution(NondominatedPopulation result) {
 		int bestSol = 0;
 		double largestWeight = Double.MIN_VALUE;
-		System.out.println(result.size());
 		for (int i = 0; i < result.size(); i++) {
 			Solution sol = result.get(i);
 			double[] objectives = sol.getObjectives();

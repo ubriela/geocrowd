@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import org.datasets.syn.DatasetGenerator;
+import org.datasets.syn.Distribution1DEnum;
 import org.datasets.syn.UniformGenerator;
+import org.datasets.syn.WorkerIDGenerator;
 import org.datasets.syn.dtype.Point;
 import org.datasets.syn.dtype.PointTime;
 import org.datasets.syn.dtype.Range;
@@ -42,8 +45,9 @@ import org.geocrowd.common.utils.Utils;
  * @author Leyla & Hien To
  */
 public class PreProcess {
-	
+
 	Character delimiter = '\t';
+	public static Distribution1DEnum workerIdDist = Distribution1DEnum.UNIFORM_1D;
 
 	/** The min lat. */
 	public static double minLat = Double.MAX_VALUE;
@@ -828,12 +832,15 @@ public class PreProcess {
 	 *            the is constant max t
 	 * @maxT is randomly generated
 	 */
-	private void generateSyncWorkersFromMatlab(String outputFile,
+	private void generateSyncWorkersFromDataPoints(String outputFile,
 			String inputFile, boolean isConstantMBR, boolean isConstantMaxT) {
 		int maxSumTaskWorkers = 0;
 		int workerCount = 0;
 		double maxRangeX = (maxLat - minLat) * (Constants.MaxRangePerc);
 		double maxRangeY = (maxLng - minLng) * Constants.MaxRangePerc;
+		// generate worker id
+		WorkerIDGenerator idGenerator = new WorkerIDGenerator(workerIdDist, 1000, 0, 10000);
+				
 		try {
 			FileWriter writer = new FileWriter(outputFile);
 			BufferedWriter out = new BufferedWriter(writer);
@@ -841,7 +848,7 @@ public class PreProcess {
 			FileReader reader = new FileReader(inputFile);
 			BufferedReader in = new BufferedReader(reader);
 			while (in.ready()) {
-				workerCount ++;
+				workerCount++;
 				String line = in.readLine();
 				String[] parts = line.split(delimiter.toString());
 				double lat = Double.parseDouble(parts[0]);
@@ -871,7 +878,10 @@ public class PreProcess {
 				SpecializedWorker w = new SpecializedWorker("dump", lat, lng,
 						maxT, mbr);
 				w.addExpertise(exp);
-				sb.append(-1 + "," + lat + "," + lng + "," + maxT + "," + "["
+
+				int workerId = idGenerator.nextWorkerId();
+
+				sb.append(workerId + "," + lat + "," + lng + "," + maxT + "," + "["
 						+ mbr.getMinLat() + "," + mbr.getMinLng() + ","
 						+ mbr.getMaxLat() + "," + mbr.getMaxLng() + "],[" + exp
 						+ "]\n");
@@ -898,7 +908,7 @@ public class PreProcess {
 			outputFileFrefix = Constants.uniTaskFileNamePrefix;
 			break;
 		}
-		
+
 		System.out.println("Tasks:");
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
 			generateSyncTasksFromMatlab(outputFileFrefix + i + ".txt",
@@ -925,13 +935,12 @@ public class PreProcess {
 			outputFileFrefix = Constants.uniWorkerFileNamePrefix;
 			break;
 		}
-		
+
 		System.out.println("Workers:");
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			generateSyncWorkersFromMatlab(
-					outputFileFrefix + i + ".txt",
-					Constants.inputWorkerFilePath + i + ".txt",
-					isConstantMBR, isConstantMaxT);
+			generateSyncWorkersFromDataPoints(outputFileFrefix + i + ".txt",
+					Constants.inputWorkerFilePath + i + ".txt", isConstantMBR,
+					isConstantMaxT);
 		}
 	}
 
@@ -1301,7 +1310,7 @@ public class PreProcess {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Save real workers.
 	 * 
@@ -1318,14 +1327,14 @@ public class PreProcess {
 			Collections.sort(dates);
 
 			Integer instanceCnt = 0;
-			
+
 			BufferedWriter out = null;
 			int i = 0;
 			for (Date date : dates) {
 				i++;
 				if (i < Constants.MIN_TIME)
 					continue;
-				
+
 				FileWriter writer = new FileWriter(
 						Constants.gowallaWorkerFileNamePrefix
 								+ instanceCnt.toString() + ".txt");
@@ -1337,9 +1346,10 @@ public class PreProcess {
 					out.write(o.toStr() + "\n");
 					workerCnt++;
 				}
-				
+
 				instanceCnt++;
-				System.out.println("worker count " + instanceCnt + " \t " + workerCnt);
+				System.out.println("worker count " + instanceCnt + " \t "
+						+ workerCnt);
 				out.close();
 			}
 

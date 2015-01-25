@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import org.datasets.syn.DatasetGenerator;
+import org.datasets.syn.Distribution1DEnum;
 import org.datasets.syn.Distribution2DEnum;
 import org.datasets.syn.InstancesGenerator;
 import org.datasets.syn.WTCountGenerator;
@@ -24,11 +25,10 @@ public class DatasetGeneratorTest {
 
 	@Test
 	public final void testGenerate2DPoints() {
-		// DatasetGenerator dg = new
-		// DatasetGenerator("./res/dataset/twod/test.txt");
-		// DatasetGenerator.gaussianCluster = 10;
-		// dg.generate2DDataset(1000, new Rectangle(0, 0, 999, 999),
-		// Distribution2DEnum.GAUSSIAN_2D);
+//		 DatasetGenerator dg = new
+//		 DatasetGenerator("./res/dataset/test/test.txt");
+//		 DatasetGenerator.gaussianCluster = 10;
+//		 dg.generate1DDataset(1000, 0, 10000, Distribution1DEnum.GAUSSIAN_1D, true);
 
 		// ArrayList<Integer> counts = WTCountGenerator.generateCounts(100,
 		// 1000, WTCycleEnum.COSINE);
@@ -37,7 +37,7 @@ public class DatasetGeneratorTest {
 
 		InstancesGenerator ig = new InstancesGenerator(
 		168, WTCycleEnum.COSINE, WTCycleEnum.COSINE, 
-		100, 1000, new Rectangle(0, 0, 99, 99),
+		1000, 1000, new Rectangle(0, 0, 99, 99),
 		Distribution2DEnum.GAUSSIAN_2D, Distribution2DEnum.GAUSSIAN_2D,
 				"./res/dataset/worker/", "./res/dataset/task/");
 	}

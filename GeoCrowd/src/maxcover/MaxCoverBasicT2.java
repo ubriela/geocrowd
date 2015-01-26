@@ -58,7 +58,8 @@ public class MaxCoverBasicT2 extends MaxCover {
 //		assignedTaskSet = new HashSet<Integer>();
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = 0;
-			double smallestAvgTimeToDead = 10000000;
+			double maxGain = -10000000;
+			double minWeight = 10000000;
 
 			/**
 			 * find the maximum of number of uncovered task
@@ -66,13 +67,14 @@ public class MaxCoverBasicT2 extends MaxCover {
 			for (int k : S.keySet()) {
 				HashMap<Integer, Integer> s = S.get(k); // task set covered by
 														// current worker
-
-				double avgTimeToDead = avgTimeToDead(s, currentTimeInstance,
-						assignedTaskSet);
-				if (avgTimeToDead < smallestAvgTimeToDead
-						&& (avgTimeToDead <= Constants.TaskDuration || currentTimeInstance == Constants.TIME_INSTANCE - 1)) {
-					smallestAvgTimeToDead = avgTimeToDead;
-					bestWorkerIndex = k;
+				int noUncoveredTasks = 0;
+				for (Integer i : s.keySet()) {
+					if (!assignedTaskSet.contains(i)) {
+						noUncoveredTasks++;
+					}
+				}
+				if (noUncoveredTasks > maxNoUncoveredTasks) {
+					maxNoUncoveredTasks = noUncoveredTasks;
 				}
 			}
 			/**
@@ -83,9 +85,14 @@ public class MaxCoverBasicT2 extends MaxCover {
 				WeightGain wg = weight(k, s, currentTimeInstance,
 						assignedTaskSet);
                                
-				if (wg.weight < smallestAvgTimeToDead) {
-					smallestAvgTimeToDead = wg.weight;
+				if (wg.gain > maxGain) {
+					maxGain = wg.gain;
 					bestWorkerIndex = k;
+				} else if (wg.gain == maxGain) {
+					if (wg.weight < minWeight) {
+						minWeight = wg.weight;
+						bestWorkerIndex = k;
+					}
 				}
 			}
 //                        System.out.println("weight:"+smallestAvgTimeToDead);
@@ -113,33 +120,6 @@ public class MaxCoverBasicT2 extends MaxCover {
 		assignedTasks = assignedTaskSet.size();
 //		System.out.println(universe.size() + "\t" + assignedTasks  + "\t" + assignWorkers.size() + "\t"  + assignedTasks/assignWorkers.size() );
 		return assignWorkers;
-	}
-	
-	
-	private double avgTimeToDead(HashMap<Integer, Integer> tasksWithDeadlines,
-			int current_time_instance, HashSet<Integer> completedTasks) {
-		int uncoveredTasks = 0;
-		double totalElapsedTime = 0;
-		for (Integer t : tasksWithDeadlines.keySet()) {
-			/**
-			 * Only consider uncovered tasks
-			 */
-			if (!completedTasks.contains(t)) {
-				/**
-				 * if the task will dead at next time instance, return 1 so that it will be assigned
-				 */
-				if (tasksWithDeadlines.get(t) - current_time_instance == 1)
-					return 1;
-				uncoveredTasks++;
-				double elapsedTime = tasksWithDeadlines.get(t) - current_time_instance; // the smaller, the better
-				
-				totalElapsedTime += elapsedTime;
-			}
-		}
-		/**
-		 * average time to deadline of new covered task
-		 */
-		return totalElapsedTime / uncoveredTasks;
 	}
 
 	/**
@@ -182,7 +162,7 @@ public class MaxCoverBasicT2 extends MaxCover {
 		/**
 		 * average time to deadline of new covered task
 		 */
-		double weight = alpha*totalElapsedTime / (Constants.TaskDuration*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks;
+		double weight = (totalElapsedTime + 0.0)/uncoveredTasks;
 		return new WeightGain(weight, uncoveredTasks);
 	}
 }

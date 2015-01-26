@@ -78,9 +78,10 @@ public class DatasetGenerator {
 		Vector<Point> points = new Vector<Point>();
 		if (n == 0)
 			return points;
+		
 		for (int c = 0; c < gaussianCluster; c++) {
 			Point mPoint = UniformGenerator.randomPoint(boundary, false,
-					seeds.get(c) * time);
+					seeds.get(c) + time);
 			double[] means = { mPoint.getX(), mPoint.getY() };
 			// mPoint.debug();
 			double[][] covariances = { { boundary.getHighPoint().getX(), 0 },

@@ -41,8 +41,10 @@ public class InstancesGenerator {
 	public void generateData() {
 		ArrayList<Integer> workerCounts = WTCountGenerator.generateCounts(instances, wMean, workerCycle);
 		ArrayList<Integer> taskCounts = WTCountGenerator.generateCounts(instances, tMean, taskCycle);
+		
 		for (int i : workerCounts)
 			System.out.print(i + "\t");
+		System.out.println();
 		ArrayList<Long> seeds = new ArrayList<>();
 		// compute seed for gaussian cluster
 		DatasetGenerator.gaussianCluster = gaussianCluster;

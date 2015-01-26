@@ -32,7 +32,7 @@ public class Constants {
 //	public static final int MAX_TIME_INSTANCE = 500;
 	
 	/** The diameter. */
-	public static double radius = 5; // task circle diameter
+	public static double radius = 1.0; // task circle diameter
 	/** enable random k */
 	public static boolean IS_RANDOM_K = false;
 	
@@ -65,7 +65,7 @@ public class Constants {
 
 
 	/** The Task duration. */
-	public static int TaskDuration = 5;// 20000; //duration of all tasks before
+	public static int TaskDuration = 10;// 20000; //duration of all tasks before
 										// they expire are fixed to 1000ms
 	/** The Max tasks per worker. */
 	public static int MaxTasksPerWorker = 20; // maximum # of tasks that a
@@ -154,10 +154,10 @@ public class Constants {
 	
 	// synthetic dataset
 	/** The skewed resolution. */
-	public static int skewedResolution = 1000;
+	public static int skewedResolution = 200;
 
 	/** The uni resolution. */
-	public static int uniResolution = 1000;
+	public static int uniResolution = 200;
 
 	/** The worker file path. */
 	public static String inputWorkerFilePath = "./res/dataset/worker/workers";

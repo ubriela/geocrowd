@@ -762,7 +762,7 @@ public class PreProcess {
 	 * @param inputFile
 	 *            : distributing tasks into four Gaussian clusters
 	 */
-	private void generateSyncTasksFromMatlab(String outputFile, String inputFile) {
+	private void generateSyncTasksFromDataPoints(String outputFile, String inputFile) {
 		int taskCount = 0;
 		try {
 			FileWriter writer = new FileWriter(outputFile);
@@ -786,7 +786,7 @@ public class PreProcess {
 			out.close();
 		} catch (Exception e) {
 		}
-		System.out.println(taskCount);
+//		System.out.println(taskCount);
 	}
 
 	/**
@@ -870,7 +870,7 @@ public class PreProcess {
 		String outputFileFrefix = Utils.datasetToTaskPath(DATA_SET);
 		System.out.println("Tasks:");
 		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			generateSyncTasksFromMatlab(outputFileFrefix + i + ".txt",
+			generateSyncTasksFromDataPoints(outputFileFrefix + i + ".txt",
 					Constants.inputTaskFilePath + i + ".txt");
 			timeCounter++;
 		}

@@ -128,7 +128,7 @@ public class PreProcessTest extends PreProcess {
 
 		PreProcess prep = new PreProcess();
 		PreProcess.DATA_SET = DatasetEnum.SKEWED;
-		Constants.TIME_INSTANCE = 192;
+		Constants.TIME_INSTANCE = 28;
 
 		prep.computeBoundary();
 		prep.readBoundary();
@@ -142,7 +142,7 @@ public class PreProcessTest extends PreProcess {
 		prep.generateSynTasks();
 
 		// generating location density
-//		prep.saveLocationDensity(prep.computeSyncLocationDensity());
-//		prep.regionEntropy();
+		prep.saveLocationDensity(prep.computeSyncLocationDensity());
+		prep.regionEntropy();
 	}
 }

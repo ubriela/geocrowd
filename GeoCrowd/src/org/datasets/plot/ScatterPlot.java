@@ -1,6 +1,9 @@
 package org.datasets.plot;
 
+import java.awt.Color;
+import java.awt.Paint;
 import java.awt.RenderingHints;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jfree.chart.ChartPanel;
@@ -44,7 +47,14 @@ public class ScatterPlot extends ApplicationFrame {
         domainAxis.setAutoRangeIncludesZero(false);
         final NumberAxis rangeAxis = new NumberAxis("Y");
         rangeAxis.setAutoRangeIncludesZero(false);
-        final FastScatterPlot plot = new FastScatterPlot(this.data, domainAxis, rangeAxis);
+    	int[] sizes = new int[points.size()];
+    	Arrays.fill(sizes, 2);
+    	Paint[] colors = new Paint[points.size()];
+    	for (int i = 0; i < colors.length; i++)
+    		colors[i] = Color.BLUE;
+    	int[] shapes = new int[points.size()];
+    	Arrays.fill(shapes, 2);
+        final ExtendedFastScatterPlot plot = new ExtendedFastScatterPlot(this.data, domainAxis, rangeAxis, sizes, colors, shapes);
         final JFreeChart chart = new JFreeChart("Fast Scatter Plot", plot);
 //        chart.setLegend(null);
 
@@ -66,9 +76,9 @@ public class ScatterPlot extends ApplicationFrame {
     }
     
     public static void main(String[] args) {
-		DataProvider md = new DataProvider("./res/dataset/task/tasks0.txt", DataTypeEnum.NORMAL_POINT);
+		DataProvider md = new DataProvider("./res/dataset/worker/workers5.txt", DataTypeEnum.NORMAL_POINT);
         final ScatterPlot demo = new ScatterPlot("Fast Scatter Plot Demo", md.points);
-        demo.pack();
+        demo.pack(); 
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
     }

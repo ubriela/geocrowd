@@ -48,6 +48,7 @@ public enum AlgorithmEnum {
         MAX_COVER_BASIC_WORKLOAD2,
         MAX_COVER_BASIC_MO,
         MAX_COVER_BASIC_T,
+        MAX_COVER_BASIC_T2,
         MAX_COVER_BASIC_S,
         MAX_COVER_BASIC_S_MO,
         MAX_COVER_BASIC_ST,

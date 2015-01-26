@@ -2,14 +2,13 @@ package org.datasets.syn;
 
 import java.util.ArrayList;
 
-
-
 public class WTCountGenerator {
-	
-	public static int cycles = 8;
+
+	public static int cycles = 16;
 	public static int cosine_height_scale = 1;
 
-	public static ArrayList<Integer> generateCounts(int instances, int mean, WTCycleEnum f) {
+	public static ArrayList<Integer> generateCounts(int instances, int mean,
+			WTCycleEnum f) {
 		ArrayList<Integer> counts = new ArrayList<>();
 
 		switch (f) {
@@ -19,15 +18,19 @@ public class WTCountGenerator {
 			break;
 		case INCREASING:
 			for (int i = 1; i <= instances; i++)
-				counts.add(2*mean*i/instances);
+				counts.add(2 * mean * i / instances);
 			break;
 		case DECREASING:
 			for (int i = instances; i > 0; i--)
-				counts.add(2*mean*i/instances);
+				counts.add(2 * mean * i / instances);
 			break;
 		case COSINE:
 			for (int i = 1; i <= instances; i++) {
-				int val = 2*mean - (int)(mean/cosine_height_scale * Math.sin((i / (instances/cycles + 0.0)) * 2 * Math.PI));
+				int val = 2
+						* mean
+						- (int) (mean / cosine_height_scale * Math
+								.sin((i / (instances / cycles + 0.0)) * 2
+										* Math.PI));
 				counts.add(val);
 			}
 			break;

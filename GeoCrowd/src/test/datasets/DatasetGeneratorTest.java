@@ -25,21 +25,24 @@ public class DatasetGeneratorTest {
 
 	@Test
 	public final void testGenerate2DPoints() {
-//		 DatasetGenerator dg = new
-//		 DatasetGenerator("./res/dataset/test/test.txt");
-//		 DatasetGenerator.gaussianCluster = 10;
-//		 dg.generate1DDataset(1000, 0, 10000, Distribution1DEnum.GAUSSIAN_1D, true);
+		// DatasetGenerator dg = new
+		// DatasetGenerator("./res/dataset/test/test.txt");
+		// DatasetGenerator.gaussianCluster = 10;
+		// dg.generate1DDataset(1000, 0, 10000, Distribution1DEnum.GAUSSIAN_1D,
+		// true);
 
 		// ArrayList<Integer> counts = WTCountGenerator.generateCounts(100,
 		// 1000, WTCycleEnum.COSINE);
 		// for (int i : counts)
 		// System.out.println(i);
 
-		InstancesGenerator ig = new InstancesGenerator(
-192, WTCycleEnum.COSINE, WTCycleEnum.CONSTANT, 
-100, 1000, new Rectangle(0, 0, 99, 99),
-Distribution2DEnum.UNIFORM_2D, Distribution2DEnum.UNIFORM_2D,
-				"./res/dataset/worker/", "./res/dataset/task/");
+		WTCountGenerator.cycles = 30;
+		int instances = WTCountGenerator.cycles * 7;
+		InstancesGenerator ig = new InstancesGenerator(instances,
+				WTCycleEnum.COSINE, WTCycleEnum.COSINE, 100, 1000,
+				new Rectangle(0, 0, 99, 99), Distribution2DEnum.UNIFORM_2D,
+				Distribution2DEnum.UNIFORM_2D, "./res/dataset/worker/",
+				"./res/dataset/task/");
 	}
 
 	@Test

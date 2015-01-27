@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.geocrowd.Geocrowd;
-import org.geocrowd.common.Constants;
+import org.geocrowd.GeocrowdConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -100,7 +100,7 @@ public class MultiSetCoverGreedy_HighTaskCoverage extends MultiSetCoverGreedy {
 				if (!assignedTaskSet.contains(taskidx)) {
 
 					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskidx) - Constants.TaskDuration)
+							- (taskSet.get(taskidx) - GeocrowdConstants.TaskDuration)
 							+ 1;
 					assignedTaskSet.add(taskidx);
 				}

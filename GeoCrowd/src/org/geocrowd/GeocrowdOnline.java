@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.geocrowd.common.Constants;
+import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.matching.Hungarian;
@@ -276,7 +276,7 @@ public class GeocrowdOnline extends Geocrowd {
 			SpecializedTask task = (SpecializedTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getEntryTime()) >= Constants.TaskDuration) {
+			if ((TimeInstance - task.getEntryTime()) >= GeocrowdConstants.TaskDuration) {
 				task.setExpired();
 			} else
 

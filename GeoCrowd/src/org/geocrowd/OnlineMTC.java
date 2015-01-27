@@ -7,28 +7,25 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import maxcover.MaxCover;
-import maxcover.MaxCoverAdapt;
-import maxcover.MaxCoverAdaptS;
-import maxcover.MaxCoverAdaptT;
-import maxcover.MaxCoverBasic;
-import maxcover.MaxCoverBasicMO;
-import maxcover.MaxCoverBasicS;
-import maxcover.MaxCoverBasicSMO;
-import maxcover.MaxCoverBasicT;
-import maxcover.MaxCoverBasicT2;
-import maxcover.MaxCoverST;
-
-import org.datasets.yelp.Constant;
-
 import static org.geocrowd.AlgorithmEnum.MAX_COVER_BASIC;
 import static org.geocrowd.Geocrowd.algorithm;
 import static org.geocrowd.Geocrowd.taskList;
 
-import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.maxcover.MaxCover;
+import org.geocrowd.maxcover.MaxCoverAdapt;
+import org.geocrowd.maxcover.MaxCoverAdaptS;
+import org.geocrowd.maxcover.MaxCoverAdaptT;
+import org.geocrowd.maxcover.MaxCoverBasic;
+import org.geocrowd.maxcover.MaxCoverBasicMO;
+import org.geocrowd.maxcover.MaxCoverBasicS;
+import org.geocrowd.maxcover.MaxCoverBasicSMO;
+import org.geocrowd.maxcover.MaxCoverBasicT;
+import org.geocrowd.maxcover.MaxCoverBasicT2;
+import org.geocrowd.maxcover.MaxCoverST;
 
 public class OnlineMTC extends GeocrowdSensing {
 
@@ -143,7 +140,7 @@ public class OnlineMTC extends GeocrowdSensing {
 				MaxCoverAdapt maxCoverAdapt = new MaxCoverAdapt(
 						getContainerWithDeadline(), TimeInstance);
 				maxCoverAdapt.eps = eps;
-				if (TimeInstance == Constants.TIME_INSTANCE - 1) {
+				if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
 					maxCoverAdapt.deltaBudget = totalBudget - usedBudget;
 					maxCoverAdapt.budget = totalBudget - usedBudget;
 				} else {
@@ -430,18 +427,18 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_BASIC_T:
 		case MAX_COVER_BASIC_T2:
 		case MAX_COVER_BASIC_ST:
-			if (TimeInstance < Constants.TIME_INSTANCE - 1) {
-				return totalBudget / Constants.TIME_INSTANCE;
+			if (TimeInstance < GeocrowdConstants.TIME_INSTANCE - 1) {
+				return totalBudget / GeocrowdConstants.TIME_INSTANCE;
 			} else {
 				return totalBudget - usedBudget;
 			}
 		case MAX_COVER_BASIC_WORKLOAD:
 //			System.out.println(TimeInstance);
-			if (TimeInstance < Constants.TIME_INSTANCE - 1) {
+			if (TimeInstance < GeocrowdConstants.TIME_INSTANCE - 1) {
 				if (TimeInstance % 7 == 6 || TimeInstance % 7 == 0)
-					return (int) ((totalBudget / Constants.TIME_INSTANCE * (1 + eps*5)));
+					return (int) ((totalBudget / GeocrowdConstants.TIME_INSTANCE * (1 + eps*5)));
 				else
-					return (int) (totalBudget / Constants.TIME_INSTANCE * (1-eps*2));
+					return (int) (totalBudget / GeocrowdConstants.TIME_INSTANCE * (1-eps*2));
 			} else {
 				return totalBudget - usedBudget;
 			}
@@ -463,7 +460,7 @@ public class OnlineMTC extends GeocrowdSensing {
 
 	private int computeTotalTasks() throws IOException {
 		int numberTasks = 0;
-		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 			String taskPath = Utils.datasetToTaskPath(DATA_SET);
 			numberTasks += Parser
 					.readNumberOfTasks(taskPath

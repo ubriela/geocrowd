@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.apache.log4j.Logger;
-import org.datasets.yelp.Constant;
 import org.geocrowd.AlgorithmEnum;
+import org.geocrowd.Constants;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
+import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.OfflineMTC;
 import org.geocrowd.OnlineMTC;
-import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.utils.Utils;
 import org.junit.Test;
@@ -32,7 +31,7 @@ public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
 		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
-		Constants.TIME_INSTANCE = 28;
+		GeocrowdConstants.TIME_INSTANCE = 28;
 		// overloading();
 
 		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
@@ -55,7 +54,7 @@ public class OnlineMTCTest {
 		workload_vary_delta(delta, totalBudget, radius, start_time);
 
 		int cycle_length = 7;
-		int workload_size = Constants.TIME_INSTANCE / cycle_length;
+		int workload_size = GeocrowdConstants.TIME_INSTANCE / cycle_length;
 		int workloadCount = 8;
 		totalBudget = 28;
 		radius = 5.0;
@@ -91,17 +90,17 @@ public class OnlineMTCTest {
 		// GeocrowdTest.main(null);
 
 		int totalBudget = 96;
-		Constants.radius = 5.0;
+		GeocrowdConstants.radius = 5.0;
 		int start_time = 0;
 		int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
 
-		System.out.println("\nRadius = " + Constants.radius);
+		System.out.println("\nRadius = " + GeocrowdConstants.radius);
 		System.out.println("Budget = " + totalBudget);
 
 		// GeocrowdTest.main(null); // generate set of tasks for next period
 
 		// apply offline method to next period
-		int next_time_period = start_time + Constants.TIME_INSTANCE;
+		int next_time_period = start_time + GeocrowdConstants.TIME_INSTANCE;
 		computeHistoryBudgets(false, totalBudget, next_time_period);
 
 		// use the same set of workers/tasks for all following period
@@ -118,7 +117,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					int next_time = next_time_period + i;
 					onlineMTC.readWorkloadTasks(
 							Utils.datasetToTaskPath(Geocrowd.DATA_SET)
@@ -183,11 +182,11 @@ public class OnlineMTCTest {
 		int[][] coveredTasks = new int[w_count][algorithms.length + 2];
 		int[][] assignedWorkers = new int[w_count][algorithms.length + 2];
 
-		Constants.TIME_INSTANCE = cycle_length * workload_size;
+		GeocrowdConstants.TIME_INSTANCE = cycle_length * workload_size;
 		int start_time = starttime;
 
-		Constants.radius = radius;
-		System.out.println("\nRadius = " + Constants.radius);
+		GeocrowdConstants.radius = radius;
+		System.out.println("\nRadius = " + GeocrowdConstants.radius);
 		System.out.println("Budget = " + totalBudget);
 
 		/**
@@ -202,7 +201,7 @@ public class OnlineMTCTest {
 			// GeocrowdTest.main(null); // generate set of tasks for next period
 
 			// apply offline method to next period
-			int next_time_period = start_time + Constants.TIME_INSTANCE;
+			int next_time_period = start_time + GeocrowdConstants.TIME_INSTANCE;
 
 			computeHistoryBudgets(true, totalBudget, next_time_period);
 			int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
@@ -221,7 +220,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					int next_time = next_time_period + i;
 					onlineMTC.readWorkloadTasks(
 							Utils.datasetToTaskPath(Geocrowd.DATA_SET)
@@ -266,7 +265,7 @@ public class OnlineMTCTest {
 		PrintWriter pw = new PrintWriter(stringWriter);
 		pw.println("\n\n##################Varying time");
 		pw.println("Budget = " + totalBudget);
-		pw.println("radius = " + Constants.radius);
+		pw.println("radius = " + GeocrowdConstants.radius);
 		pw.println("#Covered Tasks");
 		pw.printf("%-20s \t", " ");
 		for (int j2 = 0; j2 < algorithms.length; j2++)
@@ -286,8 +285,8 @@ public class OnlineMTCTest {
 	private static void workload_vary_delta(int[] delta, int totalBudget,
 			double radius, int starttime) throws IOException {
 
-		Constants.radius = radius;
-		System.out.println("\nRadius = " + Constants.radius);
+		GeocrowdConstants.radius = radius;
+		System.out.println("\nRadius = " + GeocrowdConstants.radius);
 		System.out.println("Budget = " + totalBudget);
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
@@ -298,8 +297,8 @@ public class OnlineMTCTest {
 		int[][] assignedWorkers = new int[delta.length][algorithms.length + 2];
 
 		for (int d = 0; d < delta.length; d++) {
-			Constants.TaskDuration = delta[d];
-			System.out.println("\n----\ndelta: " + Constants.TaskDuration);
+			GeocrowdConstants.TaskDuration = delta[d];
+			System.out.println("\n----\ndelta: " + GeocrowdConstants.TaskDuration);
 			Geocrowd.TimeInstance = 0;
 			// GeocrowdTest.main(null);
 
@@ -309,7 +308,7 @@ public class OnlineMTCTest {
 			// GeocrowdTest.main(null); // generate set of tasks for next period
 
 			// apply offline method to next period
-			int next_time_period = start_time + Constants.TIME_INSTANCE;
+			int next_time_period = start_time + GeocrowdConstants.TIME_INSTANCE;
 			computeHistoryBudgets(true, totalBudget, next_time_period);
 			int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
 			computeHistoryBudgets(false, totalBudget, next_time_period);
@@ -327,7 +326,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					int next_time = next_time_period + i;
 					onlineMTC.readWorkloadTasks(
 							Utils.datasetToTaskPath(Geocrowd.DATA_SET)
@@ -371,7 +370,7 @@ public class OnlineMTCTest {
 		PrintWriter pw = new PrintWriter(stringWriter);
 		pw.println("\n\n##################Varying delta");
 		pw.println("Budget = " + totalBudget);
-		pw.println("\nRadius = " + Constants.radius);
+		pw.println("\nRadius = " + GeocrowdConstants.radius);
 		pw.println("#Covered Tasks");
 		pw.printf("%-20s \t", " ");
 		for (int j2 = 0; j2 < algorithms.length; j2++)
@@ -402,8 +401,8 @@ public class OnlineMTCTest {
 		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
 
 		for (int d = 0; d < radii.length; d++) {
-			Constants.radius = radii[d];
-			System.out.println("\n----\nRadius " + Constants.radius);
+			GeocrowdConstants.radius = radii[d];
+			System.out.println("\n----\nRadius " + GeocrowdConstants.radius);
 			Geocrowd.TimeInstance = 0;
 			// GeocrowdTest.main(null);
 
@@ -413,7 +412,7 @@ public class OnlineMTCTest {
 			// GeocrowdTest.main(null); // generate set of tasks for next period
 
 			// apply offline method to next period
-			int next_time_period = start_time + Constants.TIME_INSTANCE;
+			int next_time_period = start_time + GeocrowdConstants.TIME_INSTANCE;
 			computeHistoryBudgets(true, totalBudget, next_time_period);
 			int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
 			computeHistoryBudgets(false, totalBudget, next_time_period);
@@ -431,7 +430,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					int next_time = next_time_period + i;
 					onlineMTC.readWorkloadTasks(
 							Utils.datasetToTaskPath(Geocrowd.DATA_SET)
@@ -495,8 +494,8 @@ public class OnlineMTCTest {
 	private static void workload_vary_budget(double radius, int[] budgets,
 			int starttime) throws IOException {
 
-		Constants.radius = radius;
-		System.out.println("radius = " + Constants.radius);
+		GeocrowdConstants.radius = radius;
+		System.out.println("radius = " + GeocrowdConstants.radius);
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC,
@@ -514,7 +513,7 @@ public class OnlineMTCTest {
 			int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
 
 			// apply offline method to next period
-			int next_time_period = start_time + Constants.TIME_INSTANCE;
+			int next_time_period = start_time + GeocrowdConstants.TIME_INSTANCE;
 			computeHistoryBudgets(true, totalBudget, next_time_period);
 			int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
 			computeHistoryBudgets(false, totalBudget, next_time_period);
@@ -533,7 +532,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					int next_time = next_time_period + i;
 					onlineMTC.readWorkloadTasks(
 							Utils.datasetToTaskPath(Geocrowd.DATA_SET)
@@ -576,7 +575,7 @@ public class OnlineMTCTest {
 		StringWriter stringWriter = new StringWriter();
 		PrintWriter pw = new PrintWriter(stringWriter);
 		pw.println("\n\n################## Varying budget");
-		pw.println("radius = " + Constants.radius);
+		pw.println("radius = " + GeocrowdConstants.radius);
 		pw.println("#Covered Tasks");
 		pw.printf("%-20s \t", " ");
 		for (int j2 = 0; j2 < algorithms.length; j2++)
@@ -604,7 +603,7 @@ public class OnlineMTCTest {
 		offlineMTC.budget = budget;
 		offlineMTC.isFixed = isFixed;
 
-		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 			offlineMTC.readWorkloadTasks(
 					Utils.datasetToTaskPath(Geocrowd.DATA_SET)
 							+ (i + start_time) + ".txt", start_time);
@@ -637,10 +636,10 @@ public class OnlineMTCTest {
 		int[][] coveredTasks = new int[alphas.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[alphas.length][algorithms.length + 2];
 
-		Constants.TIME_INSTANCE = 28;
+		GeocrowdConstants.TIME_INSTANCE = 28;
 		int totalBudget = 56;
-		Constants.radius = 1.0;
-		System.out.println("Radius = " + Constants.radius);
+		GeocrowdConstants.radius = 1.0;
+		System.out.println("Radius = " + GeocrowdConstants.radius);
 		System.out.println("Budget = " + totalBudget);
 
 		// GeocrowdTest.main(null);
@@ -666,7 +665,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					onlineMTC.readTasks(Utils
 							.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
 					onlineMTC.readWorkers(Utils
@@ -732,7 +731,7 @@ public class OnlineMTCTest {
 		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
 
-		Constants.TIME_INSTANCE = 28;
+		GeocrowdConstants.TIME_INSTANCE = 28;
 		int totalBudget = 56;
 		double alpha = 0.2;
 		System.out.println("Budget = " + totalBudget);
@@ -740,7 +739,7 @@ public class OnlineMTCTest {
 		// GeocrowdTest.main(null);
 
 		for (int r = 0; r < radii.length; r++) {
-			Constants.radius = r;
+			GeocrowdConstants.radius = r;
 			computeHistoryBudgets(true, totalBudget, 0);
 			int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
 			computeHistoryBudgets(false, totalBudget, 0);
@@ -758,7 +757,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					onlineMTC.readTasks(Utils
 							.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
 					onlineMTC.readWorkers(Utils
@@ -817,10 +816,10 @@ public class OnlineMTCTest {
 
 		// int[] budgets = new int[] { 40, 80, 160, 320, 640, 1280,
 		// 2560 };
-		Constants.TIME_INSTANCE = 56;
-		Constants.radius = 5.0;
+		GeocrowdConstants.TIME_INSTANCE = 56;
+		GeocrowdConstants.radius = 5.0;
 		Constants.alpha = 0.2;
-		System.out.println("Radius = " + Constants.radius);
+		System.out.println("Radius = " + GeocrowdConstants.radius);
 
 		// GeocrowdTest.main(null);
 
@@ -842,7 +841,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					onlineMTC.readTasks(Utils
 							.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
 					onlineMTC.readWorkers(Utils
@@ -901,8 +900,8 @@ public class OnlineMTCTest {
 		int[][] assignedWorkers = new int[epss.length][algorithms.length];
 
 		int totalBudget = 56;
-		Constants.radius = 5.0;
-		System.out.println("Radius = " + Constants.radius);
+		GeocrowdConstants.radius = 5.0;
+		System.out.println("Radius = " + GeocrowdConstants.radius);
 		System.out.println("Budget = " + totalBudget);
 
 		// GeocrowdTest.main(null);
@@ -920,7 +919,7 @@ public class OnlineMTCTest {
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
 								"Time", "TTask", "CTask", "TWorker", "SWorker",
 								"W/T");
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					onlineMTC.readTasks(Utils
 							.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
 					onlineMTC.readWorkers(Utils
@@ -975,8 +974,8 @@ public class OnlineMTCTest {
 	@Test
 	public void testOverloading() throws IOException {
 		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
-		Constants.radius = 5.0;
-		Constants.TIME_INSTANCE = 28;
+		GeocrowdConstants.radius = 5.0;
+		GeocrowdConstants.TIME_INSTANCE = 28;
 		int budget = 896;
 		// double[] alpha = new double[] { 0.0, 0.2, 0.4, 0.6, 0.8, 1.0 };
 		double[] alpha = new double[] { 0.1 };
@@ -1007,7 +1006,7 @@ public class OnlineMTCTest {
 				OnlineMTC.taskList.clear();
 				OnlineMTC.workerList.clear();
 				onlineMTC.totalBudget = budget;
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					onlineMTC.readTasks(Utils
 							.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
 					onlineMTC.readWorkers(Utils

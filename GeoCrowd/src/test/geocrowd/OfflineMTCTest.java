@@ -9,8 +9,8 @@ import java.util.HashSet;
 import org.apache.log4j.Logger;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
+import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.OfflineMTC;
-import org.geocrowd.common.Constants;
 import org.geocrowd.common.utils.Utils;
 
 public class OfflineMTCTest {
@@ -44,10 +44,10 @@ public class OfflineMTCTest {
 				OfflineMTC offlineMTC = new OfflineMTC();
 				offlineMTC.isFixed = isFixes[fix];
 				offlineMTC.budget = budget;
-				Constants.radius = radii[r];
+				GeocrowdConstants.radius = radii[r];
 				offlineMTC.reset();
 			
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					offlineMTC
 					.readTasks(Utils.datasetToTaskPath(Geocrowd.DATA_SET)
 							+ i + ".txt");
@@ -92,7 +92,7 @@ public class OfflineMTCTest {
 
 	public static void varying_budget(int[] budgets, double radius) {
 
-		Constants.radius = radius;
+		GeocrowdConstants.radius = radius;
 		boolean[] isFixes = { true , false };
 		
 		
@@ -107,7 +107,7 @@ public class OfflineMTCTest {
 				offlineMTC.budget = budgets[b];
 				offlineMTC.reset();
 			
-				for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 					offlineMTC
 					.readTasks(Utils.datasetToTaskPath(Geocrowd.DATA_SET)
 							+ i + ".txt");

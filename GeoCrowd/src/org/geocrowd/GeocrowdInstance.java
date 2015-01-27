@@ -22,24 +22,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.datasets.syn.UniformGenerator;
-import org.datasets.syn.dtype.Point;
-import org.datasets.syn.dtype.Range;
 import org.geocrowd.common.Cell;
-import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
-import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.MatchPair;
+import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
-import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.EntropyRecord;
-import org.geocrowd.common.utils.Utils;
+import org.geocrowd.cplex.BPMatchingCplex;
+import org.geocrowd.datasets.syn.UniformGenerator;
+import org.geocrowd.datasets.syn.dtype.Point;
+import org.geocrowd.datasets.syn.dtype.Range;
 import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.geocrowd.matching.Utility;
-
-import cplex.BPMatchingCplex;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -130,7 +126,7 @@ public class GeocrowdInstance extends Geocrowd {
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
-			for (int i = 0; i < Constants.TaskNo; i++) {
+			for (int i = 0; i < GeocrowdConstants.TaskNo; i++) {
 				double lat = UniformGenerator.randomValue(new Range(
 						minLatitude, maxLatitude), false);
 				double lng = UniformGenerator.randomValue(new Range(
@@ -139,7 +135,7 @@ public class GeocrowdInstance extends Geocrowd {
 				// System.out.println(lat + " " + lng);
 				int time = TimeInstance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.TaskTypeNo), true);
+						GeocrowdConstants.TaskTypeNo), true);
 				SpecializedTask t = new SpecializedTask(lat, lng, time, -1,
 						taskType);
 				out.write(lat + "," + lng + "," + time + "," + (-1) + "\n");
@@ -147,7 +143,7 @@ public class GeocrowdInstance extends Geocrowd {
 				listCount++;
 
 			}
-			TaskCount += Constants.TaskNo;
+			TaskCount += GeocrowdConstants.TaskNo;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
@@ -166,9 +162,9 @@ public class GeocrowdInstance extends Geocrowd {
 	 */
 	public void generateWorkersRandomMBR(String fileName) {
 		workerList = new ArrayList();
-		double maxRangeX = (maxLatitude - minLatitude) * Constants.MaxRangePerc;
+		double maxRangeX = (maxLatitude - minLatitude) * GeocrowdConstants.MaxRangePerc;
 		double maxRangeY = (maxLongitude - minLongitude)
-				* Constants.MaxRangePerc;
+				* GeocrowdConstants.MaxRangePerc;
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
@@ -198,7 +194,7 @@ public class GeocrowdInstance extends Geocrowd {
 				double lng = UniformGenerator.randomValue(new Range(startLng,
 						endLng), false);
 				int maxT = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.MaxTasksPerWorker), true) + 1;
+						GeocrowdConstants.MaxTasksPerWorker), true) + 1;
 				double rangeX = UniformGenerator.randomValue(new Range(0,
 						maxRangeX), false);
 				double rangeY = UniformGenerator.randomValue(new Range(0,
@@ -206,7 +202,7 @@ public class GeocrowdInstance extends Geocrowd {
 				MBR mbr = MBR.createMBR(lat, lng, rangeX, rangeY);
 				checkBoundaryMBR(mbr);
 				int exp = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.TaskTypeNo), true);
+						GeocrowdConstants.TaskTypeNo), true);
 				SpecializedWorker w = new SpecializedWorker("dump", lat, lng,
 						maxT, mbr);
 				w.addExpertise(exp);
@@ -738,7 +734,7 @@ public class GeocrowdInstance extends Geocrowd {
 			SpecializedTask task = (SpecializedTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getEntryTime()) >= Constants.TaskDuration) {
+			if ((TimeInstance - task.getEntryTime()) >= GeocrowdConstants.TaskDuration) {
 				task.setExpired();
 			} else
 
@@ -782,7 +778,7 @@ public class GeocrowdInstance extends Geocrowd {
 		try {
 			allTasks = new ArrayList();
 			HashMap HashMap = new HashMap();
-			FileReader reader = new FileReader(Constants.gowallaFileName_CA);
+			FileReader reader = new FileReader(GeocrowdConstants.gowallaFileName_CA);
 			BufferedReader in = new BufferedReader(reader);
 			int cnt = 0;
 			while (in.ready()) {
@@ -837,7 +833,7 @@ public class GeocrowdInstance extends Geocrowd {
 				double lng = loc[1];
 				int time = TimeInstance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.TaskTypeNo), true);
+						GeocrowdConstants.TaskTypeNo), true);
 				SpecializedTask t = new SpecializedTask(lat, lng, time, -1,
 						taskType);
 				out.write(lat + "," + lng + "," + time + "," + (-1) + ","
@@ -865,7 +861,7 @@ public class GeocrowdInstance extends Geocrowd {
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
-			for (int i = 0; i < Constants.TaskNo; i++) {
+			for (int i = 0; i < GeocrowdConstants.TaskNo; i++) {
 				int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
 						entropyList.size()), true);
 				EntropyRecord dR = entropyList.get(randomIdx);
@@ -883,7 +879,7 @@ public class GeocrowdInstance extends Geocrowd {
 				double entropy = dR.getEntropy();
 				int time = TimeInstance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.TaskTypeNo), true);
+						GeocrowdConstants.TaskTypeNo), true);
 				SpecializedTask t = new SpecializedTask(lat, lng, time,
 						entropy, taskType);
 				out.write(lat + "," + lng + "," + time + "," + entropy + ","
@@ -891,7 +887,7 @@ public class GeocrowdInstance extends Geocrowd {
 				taskList.add(listCount, t);
 				listCount++;
 			}
-			TaskCount += Constants.TaskNo;
+			TaskCount += GeocrowdConstants.TaskNo;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
@@ -915,7 +911,7 @@ public class GeocrowdInstance extends Geocrowd {
 			int step = 200;
 			r.setSeed(System.nanoTime());
 //			Constants.TaskNo = Constants.TaskNo + step;
-			int numTask = Constants.TaskNo;
+			int numTask = GeocrowdConstants.TaskNo;
 //			if (TimeInstance % 2 == 0)
 //				numTask = 10;
 //			int numTask = Constants.TaskNo + r.nextInt(1000) - 500;
@@ -948,7 +944,7 @@ public class GeocrowdInstance extends Geocrowd {
 				
 				int time = TimeInstance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.TaskTypeNo), true);
+						GeocrowdConstants.TaskTypeNo), true);
 				SpecializedTask t = new SpecializedTask(lat, lng, time,
 						entropy, taskType);
 				out.write(lat + "," + lng + "," + time + "," + entropy + ","
@@ -974,7 +970,7 @@ public class GeocrowdInstance extends Geocrowd {
 			int step = 200;
 			r.setSeed(System.nanoTime());
 //			Constants.TaskNo = Constants.TaskNo + step;
-			int numTask = Constants.TaskNo;
+			int numTask = GeocrowdConstants.TaskNo;
 //			if (TimeInstance % 2 == 0)
 //				numTask = 10;
 //			int numTask = Constants.TaskNo + r.nextInt(1000) - 500;
@@ -1003,7 +999,7 @@ public class GeocrowdInstance extends Geocrowd {
 				double entropy = 0;
 				int time = TimeInstance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.TaskTypeNo), true);
+						GeocrowdConstants.TaskTypeNo), true);
 				SpecializedTask t = new SpecializedTask(lat, lng, time,
 						entropy, taskType);
 				out.write(lat + "," + lng + "," + time + "," + entropy + ","
@@ -1034,8 +1030,8 @@ public class GeocrowdInstance extends Geocrowd {
 			 * calculate #tasks will be generated
 			 */
 			time++;
-			int numTask = (int) (Constants.TaskNo + Math.pow(-1, time)
-					* Constants.TaskNo * 2 / 3);
+			int numTask = (int) (GeocrowdConstants.TaskNo + Math.pow(-1, time)
+					* GeocrowdConstants.TaskNo * 2 / 3);
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
@@ -1056,7 +1052,7 @@ public class GeocrowdInstance extends Geocrowd {
 				double entropy = dR.getEntropy();
 				int time = TimeInstance;
 				int taskType = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.TaskTypeNo), true);
+						GeocrowdConstants.TaskTypeNo), true);
 				SpecializedTask t = new SpecializedTask(lat, lng, time,
 						entropy, taskType);
 				out.write(lat + "," + lng + "," + time + "," + entropy + ","
@@ -1064,7 +1060,7 @@ public class GeocrowdInstance extends Geocrowd {
 				taskList.add(listCount, t);
 				listCount++;
 			}
-			TaskCount += Constants.TaskNo;
+			TaskCount += GeocrowdConstants.TaskNo;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
@@ -1095,9 +1091,9 @@ public class GeocrowdInstance extends Geocrowd {
 	 */
 	public void readWorkersRandomMBR(String fileName) {
 		workerList = new ArrayList();
-		double maxRangeX = (maxLatitude - minLatitude) * Constants.MaxRangePerc;
+		double maxRangeX = (maxLatitude - minLatitude) * GeocrowdConstants.MaxRangePerc;
 		double maxRangeY = (maxLongitude - minLongitude)
-				* Constants.MaxRangePerc;
+				* GeocrowdConstants.MaxRangePerc;
 		int cnt = 0;
 		try {
 			FileReader reader = new FileReader(fileName);
@@ -1112,7 +1108,7 @@ public class GeocrowdInstance extends Geocrowd {
 				double lat = Double.parseDouble(parts[2]);
 				double lng = Double.parseDouble(parts[3]);
 				int maxT = (int) UniformGenerator.randomValue(new Range(0,
-						Constants.MaxTasksPerWorker), true);
+						GeocrowdConstants.MaxTasksPerWorker), true);
 				double rangeX = UniformGenerator.randomValue(new Range(0,
 						maxRangeX), false);
 				double rangeY = UniformGenerator.randomValue(new Range(0,

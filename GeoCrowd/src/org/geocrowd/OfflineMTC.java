@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import maxcover.MaxCover;
-import maxcover.MaxCoverBasic;
-import maxcover.MaxCoverDynamicOffline;
-import maxcover.MaxCoverFixedOffline;
-
-import org.geocrowd.common.Constants;
+import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.maxcover.MaxCover;
+import org.geocrowd.maxcover.MaxCoverBasic;
+import org.geocrowd.maxcover.MaxCoverDynamicOffline;
+import org.geocrowd.maxcover.MaxCoverFixedOffline;
 
 public class OfflineMTC extends GeocrowdSensing {
 
@@ -51,7 +50,7 @@ public class OfflineMTC extends GeocrowdSensing {
              * worker covers only task at the same time instance or deferred and
              * not expired at worker's time instance
              */
-            if ((workerOnlineTime - task.getEntryTime()) < Constants.TaskDuration
+            if ((workerOnlineTime - task.getEntryTime()) < GeocrowdConstants.TaskDuration
                     && (workerOnlineTime - task.getEntryTime()) >=0 && 
                     distanceWorkerTask(w, task) <= task.getRadius()) {
 
@@ -138,7 +137,7 @@ public class OfflineMTC extends GeocrowdSensing {
         TotalAssignedTasks = maxCover.assignedTasks;
         
         // print instances of the assigned workers
-		counts = new int[Constants.TIME_INSTANCE];
+		counts = new int[GeocrowdConstants.TIME_INSTANCE];
 		
 		for (int i : workerSet) {
 			int time = ((SensingWorker) workerList.get(i)).getOnlineTime();

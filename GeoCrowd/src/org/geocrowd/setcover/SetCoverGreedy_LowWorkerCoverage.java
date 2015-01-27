@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import org.geocrowd.common.Constants;
+
+import org.geocrowd.GeocrowdConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -111,7 +112,7 @@ public class SetCoverGreedy_LowWorkerCoverage extends SetCoverGreedy {
                 Integer key = (Integer)kt;
                 if (!assignedTaskSet.contains(key)) {
                     
-                    averageDelayTime += currentTimeInstance - (maxSet.get(key) - Constants.TaskDuration) + 1;
+                    averageDelayTime += currentTimeInstance - (maxSet.get(key) - GeocrowdConstants.TaskDuration) + 1;
                     assignedTaskSet.add(key);
                 }
             }

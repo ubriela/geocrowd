@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import org.geocrowd.common.Constants;
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.VirtualWorker;
 import org.geocrowd.setcover.MultiSetCoverGreedy_CloseToDeadline;
@@ -99,7 +99,7 @@ public class GeocrowdSensing extends Geocrowd {
 				Integer taskid = (Integer) it2.next();
 				taskidsWithDeadline.put(taskid,
 						taskList.get(candidateTaskIndices.get(taskid))
-								.getEntryTime() + Constants.TaskDuration);
+								.getEntryTime() + GeocrowdConstants.TaskDuration);
 			}
 			containerWithDeadline.add(taskidsWithDeadline);
 		}
@@ -651,7 +651,7 @@ public class GeocrowdSensing extends Geocrowd {
 			SensingTask task = (SensingTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getEntryTime()) >= (Constants.TaskDuration)
+			if ((TimeInstance - task.getEntryTime()) >= (GeocrowdConstants.TaskDuration)
 				) {
 				task.setExpired();
 			}

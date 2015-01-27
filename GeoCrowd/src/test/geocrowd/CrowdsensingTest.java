@@ -15,10 +15,10 @@
 package test.geocrowd;
 
 import org.geocrowd.AlgorithmEnum;
+import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.GeocrowdSensing;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
-import org.geocrowd.common.Constants;
 import org.geocrowd.common.utils.Utils;
 import org.junit.Test;
 
@@ -49,7 +49,7 @@ public class CrowdsensingTest {
 			crowdsensing.readEntropy();
 			
 			// for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+			for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
 				crowdsensing.readTasks(Utils
 						.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
@@ -63,7 +63,7 @@ public class CrowdsensingTest {
 				avgWT += crowdsensing.avgWT;
 
 				/** populate virtual workers */
-				if (Constants.K != 1)
+				if (GeocrowdConstants.K != 1)
 					if (Geocrowd.algorithm != AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE_MULTI
 					&& Geocrowd.algorithm != AlgorithmEnum.GREEDY_LARGE_WORKER_FANOUT_MULTI
 					&& Geocrowd.algorithm != AlgorithmEnum.GREEDY_CLOSE_TO_DEADLINE_MULTI)
@@ -90,10 +90,10 @@ public class CrowdsensingTest {
 			System.out.println("#Total tasks: " + crowdsensing.TaskCount);
 
 			double avgAssignedWorkers = ((double) GeocrowdSensing.TotalAssignedWorkers)
-					/ ((k + 1) * Constants.TIME_INSTANCE);
+					/ ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
 			double avgAssignedTasks = ((double) GeocrowdSensing.TotalAssignedTasks)
-					/ ((k + 1) * Constants.TIME_INSTANCE);
-			long avgTime = (totalTime) / ((k + 1) * Constants.TIME_INSTANCE);
+					/ ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
+			long avgTime = (totalTime) / ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
 
 			System.out.println("Total assigned workers: "
 					+ GeocrowdSensing.TotalAssignedWorkers + "   #of rounds:"
@@ -109,9 +109,9 @@ public class CrowdsensingTest {
 					/ GeocrowdSensing.TotalAssignedTasks);
 
 			System.out.println("avgTW/instance: " + avgTW
-					/ ((k + 1) * Constants.TIME_INSTANCE));
+					/ ((k + 1) * GeocrowdConstants.TIME_INSTANCE));
 			System.out.println("avgWT/instance: " + avgWT
-					/ ((k + 1) * Constants.TIME_INSTANCE));
+					/ ((k + 1) * GeocrowdConstants.TIME_INSTANCE));
 		} // end of for loop
 	}
 

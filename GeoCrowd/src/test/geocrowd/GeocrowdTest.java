@@ -22,16 +22,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.datasets.syn.dtype.Point;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
+import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.GeocrowdInstance;
 import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.GeocrowdOnline;
-import org.geocrowd.common.Constants;
 import org.geocrowd.common.MBR;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.syn.dtype.Point;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.junit.Test;
 
@@ -64,8 +64,8 @@ public class GeocrowdTest {
 		// geoCrowd.entropyList.size());
 
 		ArrayList<Point> venues = readFoursquareVenues("dataset/real/foursquare/venue_locs.txt");
-		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			geoCrowd.readTasksFoursquare(Constants.foursquareTaskFileNamePrefix
+		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
+			geoCrowd.readTasksFoursquare(GeocrowdConstants.foursquareTaskFileNamePrefix
 					+ i + ".txt", venues);
 			geoCrowd.TimeInstance++;
 		}
@@ -121,7 +121,7 @@ public class GeocrowdTest {
 			geoCrowd.printBoundaries();
 			geoCrowd.createGrid();
 			geoCrowd.readEntropy();
-			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+			for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
 				geoCrowd.readTasks(Utils
 						.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
@@ -155,10 +155,10 @@ public class GeocrowdTest {
 
 			double avgScore = ((double) totalScore) / (k + 1);
 			double avgAssignedTasks = (totalAssignedTasks)
-					/ ((k + 1) * Constants.TIME_INSTANCE);
+					/ ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
 			double avgExpertiseAssignedTasks = (totalExpertiseAssignedTasks)
-					/ ((k + 1) * Constants.TIME_INSTANCE);
-			long avgTime = (totalTime) / ((k + 1) * Constants.TIME_INSTANCE);
+					/ ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
+			long avgTime = (totalTime) / ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
 			System.out.println("Total score: " + totalScore
 					+ "   # of rounds: " + (k + 1) + "  avg: " + avgScore);
 			System.out.println("Total assigned taskes: " + totalAssignedTasks
@@ -173,8 +173,8 @@ public class GeocrowdTest {
 			System.out.println("Total distances: " + totalSumDist
 					+ "   # of rounds: " + (k + 1) + "  avg: " + avgDist);
 
-			avgAvgWT = totalAvgWT / ((k + 1) * Constants.TIME_INSTANCE);
-			avgVarWT = totalVARWT / ((k + 1) * Constants.TIME_INSTANCE);
+			avgAvgWT = totalAvgWT / ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
+			avgVarWT = totalVARWT / ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
 			System.out.println("Average worker per task: " + avgAvgWT
 					+ "   with variance: " + avgVarWT);
 		} // end of for loop
@@ -197,7 +197,7 @@ public class GeocrowdTest {
 			Geocrowd.algorithm = AlgorithmEnum.BASIC;
 			GeocrowdOnline geoCrowd = new GeocrowdOnline(
 					"dataset/real/gowalla/worker/gowalla_workers0.txt");
-			for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
+			for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 				System.out.println("---------- Time instance: " + (i + 1));
 				geoCrowd.readTasks(Utils
 						.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
@@ -230,8 +230,8 @@ public class GeocrowdTest {
 			totalSumDist += geoCrowd.TotalTravelDistance;
 
 			double avgAssignedTasks = (totalAssignedTasks)
-					/ ((k + 1) * Constants.TIME_INSTANCE);
-			long avgTime = (totalTime) / ((k + 1) * Constants.TIME_INSTANCE);
+					/ ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
+			long avgTime = (totalTime) / ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
 			System.out.println("Total assigned taskes: " + totalAssignedTasks
 					+ "   # of rounds:" + (k + 1) + "  avg: "
 					+ avgAssignedTasks);
@@ -241,8 +241,8 @@ public class GeocrowdTest {
 			System.out.println("Total distances: " + totalSumDist
 					+ "   # of rounds: " + (k + 1) + "  avg: " + avgDist);
 
-			avgAvgWT = totalAvgWT / ((k + 1) * Constants.TIME_INSTANCE);
-			avgVarWT = totalVARWT / ((k + 1) * Constants.TIME_INSTANCE);
+			avgAvgWT = totalAvgWT / ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
+			avgVarWT = totalVARWT / ((k + 1) * GeocrowdConstants.TIME_INSTANCE);
 			System.out.println("Average worker per task: " + avgAvgWT
 					+ "   with variance: " + avgVarWT);
 		} // end of for loop
@@ -260,8 +260,8 @@ public class GeocrowdTest {
 		geoCrowd.readEntropy();
 		// System.out.println("entropy list size: " +
 		// geoCrowd.entropyList.size());
-		for (int i = 0; i < Constants.TIME_INSTANCE; i++) {
-			geoCrowd.readTasksWithEntropy2(Constants.gowallaTaskFileNamePrefix
+		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
+			geoCrowd.readTasksWithEntropy2(GeocrowdConstants.gowallaTaskFileNamePrefix
 					+ i + ".txt");
 			geoCrowd.TimeInstance++;
 		}
@@ -354,8 +354,8 @@ public class GeocrowdTest {
 		geoCrowd.createGrid();
 		// geoCrowd.readEntropy();
 
-		geoCrowd.readWorkers(Constants.smallWorkerFileNamePrefix + "0.txt");
-		geoCrowd.readTasks(Constants.smallTaskFileNamePrefix + "0.txt");
+		geoCrowd.readWorkers(GeocrowdConstants.smallWorkerFileNamePrefix + "0.txt");
+		geoCrowd.readTasks(GeocrowdConstants.smallTaskFileNamePrefix + "0.txt");
 		geoCrowd.matchingTasksWorkers();
 		geoCrowd.computeAverageTaskPerWorker();
 		System.out.println("avgTW " + geoCrowd.avgTW);

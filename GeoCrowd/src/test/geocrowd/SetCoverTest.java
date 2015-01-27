@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import maxcover.MaxCoverBasic;
-
+import org.geocrowd.maxcover.MaxCoverBasic;
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy_HighTaskCoverage;
 import org.junit.Test;

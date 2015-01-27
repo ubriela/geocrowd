@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.geocrowd.common.Constants;
+import org.geocrowd.Constants;
+import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.common.crowdsource.GenericTask;
 
 // TODO: Auto-generated Javadoc
@@ -85,7 +86,7 @@ public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
 				double avgTimeToDead = avgTimeToDead(s, currentTimeInstance,
 						assignedTaskSet);
 				if (avgTimeToDead < smallestAvgTimeToDead
-						&& (avgTimeToDead <= Constants.TaskDuration || currentTimeInstance == Constants.TIME_INSTANCE - 1)) {
+						&& (avgTimeToDead <= GeocrowdConstants.TaskDuration || currentTimeInstance == GeocrowdConstants.TIME_INSTANCE - 1)) {
 					smallestAvgTimeToDead = avgTimeToDead;
 					bestWorkerIndex = j;
 				}
@@ -106,7 +107,7 @@ public class SetCoverGreedy_CloseToDeadline extends SetCoverGreedy {
 				if (!assignedTaskSet.contains(taskId)) {
 
 					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskId) - Constants.TaskDuration)
+							- (taskSet.get(taskId) - GeocrowdConstants.TaskDuration)
 							+ 1;
 					assignedTaskSet.add(taskId);
 				}

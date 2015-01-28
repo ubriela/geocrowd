@@ -143,7 +143,8 @@ public class MaxCoverBasicT extends MaxCover {
 																			// smaller,
 																			// the
 																			// better
-				totalElapsedTime += 1/(1+elapsedTime);
+//				System.out.println(elapsedTime);
+				totalElapsedTime += 1/(elapsedTime);
 			}
 		}
 		/**

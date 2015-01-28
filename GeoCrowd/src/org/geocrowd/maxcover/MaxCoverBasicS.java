@@ -32,7 +32,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 	private HashMap<Integer, Double> task_entropies;
 	private ArrayList<GenericTask> taskList;
 	public double alpha = Constants.alpha;
-	public double maxRegionEntropy = 0;
+	public double maxRegionEntropy = 0.0;
 //	public double maxNoUncoveredTasks = 0;
 	
 	public void setWorkerEntropies(HashMap<Integer, Double> worker_entropies) {

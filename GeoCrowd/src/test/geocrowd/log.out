@@ -106,3 +106,61 @@ Budget = 56
 #Covered Tasks
                      	MAX_COVER_BASIC      	MAX_COVER_BASIC_S2   	FixedOff             	DynamicOff           	
 0.200000             	4880                 	4798                 	5656                 	6333                 	
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_T2   	MAX_COVER_BASIC_S    	MAX_COVER_BASIC_S2   	FixedOff             	DynamicOff           	
+Alpha=28             	306                  	284                  	306                  	306                  	306                  	0                    	0                    	
+Alpha=56             	567                  	531                  	567                  	355                  	567                  	19                   	19                   	
+Alpha=112            	1020                 	965                  	1020                 	645                  	1020                 	37                   	37                   	
+Alpha=224            	1812                 	1712                 	1812                 	1120                 	1812                 	53                   	53                   	
+Alpha=448            	3099                 	2979                 	3102                 	1935                 	3099                 	68                   	68                   	
+Alpha=896            	5017                 	4855                 	5017                 	3241                 	5015                 	83                   	83                   	
+Alpha=1792           	7135                 	7078                 	7141                 	5296                 	7137                 	97                   	97                   	
+Alpha=3586           	8253                 	8244                 	8253                 	7381                 	8253                 	111                  	111                  	
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_T2   	MAX_COVER_BASIC_S    	MAX_COVER_BASIC_S2   	FixedOff             	DynamicOff           	
+Alpha=28             	358                  	338                  	355                  	358                  	355                  	0                    	0                    	
+Alpha=56             	670                  	621                  	670                  	659                  	670                  	21                   	21                   	
+Alpha=112            	1245                 	1164                 	1245                 	1210                 	1245                 	39                   	40                   	
+Alpha=224            	2251                 	2134                 	2250                 	2175                 	2251                 	56                   	58                   	
+Alpha=448            	3956                 	3800                 	3958                 	3774                 	3955                 	72                   	76                   	
+Alpha=896            	6617                 	6452                 	6610                 	6352                 	6619                 	88                   	93                   	
+Alpha=1792           	10465                	10276                	10455                	10030                	10457                	104                  	110                  	
+Alpha=3586           	14652                	14593                	14650                	14241                	14647                	119                  	126                  	
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_T2   	MAX_COVER_BASIC_S    	MAX_COVER_BASIC_S2   	FixedOff             	DynamicOff           	
+Alpha=28             	1560                 	1675                 	1581                 	1560                 	1581                 	0                    	0                    	
+Alpha=56             	2309                 	2470                 	2323                 	1792                 	2278                 	168                  	168                  	
+Alpha=112            	3449                 	3597                 	3466                 	2179                 	3424                 	329                  	329                  	
+Alpha=224            	4868                 	5019                 	4846                 	2759                 	4876                 	488                  	488                  	
+Alpha=448            	6358                 	6685                 	6424                 	3443                 	6393                 	625                  	625                  	
+Alpha=896            	8423                 	8684                 	8485                 	4982                 	8434                 	713                  	713                  	
+Alpha=1792           	10269                	10386                	10349                	7004                 	10273                	793                  	793                  	
+Alpha=3586           	10914                	10914                	10915                	10158                	10914                	863                  	863                  	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	FixedOff             	DynamicOff           	
+0.100000             	2309                 	2319                 	2632                 	2769                 	
+0.200000             	2309                 	2319                 	2632                 	2769                 	
+0.300000             	2309                 	2338                 	2632                 	2769                 	
+0.400000             	2309                 	2390                 	2632                 	2769                 	
+0.500000             	2309                 	2390                 	2632                 	2769                 	
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_T2   	FixedOff             	DynamicOff           	
+Alpha=28             	6139                 	6834                 	6100                 	7684                 	8496                 	
+Alpha=56             	8825                 	9509                 	8817                 	10362                	11203                	
+Alpha=112            	11325                	12271                	11303                	13327                	14359                	
+Alpha=224            	14383                	15526                	14363                	16624                	17985                	
+Alpha=448            	17838                	18686                	17809                	19738                	20940                	
+Alpha=896            	20565                	20942                	20642                	21525                	21986                	
+Alpha=1792           	21868                	21905                	21886                	21953                	21986                	
+Alpha=3586           	21986                	21986                	21986                	21986                	21986                	

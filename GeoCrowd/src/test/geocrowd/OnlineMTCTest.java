@@ -629,14 +629,13 @@ public class OnlineMTCTest {
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				AlgorithmEnum.MAX_COVER_BASIC, 
-//				AlgorithmEnum.MAX_COVER_BASIC_T,
-//				AlgorithmEnum.MAX_COVER_BASIC_T2,
-//				AlgorithmEnum.MAX_COVER_BASIC_S,
-				AlgorithmEnum.MAX_COVER_BASIC_S2 
-				};
+				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
+		// AlgorithmEnum.MAX_COVER_BASIC_T2,
+		// AlgorithmEnum.MAX_COVER_BASIC_S,
+		// AlgorithmEnum.MAX_COVER_BASIC_S2
+		};
 
-		double[] alphas = new double[] { 0.2 };
+		double[] alphas = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5 };
 		int[][] coveredTasks = new int[alphas.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[alphas.length][algorithms.length + 2];
 
@@ -729,7 +728,10 @@ public class OnlineMTCTest {
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
-				AlgorithmEnum.MAX_COVER_BASIC_S };
+				AlgorithmEnum.MAX_COVER_BASIC_T2,
+		// AlgorithmEnum.MAX_COVER_BASIC_S,
+		// AlgorithmEnum.MAX_COVER_BASIC_S2
+				};
 
 		double[] radii = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
@@ -806,21 +808,23 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryBudget() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T
-		// ,
-		// AlgorithmEnum.MAX_COVER_BASIC_S
+				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
+				AlgorithmEnum.MAX_COVER_BASIC_T2,
+		// AlgorithmEnum.MAX_COVER_BASIC_S,
+		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
 
-		int[] budgets = new int[] { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+		// int[] budgets = new int[] { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
 		int[][] coveredTasks = new int[budgets.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[budgets.length][algorithms.length + 2];
 
 		// int[] budgets = new int[] { 40, 80, 160, 320, 640, 1280,
 		// 2560 };
-		GeocrowdConstants.TIME_INSTANCE = 56;
+		GeocrowdConstants.TIME_INSTANCE = 28;
 		GeocrowdConstants.radius = 5.0;
 		Constants.alpha = 0.2;
 		System.out.println("Radius = " + GeocrowdConstants.radius);
@@ -828,9 +832,9 @@ public class OnlineMTCTest {
 		// GeocrowdTest.main(null);
 
 		for (int b = 0; b < budgets.length; b++) {
-			computeHistoryBudgets(true, b, 0);
+			computeHistoryBudgets(true, budgets[b], 0);
 			int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
-			computeHistoryBudgets(false, b, 0);
+			computeHistoryBudgets(false, budgets[b], 0);
 			int dynamic_offline_cov = Geocrowd.TotalAssignedTasks;
 
 			for (int a = 0; a < algorithms.length; a++) {
@@ -839,7 +843,6 @@ public class OnlineMTCTest {
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.reset();
 				onlineMTC.totalBudget = budgets[b];
-				;
 
 				System.out
 						.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
@@ -856,6 +859,18 @@ public class OnlineMTCTest {
 					onlineMTC.matchingTasksWorkers();
 					onlineMTC.maxCoverage();
 					OnlineMTC.TimeInstance++;
+ 
+					System.out
+							.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
+									(i + 1),
+									onlineMTC.TaskCount,
+									OnlineMTC.TotalAssignedTasks,
+									onlineMTC.totalBudget,
+									OnlineMTC.TotalAssignedWorkers,
+									OnlineMTC.TotalAssignedTasks
+											/ Math.max(
+													1,
+													OnlineMTC.TotalAssignedWorkers));
 				}
 
 				coveredTasks[b][a] = OnlineMTC.TotalAssignedTasks;
@@ -879,7 +894,7 @@ public class OnlineMTCTest {
 		pw.printf("%-20s \t", "FixedOff");
 		pw.printf("%-20s \t", "DynamicOff");
 		for (int b = 0; b < budgets.length; b++) {
-			pw.printf("\n%-20s \t", "Alpha=" + budgets[b]);
+			pw.printf("\n%-20d \t", budgets[b]);
 			for (int a = 0; a < algorithms.length + 2; a++)
 				pw.printf("%-20d \t", coveredTasks[b][a]);
 		}

@@ -13,8 +13,8 @@ import static org.geocrowd.Geocrowd.taskList;
 
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
-import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.Parser;
 import org.geocrowd.maxcover.MaxCover;
 import org.geocrowd.maxcover.MaxCoverAdapt;
 import org.geocrowd.maxcover.MaxCoverAdaptS;
@@ -22,6 +22,7 @@ import org.geocrowd.maxcover.MaxCoverAdaptT;
 import org.geocrowd.maxcover.MaxCoverBasic;
 import org.geocrowd.maxcover.MaxCoverBasicMO;
 import org.geocrowd.maxcover.MaxCoverBasicS;
+import org.geocrowd.maxcover.MaxCoverBasicS2;
 import org.geocrowd.maxcover.MaxCoverBasicSMO;
 import org.geocrowd.maxcover.MaxCoverBasicT;
 import org.geocrowd.maxcover.MaxCoverBasicT2;
@@ -239,14 +240,19 @@ public class OnlineMTC extends GeocrowdSensing {
 			 * compute entropy for workers
 			 */
 //			printBoundaries();
-//			createGrid();
-//			readEntropy();
+			createGrid();
+			readEntropy();
 			HashMap<Integer, Double> worker_entropies = new HashMap<Integer, Double>();
 			
 			for (int idx = 0; idx < containerWorker.size(); idx++)
 				worker_entropies.put(idx, computeCost(workerList.get(idx)));
+			
+			HashMap<Integer, Double> task_entropies = new HashMap<Integer, Double>();
+			for (int idx = 0; idx < taskList.size(); idx++)
+				task_entropies.put(idx, computeCost(taskList.get(idx)));
 
 			maxCoverS.setWorkerEntropies(worker_entropies);
+			maxCoverS.setTaskEntropies(task_entropies);
 			maxCoverS.maxRegionEntropy = maxEntropy;
 			assignedWorker = maxCoverS.maxCover();
 			
@@ -255,6 +261,37 @@ public class OnlineMTC extends GeocrowdSensing {
 			usedBudget += assignedWorker.size();
 
 			maxCover = maxCoverS;
+			break;
+		case MAX_COVER_BASIC_S2:
+			MaxCoverBasicS2 maxCoverS2 = new MaxCoverBasicS2(getContainerWithDeadline(),
+					TimeInstance);
+			maxCoverS2.budget = getBudget(algorithm);
+			maxCoverS2.setTaskList(taskList);
+			/**
+			 * compute entropy for workers
+			 */
+//			printBoundaries();
+			createGrid();
+			readEntropy();
+			HashMap<Integer, Double> worker_entropies2 = new HashMap<Integer, Double>();
+			
+			for (int idx = 0; idx < containerWorker.size(); idx++)
+				worker_entropies2.put(idx, computeCost(workerList.get(idx)));
+			
+			HashMap<Integer, Double> task_entropies2 = new HashMap<Integer, Double>();
+			for (int idx = 0; idx < taskList.size(); idx++)
+				task_entropies2.put(idx, computeCost(taskList.get(idx)));
+
+			maxCoverS2.setWorkerEntropies(worker_entropies2);
+			maxCoverS2.setTaskEntropies(task_entropies2);
+			maxCoverS2.maxRegionEntropy = maxEntropy;
+			assignedWorker = maxCoverS2.maxCover();
+			
+			TotalAssignedTasks += maxCoverS2.assignedTasks;
+			TotalAssignedWorkers += assignedWorker.size();
+			usedBudget += assignedWorker.size();
+
+			maxCover = maxCoverS2;
 			break;
 		case MAX_COVER_BASIC_ST:
 			MaxCoverST maxCoverST = new MaxCoverST(getContainerWithDeadline(),
@@ -295,12 +332,12 @@ public class OnlineMTC extends GeocrowdSensing {
 //				printBoundaries();
 				createGrid();
 				readEntropy();
-				HashMap<Integer, Double> worker_entropies2 = new HashMap<Integer, Double>();
+				HashMap<Integer, Double> worker_entropies3 = new HashMap<Integer, Double>();
 				
 				for (int idx = 0; idx < containerWorker.size(); idx++)
-					worker_entropies2.put(idx, computeCost(workerList.get(idx)));
+					worker_entropies3.put(idx, computeCost(workerList.get(idx)));
 				
-				maxCoverProS.setWorkerEntropies(worker_entropies2);
+				maxCoverProS.setWorkerEntropies(worker_entropies3);
 				assignedWorker = maxCoverProS.maxCover();
 
 				TotalAssignedTasks += maxCoverProS.assignedTasks;
@@ -424,9 +461,11 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_BASIC_MO:
 		case MAX_COVER_BASIC_S_MO:
 		case MAX_COVER_BASIC_S:
+		case MAX_COVER_BASIC_S2:
 		case MAX_COVER_BASIC_T:
 		case MAX_COVER_BASIC_T2:
 		case MAX_COVER_BASIC_ST:
+		
 			if (TimeInstance < GeocrowdConstants.TIME_INSTANCE - 1) {
 				return totalBudget / GeocrowdConstants.TIME_INSTANCE;
 			} else {

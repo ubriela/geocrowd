@@ -26,7 +26,7 @@ import org.geocrowd.common.crowdsource.GenericTask;
  * 
  * @author Hien
  */
-public class MaxCoverBasicS extends MaxCoverBasicT {
+public class MaxCoverBasicS2 extends MaxCoverBasicT2 {
 
 	private HashMap<Integer, Double> worker_entropies;
 	private HashMap<Integer, Double> task_entropies;
@@ -65,7 +65,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 	 *            the current_time_instance
 	 */
 
-	public MaxCoverBasicS(ArrayList container, Integer currentTI) {
+	public MaxCoverBasicS2(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
 	}
 
@@ -85,8 +85,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 	 * @param completedTasks
 	 *            [taskid]
 	 * @return
-	 */
-
+	 */	
 	@Override
 	public WeightGain weight(int workeridx, HashMap<Integer, Integer> tasksWithDeadlines,
 			int currentTI, HashSet<Integer> completedTasks) {
@@ -94,38 +93,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 		 * denotes the number of unassigned tasks covered by worker
 		 */
 		int uncoveredTasks = 0;
-		double totalTaskEntropy = 0;
-
-		for (Integer taskIdx : tasksWithDeadlines.keySet()) {
-			/**
-			 * Only consider uncovered tasks
-			 */
-			if (!completedTasks.contains(taskIdx))
-				uncoveredTasks++;
-//			System.out.println( 1/(1 + task_entropies.get(taskIdx)/maxRegionEntropy));
-			totalTaskEntropy += 1/(1 + task_entropies.get(taskIdx)/maxRegionEntropy);
-		}
-		/**
-		 * average region entropy of new covered tasks
-		 */
-		double weight = -totalTaskEntropy;
-//		System.out.println(regionEntropy/maxRegionEntropy + " " + uncoveredTasks/10.0);
-//		System.out.println(weight);
-		return new WeightGain(weight, uncoveredTasks);
-	}
-	
-	
-	@Override
-	public WeightGain weight_old(int workeridx, HashMap<Integer, Integer> tasksWithDeadlines,
-			int currentTI, HashSet<Integer> completedTasks) {
-		/**
-		 * denotes the number of unassigned tasks covered by worker
-		 */
-		int uncoveredTasks = 0;
 		double regionWorkerEntropy = worker_entropies.get(workeridx);
-		
-//		if (regionEntropy > maxRegionEntropy)
-//			maxRegionEntropy = regionEntropy;
 		
 
 		for (Integer t : tasksWithDeadlines.keySet()) {
@@ -135,13 +103,11 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 			if (!completedTasks.contains(t))
 				uncoveredTasks++;
 		}
-//		if (uncoveredTasks > maxNoUncoveredTasks) {
-//			maxNoUncoveredTasks = uncoveredTasks;
-//		}
+
 		/**
 		 * average region entropy of new covered tasks
 		 */
-		double weight = alpha * regionWorkerEntropy/maxRegionEntropy - (1-alpha)*uncoveredTasks/10.0;
+		double weight = regionWorkerEntropy;
 //		System.out.println(regionEntropy/maxRegionEntropy + " " + uncoveredTasks/10.0);
 //		System.out.println(weight);
 		return new WeightGain(weight, uncoveredTasks);

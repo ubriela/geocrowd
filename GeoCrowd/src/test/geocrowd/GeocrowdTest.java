@@ -28,10 +28,10 @@ import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.GeocrowdInstance;
 import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.GeocrowdOnline;
-import org.geocrowd.common.MBR;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.utils.Utils;
-import org.geocrowd.datasets.syn.dtype.Point;
+import org.geocrowd.datasets.dtype.MBR;
+import org.geocrowd.datasets.dtype.Point;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.junit.Test;
 

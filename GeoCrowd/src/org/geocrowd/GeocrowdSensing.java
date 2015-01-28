@@ -14,30 +14,20 @@
  */
 package org.geocrowd;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Set;
 
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
-import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.VirtualWorker;
 import org.geocrowd.setcover.MultiSetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.MultiSetCoverGreedy_LargeWorkerFanout;
-import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.MultiSetCoverGreedy_HighTaskCoverage;
 import org.geocrowd.setcover.SetCoverGreedy_CloseToDeadline;
@@ -52,8 +42,7 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.PrimitiveSink;
 
-import org.geocrowd.common.crowdsource.SensingWorker;
-import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.Parser;
 
 // TODO: Auto-generated Javadoc
 /**

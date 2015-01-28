@@ -138,12 +138,34 @@ public class MaxCoverBasicT extends MaxCover {
 			 * Only consider uncovered tasks
 			 */
 			if (!completedTasks.contains(t)) {
-				/**
-				 * if the task will dead at next time instance, return
-				 * 1 so that it will be assigned
-				 */
-//				if (tasksWithDeadlines.get(t) - currentTI == 1)
-//					return new WeightGain();
+				uncoveredTasks++;
+				double elapsedTime = tasksWithDeadlines.get(t) - currentTI; // the
+																			// smaller,
+																			// the
+																			// better
+				totalElapsedTime += 1/(1+elapsedTime);
+			}
+		}
+		/**
+		 * average time to deadline of new covered task
+		 */
+		double weight = -totalElapsedTime;
+		return new WeightGain(weight, uncoveredTasks);
+	}
+	
+	
+	public WeightGain weight_old(int workeridx, HashMap<Integer, Integer> tasksWithDeadlines,
+			int currentTI, HashSet<Integer> completedTasks) {
+		/**
+		 * denotes the number of unassigned tasks covered by worker
+		 */
+		int uncoveredTasks = 0;
+		double totalElapsedTime = 0;
+		for (Integer t : tasksWithDeadlines.keySet()) {
+			/**
+			 * Only consider uncovered tasks
+			 */
+			if (!completedTasks.contains(t)) {
 				uncoveredTasks++;
 				double elapsedTime = tasksWithDeadlines.get(t) - currentTI; // the
 																			// smaller,
@@ -158,4 +180,7 @@ public class MaxCoverBasicT extends MaxCover {
 		double weight = alpha*totalElapsedTime / (GeocrowdConstants.TaskDuration*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks;
 		return new WeightGain(weight, uncoveredTasks);
 	}
+	
+
+	
 }

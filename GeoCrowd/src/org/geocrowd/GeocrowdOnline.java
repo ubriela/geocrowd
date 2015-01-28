@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
+import org.geocrowd.datasets.Parser;
 import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.geocrowd.matching.Utility;

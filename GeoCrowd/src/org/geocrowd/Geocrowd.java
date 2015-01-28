@@ -26,6 +26,8 @@ import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.EntropyRecord;
 import org.geocrowd.common.utils.Utils;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class GenericCrowd.
@@ -238,7 +240,11 @@ public abstract class Geocrowd {
 	 * Get a list of entropy records.
 	 */
 	public void readEntropy() {
-		String filePath = Utils.datasetToEntropyPath(DATA_SET);
+		String filePath = "";
+		if (Constants.useLocationEntropy)
+			filePath = Utils.datasetToEntropyPath(DATA_SET);
+		else
+			filePath = Utils.datasetToLocationDensity(DATA_SET);
 		entropies = new HashMap<Integer, HashMap<Integer, Double>>();
 		try {
 			FileReader file = new FileReader(filePath);

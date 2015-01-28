@@ -22,17 +22,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.geocrowd.common.Cell;
-import org.geocrowd.common.MBR;
 import org.geocrowd.common.crowdsource.MatchPair;
-import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.entropy.EntropyRecord;
 import org.geocrowd.cplex.BPMatchingCplex;
-import org.geocrowd.datasets.syn.UniformGenerator;
-import org.geocrowd.datasets.syn.dtype.Point;
-import org.geocrowd.datasets.syn.dtype.Range;
+import org.geocrowd.datasets.Parser;
+import org.geocrowd.datasets.dtype.Cell;
+import org.geocrowd.datasets.dtype.MBR;
+import org.geocrowd.datasets.dtype.Point;
+import org.geocrowd.datasets.dtype.Range;
+import org.geocrowd.datasets.synthesis.gowalla.GowallaProcessor;
+import org.geocrowd.datasets.synthetic.UniformGenerator;
 import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.geocrowd.matching.Utility;
@@ -72,13 +73,13 @@ public class GeocrowdInstance extends Geocrowd {
 	 * Instantiates a new geocrowd.
 	 */
 	public GeocrowdInstance() {
-		PreProcess prep = new PreProcess();
-		PreProcess.DATA_SET = DATA_SET;
+		GowallaProcessor prep = new GowallaProcessor();
+		GowallaProcessor.DATA_SET = DATA_SET;
 		prep.readBoundary();
-		minLatitude = PreProcess.minLat;
-		maxLatitude = PreProcess.maxLat;
-		minLongitude = PreProcess.minLng;
-		maxLongitude = PreProcess.maxLng;
+		minLatitude = GowallaProcessor.minLat;
+		maxLatitude = GowallaProcessor.maxLat;
+		minLongitude = GowallaProcessor.minLng;
+		maxLongitude = GowallaProcessor.maxLng;
 	}
 
 	/**

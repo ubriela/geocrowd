@@ -11,5 +11,5 @@ public class Constants {
 	/** The Constant NON_EXPERTISE_MATCH_SCORE. */
 	public static final double NON_EXPERTISE_MATCH_SCORE = 1;
 
-	public static boolean useLocationEntropy = true;
+	public static boolean useLocationEntropy = false;
 }

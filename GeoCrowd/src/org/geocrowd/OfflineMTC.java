@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.geocrowd.common.crowdsource.Parser;
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.datasets.Parser;
 import org.geocrowd.maxcover.MaxCover;
 import org.geocrowd.maxcover.MaxCoverBasic;
 import org.geocrowd.maxcover.MaxCoverDynamicOffline;

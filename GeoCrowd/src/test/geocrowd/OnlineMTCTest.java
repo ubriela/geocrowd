@@ -298,7 +298,8 @@ public class OnlineMTCTest {
 
 		for (int d = 0; d < delta.length; d++) {
 			GeocrowdConstants.TaskDuration = delta[d];
-			System.out.println("\n----\ndelta: " + GeocrowdConstants.TaskDuration);
+			System.out.println("\n----\ndelta: "
+					+ GeocrowdConstants.TaskDuration);
 			Geocrowd.TimeInstance = 0;
 			// GeocrowdTest.main(null);
 
@@ -625,14 +626,17 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryAlpha() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_BASIC_T,
-				AlgorithmEnum.MAX_COVER_BASIC_T2,
-				AlgorithmEnum.MAX_COVER_BASIC_S };
+				AlgorithmEnum.MAX_COVER_BASIC, 
+//				AlgorithmEnum.MAX_COVER_BASIC_T,
+//				AlgorithmEnum.MAX_COVER_BASIC_T2,
+//				AlgorithmEnum.MAX_COVER_BASIC_S,
+				AlgorithmEnum.MAX_COVER_BASIC_S2 
+				};
 
-		double[] alphas = new double[] { 0.2, 0.4, 0.6};
+		double[] alphas = new double[] { 0.2 };
 		int[][] coveredTasks = new int[alphas.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[alphas.length][algorithms.length + 2];
 
@@ -657,7 +661,7 @@ public class OnlineMTCTest {
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.createGrid();
 				onlineMTC.readBoundary();
-				onlineMTC.readEntropy();
+				// onlineMTC.readEntropy();
 				onlineMTC.reset();
 
 				onlineMTC.totalBudget = totalBudget;

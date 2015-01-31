@@ -67,8 +67,8 @@ public class MaxCoverST extends MaxCoverBasicS {
 		double regionEntropy = getWorkerEntropies().get(workeridx);
 		double totalElapsedTime = 0;
 		
-		if (regionEntropy > maxRegionEntropy)
-			maxRegionEntropy = regionEntropy;
+		if (regionEntropy > maxEntropy)
+			maxEntropy = regionEntropy;
 		
 		for (Integer t : tasksWithDeadlines.keySet()) {
 			/**
@@ -93,7 +93,7 @@ public class MaxCoverST extends MaxCoverBasicS {
 		 */
 		
 //		System.out.println(maxRegionEntropy);
-		double weight = 0.15*totalElapsedTime / (GeocrowdConstants.TaskDuration*uncoveredTasks) + 0.05*regionEntropy/maxRegionEntropy - 0.8*uncoveredTasks/10.0;
+		double weight = 0.15*totalElapsedTime / (GeocrowdConstants.TaskDuration*uncoveredTasks) + 0.05*regionEntropy/maxEntropy - 0.8*uncoveredTasks/10.0;
 //		System.out.println(weight);
 		return new WeightGain(weight, uncoveredTasks);
 	}

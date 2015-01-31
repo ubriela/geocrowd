@@ -164,3 +164,103 @@ Alpha=448            	17838                	18686                	17809         
 Alpha=896            	20565                	20942                	20642                	21525                	21986                	
 Alpha=1792           	21868                	21905                	21886                	21953                	21986                	
 Alpha=3586           	21986                	21986                	21986                	21986                	21986                	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	FixedOff             	DynamicOff           	
+0.100000             	4880                 	5270                 	5656                 	6333                 	
+0.200000             	4880                 	5270                 	5656                 	6333                 	
+0.300000             	4880                 	5270                 	5656                 	6333                 	
+0.400000             	4880                 	5270                 	5656                 	6333                 	
+0.500000             	4880                 	5270                 	5656                 	6333                 	
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_T2   	FixedOff             	DynamicOff           	
+28                   	4234                 	4068                 	4163                 	4330                 	5121                 	
+56                   	7241                 	7020                 	7271                 	7715                 	8848                 	
+112                  	11298                	11429                	11305                	12620                	13934                	
+224                  	16600                	16788                	16516                	18379                	19753                	
+448                  	21369                	21789                	21356                	23216                	24440                	
+896                  	24531                	24784                	24599                	25657                	26121                	
+1792                 	26061                	26066                	26060                	26116                	26121                	
+3586                 	26121                	26121                	26121                	26121                	26121                	
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_T2   	FixedOff             	DynamicOff           	
+28                   	7172                 	6855                 	7109                 	7335                 	9272                 	
+56                   	12721                	12021                	12711                	13157                	16319                	
+112                  	21164                	20622                	21184                	22667                	27164                	
+224                  	32771                	32406                	32686                	35052                	40131                	
+448                  	43299                	43868                	43538                	46685                	50781                	
+896                  	50540                	50903                	50522                	52747                	54912                	
+1792                 	54132                	54193                	54158                	54676                	55056                	
+3586                 	55053                	55053                	55055                	55056                	55056                	
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_T2   	FixedOff             	DynamicOff           	
+28                   	4392                 	4219                 	4392                 	4426                 	5654                 	
+56                   	8458                 	8254                 	8423                 	8580                 	10892                	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	1826                 	1956                 	1826                 	2069                 	2279                 	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2808                 	2978                 	2786                 	3044                 	3342                 	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2808                 	2978                 	2786                 	3044                 	3342                 	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2808                 	2978                 	2712                 	3044                 	3342                 	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2808                 	2916                 	2712                 	3044                 	3342                 	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2808                 	2916                 	2786                 	3044                 	3342                 	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2808                 	2916                 	2809                 	3044                 	3342                 	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2808                 	2916                 	2809                 	3044                 	3342                 	
+
+##################Local varying alpha
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2808                 	2916                 	2809                 	3044                 	3342                 	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	964                  	951                  	967                  	974                  	1086                 	

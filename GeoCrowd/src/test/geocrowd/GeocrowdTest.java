@@ -54,7 +54,7 @@ public class GeocrowdTest {
 	}
 
 	@Test
-	private void testGenerateFoursquareTasks() {
+	public void testGenerateFoursquareTasks() {
 		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 		GeocrowdInstance geoCrowd = new GeocrowdInstance();
 		// geoCrowd.printBoundaries();

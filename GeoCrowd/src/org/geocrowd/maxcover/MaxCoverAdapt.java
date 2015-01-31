@@ -19,7 +19,7 @@ import org.geocrowd.GeocrowdConstants;
 public class MaxCoverAdapt extends MaxCover {
 
 	public double lambda; // algorithm stops when gain is less than lambda
-	public int deltaBudget;
+	public int deltaBudget;	// > 0 means over-utilization; < 0 otherwise
 	public double eps;
 
 	public MaxCoverAdapt(ArrayList container, Integer currentTI) {
@@ -71,25 +71,27 @@ public class MaxCoverAdapt extends MaxCover {
 
 			// Check gain threshold
 			double deltaGain = maxNoUncoveredTasks - lambda;
-			deltaBudget -= 1;
 			if (currentTimeInstance != GeocrowdConstants.TIME_INSTANCE - 1) {
-				if (deltaGain < 0 && deltaBudget < 0) {
-					break;
-				} else if (deltaGain < 0 && deltaBudget > 0) {
+				if (deltaGain <= 0 && deltaBudget >= 0) {
+					break;	// stop allocating budget
+				} else if (deltaGain <= 0 && deltaBudget <= 0) {
 					Random r = new Random();
 					r.setSeed(System.nanoTime());
 					
 					if (r.nextFloat() < eps)
 						break;
-				} else if (deltaGain > 0 && deltaBudget < 0) {
+				} else if (deltaGain >= 0 && deltaBudget >= 0) {
 					Random r = new Random();	
 					r.setSeed(System.nanoTime());
 						
 					if (r.nextFloat() < eps)
 						break;
 				}
+				
+				// otherwise (deltaGain > 0 && deltaBudget < 0) --> increase budget by 1
 			}
 
+			deltaBudget -= 1;
 			gain = maxNoUncoveredTasks;
 
 			assignWorkers.add(bestWorkerIndex);

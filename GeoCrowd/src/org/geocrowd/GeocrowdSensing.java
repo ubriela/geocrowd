@@ -676,6 +676,8 @@ public class GeocrowdSensing extends Geocrowd {
      * Re-initialize all parameters
      */
 	public void reset() {
+		sumEntropy = 0;
+		maxEntropy = 0;
 		TimeInstance = 0;
 		TaskCount = 0;
 		WorkerCount = 0;

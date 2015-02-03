@@ -35,6 +35,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 	public double alpha = Constants.alpha;
 	public double maxEntropy = 0.0;
 	public double totalEntropy = 0.0;
+	public double meanEntropy = 0.0;
 
 	// public double maxNoUncoveredTasks = 0;
 
@@ -105,8 +106,8 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 				uncoveredTasks++;
 				// System.out.println( 1/(1 +
 				// task_entropies.get(taskIdx)/maxRegionEntropy));
-				totalTaskEntropy += 1.0 / (1 + task_entropies.get(taskIdx)
-						/ maxEntropy);
+				totalTaskEntropy += 1.0 / (meanEntropy + task_entropies.get(taskIdx)
+						/ totalEntropy);
 			}
 		}
 		/**

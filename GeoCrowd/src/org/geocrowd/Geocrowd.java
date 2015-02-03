@@ -62,7 +62,9 @@ public abstract class Geocrowd {
 	public double maxEntropy = 0;
 
 	/** The sum entropy. */
-	public int sumEntropy = 0;
+	public double totalEntropy = 0;
+	
+	public double meanEntropy = 0;
 
 	// ---------------
 
@@ -240,6 +242,8 @@ public abstract class Geocrowd {
 	 * Get a list of entropy records.
 	 */
 	public void readEntropy() {
+		totalEntropy = 0.0;
+		maxEntropy = 0.0;
 		String filePath = "";
 		if (Constants.useLocationEntropy)
 			filePath = Utils.datasetToEntropyPath(DATA_SET);
@@ -249,6 +253,7 @@ public abstract class Geocrowd {
 		try {
 			FileReader file = new FileReader(filePath);
 			BufferedReader in = new BufferedReader(file);
+			int count = 0;
 			while (in.ready()) {
 				String line = in.readLine();
 				String[] parts = line.split(",");
@@ -268,8 +273,15 @@ public abstract class Geocrowd {
 				EntropyRecord dR = new EntropyRecord(entropy, new Coord(row,
 						col));
 				entropyList.add(dR);
-				sumEntropy += entropy;
+				totalEntropy += entropy;
+				
+				/**
+				 * Compute mean entropy
+				 */
+				count ++;
+				meanEntropy = meanEntropy * (count-1.0)/count + entropy/totalEntropy * 1.0/count;
 			}
+			
 			// System.out.println("Max entropy: " + maxEntropy);
 		} catch (Exception e) {
 			e.printStackTrace();

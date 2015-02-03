@@ -528,3 +528,24 @@ Budget = 56
 #Covered Tasks
                      	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	FixedOff             	DynamicOff           	
 0.100000             	16509                	17254                	17461                	18447                	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	FixedOff             	DynamicOff           	
+0.100000             	5831                 	5804                 	5946                 	7090                 	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	FixedOff             	DynamicOff           	
+1                    	9782                 	9782                 	9782                 	9782                 	
+2                    	11315                	11325                	12214                	12369                	
+3                    	12323                	12660                	13702                	13942                	
+4                    	12761                	13115                	14686                	15224                	
+5                    	13365                	14158                	15923                	16287                	
+6                    	13597                	14922                	16597                	17189                	
+7                    	13814                	15650                	16955                	17720                	
+8                    	14145                	15933                	17512                	18371                	
+9                    	14663                	16436                	18021                	18920                	
+10                   	15323                	16909                	18365                	19223                	

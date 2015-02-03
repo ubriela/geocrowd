@@ -284,7 +284,8 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCoverS.setWorkerEntropies(worker_entropies);
 			maxCoverS.setTaskEntropies(task_entropies);
 			maxCoverS.maxEntropy = maxEntropy;
-			maxCoverS.totalEntropy = sumEntropy;
+			maxCoverS.meanEntropy = meanEntropy;
+			maxCoverS.totalEntropy = totalEntropy;
 			assignedWorker = maxCoverS.maxCover();
 			
 			TotalAssignedTasks += maxCoverS.assignedTasks;

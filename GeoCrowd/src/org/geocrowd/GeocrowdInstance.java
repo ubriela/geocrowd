@@ -172,7 +172,7 @@ public class GeocrowdInstance extends Geocrowd {
 
 			for (int i = 0; (i < workerNo); i++) {
 				double randomEntropy = UniformGenerator.randomValue(new Range(
-						0, sumEntropy), false);
+						0, totalEntropy), false);
 				double sum = 0;
 				int randomIdx = -1;
 				for (int j = 0; j < entropyList.size(); j++) {

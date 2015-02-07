@@ -162,7 +162,7 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCover = maxCoverAdapt;
 			}
 			
-		case MAX_COVER_BASIC_WORKLOAD_ADAPT:
+		case MAX_COVER_ADAPT_B_W:
 			
 			MaxCoverAdapt maxCoverAdapt = new MaxCoverAdapt(
 					getContainerWithDeadline(), TimeInstance);
@@ -175,7 +175,7 @@ public class OnlineMTC extends GeocrowdSensing {
 				for (int ti = 0; ti < TimeInstance; ti++)
 					preAggBudget += preBudgets[ti];
 				maxCoverAdapt.deltaBudget = usedBudget - preAggBudget;
-				maxCoverAdapt.budget = getBudget(AlgorithmEnum.MAX_COVER_BASIC_WORKLOAD_ADAPT);
+				maxCoverAdapt.budget = getBudget(AlgorithmEnum.MAX_COVER_ADAPT_B_W);
 			}
 			
 			maxCoverAdapt.lambda = avgLamda;
@@ -505,7 +505,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			}
 			
 		case MAX_COVER_BASIC_WORKLOAD:
-		case MAX_COVER_BASIC_WORKLOAD_ADAPT:
+		case MAX_COVER_ADAPT_B_W:
 		case MAX_COVER_BASIC_WORKLOAD_T:
 			return preBudgets[TimeInstance];
 		case MAX_COVER_PRO_B:

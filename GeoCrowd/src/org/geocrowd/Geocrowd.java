@@ -309,6 +309,7 @@ public abstract class Geocrowd {
 	 * @return the int
 	 */
 	public int latToRowIdx(double lat) {
+//		System.out.println("xx" + minLatitude);
 		return (int) (resolution * (lat - minLatitude) / (maxLatitude - minLatitude));
 	}
 

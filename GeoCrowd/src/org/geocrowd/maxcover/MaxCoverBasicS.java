@@ -104,10 +104,9 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 			 */
 			if (!completedTasks.contains(taskIdx)) {
 				uncoveredTasks++;
-				// System.out.println( 1/(1 +
-				// task_entropies.get(taskIdx)/maxRegionEntropy));
-				totalTaskEntropy += 1.0 / (meanEntropy + task_entropies.get(taskIdx)
-						/ totalEntropy);
+				if (task_entropies.get(taskIdx) != 0)
+//				System.out.println(totalEntropy + " " + maxEntropy + " " + task_entropies.get(taskIdx));
+				totalTaskEntropy += 1.0 / (1 + task_entropies.get(taskIdx));
 			}
 		}
 		/**

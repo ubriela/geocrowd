@@ -89,7 +89,7 @@ public class MaxCoverAdaptST extends MaxCoverST {
 				}
 		}
 		assignedTasks = assignedTaskSet.size();
-		System.out.println("#Task assigned: " + assignedTasks);
+//		System.out.println("#Task assigned: " + assignedTasks);
 
 		return assignWorkers;
 	}

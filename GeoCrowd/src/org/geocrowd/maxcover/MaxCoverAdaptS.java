@@ -3,6 +3,7 @@ package org.geocrowd.maxcover;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
 import org.geocrowd.GeocrowdConstants;
 
@@ -18,6 +19,8 @@ import org.geocrowd.GeocrowdConstants;
 public class MaxCoverAdaptS extends MaxCoverBasicS {
 
 	public double lambda; // algorithm stops when gain is less than lambda
+	public int deltaBudget;	// > 0 means over-utilization; < 0 otherwise
+	public double eps;
 
 	public MaxCoverAdaptS(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
@@ -44,7 +47,7 @@ public class MaxCoverAdaptS extends MaxCoverBasicS {
 		 * Run until either the gain of adding one worker is less than a
 		 * threshold or no more tasks to cover
 		 */
-		while (!Q.isEmpty()) {
+		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = 0;
 			double smallestAvgWeight = 10000000;
 			int maxNoUncoveredTasks = 0;
@@ -64,12 +67,30 @@ public class MaxCoverAdaptS extends MaxCoverBasicS {
 				}
 			}
 
-//			System.out.println(S.get(bestWorkerIndex));
-//			System.out.println(maxNoUncoveredTasks);
-			
 			// Check gain threshold
-			if (maxNoUncoveredTasks < lambda)
-				break;
+			double deltaGain = maxNoUncoveredTasks - lambda;
+			if (currentTimeInstance != GeocrowdConstants.TIME_INSTANCE - 1) {
+				if (deltaGain <= 0 && deltaBudget >= 0) {
+					break;	// stop allocating budget
+				} else if (deltaGain <= 0 && deltaBudget <= 0) {
+					Random r = new Random();
+					r.setSeed(System.nanoTime());
+					
+					if (r.nextFloat() < eps)
+						break;
+				} else if (deltaGain >= 0 && deltaBudget >= 0) {
+					Random r = new Random();	
+					r.setSeed(System.nanoTime());
+						
+					if (r.nextFloat() < eps)
+						break;
+				}
+				
+				// otherwise (deltaGain > 0 && deltaBudget < 0) --> increase budget by 1
+			}
+
+			deltaBudget -= 1;
+			gain = maxNoUncoveredTasks;
 			
 			assignWorkers.add(bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
@@ -89,7 +110,7 @@ public class MaxCoverAdaptS extends MaxCoverBasicS {
 				}
 		}
 		assignedTasks = assignedTaskSet.size();
-		System.out.println("#Task assigned: " + assignedTasks);
+//		System.out.println("#Task assigned: " + assignedTasks);
 
 		return assignWorkers;
 	}

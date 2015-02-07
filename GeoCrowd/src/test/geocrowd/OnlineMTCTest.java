@@ -80,6 +80,8 @@ public class OnlineMTCTest {
 		AlgorithmEnum.MAX_COVER_ADAPT_B_W,
 		AlgorithmEnum.MAX_COVER_ADAPT_T,
 		AlgorithmEnum.MAX_COVER_ADAPT_T_W,
+//		AlgorithmEnum.MAX_COVER_ADAPT_S,
+//		AlgorithmEnum.MAX_COVER_ADAPT_S_W
 		};
 
 		// Double[] epss = new Double[] { 0.05, 0.1, 0.15, 0.2, 0.25 };
@@ -90,9 +92,9 @@ public class OnlineMTCTest {
 
 		// GeocrowdTest.main(null);
 
-		GeocrowdConstants.TIME_INSTANCE = 14;
+		GeocrowdConstants.TIME_INSTANCE = 28;
 		int totalBudget = 28;
-		GeocrowdConstants.radius = 1.0;
+		GeocrowdConstants.radius = 5.0;
 		int start_time = 0;
 		int[] counts = computeHistoryBudgets(false, totalBudget, start_time);
 

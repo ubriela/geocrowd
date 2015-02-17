@@ -88,6 +88,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			break;
 			
 		case MAX_COVER_BASIC_MO:
+		case MAX_COVER_BASIC_W_MO:
 			MaxCoverBasicMO mcBasicMo = new MaxCoverBasicMO();
 			int budget = getBudget(algorithm);
 			int[] _workerCounts = new int[workerList.size()];
@@ -444,6 +445,7 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_ADAPT_T_W:
 		case MAX_COVER_ADAPT_S_W:
 		case MAX_COVER_BASIC_WORKLOAD_T:
+		case MAX_COVER_BASIC_W_MO:
 			return preBudgets[TimeInstance];
 		case MAX_COVER_PRO_B:
 		case MAX_COVER_PRO_S:

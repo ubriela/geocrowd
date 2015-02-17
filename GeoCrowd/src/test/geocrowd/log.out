@@ -736,3 +736,12 @@ Budget = 56
 8.000000             	10495                	10455                	9241                 	10574                	12424                	
 9.000000             	12727                	12675                	11423                	12828                	14868                	
 10.000000            	15017                	15062                	13619                	15057                	17286                	
+
+
+##################Overloading
+Budget = 896
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_MO   	MAX_COVER_BASIC_W_MO 	
+0.100000             	25789                	25670                	25100                	
+MAX_COVER_BASIC      	MAX_COVER_BASIC_MO   	MAX_COVER_BASIC_W_MO 	
+0.100000             	16                   	7                    	6                    	

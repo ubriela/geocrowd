@@ -1,0 +1,27 @@
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+28                   	233                  	239                  	231                  	111                  	111                  	
+56                   	344                  	355                  	345                  	30                   	30                   	
+112                  	493                  	512                  	492                  	47                   	47                   	
+224                  	678                  	704                  	682                  	69                   	69                   	
+448                  	868                  	894                  	878                  	94                   	94                   	
+896                  	984                  	994                  	987                  	122                  	122                  	
+1792                 	1021                 	1022                 	1022                 	142                  	142                  	
+3586                 	1028                 	1028                 	1028                 	147                  	147                  	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+1                    	184                  	184                  	180                  	45                   	45                   	
+2                    	244                  	249                  	237                  	24                   	24                   	
+3                    	288                  	294                  	281                  	31                   	31                   	
+4                    	321                  	330                  	316                  	38                   	38                   	
+5                    	344                  	355                  	345                  	43                   	43                   	
+6                    	366                  	378                  	362                  	47                   	47                   	
+7                    	384                  	398                  	384                  	51                   	51                   	
+8                    	399                  	417                  	402                  	54                   	54                   	
+9                    	414                  	426                  	412                  	57                   	57                   	
+10                   	424                  	438                  	425                  	58                   	58                   	

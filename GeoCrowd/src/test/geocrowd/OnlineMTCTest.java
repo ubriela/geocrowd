@@ -801,9 +801,21 @@ public class OnlineMTCTest {
 						onlineMTC.matchingTasksWorkers();
 						onlineMTC.maxCoverage();
 						OnlineMTC.TimeInstance++;
+						
+						System.out
+						.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
+								(i + 1),
+								onlineMTC.TaskCount,
+								OnlineMTC.TotalAssignedTasks,
+								onlineMTC.totalBudget,
+								OnlineMTC.TotalAssignedWorkers,
+								OnlineMTC.TotalAssignedTasks
+										/ Math.max(
+												1,
+												OnlineMTC.TotalAssignedWorkers));
 					}
 
-					coveredTasks[d][g] = OnlineMTC.TotalAssignedTasks;
+					coveredTasks[d][g] += OnlineMTC.TotalAssignedTasks;
 					assignedWorkers[d][g] += OnlineMTC.TotalAssignedWorkers;
 				}
 				coveredTasks[d][algorithms.length] = fixed_offline_cov;
@@ -899,9 +911,21 @@ public class OnlineMTCTest {
 						onlineMTC.matchingTasksWorkers();
 						onlineMTC.maxCoverage();
 						OnlineMTC.TimeInstance++;
+						
+						System.out
+						.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
+								(i + 1),
+								onlineMTC.TaskCount,
+								OnlineMTC.TotalAssignedTasks,
+								onlineMTC.totalBudget,
+								OnlineMTC.TotalAssignedWorkers,
+								OnlineMTC.TotalAssignedTasks
+										/ Math.max(
+												1,
+												OnlineMTC.TotalAssignedWorkers));
 					}
 
-					coveredTasks[r][g] = OnlineMTC.TotalAssignedTasks;
+					coveredTasks[r][g] += OnlineMTC.TotalAssignedTasks;
 					assignedWorkers[r][g] += OnlineMTC.TotalAssignedWorkers;
 				}
 				coveredTasks[r][algorithms.length] = fixed_offline_cov;
@@ -1011,7 +1035,7 @@ public class OnlineMTCTest {
 														OnlineMTC.TotalAssignedWorkers));
 					}
 
-					coveredTasks[b][a] = OnlineMTC.TotalAssignedTasks;
+					coveredTasks[b][a] += OnlineMTC.TotalAssignedTasks;
 					assignedWorkers[b][a] += OnlineMTC.TotalAssignedWorkers;
 				}
 

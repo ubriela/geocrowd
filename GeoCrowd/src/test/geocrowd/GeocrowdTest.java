@@ -28,10 +28,12 @@ import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.GeocrowdInstance;
 import org.geocrowd.AlgorithmEnum;
 import org.geocrowd.GeocrowdOnline;
+import org.geocrowd.WTArrivalEnum;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.utils.Utils;
 import org.geocrowd.datasets.dtype.MBR;
 import org.geocrowd.datasets.dtype.Point;
+import org.geocrowd.datasets.synthetic.WTCountGenerator;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.junit.Test;
 
@@ -260,8 +262,9 @@ public class GeocrowdTest {
 		geoCrowd.readEntropy();
 		// System.out.println("entropy list size: " +
 		// geoCrowd.entropyList.size());
+		ArrayList<Integer> taskCounts = WTCountGenerator.generateCounts(GeocrowdConstants.TIME_INSTANCE, 1000, WTArrivalEnum.POISSON);
 		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
-			geoCrowd.readTasksWithEntropy2(GeocrowdConstants.gowallaTaskFileNamePrefix
+			geoCrowd.readTasksWithEntropy2(taskCounts.get(i), GeocrowdConstants.gowallaTaskFileNamePrefix
 					+ i + ".txt");
 			geoCrowd.TimeInstance++;
 		}

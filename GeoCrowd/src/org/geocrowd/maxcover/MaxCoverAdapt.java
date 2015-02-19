@@ -72,15 +72,15 @@ public class MaxCoverAdapt extends MaxCover {
 			// Check gain threshold
 			double deltaGain = maxNoUncoveredTasks - lambda;
 			if (currentTimeInstance != GeocrowdConstants.TIME_INSTANCE - 1) {
-				if (deltaGain <= 0 && deltaBudget >= 0) {
+				if (deltaGain <= 0 && deltaBudget <= 0) {
 					break;	// stop allocating budget
-				} else if (deltaGain <= 0 && deltaBudget <= 0) {
+				} else if (deltaGain <= 0 && deltaBudget > 0) {
 					Random r = new Random();
 					r.setSeed(System.nanoTime());
 					
 					if (r.nextFloat() < eps)
 						break;
-				} else if (deltaGain >= 0 && deltaBudget >= 0) {
+				} else if (deltaGain > 0 && deltaBudget <= 0) {
 					Random r = new Random();	
 					r.setSeed(System.nanoTime());
 						

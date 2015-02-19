@@ -65,9 +65,10 @@ public class GeocrowdTest {
 		// System.out.println("entropy list size: " +
 		// geoCrowd.entropyList.size());
 
+		ArrayList<Integer> taskCounts = WTCountGenerator.generateCounts(GeocrowdConstants.TIME_INSTANCE, 1000, WTArrivalEnum.POISSON);
 		ArrayList<Point> venues = readFoursquareVenues("dataset/real/foursquare/venue_locs.txt");
 		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
-			geoCrowd.readTasksFoursquare(GeocrowdConstants.foursquareTaskFileNamePrefix
+			geoCrowd.readTasksFoursquare(taskCounts.get(i), GeocrowdConstants.foursquareTaskFileNamePrefix
 					+ i + ".txt", venues);
 			geoCrowd.TimeInstance++;
 		}

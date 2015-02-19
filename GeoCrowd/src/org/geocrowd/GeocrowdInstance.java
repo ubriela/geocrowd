@@ -956,7 +956,7 @@ public class GeocrowdInstance extends Geocrowd {
 		}
 	}
 	
-	public void readTasksFoursquare(String fileName, ArrayList<Point> venues) {
+	public void readTasksFoursquare(int numTask, String fileName, ArrayList<Point> venues) {
 		int listCount = taskList.size();
 		try {
 			/*
@@ -965,11 +965,6 @@ public class GeocrowdInstance extends Geocrowd {
 			Random r = new Random();
 			int step = 200;
 			r.setSeed(System.nanoTime());
-//			Constants.TaskNo = Constants.TaskNo + step;
-			int numTask = GeocrowdConstants.TaskNo;
-//			if (TimeInstance % 2 == 0)
-//				numTask = 10;
-//			int numTask = Constants.TaskNo + r.nextInt(1000) - 500;
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {

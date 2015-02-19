@@ -20,11 +20,11 @@ public class OfflineMTCTest {
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
 //		int[] budgets = new int[] { 5, 10, 15, 20, 25, 30}; // gowalla
-		// int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 }; //
+//		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 }; //
 		// foursquare
 		// int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 }; //
 
-//		varying_budget(0, 2, budgets, 5);
+//		varying_budget(0, 8, budgets, 5);
 
 		// double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
 		// double[] radii = {0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45,
@@ -139,7 +139,7 @@ public class OfflineMTCTest {
 										+ next_time + ".txt", next_time_period);
 						offlineMTC.readWorkers(
 								Utils.datasetToWorkerPath(Geocrowd.DATA_SET)
-										+ next_time + ".txt", next_time);
+										+ next_time + ".txt", i);
 					}
 
 					System.out.print("\ndelta = " + delta[d] + ", isFixed = "

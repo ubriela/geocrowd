@@ -1,50 +1,42 @@
 
-##################Fixed-Dynamic varying budget, times = 0
-
-                     	true                 	false                	
-5                    	539                  	539                  	
-10                   	638                  	638                  	
-15                   	688                  	688                  	
-20                   	722                  	722                  	
-25                   	744                  	744                  	
-30                   	753                  	753                  	
-
-##################Fixed-Dynamic varying budget, times = 0
-
-                     	true                 	false                	
-5                    	539                  	539                  	
-10                   	638                  	638                  	
-15                   	688                  	688                  	
-20                   	722                  	722                  	
-25                   	744                  	744                  	
-30                   	753                  	753                  	
-
-##################Fixed-Dynamic varying budget, times = 0
+##################Fixed-Dynamic varying budget
 
                      	true                 	
-5                    	539                  	
-10                   	638                  	
-15                   	688                  	
-20                   	722                  	
-25                   	744                  	
-30                   	753                  	
-
-##################Fixed-Dynamic varying budget, times = 1
-
-                     	true                 	
-5                    	478                  	
-10                   	584                  	
-15                   	630                  	
-20                   	660                  	
-25                   	681                  	
-30                   	695                  	
+5                    	203                  	
+10                   	292                  	
+15                   	355                  	
+20                   	404                  	
+25                   	443                  	
+30                   	477                  	
 
 ##################Fixed-Dynamic varying budget
 
                      	true                 	
-5                    	508                  	
-10                   	611                  	
-15                   	659                  	
-20                   	691                  	
-25                   	712                  	
-30                   	724                  	
+24                   	435                  	
+48                   	578                  	
+96                   	732                  	
+192                  	789                  	
+384                  	789                  	
+768                  	789                  	
+1536                 	789                  	
+3072                 	789                  	
+
+##################Fixed-Dynamic varying budget
+
+                     	true                 	
+24                   	435                  	
+
+##################Fixed-Dynamic varying budget
+
+                     	true                 	
+24                   	435                  	
+
+##################Fixed-Dynamic varying budget
+
+                     	true                 	
+24                   	441                  	
+
+##################Fixed-Dynamic varying budget
+
+                     	true                 	
+100                  	721                  	

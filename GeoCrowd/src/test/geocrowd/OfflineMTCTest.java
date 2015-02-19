@@ -63,7 +63,7 @@ public class OfflineMTCTest {
 										+ next_time + ".txt", next_time_period);
 						offlineMTC.readWorkers(
 								Utils.datasetToWorkerPath(Geocrowd.DATA_SET)
-										+ next_time + ".txt", next_time);
+										+ next_time + ".txt", i);
 					}
 
 					System.out.print("\nradius = " + radii[r] + ", isFixed = "
@@ -166,26 +166,25 @@ public class OfflineMTCTest {
 									/ Math.max(1,
 											OfflineMTC.TotalAssignedWorkers));
 				}
-
-			/**
-			 * print result
-			 */
-			StringWriter stringWriter = new StringWriter();
-			PrintWriter pw = new PrintWriter(stringWriter);
-			pw.println("\n##################Offline varying delta "
-					+ t);
-			pw.printf("\n%-20s \t", "");
-			for (int j2 = 0; j2 < isFixes.length; j2++)
-				pw.printf("%-20s \t", isFixes[j2]);
-			for (int b = 0; b < delta.length; b++) {
-				pw.printf("\n%-20f \t", delta[b]);
-				for (int j2 = 0; j2 < isFixes.length; j2++)
-					pw.printf("%-20d \t", (int)(coveredTasks[b][j2]/times));
-			}
-
-			logger.info(stringWriter.toString());
-			System.out.println(stringWriter.toString());
 		}
+		
+		/**
+		 * print result
+		 */
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter pw = new PrintWriter(stringWriter);
+		pw.println("\n##################Offline varying delta ");
+		pw.printf("\n%-20s \t", "");
+		for (int j2 = 0; j2 < isFixes.length; j2++)
+			pw.printf("%-20s \t", isFixes[j2]);
+		for (int b = 0; b < delta.length; b++) {
+			pw.printf("\n%-20d \t", delta[b]);
+			for (int j2 = 0; j2 < isFixes.length; j2++)
+				pw.printf("%-20d \t", (int)(coveredTasks[b][j2]/times));
+		}
+
+		logger.info(stringWriter.toString());
+		System.out.println(stringWriter.toString());
 	}
 
 	public static void varying_budget(int starttime, int times, int[] budgets,

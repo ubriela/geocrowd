@@ -1,0 +1,50 @@
+
+##################Fixed-Dynamic varying budget, times = 0
+
+                     	true                 	false                	
+5                    	539                  	539                  	
+10                   	638                  	638                  	
+15                   	688                  	688                  	
+20                   	722                  	722                  	
+25                   	744                  	744                  	
+30                   	753                  	753                  	
+
+##################Fixed-Dynamic varying budget, times = 0
+
+                     	true                 	false                	
+5                    	539                  	539                  	
+10                   	638                  	638                  	
+15                   	688                  	688                  	
+20                   	722                  	722                  	
+25                   	744                  	744                  	
+30                   	753                  	753                  	
+
+##################Fixed-Dynamic varying budget, times = 0
+
+                     	true                 	
+5                    	539                  	
+10                   	638                  	
+15                   	688                  	
+20                   	722                  	
+25                   	744                  	
+30                   	753                  	
+
+##################Fixed-Dynamic varying budget, times = 1
+
+                     	true                 	
+5                    	478                  	
+10                   	584                  	
+15                   	630                  	
+20                   	660                  	
+25                   	681                  	
+30                   	695                  	
+
+##################Fixed-Dynamic varying budget
+
+                     	true                 	
+5                    	508                  	
+10                   	611                  	
+15                   	659                  	
+20                   	691                  	
+25                   	712                  	
+30                   	724                  	

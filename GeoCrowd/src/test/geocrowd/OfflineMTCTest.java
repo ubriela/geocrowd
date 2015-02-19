@@ -19,8 +19,9 @@ public class OfflineMTCTest {
 	public static void main(String[] args) {
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
-		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 }; // gowalla
-//		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 }; // foursquare
+		int[] budgets = new int[] { 5, 10, 15, 20, 25, 30}; // gowalla
+		// int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 }; //
+		// foursquare
 		// int[] budgets = { 20, 40, 80, 160, 320, 640, 1280, 2560 }; //
 
 		varying_budget(0, 2, budgets, 5);
@@ -28,85 +29,101 @@ public class OfflineMTCTest {
 		// double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
 		// double[] radii = {0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45,
 		// 0.5};
-//		double[] radii = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-//		varying_radius(radii, 48);
+		// double[] radii = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		// varying_radius(radii, 48);
 	}
 
-	public static void varying_radius(double[] radii, int budget) {
+	public static void varying_radius(int starttime, int times, double[] radii,
+			int budget) {
 
-		boolean[] isFixes = { true, false };
+		for (int t = 0; t < times; t++) {
+			boolean[] isFixes = { true, false };
 
-		Integer[][] coveredTasks = new Integer[radii.length][isFixes.length];
-		Integer[][] assignedWorkers = new Integer[radii.length][isFixes.length];
+			Integer[][] coveredTasks = new Integer[radii.length][isFixes.length];
+			Integer[][] assignedWorkers = new Integer[radii.length][isFixes.length];
 
-		for (int r = 0; r < radii.length; r++)
-			for (int fix = 0; fix < isFixes.length; fix++) {
+			int next_time_period = starttime + t
+					* GeocrowdConstants.TIME_INSTANCE;
 
-				OfflineMTC offlineMTC = new OfflineMTC();
-				offlineMTC.isFixed = isFixes[fix];
-				offlineMTC.budget = budget;
-				GeocrowdConstants.radius = radii[r];
-				offlineMTC.reset();
+			for (int r = 0; r < radii.length; r++)
+				for (int fix = 0; fix < isFixes.length; fix++) {
 
-				for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
-					offlineMTC.readTasks(Utils
-							.datasetToTaskPath(Geocrowd.DATA_SET) + i + ".txt");
-					offlineMTC.readWorkers(
-							Utils.datasetToWorkerPath(Geocrowd.DATA_SET) + i
-									+ ".txt", i);
+					OfflineMTC offlineMTC = new OfflineMTC();
+					offlineMTC.isFixed = isFixes[fix];
+					offlineMTC.budget = budget;
+					GeocrowdConstants.radius = radii[r];
+					offlineMTC.reset();
+
+					for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
+						int next_time = next_time_period + i;
+						offlineMTC.readWorkloadTasks(
+								Utils.datasetToTaskPath(Geocrowd.DATA_SET)
+										+ next_time + ".txt", next_time_period);
+						offlineMTC.readWorkers(
+								Utils.datasetToWorkerPath(Geocrowd.DATA_SET)
+										+ next_time + ".txt", next_time);
+					}
+
+					System.out.print("\nbudget = " + radii[r] + ", isFixed = "
+							+ isFixes[fix]);
+					System.out.printf(
+							"\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s",
+							"TotalTask", "CoveredTask", "TotalWorker",
+							"SelectedWorker", "W/T");
+
+					offlineMTC.matchingTasksWorkers();
+
+					offlineMTC.maxTaskCoverage();
+
+					assignedWorkers[r][fix] = OfflineMTC.TotalAssignedWorkers;
+					coveredTasks[r][fix] = OfflineMTC.TotalAssignedTasks;
+
+					System.out.printf(
+							"\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d\n",
+							offlineMTC.TaskCount,
+							OfflineMTC.TotalAssignedTasks,
+							offlineMTC.budget,
+							OfflineMTC.TotalAssignedWorkers,
+							OfflineMTC.TotalAssignedTasks
+									/ Math.max(1,
+											OfflineMTC.TotalAssignedWorkers));
 				}
 
-				System.out.print("\nbudget = " + radii[r] + ", isFixed = "
-						+ isFixes[fix]);
-				System.out.printf(
-						"\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s",
-						"TotalTask", "CoveredTask", "TotalWorker",
-						"SelectedWorker", "W/T");
-
-				offlineMTC.matchingTasksWorkers();
-
-				offlineMTC.maxTaskCoverage();
-
-				assignedWorkers[r][fix] = OfflineMTC.TotalAssignedWorkers;
-				coveredTasks[r][fix] = OfflineMTC.TotalAssignedTasks;
-
-				System.out.printf(
-						"\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d\n",
-						offlineMTC.TaskCount,
-						OfflineMTC.TotalAssignedTasks,
-						offlineMTC.budget,
-						OfflineMTC.TotalAssignedWorkers,
-						OfflineMTC.TotalAssignedTasks
-								/ Math.max(1, OfflineMTC.TotalAssignedWorkers));
+			/**
+			 * print result
+			 */
+			StringWriter stringWriter = new StringWriter();
+			PrintWriter pw = new PrintWriter(stringWriter);
+			pw.println("\n##################Fixed-Dynamic varying radius, times = "
+					+ t);
+			pw.printf("\n%-20s \t", "");
+			for (int j2 = 0; j2 < isFixes.length; j2++)
+				pw.printf("%-20s \t", isFixes[j2]);
+			for (int b = 0; b < radii.length; b++) {
+				pw.printf("\n%-20f \t", radii[b]);
+				for (int j2 = 0; j2 < isFixes.length; j2++)
+					pw.printf("%-20d \t", coveredTasks[b][j2]);
 			}
 
-		StringWriter stringWriter = new StringWriter();
-		PrintWriter pw = new PrintWriter(stringWriter);
-		pw.printf("\n%-20s \t", "");
-		for (int j2 = 0; j2 < isFixes.length; j2++)
-			pw.printf("%-20s \t", isFixes[j2]);
-		for (int b = 0; b < radii.length; b++) {
-			pw.printf("\n%-20f \t", radii[b]);
-			for (int j2 = 0; j2 < isFixes.length; j2++)
-				pw.printf("%-20d \t", coveredTasks[b][j2]);
+			logger.info(stringWriter.toString());
+			System.out.println(stringWriter.toString());
 		}
-
-		logger.info(stringWriter.toString());
-		System.out.println(stringWriter.toString());
 	}
 
 	public static void varying_budget(int starttime, int times, int[] budgets,
 			double radius) {
 
+		boolean[] isFixes = { true };
+
+		int[][] coveredTasks = new int[budgets.length][isFixes.length];
+		int[][] assignedWorkers = new int[budgets.length][isFixes.length];
+		
 		for (int t = 0; t < times; t++) {
 			GeocrowdConstants.radius = radius;
-			boolean[] isFixes = { true, false };
 
-			Integer[][] coveredTasks = new Integer[budgets.length][isFixes.length];
-			Integer[][] assignedWorkers = new Integer[budgets.length][isFixes.length];
+			int next_time_period = starttime + t
+					* GeocrowdConstants.TIME_INSTANCE;
 
-			int next_time_period = starttime + t * GeocrowdConstants.TIME_INSTANCE;
-			
 			for (int b = 0; b < budgets.length; b++)
 				for (int fix = 0; fix < isFixes.length; fix++) {
 					OfflineMTC offlineMTC = new OfflineMTC();
@@ -119,10 +136,9 @@ public class OfflineMTCTest {
 						offlineMTC.readWorkloadTasks(
 								Utils.datasetToTaskPath(Geocrowd.DATA_SET)
 										+ next_time + ".txt", next_time_period);
-						offlineMTC.readWorkers(Utils
-								.datasetToWorkerPath(Geocrowd.DATA_SET)
-								+ next_time
-								+ ".txt", next_time);
+						offlineMTC.readWorkers(
+								Utils.datasetToWorkerPath(Geocrowd.DATA_SET)
+										+ next_time + ".txt", i);
 					}
 
 					System.out.print("\nbudget = " + budgets[b]
@@ -136,7 +152,7 @@ public class OfflineMTCTest {
 					offlineMTC.maxTaskCoverage();
 
 					assignedWorkers[b][fix] = OfflineMTC.TotalAssignedWorkers;
-					coveredTasks[b][fix] = OfflineMTC.TotalAssignedTasks;
+					coveredTasks[b][fix] += OfflineMTC.TotalAssignedTasks;
 
 					System.out.printf(
 							"\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d\n",
@@ -148,20 +164,24 @@ public class OfflineMTCTest {
 									/ Math.max(1,
 											OfflineMTC.TotalAssignedWorkers));
 				}
-
-			StringWriter stringWriter = new StringWriter();
-			PrintWriter pw = new PrintWriter(stringWriter);
-			pw.printf("\n%-20s \t", "");
-			for (int j2 = 0; j2 < isFixes.length; j2++)
-				pw.printf("%-20s \t", isFixes[j2]);
-			for (int b = 0; b < budgets.length; b++) {
-				pw.printf("\n%-20d \t", budgets[b]);
-				for (int j2 = 0; j2 < isFixes.length; j2++)
-					pw.printf("%-20d \t", coveredTasks[b][j2]);
-			}
-
-			logger.info(stringWriter.toString());
-			System.out.println(stringWriter.toString());
 		}
+
+		/**
+		 * print result
+		 */
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter pw = new PrintWriter(stringWriter);
+		pw.println("\n##################Fixed-Dynamic varying budget");
+		pw.printf("\n%-20s \t", "");
+		for (int j2 = 0; j2 < isFixes.length; j2++)
+			pw.printf("%-20s \t", isFixes[j2]);
+		for (int b = 0; b < budgets.length; b++) {
+			pw.printf("\n%-20d \t", budgets[b]);
+			for (int j2 = 0; j2 < isFixes.length; j2++)
+				pw.printf("%-20d \t", (int)(coveredTasks[b][j2]/times));
+		}
+
+		logger.info(stringWriter.toString());
+		System.out.println(stringWriter.toString());
 	}
 }

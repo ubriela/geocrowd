@@ -776,10 +776,10 @@ public class OnlineMTCTest {
 					onlineMTC.createGrid();
 					onlineMTC.readBoundary();
 
-					System.out
-							.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
-									"Time", "TTask", "CTask", "TWorker",
-									"SWorker", "W/T");
+//					System.out
+//							.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
+//									"Time", "TTask", "CTask", "TWorker",
+//									"SWorker", "W/T");
 					for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 						int next_time = next_time_period + i;
 						onlineMTC.readWorkloadTasks(
@@ -802,17 +802,17 @@ public class OnlineMTCTest {
 						onlineMTC.maxCoverage();
 						OnlineMTC.TimeInstance++;
 						
-						System.out
-						.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
-								(i + 1),
-								onlineMTC.TaskCount,
-								OnlineMTC.TotalAssignedTasks,
-								onlineMTC.totalBudget,
-								OnlineMTC.TotalAssignedWorkers,
-								OnlineMTC.TotalAssignedTasks
-										/ Math.max(
-												1,
-												OnlineMTC.TotalAssignedWorkers));
+//						System.out
+//						.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
+//								(i + 1),
+//								onlineMTC.TaskCount,
+//								OnlineMTC.TotalAssignedTasks,
+//								onlineMTC.totalBudget,
+//								OnlineMTC.TotalAssignedWorkers,
+//								OnlineMTC.TotalAssignedTasks
+//										/ Math.max(
+//												1,
+//												OnlineMTC.TotalAssignedWorkers));
 					}
 
 					coveredTasks[d][g] += OnlineMTC.TotalAssignedTasks;
@@ -886,10 +886,10 @@ public class OnlineMTCTest {
 					onlineMTC.createGrid();
 					onlineMTC.readBoundary();
 
-					System.out
-							.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
-									"Time", "TTask", "CTask", "TWorker",
-									"SWorker", "W/T");
+//					System.out
+//							.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
+//									"Time", "TTask", "CTask", "TWorker",
+//									"SWorker", "W/T");
 					for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 						int next_time = next_time_period + i;
 						onlineMTC.readWorkloadTasks(
@@ -912,17 +912,17 @@ public class OnlineMTCTest {
 						onlineMTC.maxCoverage();
 						OnlineMTC.TimeInstance++;
 						
-						System.out
-						.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
-								(i + 1),
-								onlineMTC.TaskCount,
-								OnlineMTC.TotalAssignedTasks,
-								onlineMTC.totalBudget,
-								OnlineMTC.TotalAssignedWorkers,
-								OnlineMTC.TotalAssignedTasks
-										/ Math.max(
-												1,
-												OnlineMTC.TotalAssignedWorkers));
+//						System.out
+//						.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
+//								(i + 1),
+//								onlineMTC.TaskCount,
+//								OnlineMTC.TotalAssignedTasks,
+//								onlineMTC.totalBudget,
+//								OnlineMTC.TotalAssignedWorkers,
+//								OnlineMTC.TotalAssignedTasks
+//										/ Math.max(
+//												1,
+//												OnlineMTC.TotalAssignedWorkers));
 					}
 
 					coveredTasks[r][g] += OnlineMTC.TotalAssignedTasks;
@@ -967,7 +967,7 @@ public class OnlineMTCTest {
 		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
 
-		// int[] budgets = new int[] { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+		//int[] budgets = new int[] { 24, 48, 96, 192, 384, 768, 1536, 3072 };
 		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
 		// int[] budgets = new int[] { 28, 56 };
 		int[][] coveredTasks = new int[budgets.length][algorithms.length + 2];
@@ -998,10 +998,10 @@ public class OnlineMTCTest {
 					onlineMTC.createGrid();
 					onlineMTC.readBoundary();
 
-					System.out
-							.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
-									"Time", "TTask", "CTask", "TWorker",
-									"SWorker", "W/T");
+//					System.out
+//							.printf("\n\n%-10s \t %-10s \t %-10s \t %-10s \t %-10s \t %-10s",
+//									"Time", "TTask", "CTask", "TWorker",
+//									"SWorker", "W/T");
 					for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 						int next_time = next_time_period + i;
 						onlineMTC.readWorkloadTasks(
@@ -1022,17 +1022,17 @@ public class OnlineMTCTest {
 						onlineMTC.maxCoverage();
 						OnlineMTC.TimeInstance++;
 
-						System.out
-								.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
-										(i + 1),
-										onlineMTC.TaskCount,
-										OnlineMTC.TotalAssignedTasks,
-										onlineMTC.totalBudget,
-										OnlineMTC.TotalAssignedWorkers,
-										OnlineMTC.TotalAssignedTasks
-												/ Math.max(
-														1,
-														OnlineMTC.TotalAssignedWorkers));
+//						System.out
+//								.printf("\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d \t %-10d",
+//										(i + 1),
+//										onlineMTC.TaskCount,
+//										OnlineMTC.TotalAssignedTasks,
+//										onlineMTC.totalBudget,
+//										OnlineMTC.TotalAssignedWorkers,
+//										OnlineMTC.TotalAssignedTasks
+//												/ Math.max(
+//														1,
+//														OnlineMTC.TotalAssignedWorkers));
 					}
 
 					coveredTasks[b][a] += OnlineMTC.TotalAssignedTasks;

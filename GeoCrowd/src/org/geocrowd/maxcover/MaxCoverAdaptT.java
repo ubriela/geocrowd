@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
 
 /**
@@ -37,6 +38,7 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 		HashMap<Integer, HashMap<Integer, Integer>> S = (HashMap<Integer, HashMap<Integer, Integer>>) mapSets
 				.clone();
 
+		//System.out.println("\n--------TI " + Geocrowd.TimeInstance);
 		/**
 		 * Q is the universe of tasks
 		 */
@@ -71,7 +73,13 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 //			System.out.println(maxNoUncoveredTasks);
 			
 			// Check gain threshold
-			double deltaGain = maxNoUncoveredTasks - lambda;
+			//double deltaGain = maxNoUncoveredTasks - lambda;
+			
+			double deltaGain = -(smallestAvgWeight - lambda);
+			
+			//System.out.println(smallestAvgWeight + " " + lambda + " " + maxNoUncoveredTasks);
+			//System.out.println(deltaGain + " " + deltaBudget + "\n");
+			
 			if (currentTimeInstance != GeocrowdConstants.TIME_INSTANCE - 1) {
 				if (deltaGain <= 0 && deltaBudget <= 0) {
 					break;	// stop allocating budget
@@ -93,7 +101,8 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 			}
 			
 			deltaBudget -= 1;
-			gain = maxNoUncoveredTasks;
+			//gain = maxNoUncoveredTasks;
+			gain = (int)smallestAvgWeight;
 			
 			assignWorkers.add(bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
@@ -113,7 +122,7 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 				}
 		}
 		assignedTasks = assignedTaskSet.size();
-		System.out.println("#Task assigned: " + assignedTasks);
+		//System.out.println("#Task assigned: " + assignedTasks);
 
 		return assignWorkers;
 	}

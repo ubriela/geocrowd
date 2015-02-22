@@ -42,7 +42,7 @@ public class OnlineMTC extends GeocrowdSensing {
 	public int beta = 2;
 	public int usedBudget;
 	public double epsGain = 0.5;
-	public double epsBudget = 0.8;
+	public double epsBudget = 0.2;
 	public int[] preBudgets;
 
 	public OnlineMTC() throws IOException {

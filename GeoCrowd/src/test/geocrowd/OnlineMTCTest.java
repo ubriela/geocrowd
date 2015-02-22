@@ -30,11 +30,11 @@ public class OnlineMTCTest {
 	static Logger logger = Logger.getLogger(OnlineMTCTest.class.getName());
 
 	public static void main(String[] args) throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
 		GeocrowdConstants.TIME_INSTANCE = 28;
 		// overloading();
 
-		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
+//		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
 		// int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
 		// int[] budgets = { 24, 48, 96};
 //		double radius = 5.0;
@@ -44,7 +44,7 @@ public class OnlineMTCTest {
 		 int totalBudget = 56;
 		// start_time = 0;
 		 workload_vary_radius(radii, totalBudget);
-		//
+		
 //		 int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 //		 radius = 5.0;
 		// start_time = 0;
@@ -746,7 +746,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryBudget() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
+		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -858,7 +858,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryDelta() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
+		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -970,7 +970,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryRadius() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
+		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,

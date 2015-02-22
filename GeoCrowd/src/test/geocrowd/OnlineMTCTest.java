@@ -80,11 +80,12 @@ public class OnlineMTCTest {
 		// AlgorithmEnum.MAX_COVER_ADAPT_S_W
 		};
 
-		// Double[] epss = new Double[] { 0.05, 0.1, 0.15, 0.2, 0.25 };
-		double[] epss = new double[] { 0.5 };
+		// Double[] epsGains = new Double[] { 0.05, 0.1, 0.15, 0.2, 0.25 };
+		double[] epsGains = new double[] { 0.5 };
+		double[] epsBudgets = new double[] { 0.8 };
 
-		int[][] coveredTasks = new int[epss.length][algorithms.length];
-		int[][] assignedWorkers = new int[epss.length][algorithms.length];
+		int[][] coveredTasks = new int[epsGains.length][algorithms.length];
+		int[][] assignedWorkers = new int[epsGains.length][algorithms.length];
 
 		// GeocrowdTest.main(null);
 
@@ -104,12 +105,13 @@ public class OnlineMTCTest {
 		computeHistoryBudgets(false, totalBudget, next_time_period);
 
 		// use the same set of workers/tasks for all following period
-		for (int eps = 0; eps < epss.length; eps++) {
+		for (int eps = 0; eps < epsGains.length; eps++) {
 			for (int g = 0; g < algorithms.length; g++) {
 				Geocrowd.algorithm = algorithms[g];
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.reset();
-				onlineMTC.eps = epss[eps];
+				onlineMTC.epsGain = epsGains[eps];
+				onlineMTC.epsBudget = epsBudgets[eps];
 				onlineMTC.preBudgets = counts;
 				onlineMTC.totalBudget = totalBudget;
 
@@ -158,8 +160,8 @@ public class OnlineMTCTest {
 		System.out.printf("%-20s \t", " ");
 		for (int j2 = 0; j2 < algorithms.length; j2++)
 			System.out.printf("%-20s \t", algorithms[j2]);
-		for (int eps = 0; eps < epss.length; eps++) {
-			System.out.printf("\n%-20f \t", epss[eps]);
+		for (int eps = 0; eps < epsGains.length; eps++) {
+			System.out.printf("\n%-20f \t", epsGains[eps]);
 			for (int g2 = 0; g2 < algorithms.length; g2++) {
 				System.out.printf("%-20d \t", coveredTasks[eps][g2]);
 			}
@@ -744,7 +746,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryBudget() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -856,7 +858,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryDelta() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -968,7 +970,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryRadius() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -1085,11 +1087,13 @@ public class OnlineMTCTest {
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B };
 
-		Double[] epss = new Double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
+		Double[] epsGains = new Double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
 				0.9 };
-		// double[] epss = new double[] { 0.3, 0.5, 0.7 };
-		int[][] coveredTasks = new int[epss.length][algorithms.length];
-		int[][] assignedWorkers = new int[epss.length][algorithms.length];
+		Double[] epsBudgets = new Double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
+				0.9 };
+		// double[] epsGains = new double[] { 0.3, 0.5, 0.7 };
+		int[][] coveredTasks = new int[epsGains.length][algorithms.length];
+		int[][] assignedWorkers = new int[epsGains.length][algorithms.length];
 
 		int totalBudget = 224;
 		GeocrowdConstants.radius = 5.0;
@@ -1098,13 +1102,14 @@ public class OnlineMTCTest {
 
 		// GeocrowdTest.main(null);
 
-		for (int eps = 0; eps < epss.length; eps++) {
+		for (int eps = 0; eps < epsGains.length; eps++) {
 			for (int g = 0; g < algorithms.length; g++) {
 				// update alpha for temporal, spatial algorithms.
 				Geocrowd.algorithm = algorithms[g];
 				OnlineMTC onlineMTC = new OnlineMTC();
 				onlineMTC.reset();
-				onlineMTC.eps = epss[eps];
+				onlineMTC.epsGain = epsGains[eps];
+				onlineMTC.epsBudget = epsBudgets[eps];
 				onlineMTC.totalBudget = totalBudget;
 
 				System.out
@@ -1152,8 +1157,8 @@ public class OnlineMTCTest {
 		pw.printf("%-20s \t", " ");
 		for (int j2 = 0; j2 < algorithms.length; j2++)
 			pw.printf("%-20s \t", algorithms[j2]);
-		for (int eps = 0; eps < epss.length; eps++) {
-			pw.printf("\n%-20f \t", epss[eps]);
+		for (int eps = 0; eps < epsGains.length; eps++) {
+			pw.printf("\n%-20f \t", epsGains[eps]);
 			for (int g2 = 0; g2 < algorithms.length; g2++) {
 				pw.printf("%-20d \t", coveredTasks[eps][g2]);
 			}

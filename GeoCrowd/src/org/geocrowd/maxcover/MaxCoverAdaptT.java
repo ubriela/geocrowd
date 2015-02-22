@@ -21,7 +21,8 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 
 	public double lambda; // algorithm stops when gain is less than lambda
 	public int deltaBudget;	// > 0 means over-utilization; < 0 otherwise
-	public double eps;
+	public double epsGain;
+	public double epsBudget;
 
 	public MaxCoverAdaptT(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
@@ -87,13 +88,13 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 					Random r = new Random();
 					r.setSeed(System.nanoTime());
 					
-					if (r.nextFloat() < eps)
+					if (r.nextFloat() < epsBudget)
 						break;
 				} else if (deltaGain > 0 && deltaBudget <= 0) {
 					Random r = new Random();	
 					r.setSeed(System.nanoTime());
 						
-					if (r.nextFloat() < eps)
+					if (r.nextFloat() < epsGain)
 						break;
 				}
 				

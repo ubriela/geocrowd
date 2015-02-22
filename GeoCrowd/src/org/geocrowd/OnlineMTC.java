@@ -41,7 +41,8 @@ public class OnlineMTC extends GeocrowdSensing {
 	public double avgLamda;
 	public int beta = 2;
 	public int usedBudget;
-	public double eps = 0.5;
+	public double epsGain = 0.5;
+	public double epsBudget = 0.8;
 	public int[] preBudgets;
 
 	public OnlineMTC() throws IOException {
@@ -122,7 +123,8 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_ADAPT_B:
 			MaxCoverAdapt maxCoverAdaptB = new MaxCoverAdapt(
 					getContainerWithDeadline(), TimeInstance);
-			maxCoverAdaptB.eps = eps;
+			maxCoverAdaptB.epsGain = epsGain;
+			maxCoverAdaptB.epsBudget = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
 				maxCoverAdaptB.deltaBudget = totalBudget - usedBudget;
 			} else {
@@ -154,7 +156,8 @@ public class OnlineMTC extends GeocrowdSensing {
 			
 			MaxCoverAdapt maxCoverAdapt = new MaxCoverAdapt(
 					getContainerWithDeadline(), TimeInstance);
-			maxCoverAdapt.eps = eps;
+			maxCoverAdapt.epsGain = epsGain;
+			maxCoverAdapt.epsBudget = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
 				maxCoverAdapt.deltaBudget = totalBudget - usedBudget;
 			} else {
@@ -184,7 +187,8 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_ADAPT_T:
 			MaxCoverAdaptT maxCoverAdaptT = new MaxCoverAdaptT(
 					getContainerWithDeadline(), TimeInstance);
-			maxCoverAdaptT.eps = eps;
+			maxCoverAdaptT.epsGain = epsGain;
+			maxCoverAdaptT.epsBudget = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
 				maxCoverAdaptT.deltaBudget = totalBudget - usedBudget;
 			} else {
@@ -212,7 +216,8 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_ADAPT_T_W:
 			MaxCoverAdaptT maxCoverAdaptTW = new MaxCoverAdaptT(
 					getContainerWithDeadline(), TimeInstance);
-			maxCoverAdaptTW.eps = eps;
+			maxCoverAdaptTW.epsGain = epsGain;
+			maxCoverAdaptTW.epsBudget = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
 				maxCoverAdaptTW.deltaBudget = totalBudget - usedBudget;
 			} else {
@@ -356,7 +361,8 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_ADAPT_S_W:
 			MaxCoverAdaptS maxCoverAdaptS = new MaxCoverAdaptS(
 					getContainerWithDeadline(), TimeInstance);
-			maxCoverAdaptS.eps = eps;
+			maxCoverAdaptS.eps = epsGain;
+			maxCoverAdaptS.eps = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
 				maxCoverAdaptS.deltaBudget = totalBudget - usedBudget;
 				maxCoverAdaptS.budget = totalBudget - usedBudget;

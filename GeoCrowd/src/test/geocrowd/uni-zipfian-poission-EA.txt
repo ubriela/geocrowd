@@ -1,0 +1,42 @@
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+28                   	165                  	224                  	221                  	60                   	60                   	
+56                   	238                  	369                  	363                  	35                   	35                   	
+112                  	319                  	543                  	540                  	60                   	60                   	
+224                  	403                  	652                  	665                  	100                  	100                  	
+448                  	490                  	689                  	713                  	145                  	145                  	
+896                  	591                  	689                  	711                  	178                  	178                  	
+1792                 	679                  	688                  	710                  	178                  	178                  	
+3586                 	720                  	691                  	713                  	178                  	178                  	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1                    	62                   	95                   	96                   	60                   	60                   	
+2                    	110                  	167                  	173                  	16                   	16                   	
+3                    	156                  	245                  	239                  	27                   	27                   	
+4                    	196                  	302                  	302                  	38                   	38                   	
+5                    	238                  	382                  	367                  	46                   	46                   	
+6                    	275                  	438                  	432                  	61                   	61                   	
+7                    	311                  	482                  	489                  	70                   	70                   	
+8                    	342                  	549                  	543                  	76                   	76                   	
+9                    	377                  	599                  	595                  	85                   	85                   	
+10                   	408                  	638                  	622                  	95                   	95                   	
+
+##################Local varying radius
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	15                   	30                   	30                   	113                  	113                  	
+2.000000             	45                   	78                   	79                   	5                    	5                    	
+3.000000             	94                   	148                  	146                  	12                   	12                   	
+4.000000             	159                  	247                  	250                  	22                   	22                   	
+5.000000             	238                  	369                  	374                  	40                   	40                   	
+6.000000             	323                  	509                  	500                  	61                   	61                   	
+7.000000             	428                  	662                  	652                  	78                   	78                   	
+8.000000             	551                  	845                  	841                  	109                  	109                  	
+9.000000             	686                  	1034                 	1025                 	135                  	135                  	
+10.000000            	819                  	1228                 	1225                 	161                  	161                  	

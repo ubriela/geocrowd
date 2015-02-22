@@ -1,0 +1,21 @@
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+24                   	8148                 	8155                 	7846                 	2902                 	2902                 	
+48                   	11649                	11816                	12637                	1022                 	1022                 	
+96                   	16083                	16379                	17220                	1602                 	1602                 	
+192                  	20025                	18642                	20209                	2159                 	2159                 	
+384                  	22352                	21161                	21077                	2569                 	2569                 	
+768                  	23177                	20670                	21589                	2471                 	2471                 	
+1536                 	23264                	21714                	21278                	2385                 	2385                 	
+3072                 	23264                	23253                	22688                	2751                 	2751                 	
+
+
+##################Overloading
+Budget = 336
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_S    	
+0.100000             	13786                	6776                 	
+MAX_COVER_BASIC      	MAX_COVER_BASIC_S    	
+0.100000             	3                    	26                   	

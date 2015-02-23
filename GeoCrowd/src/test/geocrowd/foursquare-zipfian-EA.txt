@@ -1,0 +1,54 @@
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+24                   	56                   	52                   	49                   	5                    	5                    	
+48                   	70                   	71                   	73                   	8                    	8                    	
+96                   	75                   	75                   	75                   	11                   	11                   	
+192                  	76                   	75                   	76                   	13                   	13                   	
+384                  	76                   	76                   	76                   	13                   	13                   	
+768                  	76                   	76                   	76                   	13                   	13                   	
+1536                 	76                   	75                   	76                   	13                   	13                   	
+3072                 	76                   	75                   	76                   	13                   	13                   	
+
+##################Local varying delta
+Budget = 48
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1                    	50                   	61                   	62                   	5                    	5                    	
+2                    	60                   	67                   	66                   	7                    	7                    	
+3                    	64                   	67                   	71                   	8                    	8                    	
+4                    	68                   	70                   	72                   	11                   	11                   	
+5                    	70                   	71                   	73                   	11                   	11                   	
+6                    	71                   	72                   	73                   	12                   	12                   	
+7                    	72                   	72                   	74                   	11                   	11                   	
+8                    	73                   	74                   	75                   	12                   	12                   	
+9                    	73                   	75                   	75                   	13                   	13                   	
+10                   	73                   	74                   	75                   	13                   	13                   	
+
+##################Local varying radius
+Budget = 48
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	35                   	39                   	40                   	5                    	5                    	
+2.000000             	48                   	51                   	54                   	6                    	6                    	
+3.000000             	55                   	59                   	60                   	7                    	7                    	
+4.000000             	63                   	67                   	68                   	8                    	8                    	
+5.000000             	70                   	72                   	73                   	10                   	10                   	
+6.000000             	72                   	74                   	75                   	11                   	11                   	
+7.000000             	76                   	76                   	77                   	12                   	12                   	
+8.000000             	78                   	77                   	79                   	12                   	12                   	
+9.000000             	79                   	78                   	80                   	13                   	13                   	
+10.000000            	80                   	80                   	80                   	14                   	14                   	
+
+##################Local varying budget
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+24                   	56                   	53                   	50                   	5                    	5                    	
+48                   	70                   	72                   	73                   	8                    	8                    	
+96                   	75                   	75                   	75                   	12                   	12                   	
+192                  	76                   	76                   	76                   	12                   	12                   	
+384                  	76                   	76                   	76                   	13                   	13                   	
+768                  	76                   	76                   	76                   	13                   	13                   	
+1536                 	76                   	75                   	74                   	13                   	13                   	
+3072                 	76                   	76                   	75                   	12                   	12                   	

@@ -30,12 +30,12 @@ public class OnlineMTCTest {
 	static Logger logger = Logger.getLogger(OnlineMTCTest.class.getName());
 
 	public static void main(String[] args) throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
-		GeocrowdConstants.TIME_INSTANCE = 28;
+		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		GeocrowdConstants.TIME_INSTANCE = 7;
 		// overloading();
 
 //		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
-		// int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+//		 int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 };
 		// int[] budgets = { 24, 48, 96};
 //		double radius = 5.0;
 //		int start_time = 0;
@@ -293,10 +293,10 @@ public class OnlineMTCTest {
 		System.out.println("radius = " + GeocrowdConstants.radius);
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-		// AlgorithmEnum.MAX_COVER_BASIC,
-		// AlgorithmEnum.MAX_COVER_ADAPT_B,
+		 AlgorithmEnum.MAX_COVER_BASIC,
+//		 AlgorithmEnum.MAX_COVER_ADAPT_B,
 		// AlgorithmEnum.MAX_COVER_BASIC_T,
-		// AlgorithmEnum.MAX_COVER_ADAPT_T,
+		 AlgorithmEnum.MAX_COVER_ADAPT_T,
 		// AlgorithmEnum.MAX_COVER_ADAPT_B_W,
 		// AlgorithmEnum.MAX_COVER_ADAPT_T,
 		AlgorithmEnum.MAX_COVER_ADAPT_T_W };
@@ -304,7 +304,7 @@ public class OnlineMTCTest {
 		int[][] coveredTasks = new int[budgets.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[budgets.length][algorithms.length + 2];
 
-		int times = 8;
+		int times = 16;
 		for (int t = 0; t < times; t++) {
 			int start_time = 0 + t * GeocrowdConstants.TIME_INSTANCE;
 			for (int b = 0; b < budgets.length; b++) {
@@ -406,15 +406,15 @@ public class OnlineMTCTest {
 		System.out.println("Budget = " + totalBudget);
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-		// AlgorithmEnum.MAX_COVER_BASIC,
-		// AlgorithmEnum.MAX_COVER_ADAPT_B,
+		 AlgorithmEnum.MAX_COVER_BASIC,
+//		 AlgorithmEnum.MAX_COVER_ADAPT_B,
 		// AlgorithmEnum.MAX_COVER_ADAPT_B_W,
-		// AlgorithmEnum.MAX_COVER_ADAPT_T,
+		 AlgorithmEnum.MAX_COVER_ADAPT_T,
 		AlgorithmEnum.MAX_COVER_ADAPT_T_W };
 
 		int[][] coveredTasks = new int[delta.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[delta.length][algorithms.length + 2];
-		int times = 8;
+		int times = 16;
 		for (int t = 0; t < times; t++) {
 			int start_time = 0 + t * GeocrowdConstants.TIME_INSTANCE;
 			for (int d = 0; d < delta.length; d++) {
@@ -516,14 +516,15 @@ public class OnlineMTCTest {
 		System.out.println("Budget = " + totalBudget);
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-		// AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
+		 AlgorithmEnum.MAX_COVER_BASIC,
+//				AlgorithmEnum.MAX_COVER_ADAPT_B,
 		// AlgorithmEnum.MAX_COVER_ADAPT_B_W,
-		// AlgorithmEnum.MAX_COVER_ADAPT_T,
+		 AlgorithmEnum.MAX_COVER_ADAPT_T,
 		AlgorithmEnum.MAX_COVER_ADAPT_T_W };
 
 		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
-		int times = 8;
+		int times = 16;
 		for (int t = 0; t < times; t++) {
 			int start_time = 0 + t * GeocrowdConstants.TIME_INSTANCE;
 		for (int d = 0; d < radii.length; d++) {
@@ -746,7 +747,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryBudget() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -757,15 +758,15 @@ public class OnlineMTCTest {
 		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
 
-//		 int[] budgets = new int[] { 24, 48, 96, 192, 384, 768, 1536, 3072 };
-		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
+		 int[] budgets = new int[] { 24, 48, 96, 192, 384, 768, 1536, 3072 };
+//		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
 		// int[] budgets = new int[] { 28, 56 };
 		int[][] coveredTasks = new int[budgets.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[budgets.length][algorithms.length + 2];
 
 		// int[] budgets = new int[] { 40, 80, 160, 320, 640, 1280,
 		// 2560 };
-		GeocrowdConstants.TIME_INSTANCE = 28;
+		GeocrowdConstants.TIME_INSTANCE = 24;
 		GeocrowdConstants.radius = 5.0;
 		Constants.alpha = 0.2;
 		System.out.println("Radius = " + GeocrowdConstants.radius);
@@ -858,7 +859,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryDelta() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -873,8 +874,8 @@ public class OnlineMTCTest {
 		int[][] coveredTasks = new int[delta.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[delta.length][algorithms.length + 2];
 
-		GeocrowdConstants.TIME_INSTANCE = 28;
-		int totalBudget = 56;
+		GeocrowdConstants.TIME_INSTANCE = 24;
+		int totalBudget = 48;
 		double alpha = 0.2;
 		System.out.println("Budget = " + totalBudget);
 
@@ -970,7 +971,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryRadius() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -985,8 +986,8 @@ public class OnlineMTCTest {
 		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
 
-		GeocrowdConstants.TIME_INSTANCE = 28;
-		int totalBudget = 56;
+		GeocrowdConstants.TIME_INSTANCE = 24;
+		int totalBudget = 48;
 		double alpha = 0.2;
 		System.out.println("Budget = " + totalBudget);
 

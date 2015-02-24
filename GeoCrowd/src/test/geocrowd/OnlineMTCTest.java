@@ -30,8 +30,8 @@ public class OnlineMTCTest {
 	static Logger logger = Logger.getLogger(OnlineMTCTest.class.getName());
 
 	public static void main(String[] args) throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
-		GeocrowdConstants.TIME_INSTANCE = 7;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		GeocrowdConstants.TIME_INSTANCE = 14;
 		// overloading();
 
 //		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
 
 import static org.geocrowd.Geocrowd.workerList;

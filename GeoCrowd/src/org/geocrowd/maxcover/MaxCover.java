@@ -23,6 +23,8 @@ import java.util.HashSet;
  * The Class MaxSetCover.
  */
 public abstract class MaxCover {
+	
+	public boolean DBU = true;	// distance-based-utility
 
 	/**
 	 * Each element in the list is associated with a worker, and each worker
@@ -33,7 +35,7 @@ public abstract class MaxCover {
 
 	public int budget = 0; // budget
 
-	public int gain = 0; // this gain is updated at every stage of greedy
+	public double gain = 0.0; // this gain is updated at every stage of greedy
 							// algorithm
 	
 	public MaxCover() {
@@ -51,6 +53,7 @@ public abstract class MaxCover {
 	 * The number of assigned tasks.
 	 */
 	public int assignedTasks = 0;
+	public double assignedUtility = 0.0;
 
 	/**
 	 * The assigned workers

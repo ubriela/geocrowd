@@ -17,12 +17,12 @@ public class OfflineMTCTest {
 	static Logger logger = Logger.getLogger(OnlineMTCTest.class.getName());
 
 	public static void main(String[] args) {
-		Geocrowd.DATA_SET = DatasetEnum.UNIFORM;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
-//		int[] budgets = new int[] { 5, 10, 15, 20, 25, 30}; // gowalla
+//		int[] budgets = new int[] {7, 14, 28}; // gowalla
 //		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 }; // foursquare
-//		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
-//		varying_budget(0, 8, budgets, 5);
+		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
+		varying_budget(0, 8, budgets, 5);
 
 //		 double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
 		// double[] radii = {0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45,
@@ -31,8 +31,8 @@ public class OfflineMTCTest {
 		 double[] radii = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 		 varying_radius(0, 8, radii, 56);
 		 
-//		 int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-//		 varying_delta(0, 8, delta, 56);
+		 int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		 varying_delta(0, 8, delta, 56);
 	}
 
 	public static void varying_radius(int starttime, int times, double[] radii,
@@ -191,6 +191,7 @@ public class OfflineMTCTest {
 
 		boolean[] isFixes = { true, false };
 		int[][] coveredTasks = new int[budgets.length][isFixes.length];
+		double[][] coveredUtility = new double[budgets.length][isFixes.length];
 		int[][] assignedWorkers = new int[budgets.length][isFixes.length];
 		
 		for (int t = 0; t < times; t++) {
@@ -228,6 +229,7 @@ public class OfflineMTCTest {
 
 					assignedWorkers[b][fix] = OfflineMTC.TotalAssignedWorkers;
 					coveredTasks[b][fix] += OfflineMTC.TotalAssignedTasks;
+					coveredUtility[b][fix] += OfflineMTC.TotalCoveredUtility;
 
 					System.out.printf(
 							"\n%-10d \t %-10d \t %-10d \t %-10d \t %-10d\n",
@@ -253,7 +255,7 @@ public class OfflineMTCTest {
 		for (int b = 0; b < budgets.length; b++) {
 			pw.printf("\n%-20d \t", budgets[b]);
 			for (int j2 = 0; j2 < isFixes.length; j2++)
-				pw.printf("%-20d \t", (int)(coveredTasks[b][j2]/times));
+				pw.printf("%-20f \t", coveredUtility[b][j2]/times);
 		}
 
 		logger.info(stringWriter.toString());

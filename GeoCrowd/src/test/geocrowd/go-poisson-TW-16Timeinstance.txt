@@ -46,3 +46,103 @@ Budget = 56
 8.000000             	5596                 	6189                 	6441                 	6371                 	6913                 	
 9.000000             	6075                 	6649                 	6924                 	6837                 	7413                 	
 10.000000            	6450                 	7096                 	7256                 	7268                 	7862                 	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+30                   	2123                 	2423                 	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0                    	1119                 	
+14                   	0                    	1673                 	
+28                   	0                    	2351                 	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0                    	1119                 	
+14                   	0                    	1673                 	
+28                   	0                    	2351                 	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0                    	1119                 	
+14                   	0                    	1673                 	
+28                   	0                    	2351                 	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	0.000000             	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	537.648166           	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	983.000000           	0.000000             	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	983.000000           	1119.000000          	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	983.000000           	1119.000000          	
+14                   	1431.000000          	1673.000000          	
+28                   	2001.000000          	2351.000000          	
+
+##################Offline varying budget
+
+                     	true                 	false                	
+7                    	537.648166           	631.845702           	
+14                   	738.015928           	869.429834           	
+28                   	1022.700032          	1180.299037          	

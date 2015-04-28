@@ -13,11 +13,14 @@ import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.OfflineMTC;
 
+import static org.geocrowd.Geocrowd.candidateTaskIndices;
+import static org.geocrowd.Geocrowd.taskList;
 import static org.geocrowd.Geocrowd.workerList;
 
 import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.common.utils.Utils;
 
 /**
  * 
@@ -62,7 +65,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 		 */
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = -1; // track index of the best worker in S
-			int maxNoUncoveredTasks = 0;
+			double maxUncoveredUtility = 0.0;
 			/**
 			 * Iterate all workers, find the one which covers maximum number of
 			 * uncovered tasks
@@ -70,20 +73,25 @@ public class MaxCoverDynamicOffline extends MaxCover {
 			for (int k : S.keySet()) {
 				HashMap<Integer, Integer> s = S.get(k); // task set covered by
 				// current worker
-
+				SensingWorker w = (SensingWorker) workerList.get(k);
+				
 				/**
 				 * check if the #selected workers at time instance of current
 				 * worker <limit
 				 */
 				/* actual worker */
-				int noUncoveredTasks = 0;
+				double uncoveredUtility = 0.0;
 				for (Integer i : s.keySet()) {
 					if (!assignedTaskSet.contains(i)) {
-						noUncoveredTasks++;
+						// compute utility (w,task i)
+						SensingTask t = (SensingTask) taskList
+								.get(candidateTaskIndices.get(i));
+						double utility = Utils.utility(w, t);
+						uncoveredUtility += utility;
 					}
 				}
-				if (noUncoveredTasks > maxNoUncoveredTasks) {
-					maxNoUncoveredTasks = noUncoveredTasks;
+				if (uncoveredUtility > maxUncoveredUtility) {
+					maxUncoveredUtility = uncoveredUtility;
 					bestWorkerIndex = k;
 				}
 			}
@@ -92,7 +100,8 @@ public class MaxCoverDynamicOffline extends MaxCover {
 			 * gain is reduced at every stage
 			 */
 			if (bestWorkerIndex > -1) {
-				gain = maxNoUncoveredTasks;
+				gain = maxUncoveredUtility;
+				assignedUtility += gain;
 
 				assignWorkers.add(bestWorkerIndex);
 				HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);

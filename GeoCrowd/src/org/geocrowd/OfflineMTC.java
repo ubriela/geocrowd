@@ -135,6 +135,7 @@ public class OfflineMTC extends GeocrowdSensing {
 //        maxCover.numberTimeInstance = Constants.TIME_INSTANCE;
         HashSet<Integer> workerSet = maxCover.maxCover();
         TotalAssignedTasks = maxCover.assignedTasks;
+        TotalCoveredUtility = maxCover.assignedUtility;
         
         // print instances of the assigned workers
 		counts = new int[GeocrowdConstants.TIME_INSTANCE];

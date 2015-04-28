@@ -9,12 +9,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
 
 import static org.geocrowd.Geocrowd.workerList;
+import static org.geocrowd.Geocrowd.taskList;
+import static org.geocrowd.Geocrowd.candidateTaskIndices;
 
+import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.common.utils.Utils;
 
 /**
  * 
@@ -22,7 +25,7 @@ import org.geocrowd.common.crowdsource.SensingWorker;
  */
 public class MaxCoverFixedOffline extends MaxCover {
 
-//	public int numberTimeInstance = 0;
+	// public int numberTimeInstance = 0;
 	public int[] budgetPerInstance;
 	/**
 	 * limit number of workers selected at each time instance
@@ -49,7 +52,8 @@ public class MaxCoverFixedOffline extends MaxCover {
 			budgetPerInstance[i] = budget / GeocrowdConstants.TIME_INSTANCE;
 		}
 		budgetPerInstance[budgetPerInstance.length - 1] = budget - budget
-				/ GeocrowdConstants.TIME_INSTANCE * (GeocrowdConstants.TIME_INSTANCE - 1);
+				/ GeocrowdConstants.TIME_INSTANCE
+				* (GeocrowdConstants.TIME_INSTANCE - 1);
 
 		HashMap<Integer, HashMap<Integer, Integer>> S = (HashMap<Integer, HashMap<Integer, Integer>>) mapSets
 				.clone();
@@ -58,14 +62,14 @@ public class MaxCoverFixedOffline extends MaxCover {
 		 * Q is the universe of tasks
 		 */
 		HashSet<Integer> Q = (HashSet<Integer>) universe.clone();
-//		assignedTaskSet = new HashSet<Integer>();
+		// assignedTaskSet = new HashSet<Integer>();
 
 		/**
 		 * Run until either running out of budget or no more tasks to cover
 		 */
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = -1; // track index of the best worker in S
-			int maxNoUncoveredTasks = 0;
+			double maxUncoveredUtility = 0.0;
 			/**
 			 * Iterate all workers, find the one which covers maximum number of
 			 * uncovered tasks
@@ -85,15 +89,23 @@ public class MaxCoverFixedOffline extends MaxCover {
 								.getOnlineTime()]) {
 					continue;
 				}
-				int noUncoveredTasks = 0;
+				double uncoveredUtility = 0.0; // number of uncovered tasks when DBU
+											// = false
 				for (Integer i : s.keySet()) {
 					if (!assignedTaskSet.contains(i)) {
-						noUncoveredTasks++;
+						// compute utility (w,task i)
+						SensingTask t = (SensingTask) taskList
+								.get(candidateTaskIndices.get(i));
+						double utility = Utils.utility(w, t);
+						uncoveredUtility += utility;
 					}
 				}
-				if (noUncoveredTasks > maxNoUncoveredTasks) {
-					maxNoUncoveredTasks = noUncoveredTasks;
+
+				if (uncoveredUtility > maxUncoveredUtility) {
+					maxUncoveredUtility = uncoveredUtility;
 					bestWorkerIndex = k;
+
+					System.out.println(k + " " + maxUncoveredUtility);
 				}
 			}
 
@@ -103,7 +115,8 @@ public class MaxCoverFixedOffline extends MaxCover {
 			 * gain is reduced at every stage
 			 */
 			if (bestWorkerIndex > -1) {
-				gain = maxNoUncoveredTasks;
+				gain = maxUncoveredUtility;
+				assignedUtility += gain;
 
 				assignWorkers.add(bestWorkerIndex);
 				HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
@@ -133,9 +146,9 @@ public class MaxCoverFixedOffline extends MaxCover {
 						assignedTaskSet.add(taskidx);
 					}
 				}
-			}
-			else {
-				System.out.println("Break here because best index = "+bestWorkerIndex);
+			} else {
+				System.out.println("Break here because best index = "
+						+ bestWorkerIndex);
 				break;
 			}
 		}
@@ -143,10 +156,10 @@ public class MaxCoverFixedOffline extends MaxCover {
 		assignedTasks = assignedTaskSet.size();
 		// System.out.println(universe.size() + "\t" + assignedTasks + "\t" +
 		// assignWorkers.size() + "\t" + assignedTasks / assignWorkers.size());
-//		for (Integer i : selectedWorkerAtTimeInstance.keySet()) {
-//			System.out.println("#Selected workers in Time instance " + (i + 1)
-//					+ ":" + selectedWorkerAtTimeInstance.get(i));
-//		}
+		// for (Integer i : selectedWorkerAtTimeInstance.keySet()) {
+		// System.out.println("#Selected workers in Time instance " + (i + 1)
+		// + ":" + selectedWorkerAtTimeInstance.get(i));
+		// }
 		return assignWorkers;
 	}
 

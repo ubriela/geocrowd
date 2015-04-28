@@ -84,6 +84,8 @@ public abstract class Geocrowd {
 	public int WorkerCount = 0;
 	/** number of assigned tasks. */
 	public static int TotalAssignedTasks = 0;
+	
+	public static double TotalCoveredUtility = 0.0;
 
 	/** number of assigned tasks. */
 	public static int TotalAssignedWorkers = 0;
@@ -114,7 +116,7 @@ public abstract class Geocrowd {
 	 * (i.e., at least one worker can perform this task). The values in this
 	 * list point to an index in taskList.
 	 */
-	public ArrayList<Integer> candidateTaskIndices = null;
+	public static ArrayList<Integer> candidateTaskIndices = null;
 
 	/**
 	 * Each worker has a list of task index that he is eligible to perform. The

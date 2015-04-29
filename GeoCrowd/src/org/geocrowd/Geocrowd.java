@@ -197,30 +197,6 @@ public abstract class Geocrowd {
 	}
 
 	/**
-	 * Euclidean distance between worker and task.
-	 * 
-	 * @param worker
-	 *            the worker
-	 * @param task
-	 *            the task
-	 * @return the double
-	 */
-	public double distanceWorkerTask(GenericWorker worker, GenericTask task) {
-		if (DATA_SET == DatasetEnum.GOWALLA || DATA_SET == DatasetEnum.YELP
-				|| DATA_SET == DatasetEnum.FOURSQUARE)
-			return worker.distanceToTask(task);
-
-		// not geographical coordinates
-		double distance = Math.sqrt((worker.getLatitude() - task.getLat())
-				* (worker.getLatitude() - task.getLat())
-				+ (worker.getLongitude() - task.getLng())
-				* (worker.getLongitude() - task.getLng()));
-
-		// System.out.println(distance);
-		return distance;
-	}
-
-	/**
 	 * remove expired task from tasklist.
 	 */
 	public void pruneExpiredTasks() {

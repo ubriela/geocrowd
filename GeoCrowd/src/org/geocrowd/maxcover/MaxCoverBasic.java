@@ -14,11 +14,20 @@
  */
 package org.geocrowd.maxcover;
 
+import static org.geocrowd.Geocrowd.candidateTaskIndices;
+import static org.geocrowd.Geocrowd.taskList;
+import static org.geocrowd.Geocrowd.workerList;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
+import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.crowdsource.SensingTask;
+import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.common.utils.Utils;
 
 /**
  * The Class SetCoverGreedy.
@@ -57,22 +66,28 @@ public class MaxCoverBasic extends MaxCover {
 		 */
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = -1; // track index of the best worker in S
-			int maxNoUncoveredTasks = 0;
+			double maxUncoveredUtility = 0.0;
 			/**
 			 * Iterate all workers, find the one which covers maximum number of
 			 * uncovered tasks
 			 */
 			for (int k : S.keySet()) {
+				GenericWorker w = workerList.get(k);
+				
 				HashMap<Integer, Integer> s = S.get(k); // task set covered by
 														// current worker
-				int noUncoveredTasks = 0;
+				double uncoveredUtility = 0.0;
 				for (Integer i : s.keySet()) {
 					if (!assignedTaskSet.contains(i)) {
-						noUncoveredTasks++;
+						SensingTask t = (SensingTask) taskList
+								.get(candidateTaskIndices.get(i));
+						double utility = Utils.utility(Geocrowd.DATA_SET, w, t);
+//						System.out.println(utility);
+						uncoveredUtility += utility;
 					}
 				}
-				if (noUncoveredTasks > maxNoUncoveredTasks) {
-					maxNoUncoveredTasks = noUncoveredTasks;
+				if (uncoveredUtility > maxUncoveredUtility) {
+					maxUncoveredUtility = uncoveredUtility;
 					bestWorkerIndex = k;
 				}
 			}
@@ -83,7 +98,8 @@ public class MaxCoverBasic extends MaxCover {
 				/**
 				 * gain is reduced at every stage
 				 */
-				gain = maxNoUncoveredTasks;
+				gain = maxUncoveredUtility;
+				assignedUtility += gain;
 
 				assignWorkers.add(bestWorkerIndex);
 				HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);

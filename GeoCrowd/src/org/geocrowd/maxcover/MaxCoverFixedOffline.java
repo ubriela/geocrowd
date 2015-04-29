@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
 
 import static org.geocrowd.Geocrowd.workerList;
@@ -96,7 +97,7 @@ public class MaxCoverFixedOffline extends MaxCover {
 						// compute utility (w,task i)
 						SensingTask t = (SensingTask) taskList
 								.get(candidateTaskIndices.get(i));
-						double utility = Utils.utility(w, t);
+						double utility = Utils.utility(Geocrowd.DATA_SET, w, t);
 						uncoveredUtility += utility;
 					}
 				}
@@ -104,8 +105,6 @@ public class MaxCoverFixedOffline extends MaxCover {
 				if (uncoveredUtility > maxUncoveredUtility) {
 					maxUncoveredUtility = uncoveredUtility;
 					bestWorkerIndex = k;
-
-					System.out.println(k + " " + maxUncoveredUtility);
 				}
 			}
 

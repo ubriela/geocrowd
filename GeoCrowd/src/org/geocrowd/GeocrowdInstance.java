@@ -26,6 +26,7 @@ import org.geocrowd.common.crowdsource.MatchPair;
 import org.geocrowd.common.crowdsource.SpecializedTask;
 import org.geocrowd.common.crowdsource.SpecializedWorker;
 import org.geocrowd.common.entropy.EntropyRecord;
+import org.geocrowd.common.utils.Utils;
 import org.geocrowd.cplex.BPMatchingCplex;
 import org.geocrowd.datasets.Parser;
 import org.geocrowd.datasets.dtype.Cell;
@@ -399,7 +400,7 @@ public class GeocrowdInstance extends Geocrowd {
 										.get(candidateTaskIndices.get(t))));
 								break;
 							case NNP:
-								objectiveCoeff.add(distanceWorkerTask(worker,
+								objectiveCoeff.add(Utils.distanceWorkerTask(DATA_SET, worker,
 										taskList.get(candidateTaskIndices
 												.get(t))));
 								break;
@@ -431,7 +432,7 @@ public class GeocrowdInstance extends Geocrowd {
 				SpecializedTask task = (SpecializedTask) taskList
 						.get(candidateTaskIndices.get(pair.getT()));
 				double score = computeScore(worker, task);
-				totalDistance += distanceWorkerTask(worker, task);
+				totalDistance += Utils.distanceWorkerTask(DATA_SET, worker, task);
 				_totalScore += score;
 				// if (score == Constants.EXACT_MATCH_SCORE)
 				// totalTasksExactMatch++;
@@ -469,7 +470,7 @@ public class GeocrowdInstance extends Geocrowd {
 								.get(logicalWorkerToWorker.get(r[i]));
 						SpecializedTask task = (SpecializedTask) taskList
 								.get(candidateTaskIndices.get(i));
-						totalDistance += distanceWorkerTask(worker, task);
+						totalDistance += Utils.distanceWorkerTask(DATA_SET, worker, task);
 						// exact match?
 						if (worker.isExactMatch(task))
 							totalTasksExactMatch++;
@@ -479,7 +480,7 @@ public class GeocrowdInstance extends Geocrowd {
 								.get(logicalWorkerToWorker.get(i));
 						SpecializedTask task = (SpecializedTask) taskList
 								.get(candidateTaskIndices.get(r[i]));
-						totalDistance += distanceWorkerTask(worker, task);
+						totalDistance += Utils.distanceWorkerTask(DATA_SET, worker, task);
 						// exact match?
 						if (worker.isExactMatch(task))
 							totalTasksExactMatch++;

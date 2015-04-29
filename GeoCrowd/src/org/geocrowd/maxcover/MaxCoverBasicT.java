@@ -13,12 +13,21 @@
 
 package org.geocrowd.maxcover;
 
+import static org.geocrowd.Geocrowd.candidateTaskIndices;
+import static org.geocrowd.Geocrowd.taskList;
+import static org.geocrowd.Geocrowd.workerList;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import org.geocrowd.Constants;
+import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
+import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.crowdsource.SensingTask;
+import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.common.utils.Utils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -58,23 +67,24 @@ public class MaxCoverBasicT extends MaxCover {
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = 0;
 			double smallestAvgTimeToDead = 10000000;
+			double maxUncoveredUtility = 0.0;
 
 			/**
 			 * find the maximum of number of uncovered task
 			 */
-			for (int k : S.keySet()) {
-				HashMap<Integer, Integer> s = S.get(k); // task set covered by
-														// current worker
-				int noUncoveredTasks = 0;
-				for (Integer i : s.keySet()) {
-					if (!assignedTaskSet.contains(i)) {
-						noUncoveredTasks++;
-					}
-				}
-				if (noUncoveredTasks > maxNoUncoveredTasks) {
-					maxNoUncoveredTasks = noUncoveredTasks;
-				}
-			}
+//			for (int k : S.keySet()) {
+//				HashMap<Integer, Integer> s = S.get(k); // task set covered by
+//														// current worker
+//				int noUncoveredTasks = 0;
+//				for (Integer i : s.keySet()) {
+//					if (!assignedTaskSet.contains(i)) {
+//						noUncoveredTasks++;
+//					}
+//				}
+//				if (noUncoveredTasks > maxNoUncoveredTasks) {
+//					maxNoUncoveredTasks = noUncoveredTasks;
+//				}
+//			}
 			/**
 			 * Iterate all workers, find the one with the smallest weight
 			 */
@@ -85,12 +95,14 @@ public class MaxCoverBasicT extends MaxCover {
                                
 				if (wg.weight < smallestAvgTimeToDead) {
 					smallestAvgTimeToDead = wg.weight;
+					maxUncoveredUtility = wg.gain;
 					bestWorkerIndex = k;
 				}
 			}
 //                        System.out.println("weight:"+smallestAvgTimeToDead);
                         
 			assignWorkers.add(bestWorkerIndex);
+			assignedUtility += maxUncoveredUtility;
 
 //			System.out.println(S.size() + " " + bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
@@ -131,27 +143,31 @@ public class MaxCoverBasicT extends MaxCover {
 		/**
 		 * denotes the number of unassigned tasks covered by worker
 		 */
-		int uncoveredTasks = 0;
+		double uncoveredUtility = 0.0;
 		double totalElapsedTime = 0;
 		for (Integer t : tasksWithDeadlines.keySet()) {
 			/**
 			 * Only consider uncovered tasks
 			 */
 			if (!completedTasks.contains(t)) {
-				uncoveredTasks++;
 				double elapsedTime = tasksWithDeadlines.get(t) - currentTI; // the
 																			// smaller,
 																			// the
 																			// better
 //				System.out.println(elapsedTime);
-				totalElapsedTime += 1/(1 + elapsedTime);
+				GenericWorker worker = workerList.get(workeridx);
+				SensingTask task = (SensingTask) taskList
+						.get(candidateTaskIndices.get(t));
+				double utility = Utils.utility(Geocrowd.DATA_SET, worker, task);
+				uncoveredUtility += utility;
+				totalElapsedTime += utility/(1 + elapsedTime);
 			}
 		}
 		/**
 		 * average time to deadline of new covered task
 		 */
 		double weight = -totalElapsedTime;
-		return new WeightGain(weight, uncoveredTasks);
+		return new WeightGain(weight, uncoveredUtility);
 	}
 	
 	

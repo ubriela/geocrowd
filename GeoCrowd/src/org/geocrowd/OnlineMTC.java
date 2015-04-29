@@ -75,16 +75,17 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_BASIC:
 		case MAX_COVER_BASIC_WORKLOAD:
 		case MAX_COVER_PRO_B:
-			MaxCoverBasic maxCoverPro = new MaxCoverBasic(
+			MaxCoverBasic maxCoverBsic = new MaxCoverBasic(
 					getContainerWithDeadline(), TimeInstance);
-			maxCoverPro.budget = getBudget(algorithm);
+			maxCoverBsic.budget = getBudget(algorithm);
 //			System.out.println("xxxx" + maxCoverPro.budget); 
-			assignedWorker = maxCoverPro.maxCover();
+			assignedWorker = maxCoverBsic.maxCover();
 
-			TotalAssignedTasks += maxCoverPro.assignedTasks;
+			TotalAssignedTasks += maxCoverBsic.assignedTasks;
+			TotalCoveredUtility += maxCoverBsic.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
-			maxCover = maxCoverPro;
+			maxCover = maxCoverBsic;
 //			System.out.print("\t" + maxCoverPro.gain);
 			break;
 			
@@ -251,6 +252,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			assignedWorker = maxCoverBasicT.maxCover();
 
 			TotalAssignedTasks += maxCoverBasicT.assignedTasks;
+			TotalCoveredUtility += maxCoverBasicT.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = maxCoverBasicT;
@@ -297,6 +299,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			assignedWorker = maxCoverS.maxCover();
 			
 			TotalAssignedTasks += maxCoverS.assignedTasks;
+			TotalCoveredUtility += maxCoverS.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 

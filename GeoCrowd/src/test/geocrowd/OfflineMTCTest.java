@@ -19,20 +19,20 @@ public class OfflineMTCTest {
 	public static void main(String[] args) {
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
-//		int[] budgets = new int[] {7, 14, 28}; // gowalla
+		int[] budgets = new int[] {28}; // gowalla
 //		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 }; // foursquare
-		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
+//		int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
 		varying_budget(0, 8, budgets, 5);
 
 //		 double[] radii = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5 };
 		// double[] radii = {0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45,
 		// 0.5};
 		
-		 double[] radii = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		 varying_radius(0, 8, radii, 56);
-		 
-		 int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		 varying_delta(0, 8, delta, 56);
+//		 double[] radii = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//		 varying_radius(0, 8, radii, 56);
+//		 
+//		 int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//		 varying_delta(0, 8, delta, 56);
 	}
 
 	public static void varying_radius(int starttime, int times, double[] radii,

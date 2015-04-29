@@ -86,7 +86,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 						// compute utility (w,task i)
 						SensingTask t = (SensingTask) taskList
 								.get(candidateTaskIndices.get(i));
-						double utility = Utils.utility(w, t);
+						double utility = Utils.utility(Geocrowd.DATA_SET, w, t);
 						uncoveredUtility += utility;
 					}
 				}

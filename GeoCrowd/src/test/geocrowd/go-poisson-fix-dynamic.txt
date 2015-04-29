@@ -1,0 +1,120 @@
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	0.000000             	0.251854             	0.251854             	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	0.000000             	0.251854             	0.251854             	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	0.000000             	0.251854             	0.251854             	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	0.251854             	0.503708             	0.503708             	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	0.251854             	0.251854             	0.000000             	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	0.251854             	0.251854             	0.000000             	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	6870.000000          	6792.000000          	11.000000            	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	6870.000000          	6792.000000          	11.000000            	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	6870.000000          	6792.000000          	11.000000            	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	6870.000000          	6792.000000          	11.000000            	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	6870.000000          	6792.000000          	11.000000            	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	6870.000000          	6792.000000          	11.000000            	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	6870.000000          	6792.000000          	5851.000000          	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	0.251854             	0.251854             	0.000000             	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	0.251854             	0.251854             	0.000000             	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2010.444966          	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2323.464635          	2323.122728          	2010.444966          	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	6870.000000          	6792.000000          	5851.000000          	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	2323.464635          	2323.122728          	2010.444966          	0.000000             	0.000000             	
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_BASIC_T    	MAX_COVER_BASIC_S    	FixedOff             	DynamicOff           	
+0.100000             	3493.595553          	3548.009900          	3268.609379          	0.000000             	0.000000             	

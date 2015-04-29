@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.common.utils.Utils;
 import org.geocrowd.datasets.Parser;
 import org.geocrowd.maxcover.MaxCover;
 import org.geocrowd.maxcover.MaxCoverBasic;
@@ -52,7 +53,7 @@ public class OfflineMTC extends GeocrowdSensing {
              */
             if ((workerOnlineTime - task.getEntryTime()) < GeocrowdConstants.TaskDuration
                     && (workerOnlineTime - task.getEntryTime()) >=0 && 
-                    distanceWorkerTask(w, task) <= task.getRadius()) {
+                    		Utils.distanceWorkerTask(DATA_SET, w, task) <= task.getRadius()) {
 
                 /* compute a list of candidate tasks */
                 if (!taskSet.contains(tid)) {

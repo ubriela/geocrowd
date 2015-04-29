@@ -26,6 +26,7 @@ import org.geocrowd.common.crowdsource.GenericTask;
 import org.geocrowd.common.crowdsource.GenericWorker;
 import org.geocrowd.common.crowdsource.SensingTask;
 import org.geocrowd.common.crowdsource.VirtualWorker;
+import org.geocrowd.common.utils.Utils;
 import org.geocrowd.setcover.MultiSetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.MultiSetCoverGreedy_LargeWorkerFanout;
 import org.geocrowd.setcover.SetCoverGreedy;
@@ -645,7 +646,7 @@ public class GeocrowdSensing extends Geocrowd {
 				task.setExpired();
 			}
 			/* if worker in task region */
-			else if (distanceWorkerTask(w, task) <= task.getRadius()) {
+			else if (Utils.distanceWorkerTask(DATA_SET, w, task) <= task.getRadius()) {
 
 				/* compute a list of candidate tasks */
 				if (!taskSet.contains(tid)) {
@@ -683,6 +684,7 @@ public class GeocrowdSensing extends Geocrowd {
 		TaskCount = 0;
 		WorkerCount = 0;
 		TotalAssignedTasks = 0;
+		TotalCoveredUtility = 0.0;
 		TotalAssignedWorkers = 0;
 		workerList = null;
 		workerList = new ArrayList<>();

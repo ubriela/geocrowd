@@ -53,7 +53,7 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = 0;
 			double smallestAvgWeight = 10000000;
-			int maxNoUncoveredTasks = 0;
+			double maxUncoveredUtility = 0.0;
 			
 			/**
 			 * Iterate all workers, find the one which covers maximum number of
@@ -66,7 +66,7 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 				if (wg.weight < smallestAvgWeight) {
 					smallestAvgWeight = wg.weight;
 					bestWorkerIndex = k;
-					maxNoUncoveredTasks = wg.gain;
+					maxUncoveredUtility = wg.gain;
 				}
 			}
 
@@ -106,6 +106,8 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 			gain = (int)smallestAvgWeight;
 			
 			assignWorkers.add(bestWorkerIndex);
+			assignedUtility += maxUncoveredUtility;
+			
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
 			S.remove(bestWorkerIndex);
 			Q.removeAll(taskSet.keySet());

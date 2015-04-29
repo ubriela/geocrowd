@@ -31,7 +31,7 @@ public class OnlineMTCTest {
 
 	public static void main(String[] args) throws IOException {
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
-		GeocrowdConstants.TIME_INSTANCE = 14;
+		GeocrowdConstants.TIME_INSTANCE = 28;
 		// overloading();
 
 		// int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
@@ -520,12 +520,13 @@ public class OnlineMTCTest {
 				AlgorithmEnum.MAX_COVER_BASIC,
 				// AlgorithmEnum.MAX_COVER_ADAPT_B,
 				// AlgorithmEnum.MAX_COVER_ADAPT_B_W,
-				AlgorithmEnum.MAX_COVER_ADAPT_T,
+//				AlgorithmEnum.MAX_COVER_ADAPT_T,
 				AlgorithmEnum.MAX_COVER_ADAPT_T_W };
 
 		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
+		double[][] coveredUtility = new double[radii.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
-		int times = 16;
+		int times = 8;
 		for (int t = 0; t < times; t++) {
 			int start_time = 0 + t * GeocrowdConstants.TIME_INSTANCE;
 			for (int d = 0; d < radii.length; d++) {
@@ -544,10 +545,12 @@ public class OnlineMTCTest {
 				// apply offline method to next period
 				int next_time_period = start_time
 						+ GeocrowdConstants.TIME_INSTANCE;
-				computeHistoryBudgets(true, totalBudget, next_time_period);
+				//computeHistoryBudgets(true, totalBudget, next_time_period);
 				int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
+				double fixed_offline_utility = Geocrowd.TotalCoveredUtility;
 				computeHistoryBudgets(false, totalBudget, next_time_period);
 				int dynamic_offline_cov = Geocrowd.TotalAssignedTasks;
+				double dynamic_offline_utility = Geocrowd.TotalCoveredUtility;
 
 				// use the same set of workers/tasks for all following period
 				for (int g = 0; g < algorithms.length; g++) {
@@ -588,6 +591,7 @@ public class OnlineMTCTest {
 					}
 
 					coveredTasks[d][g] += OnlineMTC.TotalAssignedTasks;
+					coveredUtility[d][g] += OnlineMTC.TotalCoveredUtility;
 					assignedWorkers[d][g] += OnlineMTC.TotalAssignedWorkers;
 
 				}
@@ -614,6 +618,13 @@ public class OnlineMTCTest {
 			pw.printf("\n%-20f \t", radii[d]);
 			for (int g2 = 0; g2 < algorithms.length + 2; g2++) {
 				pw.printf("%-20d \t", coveredTasks[d][g2] / times);
+			}
+		}
+		
+		for (int d = 0; d < radii.length; d++) {
+			pw.printf("\n%-20f \t", radii[d]);
+			for (int g2 = 0; g2 < algorithms.length + 2; g2++) {
+				pw.printf("%-20f \t", coveredUtility[d][g2] / times);
 			}
 		}
 
@@ -652,7 +663,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryAlpha() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.SKEWED;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				// AlgorithmEnum.MAX_COVER_ADAPT_T_W,
@@ -760,7 +771,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryBudget() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC,
@@ -768,7 +779,7 @@ public class OnlineMTCTest {
 				// AlgorithmEnum.MAX_COVER_ADAPT_T,
 				AlgorithmEnum.MAX_COVER_BASIC_T,
 				// AlgorithmEnum.MAX_COVER_BASIC_T2,
-				AlgorithmEnum.MAX_COVER_BASIC_S,
+//				AlgorithmEnum.MAX_COVER_BASIC_S,
 		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
 
@@ -781,7 +792,7 @@ public class OnlineMTCTest {
 
 		// int[] budgets = new int[] { 40, 80, 160, 320, 640, 1280,
 		// 2560 };
-		GeocrowdConstants.TIME_INSTANCE = 24;
+		GeocrowdConstants.TIME_INSTANCE  = 28;
 		GeocrowdConstants.radius = 5.0;
 		Constants.alpha = 0.2;
 		System.out.println("Radius = " + GeocrowdConstants.radius);
@@ -868,6 +879,12 @@ public class OnlineMTCTest {
 			pw.printf("%-20s \t", algorithms[a]);
 		pw.printf("%-20s \t", "FixedOff");
 		pw.printf("%-20s \t", "DynamicOff");
+		for (int b = 0; b < budgets.length; b++) {
+			pw.printf("\n%-20d \t", budgets[b]);
+			for (int a = 0; a < algorithms.length + 2; a++)
+				pw.printf("%-20f \t", coveredTasks[b][a] / times);
+		}
+		
 		for (int b = 0; b < budgets.length; b++) {
 			pw.printf("\n%-20d \t", budgets[b]);
 			for (int a = 0; a < algorithms.length + 2; a++)

@@ -141,6 +141,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			assignedWorker = maxCoverAdaptB.maxCover();
 
 			TotalAssignedTasks += maxCoverAdaptB.assignedTasks;
+			TotalCoveredUtility += maxCoverAdaptB.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();
@@ -173,6 +174,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			assignedWorker = maxCoverAdapt.maxCover();
 
 			TotalAssignedTasks += maxCoverAdapt.assignedTasks;
+			TotalCoveredUtility += maxCoverAdapt.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();
@@ -204,6 +206,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			assignedWorker = maxCoverAdaptT.maxCover();
 
 			TotalAssignedTasks += maxCoverAdaptT.assignedTasks;
+			TotalCoveredUtility += maxCoverAdaptT.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();
@@ -233,6 +236,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			assignedWorker = maxCoverAdaptTW.maxCover();
 
 			TotalAssignedTasks += maxCoverAdaptTW.assignedTasks;
+			TotalCoveredUtility += maxCoverAdaptTW.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();

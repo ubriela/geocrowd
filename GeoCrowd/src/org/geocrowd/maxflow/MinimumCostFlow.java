@@ -10,7 +10,7 @@
 * Contributors:
 * Hien To - initial implementation
 *******************************************************************************/
-package org.geocrowd.flow;
+package org.geocrowd.maxflow;
 
 import java.util.Arrays;
 import java.util.LinkedList;

@@ -5,4 +5,4 @@
  * @author HT186011
  *
  */
-package org.geocrowd.flow;
+package org.geocrowd.knapsack;

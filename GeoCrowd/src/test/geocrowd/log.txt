@@ -202,4 +202,12 @@ Budget = 336
                      	MAX_COVER_BASIC      	MAX_COVER_BASIC_S    	
 0.100000             	13356                	7107                 	
 MAX_COVER_BASIC      	MAX_COVER_BASIC_S    	
-0.100000             	7                    	25                   	
+0.100000             	7                    	25    
+
+##################Local varying alpha
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+0.100000             	71.678629            	69.381998            	0.000000             	0.000000             	
+0.100000             	1654.000000          	2194.000000          	0.000000             	0.000000             	
+               	

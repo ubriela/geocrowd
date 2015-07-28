@@ -671,12 +671,13 @@ public class OnlineMTCTest {
 		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
-				// AlgorithmEnum.MAX_COVER_ADAPT_T_W,
+				 AlgorithmEnum.MAX_COVER_ADAPT_T_W,
 
 				// AlgorithmEnum.MAX_COVER_BASIC_T2,
-				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_T,
+//				AlgorithmEnum.MAX_COVER_BASIC, 
+//				AlgorithmEnum.MAX_COVER_ADAPT_T,
 		// AlgorithmEnum.MAX_COVER_BASIC_T,
-		// AlgorithmEnum.MAX_COVER_ADAPT_T_W,
+//		 AlgorithmEnum.MAX_COVER_ADAPT_T_W,
 		// AlgorithmEnum.MAX_COVER_BASIC_S,
 		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
@@ -701,9 +702,10 @@ public class OnlineMTCTest {
 		int fixed_offline_cov = Geocrowd.TotalAssignedTasks;
 		double fixed_offline_utility = Geocrowd.TotalCoveredUtility;
 		long start = System.currentTimeMillis();
-		// computeHistoryBudgets(false, totalBudget, 0);
+		computeHistoryBudgets(false, totalBudget, 0);
 		long elapsedDynamic = System.currentTimeMillis() - start;
 		int dynamic_offline_cov = Geocrowd.TotalAssignedTasks;
+		System.out.println(elapsedDynamic);
 		double dynamic_offline_utility = Geocrowd.TotalCoveredUtility;
 
 		for (int al = 0; al < alphas.length; al++) {
@@ -789,7 +791,7 @@ public class OnlineMTCTest {
 				pw.printf("%-20f \t", coveredUtility[al2][g2]);
 		}
 
-		pw.println("#Elapsed time");
+		pw.println("\n#Elapsed time");
 		for (int al2 = 0; al2 < alphas.length; al2++) {
 			pw.printf("\n%-20f \t", alphas[al2]);
 			for (int g2 = 0; g2 < algorithms.length + 2; g2++)
@@ -1177,7 +1179,7 @@ public class OnlineMTCTest {
 		logger.info(stringWriter.toString());
 		System.out.println(stringWriter.toString());
 	}
-
+	
 	@Test
 	public void testLocalVaryRadius() throws IOException {
 		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;

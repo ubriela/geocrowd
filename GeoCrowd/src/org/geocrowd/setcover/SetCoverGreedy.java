@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.geocrowd.common.crowdsource.GenericTask;
-import org.geocrowd.common.crowdsource.VirtualWorker;
+import org.geocrowd.common.crowd.GenericTask;
+import org.geocrowd.common.crowd.VirtualWorker;
 
 // TODO: Auto-generated Javadoc
 /**

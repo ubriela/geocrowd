@@ -20,10 +20,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.geocrowd.common.crowdsource.GenericTask;
-import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.crowd.GenericTask;
+import org.geocrowd.common.crowd.GenericWorker;
 import org.geocrowd.common.entropy.Coord;
 import org.geocrowd.common.entropy.EntropyRecord;
+import org.geocrowd.common.entropy.EntropyUtility;
 import org.geocrowd.common.utils.Utils;
 
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
@@ -224,9 +225,9 @@ public abstract class Geocrowd {
 		maxEntropy = 0.0;
 		String filePath = "";
 		if (Constants.useLocationEntropy)
-			filePath = Utils.datasetToEntropyPath(DATA_SET);
+			filePath = EntropyUtility.datasetToEntropyPath(DATA_SET);
 		else
-			filePath = Utils.datasetToLocationDensity(DATA_SET);
+			filePath = EntropyUtility.datasetToLocationDensity(DATA_SET);
 		entropies = new HashMap<Integer, HashMap<Integer, Double>>();
 		try {
 			FileReader file = new FileReader(filePath);
@@ -333,8 +334,8 @@ public abstract class Geocrowd {
 	 * @return the double
 	 */
 	public double computeCost(GenericWorker w) {
-		int row = latToRowIdx(w.getLatitude());
-		int col = lngToColIdx(w.getLongitude());
+		int row = latToRowIdx(w.getLat());
+		int col = lngToColIdx(w.getLng());
 //		System.out.println(row + " " + col);
 		double entropy = 0;
 		if (entropies.containsKey(row)) {

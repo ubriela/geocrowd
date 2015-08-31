@@ -22,10 +22,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
-import org.geocrowd.common.crowdsource.GenericTask;
-import org.geocrowd.common.crowdsource.GenericWorker;
-import org.geocrowd.common.crowdsource.SensingTask;
-import org.geocrowd.common.crowdsource.VirtualWorker;
+import org.geocrowd.common.crowd.GenericTask;
+import org.geocrowd.common.crowd.GenericWorker;
+import org.geocrowd.common.crowd.SensingTask;
+import org.geocrowd.common.crowd.VirtualWorker;
 import org.geocrowd.common.utils.Utils;
 import org.geocrowd.setcover.MultiSetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.MultiSetCoverGreedy_LargeWorkerFanout;
@@ -43,7 +43,7 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.PrimitiveSink;
 
-import org.geocrowd.datasets.Parser;
+import org.geocrowd.datasets.synthetic.Parser;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -89,7 +89,7 @@ public class GeocrowdSensing extends Geocrowd {
 				Integer taskid = (Integer) it2.next();
 				taskidsWithDeadline.put(taskid,
 						taskList.get(candidateTaskIndices.get(taskid))
-								.getEntryTime() + GeocrowdConstants.TaskDuration);
+								.getArrivalTime() + GeocrowdConstants.TaskDuration);
 			}
 			containerWithDeadline.add(taskidsWithDeadline);
 		}
@@ -641,12 +641,12 @@ public class GeocrowdSensing extends Geocrowd {
 			SensingTask task = (SensingTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getEntryTime()) >= (GeocrowdConstants.TaskDuration)
+			if ((TimeInstance - task.getArrivalTime()) >= (GeocrowdConstants.TaskDuration)
 				) {
 				task.setExpired();
 			}
 			/* if worker in task region */
-			else if (Utils.distanceWorkerTask(DATA_SET, w, task) <= task.getRadius()) {
+			else if (TaskUtility.distanceWorkerTask(DATA_SET, w, task) <= task.getRadius()) {
 
 				/* compute a list of candidate tasks */
 				if (!taskSet.contains(tid)) {

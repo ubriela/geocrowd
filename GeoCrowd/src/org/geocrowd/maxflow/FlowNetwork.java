@@ -15,8 +15,8 @@ package org.geocrowd.maxflow;
 import java.util.*;
 
 import org.geocrowd.AlgorithmEnum;
-import org.geocrowd.common.crowdsource.SpecializedTask;
-import org.geocrowd.common.crowdsource.SpecializedWorker;
+import org.geocrowd.common.crowd.ExpertTask;
+import org.geocrowd.common.crowd.ExpertWorker;
 
 // TODO: Auto-generated Javadoc
 /*************************************************************************
@@ -68,19 +68,19 @@ public class FlowNetwork {
 	 * @param assign_type
 	 *            the assign_type
 	 */
-	public FlowNetwork(int V, ArrayList[] List, ArrayList<SpecializedWorker> workerList,
-			ArrayList<SpecializedTask> taskList, AlgorithmEnum assign_type) {
+	public FlowNetwork(int V, ArrayList[] List, ArrayList<ExpertWorker> workerList,
+			ArrayList<ExpertTask> taskList, AlgorithmEnum assign_type) {
 		this(V + 2);
 		double capacity = 1;
 		for (int i = 0; i < List.length; i++) {
-			int maxTask = workerList.get(i).getMaxTaskNo();
-			double workerLat = workerList.get(i).getLatitude();
-			double workerLng = workerList.get(i).getLongitude();
+			int maxTask = workerList.get(i).getCapacity();
+			double workerLat = workerList.get(i).getLat();
+			double workerLng = workerList.get(i).getLng();
 			ArrayList tasks = List[i];
 			if (tasks != null) {
 				for (int j = 0; j < tasks.size(); j++) {
 					int t = (Integer) tasks.get(j);
-					SpecializedTask task = taskList.get(t);
+					ExpertTask task = taskList.get(t);
 					double taskLat = task.getLat();
 					double taskLng = task.getLng();
 					double dist = Math
@@ -95,7 +95,7 @@ public class FlowNetwork {
 								dist, dist));
 					else
 						addEdge(new FlowEdge(i, List.length + t, capacity,
-								task.getEntryTime(), dist));
+								task.getArrivalTime(), dist));
 				}
 			}
 			addEdge(new FlowEdge(V, i, maxTask, 0, 0)); // this is for adding
@@ -103,7 +103,7 @@ public class FlowNetwork {
 														// all points
 		}
 		for (int i = 0; i < taskList.size(); i++) {
-			SpecializedTask task = taskList.get(i);
+			ExpertTask task = taskList.get(i);
 			addEdge(new FlowEdge(List.length + i, V + 1, capacity, 0, 0));
 		}
 	}

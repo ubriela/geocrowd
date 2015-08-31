@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.geocrowd.common.crowdsource.MatchPair;
+import org.geocrowd.common.crowd.WTMatch;
 
 import ilog.concert.IloException;
 import ilog.concert.IloNumVar;
@@ -55,7 +55,7 @@ public class BPMatchingCplex {
 	private List<Double> matchingCoeff;
 
 	/** The map col to match. */
-	private HashMap<Integer, MatchPair> mapColToMatch;
+	private HashMap<Integer, WTMatch> mapColToMatch;
 
 	/** The max matching. */
 	private double maxMatching = 0;
@@ -78,7 +78,7 @@ public class BPMatchingCplex {
 	 */
 	public BPMatchingCplex(int numWorker, int numTask, List<Double> objCoeff,
 			List<Double> matchCoeff, double maximumMatching,
-			HashMap<Integer, MatchPair> map) {
+			HashMap<Integer, WTMatch> map) {
 		this.cplex = null;
 
 		this.numWorkers = numWorker;
@@ -195,14 +195,14 @@ public class BPMatchingCplex {
 	 * 
 	 * @return assigned task
 	 */
-	public ArrayList<MatchPair> maxMatchingMinCost() {
+	public ArrayList<WTMatch> maxMatchingMinCost() {
 		double[] vars = solve();
-		ArrayList<MatchPair> assignment = new ArrayList<MatchPair>();
+		ArrayList<WTMatch> assignment = new ArrayList<WTMatch>();
 		if (vars != null)
 			for (int i = 0; i < vars.length; i++) {
 				if (vars[i] == 1.0) {
 					if (mapColToMatch.containsKey(i)) {
-						MatchPair pair = mapColToMatch.get(i);
+						WTMatch pair = mapColToMatch.get(i);
 						assignment.add(pair);
 					}
 				}
@@ -253,7 +253,7 @@ public class BPMatchingCplex {
 			IloRange rw = null;
 			IloRange rt = null;
 			if (mapColToMatch.containsKey(i)) {
-				MatchPair pair = mapColToMatch.get(i);
+				WTMatch pair = mapColToMatch.get(i);
 				w = pair.getW();
 				t = pair.getT();
 				rw = rng[0][w];

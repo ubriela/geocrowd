@@ -13,7 +13,7 @@ import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.OfflineMTC;
 import org.geocrowd.OnlineMTC;
-import org.geocrowd.common.crowdsource.GenericTask;
+import org.geocrowd.common.crowd.GenericTask;
 import org.geocrowd.common.utils.Utils;
 import org.junit.Test;
 

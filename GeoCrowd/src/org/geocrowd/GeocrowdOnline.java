@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.geocrowd.common.crowdsource.SpecializedTask;
-import org.geocrowd.common.crowdsource.SpecializedWorker;
-import org.geocrowd.datasets.Parser;
+import org.geocrowd.common.crowd.ExpertTask;
+import org.geocrowd.common.crowd.ExpertWorker;
+import org.geocrowd.datasets.synthetic.Parser;
 import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.OnlineBipartiteMatching;
 import org.geocrowd.matching.Utility;
@@ -247,7 +247,7 @@ public class GeocrowdOnline extends Geocrowd {
 		pruneExpiredTasks();
 
 		for (int idx = 0; idx < workerList.size(); idx++) {
-			SpecializedWorker w = (SpecializedWorker) workerList.get(idx);
+			ExpertWorker w = (ExpertWorker) workerList.get(idx);
 			rangeQuery(idx, w);
 		}
 		
@@ -269,21 +269,21 @@ public class GeocrowdOnline extends Geocrowd {
 	 * @param mbr
 	 *            the mbr
 	 */
-	private void rangeQuery(final int workerIdx, SpecializedWorker w) {
+	private void rangeQuery(final int workerIdx, ExpertWorker w) {
 		/* task id, increasing from 0 to the number of task - 1 */
 		int t = 0;
 		for (int i = 0; i < taskList.size(); i++) {
-			SpecializedTask task = (SpecializedTask) taskList.get(i);
+			ExpertTask task = (ExpertTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getEntryTime()) >= GeocrowdConstants.TaskDuration) {
+			if ((TimeInstance - task.getArrivalTime()) >= GeocrowdConstants.TaskDuration) {
 				task.setExpired();
 			} else
 
 			/**
 			 * if the task is not assigned and in the worker's working region
 			 */
-			if (task.isCoveredBy(w.getMBR())) {
+			if (task.isCoveredBy(w.getMbr())) {
 
 				if (!taskSet.contains(t)) {
 					candidateTaskIndices.add(t);
@@ -321,12 +321,12 @@ public class GeocrowdOnline extends Geocrowd {
 	private void readOnlineWorkers(String fileName) {
 		if (workerList == null)
 			workerList = new ArrayList();
-		WorkerCount += Parser.parseSpecializedWorkers(fileName, workerList);
+		WorkerCount += Parser.parseExpertWorkers(fileName, workerList);
 	}
 
 	@Override
 	public void readTasks(String fileName) {
-            int newTask = Parser.parseSpecializedTasks(fileName, taskList);
+            int newTask = Parser.parseExpertTasks(fileName, taskList);
 		TaskCount += newTask;
 	}
 

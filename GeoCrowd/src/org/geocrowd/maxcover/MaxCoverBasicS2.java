@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.geocrowd.Constants;
-import org.geocrowd.common.crowdsource.GenericTask;
+import org.geocrowd.common.crowd.GenericTask;
 
 // TODO: Auto-generated Javadoc
 /**

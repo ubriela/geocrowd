@@ -211,3 +211,47 @@ Budget = 56
 0.100000             	71.678629            	69.381998            	0.000000             	0.000000             	
 0.100000             	1654.000000          	2194.000000          	0.000000             	0.000000             	
                	
+
+##################Runtime
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+0.100000             	37.463628            	0.000000             	0.000000             	#Elapsed time
+
+0.100000             	869.000000           	0.000000             	0.000000             	
+
+##################Runtime
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+0.100000             	38.175207            	40.566618            	0.000000             	0.000000             	
+#Elapsed time
+
+0.100000             	870.000000           	812.000000           	0.000000             	0.000000             	
+
+##################Runtime
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+0.100000             	72.501522            	74.305109            	0.000000             	0.000000             	
+#Elapsed time
+
+0.100000             	1733.000000          	2230.000000          	0.000000             	0.000000             	
+
+##################Runtime
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+0.100000             	106.509213           	0.000000             	0.000000             	
+#Elapsed time
+
+0.100000             	3931.000000          	0.000000             	0.000000             	
+
+##################Runtime
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+0.100000             	131.380069           	138.650833           	0.000000             	0.000000             	
+#Elapsed time
+
+0.100000             	4035.000000          	5054.000000          	0.000000             	0.000000             	

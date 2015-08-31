@@ -24,7 +24,7 @@ import java.util.PriorityQueue;
 
 import org.geocrowd.Constants;
 import org.geocrowd.GeocrowdConstants;
-import org.geocrowd.datasets.dtype.CoverageIndex;
+import org.geocrowd.dtype.CoverageIndex;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;

@@ -19,6 +19,11 @@ import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Scanner;
 
+
+import org.geocrowd.DatasetEnum;
+import org.geocrowd.common.crowd.ExpertWorker;
+import org.geocrowd.common.crowd.GenericTask;
+
 /**
  *
  * @author dkh

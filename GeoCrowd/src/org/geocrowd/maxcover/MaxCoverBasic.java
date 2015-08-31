@@ -24,9 +24,10 @@ import java.util.HashSet;
 
 import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
-import org.geocrowd.common.crowdsource.GenericWorker;
-import org.geocrowd.common.crowdsource.SensingTask;
-import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.TaskUtility;
+import org.geocrowd.common.crowd.GenericWorker;
+import org.geocrowd.common.crowd.SensingTask;
+import org.geocrowd.common.crowd.SensingWorker;
 import org.geocrowd.common.utils.Utils;
 
 /**
@@ -81,7 +82,7 @@ public class MaxCoverBasic extends MaxCover {
 					if (!assignedTaskSet.contains(i)) {
 						SensingTask t = (SensingTask) taskList
 								.get(candidateTaskIndices.get(i));
-						double utility = Utils.utility(Geocrowd.DATA_SET, w, t);
+						double utility = TaskUtility.utility(Geocrowd.DATA_SET, w, t);
 //						System.out.println(utility);
 						uncoveredUtility += utility;
 					}

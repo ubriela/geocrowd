@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.geocrowd.common.crowdsource.SpecializedTask;
+import org.geocrowd.common.crowd.ExpertTask;
 import org.geocrowd.common.utils.Utils;
 import org.paukov.combinatorics.Factory;
 import org.paukov.combinatorics.Generator;
@@ -162,12 +162,12 @@ public class Test {
 	 * Test1.
 	 */
 	public void test1() {
-		ArrayList<SpecializedTask> taskList = new ArrayList<SpecializedTask>();
-		SpecializedTask t1 = new SpecializedTask();
-		SpecializedTask t2 = new SpecializedTask();
+		ArrayList<ExpertTask> taskList = new ArrayList<ExpertTask>();
+		ExpertTask t1 = new ExpertTask();
+		ExpertTask t2 = new ExpertTask();
 		t2.setExpired();
-		SpecializedTask t3 = new SpecializedTask();
-		SpecializedTask t4 = new SpecializedTask();
+		ExpertTask t3 = new ExpertTask();
+		ExpertTask t4 = new ExpertTask();
 		t4.setExpired();
 
 		taskList.add(0, t1);
@@ -175,7 +175,7 @@ public class Test {
 		taskList.add(2, t3);
 		taskList.add(3, t4);
 
-		for (SpecializedTask t : taskList)
+		for (ExpertTask t : taskList)
 			System.out.println(t.toString());
 
 		for (int i = taskList.size() - 1; i >= 0; i--) {
@@ -185,7 +185,7 @@ public class Test {
 			}
 		}
 
-		for (SpecializedTask t : taskList)
+		for (ExpertTask t : taskList)
 			System.out.println(t.toString());
 	}
 

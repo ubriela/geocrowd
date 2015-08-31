@@ -12,14 +12,15 @@ import java.util.HashSet;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.OfflineMTC;
+import org.geocrowd.TaskUtility;
 
 import static org.geocrowd.Geocrowd.candidateTaskIndices;
 import static org.geocrowd.Geocrowd.taskList;
 import static org.geocrowd.Geocrowd.workerList;
 
-import org.geocrowd.common.crowdsource.GenericTask;
-import org.geocrowd.common.crowdsource.SensingTask;
-import org.geocrowd.common.crowdsource.SensingWorker;
+import org.geocrowd.common.crowd.GenericTask;
+import org.geocrowd.common.crowd.SensingTask;
+import org.geocrowd.common.crowd.SensingWorker;
 import org.geocrowd.common.utils.Utils;
 
 /**
@@ -86,7 +87,7 @@ public class MaxCoverDynamicOffline extends MaxCover {
 						// compute utility (w,task i)
 						SensingTask t = (SensingTask) taskList
 								.get(candidateTaskIndices.get(i));
-						double utility = Utils.utility(Geocrowd.DATA_SET, w, t);
+						double utility = TaskUtility.utility(Geocrowd.DATA_SET, w, t);
 						uncoveredUtility += utility;
 					}
 				}

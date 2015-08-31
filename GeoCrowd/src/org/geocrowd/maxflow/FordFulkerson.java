@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.geocrowd.AlgorithmEnum;
-import org.geocrowd.common.crowdsource.SpecializedTask;
+import org.geocrowd.common.crowd.ExpertTask;
 
 // TODO: Auto-generated Javadoc
 /*************************************************************************
@@ -75,7 +75,7 @@ public class FordFulkerson {
 								 *            the task list
 								 */
 								public FordFulkerson(FlowNetwork G, int s, int t, AlgorithmEnum assign_type,
-			int workerNo, ArrayList<SpecializedTask> taskList) {
+			int workerNo, ArrayList<ExpertTask> taskList) {
 		best = new double[G.V()];
 		value = excess(G, t);
 		if (!isFeasible(G, s, t)) {
@@ -99,7 +99,7 @@ public class FordFulkerson {
 					edgeTo[v].addResidualFlowTo(v, bottle);
 					if ((v >= workerNo) && (v != t)) {
 						// System.out.print(v+" ");
-						SpecializedTask task = taskList.get(v - workerNo);
+						ExpertTask task = taskList.get(v - workerNo);
 						task.incAssigned();
 					}
 				}
@@ -127,7 +127,7 @@ public class FordFulkerson {
 					sumDist += edgeTo[v].distance;
 					if ((v >= workerNo) && (v != t)) {
 						// System.out.print(v+" ");
-						SpecializedTask task = taskList.get(v - workerNo);
+						ExpertTask task = taskList.get(v - workerNo);
 						task.incAssigned();// .setAssigned();
 					}
 				}

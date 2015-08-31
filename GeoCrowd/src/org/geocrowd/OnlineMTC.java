@@ -11,10 +11,10 @@ import static org.geocrowd.AlgorithmEnum.MAX_COVER_BASIC;
 import static org.geocrowd.Geocrowd.algorithm;
 import static org.geocrowd.Geocrowd.taskList;
 
-import org.geocrowd.common.crowdsource.GenericTask;
-import org.geocrowd.common.crowdsource.GenericWorker;
+import org.geocrowd.common.crowd.GenericTask;
+import org.geocrowd.common.crowd.GenericWorker;
 import org.geocrowd.common.utils.Utils;
-import org.geocrowd.datasets.Parser;
+import org.geocrowd.datasets.synthetic.Parser;
 import org.geocrowd.maxcover.MaxCover;
 import org.geocrowd.maxcover.MaxCoverAdapt;
 import org.geocrowd.maxcover.MaxCoverAdaptS;
@@ -96,8 +96,8 @@ public class OnlineMTC extends GeocrowdSensing {
 			int[] _workerCounts = new int[workerList.size()];
 			int i = 0;
 			for (GenericWorker w : workerList) {
-				if (workerCounts.containsKey(w.getUserID()))
-					_workerCounts[i++] = workerCounts.get(w.getUserID());
+				if (workerCounts.containsKey(w.getId()))
+					_workerCounts[i++] = workerCounts.get(w.getId());
 				else
 					_workerCounts[i++] = 0;
 			}
@@ -455,11 +455,11 @@ public class OnlineMTC extends GeocrowdSensing {
 	private void updateWorkerCounts(HashSet<Integer> assignedWorker) {
 		for (Integer i : assignedWorker) {
 			GenericWorker w = workerList.get(i);
-			if (workerCounts.containsKey(w.getUserID())) {
-				workerCounts.put(w.getUserID(),
-						workerCounts.get(w.getUserID()) + 1);
+			if (workerCounts.containsKey(w.getId())) {
+				workerCounts.put(w.getId(),
+						workerCounts.get(w.getId()) + 1);
 			} else {
-				workerCounts.put(w.getUserID(), 1);
+				workerCounts.put(w.getId(), 1);
 			}
 		}
 	}

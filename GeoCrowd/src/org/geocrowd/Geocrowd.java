@@ -27,8 +27,6 @@ import org.geocrowd.common.entropy.EntropyRecord;
 import org.geocrowd.common.entropy.EntropyUtility;
 import org.geocrowd.common.utils.Utils;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class GenericCrowd.
@@ -73,7 +71,7 @@ public abstract class Geocrowd {
 	public ArrayList<EntropyRecord> entropyList = new ArrayList();
 
 	/** The data set. */
-	public static DatasetEnum DATA_SET = DatasetEnum.SKEWED;
+	public static DatasetEnum DATA_SET = DatasetEnum.SCALE;
 
 	/** The algorithm. */
 	public static AlgorithmEnum algorithm = AlgorithmEnum.BASIC;

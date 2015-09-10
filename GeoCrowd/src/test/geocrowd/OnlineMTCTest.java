@@ -30,7 +30,7 @@ public class OnlineMTCTest {
 	static Logger logger = Logger.getLogger(OnlineMTCTest.class.getName());
 
 	public static void main(String[] args) throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		Geocrowd.DATA_SET = DatasetEnum.SCALE;
 		GeocrowdSensingConstants.TIME_INSTANCE = 28;
 		// overloading();
 
@@ -40,10 +40,10 @@ public class OnlineMTCTest {
 		// double radius = 5.0;
 		// int start_time = 0;
 		// workload_vary_budget(radius, budgets);
-		double[] radii = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		int totalBudget = 56;
+//		double[] radii = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+//		int totalBudget = 56;
 		// start_time = 0;
-		workload_vary_radius(radii, totalBudget);
+//		workload_vary_radius(radii, totalBudget);
 
 		// int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 		// radius = 5.0;
@@ -304,7 +304,7 @@ public class OnlineMTCTest {
 		int[][] coveredTasks = new int[budgets.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[budgets.length][algorithms.length + 2];
 
-		int times = 16;
+		int times = 8;
 		for (int t = 0; t < times; t++) {
 			int start_time = 0 + t * GeocrowdSensingConstants.TIME_INSTANCE;
 			for (int b = 0; b < budgets.length; b++) {
@@ -958,7 +958,7 @@ public class OnlineMTCTest {
 		Constants.alpha = 0.2;
 		System.out.println("Radius = " + GeocrowdSensingConstants.TASK_RADIUS);
 
-		int times = 8;
+		int times = 1;
 		for (int t = 0; t < times; t++) {
 			int next_time_period = 0 + t * GeocrowdSensingConstants.TIME_INSTANCE;
 			for (int b = 0; b < budgets.length; b++) {
@@ -1084,7 +1084,7 @@ public class OnlineMTCTest {
 		double alpha = 0.2;
 		System.out.println("Budget = " + totalBudget);
 
-		int times = 8;
+		int times = 1;
 		for (int t = 0; t < times; t++) {
 			int next_time_period = 0 + t * GeocrowdSensingConstants.TIME_INSTANCE;
 			for (int d = 0; d < delta.length; d++) {
@@ -1182,7 +1182,7 @@ public class OnlineMTCTest {
 	
 	@Test
 	public void testLocalVaryRadius() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		Geocrowd.DATA_SET = DatasetEnum.SCALE;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -1193,20 +1193,21 @@ public class OnlineMTCTest {
 		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
 
-		double[] radii = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		double[] radii = new double[] { 1, 10, 20 };
 		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
 		double[][] coveredUtility = new double[radii.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
 
-		GeocrowdSensingConstants.TIME_INSTANCE = 24;
-		int totalBudget = 48;
+		GeocrowdSensingConstants.TIME_INSTANCE = 14;
+		int totalBudget = 28;
 		double alpha = 0.2;
 		System.out.println("Budget = " + totalBudget);
 
-		int times = 8;
+		int times = 1;
 		for (int t = 0; t < times; t++) {
 			int next_time_period = 0 + t * GeocrowdSensingConstants.TIME_INSTANCE;
 			for (int r = 0; r < radii.length; r++) {
+				System.out.println(r);
 				GeocrowdSensingConstants.TASK_RADIUS = radii[r];
 				// computeHistoryBudgets(true, totalBudget, 0);
 				int fixed_offline_cov = Geocrowd.TotalAssignedTasks;

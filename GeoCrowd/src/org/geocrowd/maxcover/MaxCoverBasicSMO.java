@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.geocrowd.Constants;
-import org.geocrowd.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Problem;
@@ -214,9 +214,9 @@ public class MaxCoverBasicSMO extends MaxCover implements Problem {
 			System.out.println(coverage + "\t" + TTD);
 			// the smaller weight, the better
 			double weight = -Constants.alpha
-					* ((coverage + 0.0) / GeocrowdConstants.TaskNo)
+					* ((coverage + 0.0) / GeocrowdConstants.TASK_NUMBER)
 					+ (1 - Constants.alpha) * (TTD + 0.0)
-					/ (GeocrowdConstants.TaskDuration * budget);
+					/ (GeocrowdConstants.MAX_TASK_DURATION * budget);
 			if (weight < smallestWeight) {
 				smallestWeight = weight;
 				bestSol = i;

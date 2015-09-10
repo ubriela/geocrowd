@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.geocrowd.GeocrowdConstants;
+import org.geocrowd.Constants;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 
 /**
  * @author Luan
@@ -90,7 +91,7 @@ public class SetCoverGreedy_LargeWorkerFanout extends SetCoverGreedy {
 				 * cover any task that will not available in the next time instance
 				 */
 				if (noUncoveredTasks > maxNoUncoveredTask
-						&& (noUncoveredTasks >= GeocrowdConstants.M || containElementDeadAtNextTime(
+						&& (noUncoveredTasks >= Constants.M || containElementDeadAtNextTime(
 								s, currentTimeInstance))) 
 				{
 					maxNoUncoveredTask = noUncoveredTasks;
@@ -117,7 +118,7 @@ public class SetCoverGreedy_LargeWorkerFanout extends SetCoverGreedy {
 				if (!assignedTaskSet.contains(taskId)) {
 
 					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskId) - GeocrowdConstants.TaskDuration) + 1;
+							- (taskSet.get(taskId) - GeocrowdConstants.MAX_TASK_DURATION) + 1;
 					assignedTaskSet.add(taskId);
 				}
 			}

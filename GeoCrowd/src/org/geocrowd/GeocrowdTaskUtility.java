@@ -1,9 +1,14 @@
 package org.geocrowd;
 
+import org.geocrowd.common.crowd.ExpertTask;
+import org.geocrowd.common.crowd.ExpertWorker;
 import org.geocrowd.common.crowd.GenericTask;
 import org.geocrowd.common.crowd.GenericWorker;
 import org.geocrowd.common.crowd.SensingTask;
+import org.geocrowd.common.utils.TaskUtility;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.params.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdSensingConstants;
 
 /**
  * This class uses Mediator pattern to reduce communication complexity between multiple
@@ -15,7 +20,7 @@ import org.geocrowd.common.utils.Utils;
  * @author ubriela
  *
  */
-public class TaskUtility {
+public class GeocrowdTaskUtility {
 
 	/**
 	 * Euclidean distance between worker and task.
@@ -30,7 +35,7 @@ public class TaskUtility {
 			GenericWorker worker, GenericTask task) {
 		if (dataset == DatasetEnum.GOWALLA || dataset == DatasetEnum.YELP
 				|| dataset == DatasetEnum.FOURSQUARE)
-			return worker.distanceToTask(task);
+			return TaskUtility.distanceToTask(worker, task);
 
 		// not geographical coordinates
 		double distance = Math.sqrt((worker.getLat() - task.getLat())
@@ -52,29 +57,29 @@ public class TaskUtility {
 	public static double utility(DatasetEnum dataset, GenericWorker w,
 			SensingTask t) {
 		double dist = distanceWorkerTask(dataset, w, t);
-		if (GeocrowdConstants.UTILITY_FUNCTION == "zipf") {
+		if (Constants.UTILITY_FUNCTION == "zipf") {
 			int k = Math.max(
 					1,
-					(int) Math.floor(dist * GeocrowdConstants.ZIPF_STEPS
-							/ GeocrowdConstants.radius)); // rank
-			double val = Utils.zipf_pmf(GeocrowdConstants.ZIPF_STEPS, k,
-					GeocrowdConstants.s) * GeocrowdConstants.MU;
+					(int) Math.floor(dist * Constants.ZIPF_STEPS
+							/ GeocrowdSensingConstants.TASK_RADIUS)); // rank
+			double val = Utils.zipf_pmf(Constants.ZIPF_STEPS, k,
+					Constants.s) * Constants.MU;
 			// System.out.println(k);
 			// System.out.println(val);
 			return val;
 		}
 
-		if (GeocrowdConstants.UTILITY_FUNCTION == "linear") {
+		if (Constants.UTILITY_FUNCTION == "linear") {
 			// System.out.println(dist);
-			return Math.max(0, (1 - (dist + 0.0) / GeocrowdConstants.radius)
-					* GeocrowdConstants.MU);
+			return Math.max(0, (1 - (dist + 0.0) / GeocrowdSensingConstants.TASK_RADIUS)
+					* Constants.MU);
 		}
 
-		if (GeocrowdConstants.UTILITY_FUNCTION == "const") {
-			return GeocrowdConstants.MU;
+		if (Constants.UTILITY_FUNCTION == "const") {
+			return Constants.MU;
 		}
 
-		return GeocrowdConstants.MU;
+		return Constants.MU;
 	}
 
 }

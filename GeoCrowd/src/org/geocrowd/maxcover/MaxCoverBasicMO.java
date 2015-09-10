@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 
 import org.geocrowd.Constants;
-import org.geocrowd.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 import org.geocrowd.dtype.CoverageIndex;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
@@ -220,7 +220,7 @@ public class MaxCoverBasicMO extends MaxCover implements Problem {
 			// the smaller weight, the better
 //			System.out.println("here");
 			double weight = Constants.alpha
-					* ((coverage + 0.0) / GeocrowdConstants.TaskNo)
+					* ((coverage + 0.0) / GeocrowdConstants.TASK_NUMBER)
 					- (1 - Constants.alpha) * (maxAssign + 0.0)
 					/ currentTimeInstance;
 			if (weight > largestWeight) {

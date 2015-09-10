@@ -15,11 +15,11 @@
 package test.geocrowd;
 
 import org.geocrowd.AlgorithmEnum;
-import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.GeocrowdSensing;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 import org.junit.Test;
 
 // TODO: Auto-generated Javadoc
@@ -63,7 +63,7 @@ public class CrowdsensingTest {
 				avgWT += crowdsensing.avgWT;
 
 				/** populate virtual workers */
-				if (GeocrowdConstants.K != 1)
+				if (GeocrowdConstants.MAX_TASK_REQUIREMENT != 1)
 					if (Geocrowd.algorithm != AlgorithmEnum.GREEDY_HIGH_TASK_COVERAGE_MULTI
 					&& Geocrowd.algorithm != AlgorithmEnum.GREEDY_LARGE_WORKER_FANOUT_MULTI
 					&& Geocrowd.algorithm != AlgorithmEnum.GREEDY_CLOSE_TO_DEADLINE_MULTI)

@@ -29,10 +29,13 @@ import org.geocrowd.common.crowd.TaskFactory;
 import org.geocrowd.common.crowd.WorkerFactory;
 import org.geocrowd.common.crowd.WorkingRegion;
 import org.geocrowd.common.entropy.EntropyRecord;
+import org.geocrowd.common.utils.TaskUtility;
+import org.geocrowd.common.utils.Utils;
 import org.geocrowd.cplex.BPMatchingCplex;
 import org.geocrowd.dtype.Cell;
 import org.geocrowd.dtype.Point;
 import org.geocrowd.dtype.Range;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 import org.geocrowd.datasets.params.GowallaConstants;
 import org.geocrowd.datasets.synthesis.gowalla.GowallaProcessor;
 import org.geocrowd.datasets.synthetic.Parser;
@@ -76,8 +79,8 @@ public class GeocrowdInstance extends Geocrowd {
 	 * Instantiates a new geocrowd.
 	 */
 	public GeocrowdInstance() {
-		GowallaProcessor prep = new GowallaProcessor();
-		GowallaProcessor.DATA_SET = DATA_SET;
+		GowallaProcessor prep = new GowallaProcessor(20, WorkerType.EXPERT,
+				TaskType.EXPERT, TaskCategoryEnum.RANDOM);
 		prep.readBoundary();
 		minLatitude = GowallaProcessor.minLat;
 		maxLatitude = GowallaProcessor.maxLat;
@@ -113,7 +116,7 @@ public class GeocrowdInstance extends Geocrowd {
 	 * @return the double
 	 */
 	private double computeScore(ExpertWorker w, ExpertTask t) {
-		if (w.isExactMatch(t))
+		if (TaskUtility.isExactMatch(w, t))
 			return Constants.EXPERTISE_MATCH_SCORE;
 		else
 			return Constants.NON_EXPERTISE_MATCH_SCORE;
@@ -130,18 +133,18 @@ public class GeocrowdInstance extends Geocrowd {
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
-			for (int i = 0; i < GeocrowdConstants.TaskNo; i++) {
+			for (int i = 0; i < GeocrowdConstants.TASK_NUMBER; i++) {
 				double lat = UniformGenerator.randomValue(new Range(
 						minLatitude, maxLatitude), false);
 				double lng = UniformGenerator.randomValue(new Range(
 						minLongitude, maxLongitude), false);
 				// printBoundaries();
 				// System.out.println(lat + " " + lng);
-				int taskCategory = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.TaskCategoryNo), true);
-				ExpertTask t = (ExpertTask) TaskFactory.getTask(TaskType.EXPERT);
-				t.setLat(lat);
-				t.setLng(lng);
+				int taskCategory = (int) UniformGenerator.randomValue(
+						new Range(0, GeocrowdConstants.TASK_CATEGORY_NUMBER),
+						true);
+				ExpertTask t = (ExpertTask) TaskFactory.getTask(
+						TaskType.EXPERT, lat, lng);
 				t.setArrivalTime(TimeInstance);
 				t.setEntropy(-1);
 				t.setCategory(taskCategory);
@@ -151,7 +154,7 @@ public class GeocrowdInstance extends Geocrowd {
 				listCount++;
 
 			}
-			TaskCount += GeocrowdConstants.TaskNo;
+			TaskCount += GeocrowdConstants.TASK_NUMBER;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
@@ -170,9 +173,10 @@ public class GeocrowdInstance extends Geocrowd {
 	 */
 	public void generateWorkersRandomMBR(String fileName) {
 		workerList = new ArrayList();
-		double maxRangeX = (maxLatitude - minLatitude) * GeocrowdConstants.MaxRangePerc;
+		double maxRangeX = (maxLatitude - minLatitude)
+				* GeocrowdConstants.MAX_WORKING_REGION;
 		double maxRangeY = (maxLongitude - minLongitude)
-				* GeocrowdConstants.MaxRangePerc;
+				* GeocrowdConstants.MAX_WORKING_REGION;
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
@@ -202,19 +206,19 @@ public class GeocrowdInstance extends Geocrowd {
 				double lng = UniformGenerator.randomValue(new Range(startLng,
 						endLng), false);
 				int maxT = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.MaxTasksPerWorker), true) + 1;
+						GeocrowdConstants.MAX_WORKER_CAPACITY), true) + 1;
 				double rangeX = UniformGenerator.randomValue(new Range(0,
 						maxRangeX), false);
 				double rangeY = UniformGenerator.randomValue(new Range(0,
 						maxRangeY), false);
-				WorkingRegion mbr = WorkingRegion.createMBR(lat, lng, rangeX, rangeY);
+				WorkingRegion mbr = WorkingRegion.createMBR(lat, lng, rangeX,
+						rangeY);
 				checkBoundaryMBR(mbr);
 				int exp = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.TaskCategoryNo), true);
-				ExpertWorker w = (ExpertWorker) WorkerFactory.getWorker(WorkerType.EXPERT);
+						GeocrowdConstants.TASK_CATEGORY_NUMBER), true);
+				ExpertWorker w = (ExpertWorker) WorkerFactory.getWorker(
+						WorkerType.EXPERT, lat, lng);
 				w.setId("dump");
-				w.setLat(lat);
-				w.setLng(lng);
 				w.setCapacity(maxT);
 				w.setMbr(mbr);
 				w.addExpertise(exp);
@@ -397,22 +401,23 @@ public class GeocrowdInstance extends Geocrowd {
 			int w = 0; // physical worker
 			int numWorker = 0; // logical worker
 			for (ArrayList<Integer> tasks : containerWorker) {
-				ExpertWorker worker = (ExpertWorker) workerList
-						.get(w);
+				ExpertWorker worker = (ExpertWorker) workerList.get(w);
 				if (tasks != null) {
 					for (int i = 0; i < worker.getCapacity(); i++) {
 						for (int t : tasks) {
-							mapColToMatch.put(var++,
-									new WTMatch(numWorker, t));
+							mapColToMatch.put(var++, new WTMatch(numWorker, t));
 							switch (algorithm) {
 							case LLEP:
 								objectiveCoeff.add(computeCost(taskList
 										.get(candidateTaskIndices.get(t))));
 								break;
 							case NNP:
-								objectiveCoeff.add(TaskUtility.distanceWorkerTask(DATA_SET, worker,
-										taskList.get(candidateTaskIndices
-												.get(t))));
+								objectiveCoeff
+										.add(GeocrowdTaskUtility.distanceWorkerTask(
+												DATA_SET,
+												worker,
+												taskList.get(candidateTaskIndices
+														.get(t))));
 								break;
 							}
 							matchingCoeff.add(computeScore(worker,
@@ -442,12 +447,13 @@ public class GeocrowdInstance extends Geocrowd {
 				ExpertTask task = (ExpertTask) taskList
 						.get(candidateTaskIndices.get(pair.getT()));
 				double score = computeScore(worker, task);
-				totalDistance += TaskUtility.distanceWorkerTask(DATA_SET, worker, task);
+				totalDistance += GeocrowdTaskUtility.distanceWorkerTask(
+						DATA_SET, worker, task);
 				_totalScore += score;
 				// if (score == Constants.EXACT_MATCH_SCORE)
 				// totalTasksExactMatch++;
 				// exact match?
-				if (worker.isExactMatch(task))
+				if (TaskUtility.isExactMatch(worker, task))
 					totalTasksExactMatch++;
 			}
 			totalTasksAssigned = taskAssigned.size();
@@ -480,9 +486,10 @@ public class GeocrowdInstance extends Geocrowd {
 								.get(logicalWorkerToWorker.get(r[i]));
 						ExpertTask task = (ExpertTask) taskList
 								.get(candidateTaskIndices.get(i));
-						totalDistance += TaskUtility.distanceWorkerTask(DATA_SET, worker, task);
+						totalDistance += GeocrowdTaskUtility
+								.distanceWorkerTask(DATA_SET, worker, task);
 						// exact match?
-						if (worker.isExactMatch(task))
+						if (TaskUtility.isExactMatch(worker, task))
 							totalTasksExactMatch++;
 					} else {
 						solvedTasks.add(candidateTaskIndices.get(r[i]));
@@ -490,9 +497,10 @@ public class GeocrowdInstance extends Geocrowd {
 								.get(logicalWorkerToWorker.get(i));
 						ExpertTask task = (ExpertTask) taskList
 								.get(candidateTaskIndices.get(r[i]));
-						totalDistance += TaskUtility.distanceWorkerTask(DATA_SET, worker, task);
+						totalDistance += GeocrowdTaskUtility
+								.distanceWorkerTask(DATA_SET, worker, task);
 						// exact match?
-						if (worker.isExactMatch(task))
+						if (TaskUtility.isExactMatch(worker, task))
 							totalTasksExactMatch++;
 					}
 				}
@@ -746,14 +754,14 @@ public class GeocrowdInstance extends Geocrowd {
 			ExpertTask task = (ExpertTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getArrivalTime()) >= GeocrowdConstants.TaskDuration) {
+			if ((TimeInstance - task.getArrivalTime()) >= GeocrowdConstants.MAX_TASK_DURATION) {
 				task.setExpired();
 			} else
 
 			/**
 			 * if the task is not assigned and in the worker's working region
 			 */
-			if (task.isCoveredBy(w.getMbr())) {
+			if (TaskUtility.isTaskCoveredBy(task, w.getMbr())) {
 
 				if (!taskSet.contains(t)) {
 					candidateTaskIndices.add(t);
@@ -790,7 +798,8 @@ public class GeocrowdInstance extends Geocrowd {
 		try {
 			allTasks = new ArrayList();
 			HashMap HashMap = new HashMap();
-			FileReader reader = new FileReader(GowallaConstants.gowallaFileName_CA);
+			FileReader reader = new FileReader(
+					GowallaConstants.gowallaFileName_CA);
 			BufferedReader in = new BufferedReader(reader);
 			int cnt = 0;
 			while (in.ready()) {
@@ -842,11 +851,11 @@ public class GeocrowdInstance extends Geocrowd {
 			for (int i = 0; i < allTasks.size(); i++) {
 				double[] loc = allTasks.get(i);
 				int time = TimeInstance;
-				int taskCategory = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.TaskCategoryNo), true);
-				ExpertTask t = (ExpertTask) TaskFactory.getTask(TaskType.EXPERT);
-				t.setLat(loc[0]);
-				t.setLng(loc[1]);
+				int taskCategory = (int) UniformGenerator.randomValue(
+						new Range(0, GeocrowdConstants.TASK_CATEGORY_NUMBER),
+						true);
+				ExpertTask t = (ExpertTask) TaskFactory.getTask(
+						TaskType.EXPERT, loc[0], loc[1]);
 				t.setArrivalTime(TimeInstance);
 				t.setEntropy(-1);
 				t.setCategory(taskCategory);
@@ -875,7 +884,7 @@ public class GeocrowdInstance extends Geocrowd {
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
-			for (int i = 0; i < GeocrowdConstants.TaskNo; i++) {
+			for (int i = 0; i < GeocrowdConstants.TASK_NUMBER; i++) {
 				int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
 						entropyList.size()), true);
 				EntropyRecord dR = entropyList.get(randomIdx);
@@ -890,21 +899,21 @@ public class GeocrowdInstance extends Geocrowd {
 				double endLng = colToLng(col + 1);
 				double lng = UniformGenerator.randomValue(new Range(startLng,
 						endLng), false);
-				int taskCategory = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.TaskCategoryNo), true);
-				ExpertTask t = (ExpertTask) TaskFactory.getTask(TaskType.EXPERT);
-				t.setLat(lat);
-				t.setLng(lng);
+				int taskCategory = (int) UniformGenerator.randomValue(
+						new Range(0, GeocrowdConstants.TASK_CATEGORY_NUMBER),
+						true);
+				ExpertTask t = (ExpertTask) TaskFactory.getTask(
+						TaskType.EXPERT, lat, lng);
 				t.setArrivalTime(TimeInstance);
 				t.setEntropy(dR.getEntropy());
 				t.setCategory(taskCategory);
-				
-				out.write(lat + "," + lng + "," + time + "," + dR.getEntropy() + ","
-						+ taskCategory + "\n");
+
+				out.write(lat + "," + lng + "," + time + "," + dR.getEntropy()
+						+ "," + taskCategory + "\n");
 				taskList.add(listCount, t);
 				listCount++;
 			}
-			TaskCount += GeocrowdConstants.TaskNo;
+			TaskCount += GeocrowdConstants.TASK_NUMBER;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
@@ -930,11 +939,11 @@ public class GeocrowdInstance extends Geocrowd {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
-				
+
 				int row = 0;
 				int col = 0;
 				int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
-					entropyList.size() - 1), true);
+						entropyList.size() - 1), true);
 				EntropyRecord dR = entropyList.get(randomIdx);
 				row = dR.getCoord().getRowId();
 				col = dR.getCoord().getColId();
@@ -951,31 +960,31 @@ public class GeocrowdInstance extends Geocrowd {
 				double lng = UniformGenerator.randomValue(new Range(startLng,
 						endLng), false);
 
-				
 				int time = TimeInstance;
-				int taskCategory = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.TaskCategoryNo), true);
-				ExpertTask t = (ExpertTask) TaskFactory.getTask(TaskType.EXPERT);
-				t.setLat(lat);
-				t.setLng(lng);
+				int taskCategory = (int) UniformGenerator.randomValue(
+						new Range(0, GeocrowdConstants.TASK_CATEGORY_NUMBER),
+						true);
+				ExpertTask t = (ExpertTask) TaskFactory.getTask(
+						TaskType.EXPERT, lat, lng);
 				t.setArrivalTime(TimeInstance);
 				t.setEntropy(dR.getEntropy());
 				t.setCategory(taskCategory);
 
-				out.write(lat + "," + lng + "," + time + "," + dR.getEntropy() + ","
-						+ taskCategory + "\n");
+				out.write(lat + "," + lng + "," + time + "," + dR.getEntropy()
+						+ "," + taskCategory + "\n");
 				taskList.add(listCount, t);
 				listCount++;
 			}
 			TaskCount += numTask;
-//			System.out.println("#Total tasks:" + TaskCount);
+			// System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void readTasksFoursquare(int numTask, String fileName, ArrayList<Point> venues) {
+
+	public void readTasksFoursquare(int numTask, String fileName,
+			ArrayList<Point> venues) {
 		int listCount = taskList.size();
 		try {
 			/*
@@ -987,44 +996,45 @@ public class GeocrowdInstance extends Geocrowd {
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
-				
+
 				int taskid = (int) UniformGenerator.randomValue(new Range(0,
 						venues.size() - 1), true);
 
 				// generate a task inside this cell
 
-//				double startLat = minLatitude;
-//				double endLat = maxLatitude;
-//				double lat = UniformGenerator.randomValue(new Range(startLat,
-//						endLat), false);
-//
-//				double startLng = minLongitude;
-//				double endLng = maxLongitude;
-//				double lng = UniformGenerator.randomValue(new Range(startLng,
-//						endLng), false);
-				
+				// double startLat = minLatitude;
+				// double endLat = maxLatitude;
+				// double lat = UniformGenerator.randomValue(new Range(startLat,
+				// endLat), false);
+				//
+				// double startLng = minLongitude;
+				// double endLng = maxLongitude;
+				// double lng = UniformGenerator.randomValue(new Range(startLng,
+				// endLng), false);
+
 				int time = TimeInstance;
-				int taskCategory = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.TaskCategoryNo), true);
-				ExpertTask t = (ExpertTask) TaskFactory.getTask(TaskType.EXPERT);
-				t.setLat(venues.get(taskid).getX());
-				t.setLng(venues.get(taskid).getY());
+				int taskCategory = (int) UniformGenerator.randomValue(
+						new Range(0, GeocrowdConstants.TASK_CATEGORY_NUMBER),
+						true);
+				ExpertTask t = (ExpertTask) TaskFactory.getTask(
+						TaskType.EXPERT, venues.get(taskid).getX(),
+						venues.get(taskid).getY());
 				t.setArrivalTime(TimeInstance);
 				t.setEntropy(0);
 				t.setCategory(taskCategory);
-				
-				out.write(t.getLat() + "," + t.getLng() + "," + time + "," + t.getEntropy() + ","
-						+ taskCategory + "\n");
+
+				out.write(t.getLat() + "," + t.getLng() + "," + time + ","
+						+ t.getEntropy() + "," + taskCategory + "\n");
 				taskList.add(listCount, t);
 				listCount++;
 			}
 			TaskCount += numTask;
-//			System.out.println("#Total tasks:" + TaskCount);
+			// System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
@@ -1041,8 +1051,8 @@ public class GeocrowdInstance extends Geocrowd {
 			 * calculate #tasks will be generated
 			 */
 			time++;
-			int numTask = (int) (GeocrowdConstants.TaskNo + Math.pow(-1, time)
-					* GeocrowdConstants.TaskNo * 2 / 3);
+			int numTask = (int) (GeocrowdConstants.TASK_NUMBER + Math.pow(-1,
+					time) * GeocrowdConstants.TASK_NUMBER * 2 / 3);
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
@@ -1060,20 +1070,20 @@ public class GeocrowdInstance extends Geocrowd {
 				double endLng = colToLng(col + 1);
 				double lng = UniformGenerator.randomValue(new Range(startLng,
 						endLng), false);
-				int taskCategory = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.TaskCategoryNo), true);
-				ExpertTask t = (ExpertTask) TaskFactory.getTask(TaskType.EXPERT);
-				t.setLat(lat);
-				t.setLng(lng);
+				int taskCategory = (int) UniformGenerator.randomValue(
+						new Range(0, GeocrowdConstants.TASK_CATEGORY_NUMBER),
+						true);
+				ExpertTask t = (ExpertTask) TaskFactory
+						.getTask(TaskType.EXPERT, lat, lng);
 				t.setArrivalTime(TimeInstance);
 				t.setEntropy(dR.getEntropy());
 				t.setCategory(taskCategory);
-				out.write(lat + "," + lng + "," + time + "," + dR.getEntropy() + ","
-						+ taskCategory + "\n");
+				out.write(lat + "," + lng + "," + time + "," + dR.getEntropy()
+						+ "," + taskCategory + "\n");
 				taskList.add(listCount, t);
 				listCount++;
 			}
-			TaskCount += GeocrowdConstants.TaskNo;
+			TaskCount += GeocrowdConstants.TASK_NUMBER;
 			System.out.println("#Total tasks:" + TaskCount);
 			out.close();
 		} catch (IOException e) {
@@ -1104,9 +1114,10 @@ public class GeocrowdInstance extends Geocrowd {
 	 */
 	public void readWorkersRandomMBR(String fileName) {
 		workerList = new ArrayList();
-		double maxRangeX = (maxLatitude - minLatitude) * GeocrowdConstants.MaxRangePerc;
+		double maxRangeX = (maxLatitude - minLatitude)
+				* GeocrowdConstants.MAX_WORKING_REGION;
 		double maxRangeY = (maxLongitude - minLongitude)
-				* GeocrowdConstants.MaxRangePerc;
+				* GeocrowdConstants.MAX_WORKING_REGION;
 		int cnt = 0;
 		try {
 			FileReader reader = new FileReader(fileName);
@@ -1118,19 +1129,19 @@ public class GeocrowdInstance extends Geocrowd {
 				line = line.replace("]", "");
 				String[] parts = line.split(",");
 				int maxT = (int) UniformGenerator.randomValue(new Range(0,
-						GeocrowdConstants.MaxTasksPerWorker), true);
+						GeocrowdConstants.MAX_WORKER_CAPACITY), true);
 				double rangeX = UniformGenerator.randomValue(new Range(0,
 						maxRangeX), false);
 				double rangeY = UniformGenerator.randomValue(new Range(0,
 						maxRangeY), false);
 				int exp = Integer.parseInt(parts[4]);
-				
-				ExpertWorker w = (ExpertWorker) WorkerFactory.getWorker(WorkerType.EXPERT);
+
+				ExpertWorker w = (ExpertWorker) WorkerFactory
+						.getWorker(WorkerType.EXPERT, Double.parseDouble(parts[2]), Double.parseDouble(parts[3]));
 				w.setId(parts[0]);
-				w.setLat(Double.parseDouble(parts[2]));
-				w.setLng(Double.parseDouble(parts[3]));
 				w.setCapacity(maxT);
-				WorkingRegion mbr = WorkingRegion.createMBR(w.getLat(), w.getLng(), rangeX, rangeY);
+				WorkingRegion mbr = WorkingRegion.createMBR(w.getLat(),
+						w.getLng(), rangeX, rangeY);
 				checkBoundaryMBR(mbr);
 				w.setMbr(mbr);
 				w.addExpertise(exp);

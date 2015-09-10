@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.geocrowd.Constants;
-import org.geocrowd.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -110,7 +110,7 @@ public class MaxCoverBasicT2 extends MaxCover {
 			for (Integer taskId : taskSet.keySet()) {
 				if (!assignedTaskSet.contains(taskId)) {
 					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskId) - GeocrowdConstants.TaskDuration)
+							- (taskSet.get(taskId) - GeocrowdConstants.MAX_TASK_DURATION)
 							+ 1;
 					assignedTaskSet.add(taskId);
 				}

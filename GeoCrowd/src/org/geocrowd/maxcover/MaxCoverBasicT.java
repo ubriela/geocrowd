@@ -23,12 +23,12 @@ import java.util.HashSet;
 
 import org.geocrowd.Constants;
 import org.geocrowd.Geocrowd;
-import org.geocrowd.GeocrowdConstants;
-import org.geocrowd.TaskUtility;
+import org.geocrowd.GeocrowdTaskUtility;
 import org.geocrowd.common.crowd.GenericWorker;
 import org.geocrowd.common.crowd.SensingTask;
 import org.geocrowd.common.crowd.SensingWorker;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -117,7 +117,7 @@ public class MaxCoverBasicT extends MaxCover {
 			for (Integer taskId : taskSet.keySet()) {
 				if (!assignedTaskSet.contains(taskId)) {
 					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskId) - GeocrowdConstants.TaskDuration)
+							- (taskSet.get(taskId) - GeocrowdConstants.MAX_TASK_DURATION)
 							+ 1;
 					assignedTaskSet.add(taskId);
 				}
@@ -159,7 +159,7 @@ public class MaxCoverBasicT extends MaxCover {
 				GenericWorker worker = workerList.get(workeridx);
 				SensingTask task = (SensingTask) taskList
 						.get(candidateTaskIndices.get(t));
-				double utility = TaskUtility.utility(Geocrowd.DATA_SET, worker, task);
+				double utility = GeocrowdTaskUtility.utility(Geocrowd.DATA_SET, worker, task);
 				uncoveredUtility += utility;
 				totalElapsedTime += utility/(1 + elapsedTime);
 			}
@@ -195,7 +195,7 @@ public class MaxCoverBasicT extends MaxCover {
 		/**
 		 * average time to deadline of new covered task
 		 */
-		double weight = alpha*totalElapsedTime / (GeocrowdConstants.TaskDuration*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks;
+		double weight = alpha*totalElapsedTime / (GeocrowdConstants.MAX_TASK_DURATION*uncoveredTasks) - (1-alpha) * uncoveredTasks/maxNoUncoveredTasks;
 		return new WeightGain(weight, uncoveredTasks);
 	}
 	

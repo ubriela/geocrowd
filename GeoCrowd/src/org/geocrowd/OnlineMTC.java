@@ -14,6 +14,7 @@ import static org.geocrowd.Geocrowd.taskList;
 import org.geocrowd.common.crowd.GenericTask;
 import org.geocrowd.common.crowd.GenericWorker;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 import org.geocrowd.datasets.synthetic.Parser;
 import org.geocrowd.maxcover.MaxCover;
 import org.geocrowd.maxcover.MaxCoverAdapt;

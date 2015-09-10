@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.geocrowd.Constants;
 import org.geocrowd.Geocrowd;
-import org.geocrowd.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 
 /**
  * @author Hien To
@@ -85,7 +86,7 @@ public class MultiSetCoverGreedy_LargeWorkerFanout extends MultiSetCoverGreedy {
 				for (Integer i : s.keySet()) {
 					if (assignedTaskMap.get(i) == null
 							|| assignedTaskMap.get(i) < Geocrowd.taskList
-									.get(i).getK()) {
+									.get(i).getRequirement()) {
 						uncoveredTasks++;
 					}
 				}
@@ -96,7 +97,7 @@ public class MultiSetCoverGreedy_LargeWorkerFanout extends MultiSetCoverGreedy {
 				 * cover any task that will not available in the next time instance
 				 */
 				if (uncoveredTasks > maxUncoveredTasks
-						&& (uncoveredTasks >= GeocrowdConstants.M || containElementDeadAtNextTime(
+						&& (uncoveredTasks >= Constants.M || containElementDeadAtNextTime(
 								s, currentTimeInstance))) {
 					maxUncoveredTasks = uncoveredTasks;
 					bestWorkerIndex = k;
@@ -129,7 +130,7 @@ public class MultiSetCoverGreedy_LargeWorkerFanout extends MultiSetCoverGreedy {
 				if (!assignedTaskSet.contains(taskidx)) {
 
 					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskidx) - GeocrowdConstants.TaskDuration)
+							- (taskSet.get(taskidx) - GeocrowdConstants.MAX_TASK_DURATION)
 							+ 1;
 					assignedTaskSet.add(taskidx);
 				}

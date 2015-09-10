@@ -9,9 +9,9 @@ import java.util.HashSet;
 import org.apache.log4j.Logger;
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.Geocrowd;
-import org.geocrowd.GeocrowdConstants;
 import org.geocrowd.OfflineMTC;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.params.GeocrowdSensingConstants;
 
 public class OfflineMTCTest {
 	static Logger logger = Logger.getLogger(OnlineMTCTest.class.getName());
@@ -44,7 +44,7 @@ public class OfflineMTCTest {
 		
 		for (int t = 0; t < times; t++) {
 			int next_time_period = starttime + t
-					* GeocrowdConstants.TIME_INSTANCE;
+					* GeocrowdSensingConstants.TIME_INSTANCE;
 
 			for (int r = 0; r < radii.length; r++)
 				for (int fix = 0; fix < isFixes.length; fix++) {
@@ -52,10 +52,10 @@ public class OfflineMTCTest {
 					OfflineMTC offlineMTC = new OfflineMTC();
 					offlineMTC.isFixed = isFixes[fix];
 					offlineMTC.budget = budget;
-					GeocrowdConstants.radius = radii[r];
+					GeocrowdSensingConstants.TASK_RADIUS = radii[r];
 					offlineMTC.reset();
 
-					for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
+					for (int i = 0; i < GeocrowdSensingConstants.TIME_INSTANCE; i++) {
 						int next_time = next_time_period + i;
 						offlineMTC.readWorkloadTasks(
 								Utils.datasetToTaskPath(Geocrowd.DATA_SET)
@@ -120,7 +120,7 @@ public class OfflineMTCTest {
 		for (int t = 0; t < times; t++) {
 
 			int next_time_period = starttime + t
-					* GeocrowdConstants.TIME_INSTANCE;
+					* GeocrowdSensingConstants.TIME_INSTANCE;
 
 			for (int d = 0; d < delta.length; d++)
 				for (int fix = 0; fix < isFixes.length; fix++) {
@@ -128,10 +128,10 @@ public class OfflineMTCTest {
 					OfflineMTC offlineMTC = new OfflineMTC();
 					offlineMTC.isFixed = isFixes[fix];
 					offlineMTC.budget = budget;
-					GeocrowdConstants.TaskDuration = delta[d];
+					GeocrowdSensingConstants.MAX_TASK_DURATION = delta[d];
 					offlineMTC.reset();
 
-					for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
+					for (int i = 0; i < GeocrowdSensingConstants.TIME_INSTANCE; i++) {
 						int next_time = next_time_period + i;
 						offlineMTC.readWorkloadTasks(
 								Utils.datasetToTaskPath(Geocrowd.DATA_SET)
@@ -195,10 +195,10 @@ public class OfflineMTCTest {
 		int[][] assignedWorkers = new int[budgets.length][isFixes.length];
 		
 		for (int t = 0; t < times; t++) {
-			GeocrowdConstants.radius = radius;
+			GeocrowdSensingConstants.TASK_RADIUS = radius;
 
 			int next_time_period = starttime + t
-					* GeocrowdConstants.TIME_INSTANCE;
+					* GeocrowdSensingConstants.TIME_INSTANCE;
 
 			for (int b = 0; b < budgets.length; b++)
 				for (int fix = 0; fix < isFixes.length; fix++) {
@@ -207,7 +207,7 @@ public class OfflineMTCTest {
 					offlineMTC.budget = budgets[b];
 					offlineMTC.reset();
 
-					for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
+					for (int i = 0; i < GeocrowdSensingConstants.TIME_INSTANCE; i++) {
 						int next_time = next_time_period + i;
 						offlineMTC.readWorkloadTasks(
 								Utils.datasetToTaskPath(Geocrowd.DATA_SET)

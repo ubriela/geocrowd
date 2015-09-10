@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
-import org.geocrowd.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 
 /**
  * Change the stopping condition of max cover problem.
@@ -118,7 +118,7 @@ public class MaxCoverAdaptT extends MaxCoverBasicT {
 				if (!assignedTaskSet.contains(taskidx)) {
 
 					averageDelayTime += currentTimeInstance
-							- (taskSet.get(taskidx) - GeocrowdConstants.TaskDuration)
+							- (taskSet.get(taskidx) - GeocrowdConstants.MAX_TASK_DURATION)
 							+ 1;
 					assignedTaskSet.add(taskidx);
 				}

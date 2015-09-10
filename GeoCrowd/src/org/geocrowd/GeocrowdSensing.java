@@ -43,6 +43,7 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.PrimitiveSink;
 
+import org.geocrowd.datasets.params.GeocrowdConstants;
 import org.geocrowd.datasets.synthetic.Parser;
 
 // TODO: Auto-generated Javadoc
@@ -89,7 +90,7 @@ public class GeocrowdSensing extends Geocrowd {
 				Integer taskid = (Integer) it2.next();
 				taskidsWithDeadline.put(taskid,
 						taskList.get(candidateTaskIndices.get(taskid))
-								.getArrivalTime() + GeocrowdConstants.TaskDuration);
+								.getArrivalTime() + GeocrowdConstants.MAX_TASK_DURATION);
 			}
 			containerWithDeadline.add(taskidsWithDeadline);
 		}
@@ -149,9 +150,9 @@ public class GeocrowdSensing extends Geocrowd {
 
 	final Comparator<GenericTask> TASK_ORDER = new Comparator<GenericTask>() {
 		public int compare(GenericTask t1, GenericTask t2) {
-			if (t1.getK() > t2.getK()) {
+			if (t1.getRequirement() > t2.getRequirement()) {
 				return -1;
-			} else if (t1.getK() < t2.getK()) {
+			} else if (t1.getRequirement() < t2.getRequirement()) {
 				return 1;
 			} else {
 				int idx1 = taskList.indexOf(t1);
@@ -238,7 +239,7 @@ public class GeocrowdSensing extends Geocrowd {
 		for (final GenericTask t : sortedTaskList) {
 			// get workers cover task
 			int idx = mapTaskIndices.get(t);
-			System.out.println("#task = " + i++ + " #k=" + t.getK()
+			System.out.println("#task = " + i++ + " #k=" + t.getRequirement()
 					+ " $vworkers = " + vWorkerList.size());
 
 			ArrayList<Integer> workerIdxs = null;
@@ -252,7 +253,7 @@ public class GeocrowdSensing extends Geocrowd {
 			/**
 			 * remove tasks that are covered by less than k workers
 			 */
-			if (t.getK() > workerIdxs.size()) {
+			if (t.getRequirement() > workerIdxs.size()) {
 				continue;
 			}
 
@@ -261,8 +262,8 @@ public class GeocrowdSensing extends Geocrowd {
 			 * covered by the worker set of another traversed task of the same k
 			 */
 			boolean isContinue = false;
-			if (traversedTasks.containsKey(t.getK())) {
-				for (SensingTask st : traversedTasks.get(t.getK())) {
+			if (traversedTasks.containsKey(t.getRequirement())) {
+				for (SensingTask st : traversedTasks.get(t.getRequirement())) {
 					int idxj = mapTaskIndices.get(st);
 					ArrayList<Integer> workerIdxsj = null;
 					if (invertedContainer.containsKey(idxj)) {
@@ -276,9 +277,9 @@ public class GeocrowdSensing extends Geocrowd {
 					}
 				}
 
-				traversedTasks.get(t.getK()).add((SensingTask) t);
+				traversedTasks.get(t.getRequirement()).add((SensingTask) t);
 			} else {
-				traversedTasks.put(t.getK(), new ArrayList<SensingTask>() {
+				traversedTasks.put(t.getRequirement(), new ArrayList<SensingTask>() {
 					{
 						add((SensingTask) t);
 					}
@@ -302,7 +303,7 @@ public class GeocrowdSensing extends Geocrowd {
 			 * of the initial vector
 			 */
 			Generator<Integer> gen = Factory.createSimpleCombinationGenerator(
-					initialVector, t.getK());
+					initialVector, t.getRequirement());
 
 			long start = System.nanoTime();
 
@@ -364,7 +365,7 @@ public class GeocrowdSensing extends Geocrowd {
 				HashMap<Integer, Integer> tasksWithDeadlines = cwWithTaskDeadline
 						.get(j);
 				for (Integer t : tasksWithDeadlines.keySet()) {
-					int k = taskList.get(candidateTaskIndices.get(t)).getK();
+					int k = taskList.get(candidateTaskIndices.get(t)).getRequirement();
 					/**
 					 * Check if the virtual worker is qualified for this task
 					 */
@@ -641,12 +642,12 @@ public class GeocrowdSensing extends Geocrowd {
 			SensingTask task = (SensingTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getArrivalTime()) >= (GeocrowdConstants.TaskDuration)
+			if ((TimeInstance - task.getArrivalTime()) >= (GeocrowdConstants.MAX_TASK_DURATION)
 				) {
 				task.setExpired();
 			}
 			/* if worker in task region */
-			else if (TaskUtility.distanceWorkerTask(DATA_SET, w, task) <= task.getRadius()) {
+			else if (GeocrowdTaskUtility.distanceWorkerTask(DATA_SET, w, task) <= task.getRadius()) {
 
 				/* compute a list of candidate tasks */
 				if (!taskSet.contains(tid)) {

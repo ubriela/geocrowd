@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.geocrowd.Geocrowd;
-import org.geocrowd.GeocrowdConstants;
-import org.geocrowd.TaskUtility;
+import org.geocrowd.GeocrowdTaskUtility;
 
 import static org.geocrowd.Geocrowd.workerList;
 import static org.geocrowd.Geocrowd.taskList;
@@ -20,6 +19,7 @@ import static org.geocrowd.Geocrowd.candidateTaskIndices;
 import org.geocrowd.common.crowd.SensingTask;
 import org.geocrowd.common.crowd.SensingWorker;
 import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 
 /**
  * 
@@ -98,7 +98,7 @@ public class MaxCoverFixedOffline extends MaxCover {
 						// compute utility (w,task i)
 						SensingTask t = (SensingTask) taskList
 								.get(candidateTaskIndices.get(i));
-						double utility = TaskUtility.utility(Geocrowd.DATA_SET, w, t);
+						double utility = GeocrowdTaskUtility.utility(Geocrowd.DATA_SET, w, t);
 						uncoveredUtility += utility;
 					}
 				}
@@ -141,7 +141,7 @@ public class MaxCoverFixedOffline extends MaxCover {
 					if (!assignedTaskSet.contains(taskidx)) {
 
 						averageDelayTime += currentTimeInstance
-								- (taskSet.get(taskidx) - GeocrowdConstants.TaskDuration)
+								- (taskSet.get(taskidx) - GeocrowdConstants.MAX_TASK_DURATION)
 								+ 1;
 						assignedTaskSet.add(taskidx);
 					}

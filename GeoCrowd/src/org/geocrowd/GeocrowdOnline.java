@@ -9,6 +9,9 @@ import java.util.Iterator;
 
 import org.geocrowd.common.crowd.ExpertTask;
 import org.geocrowd.common.crowd.ExpertWorker;
+import org.geocrowd.common.utils.TaskUtility;
+import org.geocrowd.common.utils.Utils;
+import org.geocrowd.datasets.params.GeocrowdConstants;
 import org.geocrowd.datasets.synthetic.Parser;
 import org.geocrowd.matching.Hungarian;
 import org.geocrowd.matching.OnlineBipartiteMatching;
@@ -276,14 +279,14 @@ public class GeocrowdOnline extends Geocrowd {
 			ExpertTask task = (ExpertTask) taskList.get(i);
 
 			/* tick expired task */
-			if ((TimeInstance - task.getArrivalTime()) >= GeocrowdConstants.TaskDuration) {
+			if ((TimeInstance - task.getArrivalTime()) >= GeocrowdConstants.MAX_TASK_DURATION) {
 				task.setExpired();
 			} else
 
 			/**
 			 * if the task is not assigned and in the worker's working region
 			 */
-			if (task.isCoveredBy(w.getMbr())) {
+			if (TaskUtility.isTaskCoveredBy(task, w.getMbr())) {
 
 				if (!taskSet.contains(t)) {
 					candidateTaskIndices.add(t);

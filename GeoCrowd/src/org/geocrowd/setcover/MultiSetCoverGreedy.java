@@ -34,7 +34,7 @@ public abstract class MultiSetCoverGreedy extends SetCoverGreedy{
 		 * make sure the tasks are covered by at least k workers
 		 */
 		for (Integer key : assignedTaskMap.keySet())
-			if (assignedTaskMap.get(key) >= Geocrowd.taskList.get(key).getK())
+			if (assignedTaskMap.get(key) >= Geocrowd.taskList.get(key).getRequirement())
 				assignedTaskSet.add(key);
 		
 		assignedTasks = assignedTaskSet.size();

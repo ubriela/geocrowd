@@ -282,107 +282,7 @@ Budget = 14
                      	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
 1.000000             	20.476839            	21.088609            	20.621124            	0.000000             	0.000000             	
 10.000000            	138.365462           	143.590154           	145.770543           	20.621124            	20.621124            	
-20.000000            	262.239202           	265.616441           	264.661171           	145.770543           	145.770543           	
-
-##################Offline varying budget
-
-                     	true                 	false                	
-28                   	0.000000             	0.000000             	
-
-##################Offline varying budget
-
-                     	true                 	false                	
-28                   	0.000000             	0.000000             	
-
-##################Offline varying budget
-
-                     	true                 	false                	
-28                   	0.000000             	0.000000             	
-
-##################Offline varying budget
-
-                     	true                 	false                	
-28                   	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-
-##################Local varying radius
-Budget = 14
-#Covered Tasks
-                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
-1.000000             	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-10.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
-20.000000            	0.000000             	0.000000             	0.000000             	0.000000             	0.000000             	
+20.000000            	262.239202           	265.616441           	264.661171           	145.770543           	145.770543           	         	
 
 ##################Local varying radius
 Budget = 14
@@ -431,3 +331,12 @@ Budget = 56
 1.000000             	5.332681             	4.685258             	4.861441     	
 5.000000             	13.503185            	13.263571            	13.319663        	
 10.000000            	17.534194            	17.243343            	16.284493        	
+
+##################Local varying radius
+Budget = 28
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	60.677091            	63.353169            	61.834728            	0.000000             	0.000000             	
+10.000000            	364.536608           	367.583304           	362.418593           	61.834728            	61.834728            	
+100.000000           	1650.400443          	1651.161934          	1653.048293          	362.418593           	362.418593           	
+1000.000000          	1967.942778          	1967.942778          	1967.942778          	1653.048293          	1653.048293          	

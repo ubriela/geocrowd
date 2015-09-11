@@ -16,13 +16,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
 import java.util.Scanner;
-
 
 import org.geocrowd.DatasetEnum;
 import org.geocrowd.common.crowd.ExpertWorker;
 import org.geocrowd.common.crowd.GenericTask;
+
 
 /**
  *
@@ -193,28 +196,6 @@ public class Utility {
 			}
 		}
 		return transposedArray;
-	}
-
-	/**
-	 * Writefile.
-	 * 
-	 * @param s
-	 *            the s
-	 */
-	public static void writefile(String s) {
-
-		File file = new File("C:\\result 2.txt");
-		FileWriter writer;
-		try {
-			writer = new FileWriter(file, true);
-			PrintWriter printer = new PrintWriter(writer);
-			// printer.append("\n\n\n"+s);
-			printer.println(s);
-			printer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**

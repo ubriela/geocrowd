@@ -13,6 +13,9 @@
 package org.geocrowd;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -131,6 +134,10 @@ public class GeocrowdInstance extends Geocrowd {
 	public void generateTasksWOEntropy(String fileName) {
 		int listCount = taskList.size();
 		try {
+			// create whole path automatically if not exist
+			Path pathToFile = Paths.get(fileName);
+			Files.createDirectories(pathToFile.getParent());
+			
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < GeocrowdConstants.TASK_NUMBER; i++) {
@@ -178,6 +185,10 @@ public class GeocrowdInstance extends Geocrowd {
 		double maxRangeY = (maxLongitude - minLongitude)
 				* GeocrowdConstants.MAX_WORKING_REGION;
 		try {
+			// create whole path automatically if not exist
+			Path pathToFile = Paths.get(fileName);
+			Files.createDirectories(pathToFile.getParent());
+			
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 
@@ -846,6 +857,10 @@ public class GeocrowdInstance extends Geocrowd {
 	public void readTasksGowalla(String fileName) {
 		int listCount = taskList.size();
 		try {
+			// create whole path automatically if not exist
+			Path pathToFile = Paths.get(fileName);
+			Files.createDirectories(pathToFile.getParent());
+			
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < allTasks.size(); i++) {
@@ -882,6 +897,10 @@ public class GeocrowdInstance extends Geocrowd {
 	public void readTasksWithEntropy(String fileName) {
 		int listCount = taskList.size();
 		try {
+			// create whole path automatically if not exist
+			Path pathToFile = Paths.get(fileName);
+			Files.createDirectories(pathToFile.getParent());
+			
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < GeocrowdConstants.TASK_NUMBER; i++) {
@@ -936,6 +955,10 @@ public class GeocrowdInstance extends Geocrowd {
 			Random r = new Random();
 			int step = 200;
 			r.setSeed(System.nanoTime());
+			// create whole path automatically if not exist
+			Path pathToFile = Paths.get(fileName);
+			Files.createDirectories(pathToFile.getParent());
+			
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
@@ -993,6 +1016,10 @@ public class GeocrowdInstance extends Geocrowd {
 			Random r = new Random();
 			int step = 200;
 			r.setSeed(System.nanoTime());
+			// create whole path automatically if not exist
+			Path pathToFile = Paths.get(fileName);
+			Files.createDirectories(pathToFile.getParent());
+			
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {
@@ -1053,6 +1080,10 @@ public class GeocrowdInstance extends Geocrowd {
 			time++;
 			int numTask = (int) (GeocrowdConstants.TASK_NUMBER + Math.pow(-1,
 					time) * GeocrowdConstants.TASK_NUMBER * 2 / 3);
+			// create whole path automatically if not exist
+			Path pathToFile = Paths.get(fileName);
+			Files.createDirectories(pathToFile.getParent());
+			
 			FileWriter writer = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(writer);
 			for (int i = 0; i < numTask; i++) {

@@ -18,6 +18,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -288,8 +291,12 @@ public class GeocrowdTest {
 		geoCrowd.printBoundaries();
 		geoCrowd.readWorkers("dataset/real/yelp/worker/yelp_workers0.txt");
 		try {
-
-			FileWriter writer = new FileWriter("dataset/real/yelp/yelp.dat");
+			// create whole path automatically if not exist
+			String outputFile = "dataset/real/yelp/yelp.dat";
+			Path pathToFile = Paths.get(outputFile);
+			Files.createDirectories(pathToFile.getParent());
+			
+			FileWriter writer = new FileWriter(outputFile);
 			BufferedWriter out = new BufferedWriter(writer);
 
 			StringBuffer sb = new StringBuffer();

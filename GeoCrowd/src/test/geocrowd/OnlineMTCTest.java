@@ -1193,13 +1193,13 @@ public class OnlineMTCTest {
 		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
 
-		double[] radii = new double[] { 1, 5, 10};
+		double[] radii = new double[] { 1, 10, 100, 1000};
 		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
 		double[][] coveredUtility = new double[radii.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
 
-		GeocrowdSensingConstants.TIME_INSTANCE = 28;
-		int totalBudget = 56;
+		GeocrowdSensingConstants.TIME_INSTANCE = 14;
+		int totalBudget = 28;
 		double alpha = 0.2;
 		System.out.println("Budget = " + totalBudget);
 

@@ -2,3 +2,7 @@ GeoCrowd/bin/
 .DS_Store
 GeoCrowd/.DS_Store
 GeoCrowd/dataset/
+bin
+gaussian_clusters.m
+randomly_distributed.m
+.project

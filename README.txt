@@ -1,14 +1,18 @@
 *** This repository is the implementation of the following papers: ***
 
-1) Hien To, Leyla Kazemi, Cyrus Shahabi. Geocrowd: A Server-Assigned Crowdsourcing Framework.
+1) Hien To, Leyla Kazemi, and Cyrus Shahabi, A Server-Assigned Spatial Crowdsourcing Framework, Journal ACM Transactions on Spatial Algorithms and Systems, Volume 1 Issue 1, Article No. 2. , New York, NY, USA, August 2015
+
+2) Hien To, Liyue Fan, Luan Tran, and Cyrus Shahabi, Real-Time Task Assignment in Hyperlocal Spatial Crowdsourcing under Budget Constraints, In Proceeding of IEEE International Conference on Pervasive Computing and Communications (PerCom 2016), Sydney, Australia, March 14-18, 2016
 
 Related studies:
 
-https://bitbucket.org/hto/privategeocrowd/
+https://github.com/ubriela/geocrowd-priv-dynamic
 
-https://bitbucket.org/hto/geocast/
+https://github.com/ubriela/geocrowd-priv
 
-https://bitbucket.org/hto/maximumcomplextask/
+https://github.com/ubriela/geocrowd-priv-demo
+
+https://github.com/ubriela/geocrowd-complex
 
 ---------------------- Version --------------------------
 1.1

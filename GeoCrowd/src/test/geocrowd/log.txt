@@ -340,3 +340,142 @@ Budget = 28
 10.000000            	364.536608           	367.583304           	362.418593           	61.834728            	61.834728            	
 100.000000           	1650.400443          	1651.161934          	1653.048293          	362.418593           	362.418593           	
 1000.000000          	1967.942778          	1967.942778          	1967.942778          	1653.048293          	1653.048293          	
+
+##################Local varying radius
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	130.410877           	134.039632           	135.440365           	0.000000             	0.000000             	
+5.000000             	425.911687           	432.528607           	436.223326           	135.440365           	135.440365           	
+10.000000            	733.821388           	753.563263           	757.999597           	436.223326           	436.223326           	
+
+##################Local varying radius
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	61.794571            	61.443755            	62.742632            	0.000000             	0.000000             	
+5.000000             	196.381806           	199.975233           	190.315385           	62.742632            	62.742632            	
+10.000000            	265.306130           	269.608158           	268.885526           	190.315385           	190.315385           	
+
+##################Local varying radius
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	37.213724            	35.827811            	35.995139            	0.000000             	0.000000             	
+5.000000             	130.924659           	134.786607           	137.684747           	35.995139            	35.995139            	
+10.000000            	221.018400           	220.658661           	222.167455           	137.684747           	137.684747           	
+
+##################Local varying radius
+Budget = 14
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	8.981137             	9.154441             	9.394762             	0.000000             	0.000000             	
+5.000000             	48.562511            	51.075158            	51.305453            	9.394762             	9.394762             	
+10.000000            	87.220666            	90.678591            	91.337815            	51.305453            	51.305453            	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	0                    	0                    	0                    	0                    	0                    	
+10                   	0                    	0                    	0                    	0                    	0                    	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+5                    	24620                	24991                	24278                	0                    	0                    	
+10                   	24819                	25156                	25274                	24278                	24278                	
+
+##################Local varying radius
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	46.653845            	47.260412            	47.382556            	0.000000             	0.000000             	
+5.000000             	197.767545           	199.932752           	203.184515           	47.382556            	47.382556            	
+10.000000            	346.181674           	354.531170           	351.658752           	203.184515           	203.184515           	
+
+##################Local varying radius
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	8932                 	9146                 	9396                 	0                    	0                    	
+5.000000             	24819                	25102                	25321                	9396                 	9396                 	
+10.000000            	26859                	27142                	26442                	25321                	25321                	
+
+##################Local varying delta
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1                    	20640                	18716                	19251                	0                    	0                    	
+
+##################Local varying radius
+Budget = 56
+#Covered Tasks
+                     	MAX_COVER_BASIC      	MAX_COVER_ADAPT_B    	MAX_COVER_ADAPT_T    	FixedOff             	DynamicOff           	
+1.000000             	203                  	223                  	221                  	0                    	0                    	
+5.000000             	612                  	613                  	617                  	221                  	221                  	
+10.000000            	653                  	655                  	658                  	617                  	617                  	

@@ -804,7 +804,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryAlpha() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		Geocrowd.DATA_SET = DatasetEnum.SCALE;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				// AlgorithmEnum.MAX_COVER_ADAPT_T_W,
@@ -933,11 +933,11 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryBudget() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		Geocrowd.DATA_SET = DatasetEnum.SCALE;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] { AlgorithmEnum.MAX_COVER_BASIC,
-		// AlgorithmEnum.MAX_COVER_ADAPT_B,
-		// AlgorithmEnum.MAX_COVER_ADAPT_T,
+		 AlgorithmEnum.MAX_COVER_ADAPT_B,
+		 AlgorithmEnum.MAX_COVER_ADAPT_T,
 		// AlgorithmEnum.MAX_COVER_BASIC_T,
 		// AlgorithmEnum.MAX_COVER_BASIC_T2,
 		// AlgorithmEnum.MAX_COVER_BASIC_S,
@@ -946,14 +946,14 @@ public class OnlineMTCTest {
 
 		// int[] budgets = new int[] { 24, 48, 96, 192, 384, 768, 1536, 3072 };
 		// int[] budgets = new int[] { 28, 56, 112, 224, 448, 896, 1792, 3586 };
-		int[] budgets = new int[] { 56 };
+		int[] budgets = new int[] { 28, 56, 112, 224 };
 		int[][] coveredTasks = new int[budgets.length][algorithms.length + 2];
 		double[][] coveredUtility = new double[budgets.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[budgets.length][algorithms.length + 2];
 
 		// int[] budgets = new int[] { 40, 80, 160, 320, 640, 1280,
 		// 2560 };
-		GeocrowdSensingConstants.TIME_INSTANCE = 7;
+		GeocrowdSensingConstants.TIME_INSTANCE = 28;
 		GeocrowdSensingConstants.TASK_RADIUS = 5.0;
 		Constants.alpha = 0.2;
 		System.out.println("Radius = " + GeocrowdSensingConstants.TASK_RADIUS);
@@ -1048,13 +1048,13 @@ public class OnlineMTCTest {
 		for (int b = 0; b < budgets.length; b++) {
 			pw.printf("\n%-20d \t", budgets[b]);
 			for (int a = 0; a < algorithms.length + 2; a++)
-				pw.printf("%-20f \t", coveredTasks[b][a] / times);
+				pw.printf("%-20d \t", coveredTasks[b][a] / times);
 		}
 
 		for (int b = 0; b < budgets.length; b++) {
 			pw.printf("\n%-20d \t", budgets[b]);
 			for (int a = 0; a < algorithms.length + 2; a++)
-				pw.printf("%-20f \t", coveredUtility[b][a] / times);
+				pw.printf("%-20d \t", coveredUtility[b][a] / times);
 		}
 
 		logger.info(stringWriter.toString());
@@ -1063,7 +1063,7 @@ public class OnlineMTCTest {
 
 	@Test
 	public void testLocalVaryDelta() throws IOException {
-		Geocrowd.DATA_SET = DatasetEnum.FOURSQUARE;
+		Geocrowd.DATA_SET = DatasetEnum.SCALE;
 
 		AlgorithmEnum[] algorithms = new AlgorithmEnum[] {
 				AlgorithmEnum.MAX_COVER_BASIC, AlgorithmEnum.MAX_COVER_ADAPT_B,
@@ -1074,13 +1074,13 @@ public class OnlineMTCTest {
 		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
 
-		int[] delta = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		int[] delta = new int[] { 1 };
 		int[][] coveredTasks = new int[delta.length][algorithms.length + 2];
 		double[][] coveredUtility = new double[delta.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[delta.length][algorithms.length + 2];
 
-		GeocrowdSensingConstants.TIME_INSTANCE = 24;
-		int totalBudget = 48;
+		GeocrowdSensingConstants.TIME_INSTANCE = 28;
+		int totalBudget = 56;
 		double alpha = 0.2;
 		System.out.println("Budget = " + totalBudget);
 
@@ -1173,7 +1173,7 @@ public class OnlineMTCTest {
 		for (int r = 0; r < delta.length; r++) {
 			pw.printf("\n%-20d \t", delta[r]);
 			for (int al = 0; al < algorithms.length + 2; al++)
-				pw.printf("%-20f \t", coveredTasks[r][al] / times);
+				pw.printf("%-20d \t", coveredTasks[r][al] / times);
 		}
 
 		logger.info(stringWriter.toString());
@@ -1193,13 +1193,13 @@ public class OnlineMTCTest {
 		// AlgorithmEnum.MAX_COVER_BASIC_S2
 		};
 
-		double[] radii = new double[] { 1, 10, 100, 1000};
+		double[] radii = new double[] { 1.0, 5.0, 10.0};
 		int[][] coveredTasks = new int[radii.length][algorithms.length + 2];
 		double[][] coveredUtility = new double[radii.length][algorithms.length + 2];
 		int[][] assignedWorkers = new int[radii.length][algorithms.length + 2];
 
-		GeocrowdSensingConstants.TIME_INSTANCE = 14;
-		int totalBudget = 28;
+		GeocrowdSensingConstants.TIME_INSTANCE = 28;
+		int totalBudget = 56;
 		double alpha = 0.2;
 		System.out.println("Budget = " + totalBudget);
 
@@ -1293,7 +1293,7 @@ public class OnlineMTCTest {
 		for (int r = 0; r < radii.length; r++) {
 			pw.printf("\n%-20f \t", radii[r]);
 			for (int al = 0; al < algorithms.length + 2; al++)
-				pw.printf("%-20f \t", coveredUtility[r][al] / times);
+				pw.printf("%-20d \t", coveredTasks[r][al] / times);
 		}
 
 		logger.info(stringWriter.toString());
@@ -1500,5 +1500,11 @@ public class OnlineMTCTest {
 			System.out.println(stringWriter.toString());
 
 		}
+	}
+
+	@Test
+	public void testOnlineMTC()
+		throws Exception {
+		OnlineMTC onlineMTC = new OnlineMTC();
 	}
 }

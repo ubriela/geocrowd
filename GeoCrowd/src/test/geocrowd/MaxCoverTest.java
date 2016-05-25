@@ -17,10 +17,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.geocrowd.maxcover.MaxCoverAdapt;
+import org.geocrowd.maxcover.MaxCoverAdaptB;
 import org.geocrowd.maxcover.MaxCoverBasic;
-import org.geocrowd.maxcover.MaxCoverBasicMO;
-import org.geocrowd.maxcover.MaxCoverBasicT;
+import org.geocrowd.maxcover.MaxCoverEqualGA;
+import org.geocrowd.maxcover.MaxCoverTemporal;
 import org.geocrowd.setcover.SetCoverGreedy;
 import org.geocrowd.setcover.SetCoverGreedy_HighTaskCoverage;
 import org.junit.Test;
@@ -91,7 +91,7 @@ public class MaxCoverTest {
 //	@Test
 	public void testMaxCoverAdapt() {
 		ArrayList<HashMap<Integer, Integer>> container = getContainer();
-		MaxCoverAdapt mc = new MaxCoverAdapt(container, 0);
+		MaxCoverAdaptB mc = new MaxCoverAdaptB(container, 0);
 		mc.lambda = 3;
 		
 		System.out.println(mc.universe);
@@ -104,7 +104,7 @@ public class MaxCoverTest {
 //	@Test
 	public void testMaxCoverT() {
 		ArrayList<HashMap<Integer, Integer>> container = getContainer();
-		MaxCoverBasicT mc = new MaxCoverBasicT(container, 1);
+		MaxCoverTemporal mc = new MaxCoverTemporal(container, 1);
 		mc.budget = 2;
 		
 		System.out.println(mc.universe);
@@ -123,7 +123,7 @@ public class MaxCoverTest {
 		selected.put(2, 2);
 		selected.put(3, 1);
 		selected.put(4, 0);
-		MaxCoverBasicMO mc = new MaxCoverBasicMO();
+		MaxCoverEqualGA mc = new MaxCoverEqualGA();
 		
 		
 //		HashSet<Integer> no_set = mc.maxCover(container, 1, selected, 2);

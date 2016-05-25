@@ -17,17 +17,17 @@ import org.geocrowd.common.utils.Utils;
 import org.geocrowd.datasets.params.GeocrowdConstants;
 import org.geocrowd.datasets.synthetic.Parser;
 import org.geocrowd.maxcover.MaxCover;
-import org.geocrowd.maxcover.MaxCoverAdapt;
+import org.geocrowd.maxcover.MaxCoverAdaptB;
 import org.geocrowd.maxcover.MaxCoverAdaptS;
 import org.geocrowd.maxcover.MaxCoverAdaptT;
 import org.geocrowd.maxcover.MaxCoverBasic;
-import org.geocrowd.maxcover.MaxCoverBasicMO;
-import org.geocrowd.maxcover.MaxCoverBasicS;
-import org.geocrowd.maxcover.MaxCoverBasicS2;
-import org.geocrowd.maxcover.MaxCoverBasicSMO;
-import org.geocrowd.maxcover.MaxCoverBasicT;
-import org.geocrowd.maxcover.MaxCoverBasicT2;
-import org.geocrowd.maxcover.MaxCoverST;
+import org.geocrowd.maxcover.MaxCoverEqualGA;
+import org.geocrowd.maxcover.MaxCoverSpatial;
+import org.geocrowd.maxcover.MaxCoverSpatial2;
+import org.geocrowd.maxcover.MaxCoverEqualSMO;
+import org.geocrowd.maxcover.MaxCoverTemporal;
+import org.geocrowd.maxcover.Temporal2;
+import org.geocrowd.maxcover.MaxCoverSpatialTemporal;
 
 public class OnlineMTC extends GeocrowdSensing {
 
@@ -92,7 +92,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			
 		case MAX_COVER_BASIC_MO:
 		case MAX_COVER_BASIC_W_MO:
-			MaxCoverBasicMO mcBasicMo = new MaxCoverBasicMO();
+			MaxCoverEqualGA mcBasicMo = new MaxCoverEqualGA();
 			int budget = getBudget(algorithm);
 			int[] _workerCounts = new int[workerList.size()];
 			int i = 0;
@@ -111,7 +111,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			break;
 			
 		case MAX_COVER_BASIC_S_MO:
-			MaxCoverBasicSMO mcBasicSMO = new MaxCoverBasicSMO();
+			MaxCoverEqualSMO mcBasicSMO = new MaxCoverEqualSMO();
 			int budgetSMO = getBudget(algorithm);
 			assignedWorker = mcBasicSMO.maxCover(getContainerWithDeadline(), TimeInstance, budgetSMO);
 
@@ -123,7 +123,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			
 
 		case MAX_COVER_ADAPT_B:
-			MaxCoverAdapt maxCoverAdaptB = new MaxCoverAdapt(
+			MaxCoverAdaptB maxCoverAdaptB = new MaxCoverAdaptB(
 					getContainerWithDeadline(), TimeInstance);
 			maxCoverAdaptB.epsGain = epsGain;
 			maxCoverAdaptB.epsBudget = epsBudget;
@@ -157,7 +157,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			break;	
 		case MAX_COVER_ADAPT_B_W:
 			
-			MaxCoverAdapt maxCoverAdapt = new MaxCoverAdapt(
+			MaxCoverAdaptB maxCoverAdapt = new MaxCoverAdaptB(
 					getContainerWithDeadline(), TimeInstance);
 			maxCoverAdapt.epsGain = epsGain;
 			maxCoverAdapt.epsBudget = epsBudget;
@@ -198,8 +198,8 @@ public class OnlineMTC extends GeocrowdSensing {
 			} else {
 				int preAggBudget = 0;
 				for (int ti = 0; ti < TimeInstance; ti++)
-					preAggBudget += totalBudget / GeocrowdConstants.TIME_INSTANCE;;
-					maxCoverAdaptT.deltaBudget = preAggBudget - usedBudget;
+					preAggBudget += totalBudget / GeocrowdConstants.TIME_INSTANCE;
+				maxCoverAdaptT.deltaBudget = preAggBudget - usedBudget;
 			}
 			maxCoverAdaptT.budget = totalBudget - usedBudget;
 			
@@ -251,7 +251,7 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_BASIC_T:
 		case MAX_COVER_BASIC_WORKLOAD_T:
 		case MAX_COVER_PRO_T:
-			MaxCoverBasicT maxCoverBasicT = new MaxCoverBasicT(
+			MaxCoverTemporal maxCoverBasicT = new MaxCoverTemporal(
 					getContainerWithDeadline(), TimeInstance);
 			maxCoverBasicT.budget = getBudget(algorithm);
 			assignedWorker = maxCoverBasicT.maxCover();
@@ -264,7 +264,7 @@ public class OnlineMTC extends GeocrowdSensing {
 //			}
 			break;
 		case MAX_COVER_BASIC_T2:
-			MaxCoverBasicT2 maxCoverBasicT2 = new MaxCoverBasicT2(
+			Temporal2 maxCoverBasicT2 = new Temporal2(
 					getContainerWithDeadline(), TimeInstance);
 			maxCoverBasicT2.budget = getBudget(algorithm);
 			assignedWorker = maxCoverBasicT2.maxCover();
@@ -278,7 +278,7 @@ public class OnlineMTC extends GeocrowdSensing {
 
 		case MAX_COVER_BASIC_S:
 		case MAX_COVER_PRO_S:
-			MaxCoverBasicS maxCoverS = new MaxCoverBasicS(getContainerWithDeadline(),
+			MaxCoverSpatial maxCoverS = new MaxCoverSpatial(getContainerWithDeadline(),
 					TimeInstance);
 			maxCoverS.budget = getBudget(algorithm);
 			maxCoverS.setTaskList(taskList);
@@ -311,7 +311,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCover = maxCoverS;
 			break;
 		case MAX_COVER_BASIC_S2:
-			MaxCoverBasicS2 maxCoverS2 = new MaxCoverBasicS2(getContainerWithDeadline(),
+			MaxCoverSpatial2 maxCoverS2 = new MaxCoverSpatial2(getContainerWithDeadline(),
 					TimeInstance);
 			maxCoverS2.budget = getBudget(algorithm);
 			maxCoverS2.setTaskList(taskList);
@@ -342,7 +342,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCover = maxCoverS2;
 			break;
 		case MAX_COVER_BASIC_ST:
-			MaxCoverST maxCoverST = new MaxCoverST(getContainerWithDeadline(),
+			MaxCoverSpatialTemporal maxCoverST = new MaxCoverSpatialTemporal(getContainerWithDeadline(),
 					TimeInstance);
 			maxCoverST.budget = getBudget(algorithm);
 			maxCoverST.setTaskList(taskList);

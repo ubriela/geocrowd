@@ -36,7 +36,7 @@ import org.geocrowd.datasets.params.GeocrowdConstants;
  * 
  * @author Hien
  */
-public class MaxCoverBasicT extends MaxCover {
+public class MaxCoverTemporal extends MaxCover {
 
 	/**
 	 * Instantiates a new sets the cover greedy combine deadline.
@@ -49,7 +49,7 @@ public class MaxCoverBasicT extends MaxCover {
 	public double alpha = Constants.alpha;
 	public int maxNoUncoveredTasks = 0;
 
-	public MaxCoverBasicT(ArrayList container, Integer currentTI) {
+	public MaxCoverTemporal(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
 	}
 

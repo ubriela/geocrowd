@@ -25,14 +25,14 @@ import org.geocrowd.datasets.params.GeocrowdConstants;
  * @author ubriela
  *
  */
-public class MaxCoverAdapt extends MaxCover {
+public class MaxCoverAdaptB extends MaxCover {
 
 	public double lambda; // algorithm stops when gain is less than lambda
 	public int deltaBudget;	// > 0 means over-utilization; < 0 otherwise
 	public double epsGain;
 	public double epsBudget;
 
-	public MaxCoverAdapt(ArrayList container, Integer currentTI) {
+	public MaxCoverAdaptB(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
 		// TODO Auto-generated constructor stub
 	}

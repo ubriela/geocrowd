@@ -37,7 +37,7 @@ import org.geocrowd.datasets.params.GeocrowdConstants;
  * 
  * @author Hien
  */
-public class MaxCoverBasicS extends MaxCoverBasicT {
+public class MaxCoverSpatial extends MaxCoverTemporal {
 
 	private HashMap<Integer, Double> worker_entropies;
 	private HashMap<Integer, Double> task_entropies;
@@ -78,7 +78,7 @@ public class MaxCoverBasicS extends MaxCoverBasicT {
 	 *            the current_time_instance
 	 */
 
-	public MaxCoverBasicS(ArrayList container, Integer currentTI) {
+	public MaxCoverSpatial(ArrayList container, Integer currentTI) {
 		super(container, currentTI);
 	}
 

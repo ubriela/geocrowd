@@ -16,7 +16,7 @@ import org.geocrowd.datasets.params.GeocrowdConstants;
  * @author ubriela
  *
  */
-public class MaxCoverAdaptT extends MaxCoverBasicT {
+public class MaxCoverAdaptT extends MaxCoverTemporal {
 
 	public double lambda; // algorithm stops when gain is less than lambda
 	public int deltaBudget;	// > 0 means over-utilization; < 0 otherwise

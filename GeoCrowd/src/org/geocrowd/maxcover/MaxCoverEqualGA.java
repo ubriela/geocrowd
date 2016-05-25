@@ -31,17 +31,17 @@ import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.variable.EncodingUtils;
 
-public class MaxCoverBasicMO extends MaxCover implements Problem {
+public class MaxCoverEqualGA extends MaxCover implements Problem {
 
 	// private ArrayList<Integer> indices = null;
 
 	int[] workerCounts = null;
 
-	public MaxCoverBasicMO() {
+	public MaxCoverEqualGA() {
 		super();
 	}
 
-	public MaxCoverBasicMO(ArrayList container, Integer currentTI,
+	public MaxCoverEqualGA(ArrayList container, Integer currentTI,
 			int[] selected, int budget) {
 		super(container, currentTI);
 
@@ -130,7 +130,7 @@ public class MaxCoverBasicMO extends MaxCover implements Problem {
 			int[] workerCounts, int budget) {
 		// solve using NSGA-II
 		NondominatedPopulation result = new Executor()
-				.withProblemClass(MaxCoverBasicMO.class, container, currentTI,
+				.withProblemClass(MaxCoverEqualGA.class, container, currentTI,
 						workerCounts, budget).withAlgorithm("NSGAII")
 				.withMaxEvaluations(200000).distributeOnAllCores().run();
 

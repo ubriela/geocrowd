@@ -23,8 +23,6 @@ import java.util.HashSet;
  * The Class MaxSetCover.
  */
 public abstract class MaxCover {
-	
-	public boolean DBU = true;	// distance-based-utility
 
 	/**
 	 * Each element in the list is associated with a worker, and each worker

@@ -15,7 +15,7 @@ import org.geocrowd.datasets.params.GeocrowdConstants;
  * @author ubriela
  *
  */
-public class MaxCoverAdaptST extends MaxCoverST {
+public class MaxCoverAdaptST extends MaxCoverSpatialTemporal {
 
 	public int lambda; // algorithm stops when gain is less than lambda
 

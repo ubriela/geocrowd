@@ -82,7 +82,7 @@ public class GeocrowdInstance extends Geocrowd {
 	 * Instantiates a new geocrowd.
 	 */
 	public GeocrowdInstance() {
-		GowallaProcessor prep = new GowallaProcessor(20, WorkerType.EXPERT,
+		GowallaProcessor prep = new GowallaProcessor(GeocrowdConstants.TIME_INSTANCE, WorkerType.EXPERT,
 				TaskType.EXPERT, TaskCategoryEnum.RANDOM);
 		prep.readBoundary();
 		minLatitude = GowallaProcessor.minLat;
@@ -927,8 +927,8 @@ public class GeocrowdInstance extends Geocrowd {
 				t.setEntropy(dR.getEntropy());
 				t.setCategory(taskCategory);
 
-				out.write(lat + "," + lng + "," + time + "," + dR.getEntropy()
-						+ "," + taskCategory + "\n");
+				out.write(lat + ";" + lng + ";" + time + ";" + dR.getEntropy()
+						+ ";" + taskCategory + "\n");
 				taskList.add(listCount, t);
 				listCount++;
 			}
@@ -993,8 +993,8 @@ public class GeocrowdInstance extends Geocrowd {
 				t.setEntropy(dR.getEntropy());
 				t.setCategory(taskCategory);
 
-				out.write(lat + "," + lng + "," + time + "," + dR.getEntropy()
-						+ "," + taskCategory + "\n");
+				out.write(lat + ";" + lng + ";" + time + ";" + dR.getEntropy()
+						+ ";" + taskCategory + "\n");
 				taskList.add(listCount, t);
 				listCount++;
 			}

@@ -71,7 +71,7 @@ public abstract class Geocrowd {
 	public ArrayList<EntropyRecord> entropyList = new ArrayList();
 
 	/** The data set. */
-	public static DatasetEnum DATA_SET = DatasetEnum.SCALE;
+	public static DatasetEnum DATA_SET = DatasetEnum.GOWALLA;
 
 	/** The algorithm. */
 	public static AlgorithmEnum algorithm = AlgorithmEnum.BASIC;

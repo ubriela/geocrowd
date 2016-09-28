@@ -271,7 +271,7 @@ public class GeocrowdTest {
 		// System.out.println("entropy list size: " +
 		// geoCrowd.entropyList.size());
 		ArrayList<Integer> taskCounts = ArrivalRateGenerator.generateCounts(
-				GeocrowdConstants.TIME_INSTANCE, 2000, ArrivalRateEnum.CONSTANT);
+				GeocrowdConstants.TIME_INSTANCE, 1000, ArrivalRateEnum.CONSTANT);
 		for (int i : taskCounts)
 			System.out.println(i);
 		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {

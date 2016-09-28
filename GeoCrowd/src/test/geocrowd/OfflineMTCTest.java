@@ -17,7 +17,7 @@ public class OfflineMTCTest {
 	static Logger logger = Logger.getLogger(OnlineMTCTest.class.getName());
 
 	public static void main(String[] args) {
-		Geocrowd.DATA_SET = DatasetEnum.SCALE;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
 
 		int[] budgets = new int[] {28}; // gowalla
 //		int[] budgets = { 24, 48, 96, 192, 384, 768, 1536, 3072 }; // foursquare

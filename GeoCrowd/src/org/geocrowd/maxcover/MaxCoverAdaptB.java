@@ -2,6 +2,7 @@ package org.geocrowd.maxcover;
 
 import static org.geocrowd.Geocrowd.candidateTaskIndices;
 import static org.geocrowd.Geocrowd.taskList;
+import static org.geocrowd.Geocrowd.tasksMap;
 import static org.geocrowd.Geocrowd.workerList;
 
 import java.util.ArrayList;
@@ -9,8 +10,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import org.geocrowd.Constants;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdTaskUtility;
+import org.geocrowd.OnlineMTC;
 import org.geocrowd.common.crowd.GenericWorker;
 import org.geocrowd.common.crowd.SensingTask;
 import org.geocrowd.common.utils.Utils;
@@ -58,8 +61,8 @@ public class MaxCoverAdaptB extends MaxCover {
 		 * threshold or no more tasks to cover
 		 */
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
-			int bestWorkerIndex = 0; // track index of the best worker in S
-			double maxUncoveredUtility = 0.0;
+			int bestWorkerIndex = -1; // track index of the best worker in S
+			double maxUncoveredUtility = -1;
 			/**
 			 * Iterate all workers, find the one which covers maximum number of
 			 * uncovered tasks
@@ -71,18 +74,29 @@ public class MaxCoverAdaptB extends MaxCover {
 				double uncoveredUtility = 0.0;
 				for (Integer i : s.keySet()) {
 					if (!assignedTaskSet.contains(i)) {
-						SensingTask t = (SensingTask) taskList
-								.get(candidateTaskIndices.get(i));
+//						SensingTask t = (SensingTask) taskList
+//								.get(candidateTaskIndices.get(i));
+						SensingTask t = (SensingTask) tasksMap.get(i);
 						double utility = GeocrowdTaskUtility.utility(Geocrowd.DATA_SET, w, t);
 //						System.out.println(utility);
 						uncoveredUtility += utility;
 					}
+				}
+				
+				//using worker overloading
+				
+				if(Constants.workerOverload) {
+					int count = 0;
+					if(OnlineMTC.workerCounts.containsKey(w.getId())) count = OnlineMTC.workerCounts.get(w.getId());
+					
+					uncoveredUtility = uncoveredUtility *(1-Constants.theta)/taskList.size() - count*Constants.theta/GeocrowdConstants.TIME_INSTANCE;
 				}
 				if (uncoveredUtility > maxUncoveredUtility) {
 					maxUncoveredUtility = uncoveredUtility;
 					bestWorkerIndex = k;
 				}
 			}
+			if(bestWorkerIndex > -1){
 
 			// Check gain threshold
 			double deltaGain = maxUncoveredUtility - lambda;
@@ -113,6 +127,7 @@ public class MaxCoverAdaptB extends MaxCover {
 			assignWorkers.add(bestWorkerIndex);
 			HashMap<Integer, Integer> taskSet = S.get(bestWorkerIndex);
 			S.remove(bestWorkerIndex);
+			//if(taskSet!=null){
 			Q.removeAll(taskSet.keySet());
 
 			/**
@@ -127,6 +142,9 @@ public class MaxCoverAdaptB extends MaxCover {
 					assignedTaskSet.add(taskidx);
 				}
 			}
+			//}
+		}
+			else break;
 		}
 		assignedTasks = assignedTaskSet.size();
 		// System.out.println("#Task assigned: " + assignedTasks);

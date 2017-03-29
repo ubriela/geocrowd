@@ -30,7 +30,7 @@ public class MaxCoverSpatial2 extends Temporal2 {
 
 	private HashMap<Integer, Double> worker_entropies;
 	private HashMap<Integer, Double> task_entropies;
-	private ArrayList<GenericTask> taskList;
+	public  ArrayList<GenericTask> taskList = new ArrayList<>();
 	public double alpha = Constants.alpha;
 	public double maxRegionEntropy = 0;
 //	public double maxNoUncoveredTasks = 0;
@@ -41,6 +41,13 @@ public class MaxCoverSpatial2 extends Temporal2 {
 	
 	public void setTaskEntropies(HashMap<Integer, Double> task_entropies) {
 		this.task_entropies = task_entropies;
+	}
+
+	public void setTaskList(HashMap<Integer, GenericTask> tasksMap) {
+		for(Integer taskId: tasksMap.keySet()){
+			this.taskList.add(tasksMap.get(taskId));
+		}
+		
 	}
 
 	public void setTaskList(ArrayList<GenericTask> taskList) {

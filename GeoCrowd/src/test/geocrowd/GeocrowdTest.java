@@ -73,7 +73,7 @@ public class GeocrowdTest {
 		// geoCrowd.entropyList.size());
 
 		ArrayList<Integer> taskCounts = ArrivalRateGenerator.generateCounts(
-				GeocrowdConstants.TIME_INSTANCE, 1000, ArrivalRateEnum.POISSON);
+				GeocrowdConstants.TIME_INSTANCE, 1000, ArrivalRateEnum.CONSTANT);
 		ArrayList<Point> venues = readFoursquareVenues("dataset/real/foursquare/venue_locs.txt");
 		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 			geoCrowd.readTasksFoursquare(taskCounts.get(i),
@@ -271,11 +271,13 @@ public class GeocrowdTest {
 		// System.out.println("entropy list size: " +
 		// geoCrowd.entropyList.size());
 		ArrayList<Integer> taskCounts = ArrivalRateGenerator.generateCounts(
-				GeocrowdConstants.TIME_INSTANCE, 1000, ArrivalRateEnum.CONSTANT);
+				GeocrowdConstants.TIME_INSTANCE*10, 1000, ArrivalRateEnum.CONSTANT);
 		for (int i : taskCounts)
 			System.out.println(i);
-		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
-			geoCrowd.readTasksWithEntropy2(taskCounts.get(i),
+		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE*10; i++) {
+			
+			//test randomly generated without replacement
+			geoCrowd.readTasksWithEntropy3(taskCounts.get(i),
 					GowallaConstants.gowallaTaskFileNamePrefix + i + ".txt");
 			geoCrowd.TimeInstance++;
 		}

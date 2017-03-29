@@ -1,11 +1,20 @@
 package org.geocrowd;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 
 import static org.geocrowd.AlgorithmEnum.MAX_COVER_BASIC;
 import static org.geocrowd.Geocrowd.algorithm;
@@ -32,7 +41,9 @@ import org.geocrowd.maxcover.MaxCoverSpatialTemporal;
 public class OnlineMTC extends GeocrowdSensing {
 
 	public int totalBudget = 0;
-	public HashMap<String, Integer> workerCounts = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> workerCounts = new HashMap<String, Integer>();
+	
+	
 
 	public final int totalNumberTasks;
 
@@ -42,10 +53,13 @@ public class OnlineMTC extends GeocrowdSensing {
 	public double avgLamda;
 	public int beta = 2;
 	public int usedBudget;
-	public double epsGain = 0.5;
+	public double epsGain = 0.2;
 	public double epsBudget = 0.2;
 	public int[] preBudgets;
 
+	// public static HashMap<Integer, Integer> workerCounts = new Hash
+
+	public static ArrayList<Integer> randomBudget;
 	public OnlineMTC() throws IOException {
 		if (AlgorithmEnum.BASIC != Geocrowd.algorithm) {
 			this.totalNumberTasks = computeTotalTasks();
@@ -53,7 +67,6 @@ public class OnlineMTC extends GeocrowdSensing {
 			this.totalNumberTasks = -1;
 		}
 	}
-
 
 	/**
 	 * Read tasks from file.
@@ -68,6 +81,25 @@ public class OnlineMTC extends GeocrowdSensing {
 		TaskCount += this.numberArrivalTask;
 	}
 
+	public void printSelectedWorker(String algorithm, HashSet<Integer> assignWorkers) {
+
+		ArrayList<Integer> selectedWorkers = new ArrayList<>();
+		for (Integer workerId : assignWorkers) {
+			selectedWorkers.add(workerId);
+		}
+		Collections.sort(selectedWorkers);
+		try (FileWriter fw = new FileWriter(Geocrowd.TimeInstance + algorithm + "_selectedWorker.txt", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				PrintWriter out = new PrintWriter(bw)) {
+			for (int i = 0; i < selectedWorkers.size(); i++)
+				out.write(selectedWorkers.get(i) + ",");
+			out.write("\n");
+		} catch (IOException e) {
+			// exception handling left as an exercise for the reader
+		}
+
+	}
+
 	public HashSet<Integer> maxCoverage() {
 		MaxCover maxCover = null;
 		HashSet<Integer> assignedWorker = new HashSet<Integer>();
@@ -76,20 +108,56 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_BASIC:
 		case MAX_COVER_BASIC_WORKLOAD:
 		case MAX_COVER_PRO_B:
-			MaxCoverBasic maxCoverBsic = new MaxCoverBasic(
-					getContainerWithDeadline(), TimeInstance);
+			// MaxCoverBasic maxCoverBsic = new MaxCoverBasic(
+			// getContainerWithDeadline(), TimeInstance); //luan test here
+			MaxCoverBasic maxCoverBsic = new MaxCoverBasic(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverBsic.budget = getBudget(algorithm);
-//			System.out.println("xxxx" + maxCoverPro.budget); 
+			// System.out.println("xxxx" + maxCoverPro.budget);
 			assignedWorker = maxCoverBsic.maxCover();
-
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
 			TotalAssignedTasks += maxCoverBsic.assignedTasks;
 			TotalCoveredUtility += maxCoverBsic.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = maxCoverBsic;
-//			System.out.print("\t" + maxCoverPro.gain);
+			// System.out.print("\t" + maxCoverPro.gain);
 			break;
 			
+		case MAX_COVER_NAIVE_B:
+			MaxCoverBasic maxCoverBsic2 = new MaxCoverBasic(containerWorkerWithTaskDeadline, TimeInstance);
+
+			maxCoverBsic2.budget = totalBudget - usedBudget;
+
+			assignedWorker = maxCoverBsic2.maxCover();
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
+
+			// TotalAssignedTasks+= maxCoverBasicT3.assignedTasks;
+
+			TotalAssignedTasks = Geocrowd.assignedTasks.size();
+			TotalCoveredUtility += maxCoverBsic2.assignedUtility;
+			TotalAssignedWorkers += assignedWorker.size();
+
+			usedBudget += assignedWorker.size();
+
+			maxCover = maxCoverBsic2;
+			break;
+			
+		case MAX_COVER_RANDOM_B:
+			MaxCoverBasic maxCoverBsic3 = new MaxCoverBasic(containerWorkerWithTaskDeadline, TimeInstance);
+
+			maxCoverBsic3.budget = getBudget(algorithm);
+
+			assignedWorker = maxCoverBsic3.maxCover();
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
+			TotalAssignedTasks += maxCoverBsic3.assignedTasks;
+			TotalCoveredUtility += maxCoverBsic3.assignedUtility;
+			TotalAssignedWorkers += assignedWorker.size();
+
+			usedBudget += assignedWorker.size();
+
+			maxCover = maxCoverBsic3;
+			break;
+
 		case MAX_COVER_BASIC_MO:
 		case MAX_COVER_BASIC_W_MO:
 			MaxCoverEqualGA mcBasicMo = new MaxCoverEqualGA();
@@ -102,29 +170,27 @@ public class OnlineMTC extends GeocrowdSensing {
 				else
 					_workerCounts[i++] = 0;
 			}
-			assignedWorker = mcBasicMo.maxCover(getContainerWithDeadline(), TimeInstance, _workerCounts, budget);
-
+			assignedWorker = mcBasicMo.maxCover(containerWorkerWithTaskDeadline, TimeInstance, _workerCounts, budget);
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
 			TotalAssignedTasks += mcBasicMo.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = mcBasicMo;
 			break;
-			
+
 		case MAX_COVER_BASIC_S_MO:
 			MaxCoverEqualSMO mcBasicSMO = new MaxCoverEqualSMO();
 			int budgetSMO = getBudget(algorithm);
-			assignedWorker = mcBasicSMO.maxCover(getContainerWithDeadline(), TimeInstance, budgetSMO);
+			assignedWorker = mcBasicSMO.maxCover(containerWorkerWithTaskDeadline, TimeInstance, budgetSMO);
 
 			TotalAssignedTasks += mcBasicSMO.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = mcBasicSMO;
 			break;
-			
 
 		case MAX_COVER_ADAPT_B:
-			MaxCoverAdaptB maxCoverAdaptB = new MaxCoverAdaptB(
-					getContainerWithDeadline(), TimeInstance);
+			MaxCoverAdaptB maxCoverAdaptB = new MaxCoverAdaptB(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverAdaptB.epsGain = epsGain;
 			maxCoverAdaptB.epsBudget = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
@@ -132,12 +198,13 @@ public class OnlineMTC extends GeocrowdSensing {
 			} else {
 				int preAggBudget = 0;
 				for (int ti = 0; ti < TimeInstance; ti++)
-					preAggBudget += totalBudget / GeocrowdConstants.TIME_INSTANCE;;
+					preAggBudget += totalBudget / GeocrowdConstants.TIME_INSTANCE;
+				;
 				maxCoverAdaptB.deltaBudget = preAggBudget - usedBudget;
-//				System.out.println("xxx" + maxCoverAdaptB.deltaBudget);
+				// System.out.println("xxx" + maxCoverAdaptB.deltaBudget);
 			}
 			maxCoverAdaptB.budget = totalBudget - usedBudget;
-			
+
 			maxCoverAdaptB.lambda = avgLamda;
 			assignedWorker = maxCoverAdaptB.maxCover();
 
@@ -146,19 +213,19 @@ public class OnlineMTC extends GeocrowdSensing {
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();
-			
+
 			// update average gain
-			avgLamda = (avgLamda * TimeInstance + maxCoverAdaptB.gain + 0.0)/(TimeInstance + 1);
-//			avgLamda = maxCoverAdapt.gain;
-			//System.out.print("\t" + maxCoverAdaptB.deltaBudget + "\t" + avgLamda);
+			avgLamda = (avgLamda * TimeInstance + maxCoverAdaptB.gain + 0.0) / (TimeInstance + 1);
+			// avgLamda = maxCoverAdapt.gain;
+			// System.out.print("\t" + maxCoverAdaptB.deltaBudget + "\t" +
+			// avgLamda);
 
 			maxCover = maxCoverAdaptB;
-			
-			break;	
+
+			break;
 		case MAX_COVER_ADAPT_B_W:
-			
-			MaxCoverAdaptB maxCoverAdapt = new MaxCoverAdaptB(
-					getContainerWithDeadline(), TimeInstance);
+
+			MaxCoverAdaptB maxCoverAdapt = new MaxCoverAdaptB(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverAdapt.epsGain = epsGain;
 			maxCoverAdapt.epsBudget = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
@@ -170,7 +237,7 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCoverAdapt.deltaBudget = preAggBudget - usedBudget;
 			}
 			maxCoverAdapt.budget = totalBudget - usedBudget;
-			
+
 			maxCoverAdapt.lambda = avgLamda;
 			assignedWorker = maxCoverAdapt.maxCover();
 
@@ -179,18 +246,19 @@ public class OnlineMTC extends GeocrowdSensing {
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();
-			
+
 			// update average gain
-			avgLamda = (avgLamda * TimeInstance + maxCoverAdapt.gain + 0.0)/(TimeInstance + 1);
-//			avgLamda = maxCoverAdapt.gain;
-			//System.out.print("\t" + maxCoverAdapt.deltaBudget + "\t" + avgLamda);
+			avgLamda = (avgLamda * TimeInstance + maxCoverAdapt.gain + 0.0) / (TimeInstance + 1);
+			// avgLamda = maxCoverAdapt.gain;
+			// System.out.print("\t" + maxCoverAdapt.deltaBudget + "\t" +
+			// avgLamda);
 
 			maxCover = maxCoverAdapt;
 
-			break;	
+			break;
+
 		case MAX_COVER_ADAPT_T:
-			MaxCoverAdaptT maxCoverAdaptT = new MaxCoverAdaptT(
-					getContainerWithDeadline(), TimeInstance);
+			MaxCoverAdaptT maxCoverAdaptT = new MaxCoverAdaptT(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverAdaptT.epsGain = epsGain;
 			maxCoverAdaptT.epsBudget = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
@@ -202,25 +270,26 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCoverAdaptT.deltaBudget = preAggBudget - usedBudget;
 			}
 			maxCoverAdaptT.budget = totalBudget - usedBudget;
-			
+
 			maxCoverAdaptT.lambda = avgLamda;
 			assignedWorker = maxCoverAdaptT.maxCover();
-
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
 			TotalAssignedTasks += maxCoverAdaptT.assignedTasks;
 			TotalCoveredUtility += maxCoverAdaptT.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();
-			
+
 			// update average gain
-			avgLamda = (avgLamda * TimeInstance + maxCoverAdaptT.gain + 0.0)/(TimeInstance + 1);
-			//System.out.print("\t" + maxCoverAdaptT.deltaBudget + "\t" + avgLamda);
+			avgLamda = (avgLamda * TimeInstance + maxCoverAdaptT.gain + 0.0) / (TimeInstance + 1);
+			// System.out.print("\t" + maxCoverAdaptT.deltaBudget + "\t" +
+			// avgLamda);
 
 			maxCover = maxCoverAdaptT;
 			break;
+
 		case MAX_COVER_ADAPT_T_W:
-			MaxCoverAdaptT maxCoverAdaptTW = new MaxCoverAdaptT(
-					getContainerWithDeadline(), TimeInstance);
+			MaxCoverAdaptT maxCoverAdaptTW = new MaxCoverAdaptT(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverAdaptTW.epsGain = epsGain;
 			maxCoverAdaptTW.epsBudget = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
@@ -232,40 +301,75 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCoverAdaptTW.deltaBudget = preAggBudget - usedBudget;
 			}
 			maxCoverAdaptTW.budget = totalBudget - usedBudget;
-			
+
 			maxCoverAdaptTW.lambda = avgLamda;
 			assignedWorker = maxCoverAdaptTW.maxCover();
-
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
 			TotalAssignedTasks += maxCoverAdaptTW.assignedTasks;
 			TotalCoveredUtility += maxCoverAdaptTW.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();
-			
+
 			// update average gain
-			avgLamda = (avgLamda * TimeInstance + maxCoverAdaptTW.gain + 0.0)/(TimeInstance + 1);
-			//System.out.print("\t" + maxCoverAdaptTW.deltaBudget + "\t" + avgLamda);
+			avgLamda = (avgLamda * TimeInstance + maxCoverAdaptTW.gain + 0.0) / (TimeInstance + 1);
+			// System.out.print("\t" + maxCoverAdaptTW.deltaBudget + "\t" +
+			// avgLamda);
 
 			maxCover = maxCoverAdaptTW;
+			break;
+			
+		
+		case MAX_COVER_NAIVE_T:
+			MaxCoverTemporal maxCoverBasicT3 = new MaxCoverTemporal(containerWorkerWithTaskDeadline, TimeInstance);
+
+			maxCoverBasicT3.budget = totalBudget - usedBudget;
+
+			assignedWorker = maxCoverBasicT3.maxCover();
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
+
+			// TotalAssignedTasks+= maxCoverBasicT3.assignedTasks;
+
+			TotalAssignedTasks = Geocrowd.assignedTasks.size();
+			TotalCoveredUtility += maxCoverBasicT3.assignedUtility;
+			TotalAssignedWorkers += assignedWorker.size();
+
+			usedBudget += assignedWorker.size();
+
+			maxCover = maxCoverBasicT3;
+			break;
+
+		case MAX_COVER_RANDOM_T:
+			MaxCoverTemporal maxCoverBasicT4 = new MaxCoverTemporal(containerWorkerWithTaskDeadline, TimeInstance);
+
+			maxCoverBasicT4.budget = getBudget(algorithm);
+
+			assignedWorker = maxCoverBasicT4.maxCover();
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
+			TotalAssignedTasks += maxCoverBasicT4.assignedTasks;
+			TotalCoveredUtility += maxCoverBasicT4.assignedUtility;
+			TotalAssignedWorkers += assignedWorker.size();
+
+			usedBudget += assignedWorker.size();
+
+			maxCover = maxCoverBasicT4;
 			break;
 		case MAX_COVER_BASIC_T:
 		case MAX_COVER_BASIC_WORKLOAD_T:
 		case MAX_COVER_PRO_T:
-			MaxCoverTemporal maxCoverBasicT = new MaxCoverTemporal(
-					getContainerWithDeadline(), TimeInstance);
+			MaxCoverTemporal maxCoverBasicT = new MaxCoverTemporal(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverBasicT.budget = getBudget(algorithm);
 			assignedWorker = maxCoverBasicT.maxCover();
-
+			// printSelectedWorker(algorithm.toString(), assignedWorker);
 			TotalAssignedTasks += maxCoverBasicT.assignedTasks;
 			TotalCoveredUtility += maxCoverBasicT.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = maxCoverBasicT;
-//			}
+			// }
 			break;
 		case MAX_COVER_BASIC_T2:
-			Temporal2 maxCoverBasicT2 = new Temporal2(
-					getContainerWithDeadline(), TimeInstance);
+			Temporal2 maxCoverBasicT2 = new Temporal2(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverBasicT2.budget = getBudget(algorithm);
 			assignedWorker = maxCoverBasicT2.maxCover();
 
@@ -273,28 +377,29 @@ public class OnlineMTC extends GeocrowdSensing {
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
 			maxCover = maxCoverBasicT2;
-//			}
+			// }
 			break;
 
 		case MAX_COVER_BASIC_S:
 		case MAX_COVER_PRO_S:
-			MaxCoverSpatial maxCoverS = new MaxCoverSpatial(getContainerWithDeadline(),
-					TimeInstance);
+			MaxCoverSpatial maxCoverS = new MaxCoverSpatial(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverS.budget = getBudget(algorithm);
-			maxCoverS.setTaskList(taskList);
+			// maxCoverS.setTaskList(taskList);
+			maxCoverS.setTaskList(tasksMap);
 			/**
 			 * compute entropy for workers
 			 */
 			createGrid();
+			readBoundary();
 			readEntropy();
 			HashMap<Integer, Double> worker_entropies = new HashMap<Integer, Double>();
-			
-			for (int idx = 0; idx < containerWorker.size(); idx++)
+			// luan change container worker to containerWorkerWithTaskDeadline
+			for (int idx = 0; idx < containerWorkerWithTaskDeadline.size(); idx++)
 				worker_entropies.put(idx, computeCost(workerList.get(idx)));
-			
+
 			HashMap<Integer, Double> task_entropies = new HashMap<Integer, Double>();
-			for (int idx = 0; idx < taskList.size(); idx++)
-				task_entropies.put(idx, computeCost(taskList.get(idx)));
+			for (int idx = 0; idx < maxCoverS.taskList.size(); idx++)
+				task_entropies.put(idx, computeCost(maxCoverS.taskList.get(idx)));
 
 			maxCoverS.setWorkerEntropies(worker_entropies);
 			maxCoverS.setTaskEntropies(task_entropies);
@@ -302,7 +407,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCoverS.meanEntropy = meanEntropy;
 			maxCoverS.totalEntropy = totalEntropy;
 			assignedWorker = maxCoverS.maxCover();
-			
+
 			TotalAssignedTasks += maxCoverS.assignedTasks;
 			TotalCoveredUtility += maxCoverS.assignedUtility;
 			TotalAssignedWorkers += assignedWorker.size();
@@ -311,30 +416,30 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCover = maxCoverS;
 			break;
 		case MAX_COVER_BASIC_S2:
-			MaxCoverSpatial2 maxCoverS2 = new MaxCoverSpatial2(getContainerWithDeadline(),
-					TimeInstance);
+			MaxCoverSpatial2 maxCoverS2 = new MaxCoverSpatial2(containerWorkerWithTaskDeadline, TimeInstance);
 			maxCoverS2.budget = getBudget(algorithm);
-			maxCoverS2.setTaskList(taskList);
+			// maxCoverS2.setTaskList(taskList);
+			maxCoverS2.setTaskList(tasksMap);
 			/**
 			 * compute entropy for workers
 			 */
-//			printBoundaries();
+			// printBoundaries();
 			createGrid();
 			readEntropy();
 			HashMap<Integer, Double> worker_entropies2 = new HashMap<Integer, Double>();
-			
-			for (int idx = 0; idx < containerWorker.size(); idx++)
+			// luan change container worker to containerWorkerWithTaskDeadline
+			for (int idx = 0; idx < containerWorkerWithTaskDeadline.size(); idx++)
 				worker_entropies2.put(idx, computeCost(workerList.get(idx)));
-			
+
 			HashMap<Integer, Double> task_entropies2 = new HashMap<Integer, Double>();
-			for (int idx = 0; idx < taskList.size(); idx++)
-				task_entropies2.put(idx, computeCost(taskList.get(idx)));
+			for (int idx = 0; idx < maxCoverS2.taskList.size(); idx++)
+				task_entropies2.put(idx, computeCost(maxCoverS2.taskList.get(idx)));
 
 			maxCoverS2.setWorkerEntropies(worker_entropies2);
 			maxCoverS2.setTaskEntropies(task_entropies2);
 			maxCoverS2.maxRegionEntropy = maxEntropy;
 			assignedWorker = maxCoverS2.maxCover();
-			
+
 			TotalAssignedTasks += maxCoverS2.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
@@ -342,8 +447,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCover = maxCoverS2;
 			break;
 		case MAX_COVER_BASIC_ST:
-			MaxCoverSpatialTemporal maxCoverST = new MaxCoverSpatialTemporal(getContainerWithDeadline(),
-					TimeInstance);
+			MaxCoverSpatialTemporal maxCoverST = new MaxCoverSpatialTemporal(getContainerWithDeadline(), TimeInstance);
 			maxCoverST.budget = getBudget(algorithm);
 			maxCoverST.setTaskList(taskList);
 			/**
@@ -352,13 +456,13 @@ public class OnlineMTC extends GeocrowdSensing {
 			createGrid();
 			readEntropy();
 			HashMap<Integer, Double> worker_entropies4 = new HashMap<Integer, Double>();
-			
+
 			for (int idx = 0; idx < containerWorker.size(); idx++)
 				worker_entropies4.put(idx, computeCost(workerList.get(idx)));
 
 			maxCoverST.setWorkerEntropies(worker_entropies4);
 			assignedWorker = maxCoverST.maxCover();
-			
+
 			TotalAssignedTasks += maxCoverST.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
 			usedBudget += assignedWorker.size();
@@ -367,8 +471,7 @@ public class OnlineMTC extends GeocrowdSensing {
 			break;
 		case MAX_COVER_ADAPT_S:
 		case MAX_COVER_ADAPT_S_W:
-			MaxCoverAdaptS maxCoverAdaptS = new MaxCoverAdaptS(
-					getContainerWithDeadline(), TimeInstance);
+			MaxCoverAdaptS maxCoverAdaptS = new MaxCoverAdaptS(getContainerWithDeadline(), TimeInstance);
 			maxCoverAdaptS.eps = epsGain;
 			maxCoverAdaptS.eps = epsBudget;
 			if (TimeInstance == GeocrowdConstants.TIME_INSTANCE - 1) {
@@ -381,9 +484,9 @@ public class OnlineMTC extends GeocrowdSensing {
 				maxCoverAdaptS.deltaBudget = usedBudget - preAggBudget;
 				maxCoverAdaptS.budget = getBudget(algorithm);
 			}
-			
+
 			maxCoverAdaptS.lambda = avgLamda;
-			
+
 			maxCoverAdaptS.setTaskList(taskList);
 			/**
 			 * compute entropy for workers
@@ -391,10 +494,10 @@ public class OnlineMTC extends GeocrowdSensing {
 			createGrid();
 			readEntropy();
 			HashMap<Integer, Double> worker_entropiesS = new HashMap<Integer, Double>();
-			
+
 			for (int idx = 0; idx < containerWorker.size(); idx++)
 				worker_entropiesS.put(idx, computeCost(workerList.get(idx)));
-			
+
 			HashMap<Integer, Double> task_entropiesS = new HashMap<Integer, Double>();
 			for (int idx = 0; idx < taskList.size(); idx++)
 				task_entropiesS.put(idx, computeCost(taskList.get(idx)));
@@ -404,45 +507,47 @@ public class OnlineMTC extends GeocrowdSensing {
 			maxCoverAdaptS.maxEntropy = maxEntropy;
 			maxCoverAdaptS.meanEntropy = meanEntropy;
 			maxCoverAdaptS.totalEntropy = totalEntropy;
-			
+
 			assignedWorker = maxCoverAdaptS.maxCover();
 
 			TotalAssignedTasks += maxCoverAdaptS.assignedTasks;
 			TotalAssignedWorkers += assignedWorker.size();
 
 			usedBudget += assignedWorker.size();
-			
+
 			// update average gain
-			avgLamda = (avgLamda * TimeInstance + maxCoverAdaptS.gain + 0.0)/(TimeInstance + 1);
-			//System.out.print("\t" + maxCoverAdaptS.deltaBudget + "\t" + avgLamda);
+			avgLamda = (avgLamda * TimeInstance + maxCoverAdaptS.gain + 0.0) / (TimeInstance + 1);
+			// System.out.print("\t" + maxCoverAdaptS.deltaBudget + "\t" +
+			// avgLamda);
 
 			maxCover = maxCoverAdaptS;
 			break;
 		}
 
+		assignedTasks.addAll(maxCover.assignedTaskSet);
+//		System.out.println("Assinged Task = " + assignedTasks.size());
 		/**
 		 * As all the tasks in the container are assigned, we need to remove
 		 * them from task list.
 		 */
-		ArrayList<Integer> assignedTasks = new ArrayList<Integer>();
-		// Iterator it = sc.universe.iterator();
-//		System.out.println(maxCover.assignedTaskSet);
-		if (maxCover.assignedTaskSet.size() > 0) {
-		Iterator it = maxCover.assignedTaskSet.iterator();
-		while (it.hasNext()) {
-			Integer candidateIndex = (Integer) it.next();
-			assignedTasks.add(candidateTaskIndices.get(candidateIndex));
-		}}
-
 		/**
-		 * sorting is necessary to make sure that we don't mess things up when
-		 * removing elements from a list
+		 * ArrayList<Integer> assignedTasks = new ArrayList<Integer>();
+		 * 
+		 * if (maxCover.assignedTaskSet.size() > 0) { Iterator it =
+		 * maxCover.assignedTaskSet.iterator(); while (it.hasNext()) { Integer
+		 * candidateIndex = (Integer) it.next();
+		 * assignedTasks.add(candidateTaskIndices.get(candidateIndex)); }}
+		 * 
+		 * /** sorting is necessary to make sure that we don't mess things up
+		 * when removing elements from a list
 		 */
-		Collections.sort(assignedTasks);
-		for (int i = assignedTasks.size() - 1; i >= 0; i--) {
-			/* remove the last elements first */
-			taskList.remove((int) assignedTasks.get(i));
-		}
+		/**
+		 * Collections.sort(assignedTasks); for (int i = assignedTasks.size() -
+		 * 1; i >= 0; i--) { /* remove the last elements first
+		 */ /**
+			 * taskList.remove((int) assignedTasks.get(i)); }
+			 **/
+		// for(Integer taskID: taskap)
 
 		/**
 		 * update workerCounts
@@ -457,14 +562,14 @@ public class OnlineMTC extends GeocrowdSensing {
 		for (Integer i : assignedWorker) {
 			GenericWorker w = workerList.get(i);
 			if (workerCounts.containsKey(w.getId())) {
-				workerCounts.put(w.getId(),
-						workerCounts.get(w.getId()) + 1);
+				workerCounts.put(w.getId(), workerCounts.get(w.getId()) + 1);
 			} else {
 				workerCounts.put(w.getId(), 1);
 			}
 		}
+		// workerCounts=assignedTasks.
 	}
-	
+
 	/**
 	 * Debug the number of requests for each worker.
 	 */
@@ -484,7 +589,7 @@ public class OnlineMTC extends GeocrowdSensing {
 		System.out.println("count\tfreq");
 
 		for (Integer i : h.keySet()) {
-			System.out.println(i + "\t" + i*h.get(i));
+			System.out.println(i + "\t" + i * h.get(i));
 		}
 		System.out.println("\nMax count: " + max);
 		return max;
@@ -494,6 +599,12 @@ public class OnlineMTC extends GeocrowdSensing {
 		switch (algorithm) {
 
 		case MAX_COVER_BASIC:
+			if (TimeInstance < GeocrowdConstants.TIME_INSTANCE - 1) {
+				return totalBudget / GeocrowdConstants.TIME_INSTANCE;
+			} else {
+				return totalBudget
+						- totalBudget / GeocrowdConstants.TIME_INSTANCE * (GeocrowdConstants.TIME_INSTANCE - 1);
+			}
 		case MAX_COVER_BASIC_MO:
 		case MAX_COVER_BASIC_S_MO:
 		case MAX_COVER_BASIC_S:
@@ -507,9 +618,9 @@ public class OnlineMTC extends GeocrowdSensing {
 			if (TimeInstance < GeocrowdConstants.TIME_INSTANCE - 1) {
 				return totalBudget / GeocrowdConstants.TIME_INSTANCE;
 			} else {
-				return totalBudget - usedBudget;
+				return totalBudget
+						- totalBudget / GeocrowdConstants.TIME_INSTANCE * (GeocrowdConstants.TIME_INSTANCE - 1);
 			}
-			
 		case MAX_COVER_BASIC_WORKLOAD:
 		case MAX_COVER_ADAPT_B_W:
 		case MAX_COVER_ADAPT_T_W:
@@ -522,10 +633,33 @@ public class OnlineMTC extends GeocrowdSensing {
 		case MAX_COVER_PRO_T:
 		case MAX_COVER_PRO_ST:
 			return totalBudget * numberArrivalTask / totalNumberTasks;
-			// return (totalBudget - usedBudget) * taskList.size()
-			// / (totalNumberTasks - numberCoveredTask);
-
+		// return (totalBudget - usedBudget) * taskList.size()
+		// / (totalNumberTasks - numberCoveredTask);
+		case MAX_COVER_RANDOM_B:
+		case MAX_COVER_RANDOM_T:
+			if(randomBudget == null){
+				randomBudget = new ArrayList<>();
+				Random r = new Random();
+				int sum =0;
+				ArrayList<Integer> tem = new ArrayList<>();
+				for(int i = 0 ; i < GeocrowdConstants.TIME_INSTANCE; i++){
+					Integer k = r.nextInt(28);
+					tem.add(k);
+					sum +=k;
+				}
+				int sumBudget = 0;
+				for(int i =0 ; i < GeocrowdConstants.TIME_INSTANCE-1; i++){
+					int b = totalBudget * tem.get(i)/sum;
+					sumBudget +=b;
+					randomBudget.add(b);
+				}
+				randomBudget.add(totalBudget - sumBudget);
+			}
+			return randomBudget.get(TimeInstance);
+		
 		}
+		
+			
 		return 0;
 	}
 
@@ -533,10 +667,38 @@ public class OnlineMTC extends GeocrowdSensing {
 		int numberTasks = 0;
 		for (int i = 0; i < GeocrowdConstants.TIME_INSTANCE; i++) {
 			String taskPath = Utils.datasetToTaskPath(DATA_SET);
-			numberTasks += Parser
-					.readNumberOfTasks(taskPath
-							+ i + ".txt");
+			numberTasks += Parser.readNumberOfTasks(taskPath + i + ".txt");
 		}
 		return numberTasks;
+	}
+
+	public void printStatistics() throws UnsupportedEncodingException, FileNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		ArrayList<Integer> tasksPerWorkers = new ArrayList<>();
+		try (Writer writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(TimeInstance + "tasksPerWorker.txt"), "utf-8"))) {
+
+			for (HashMap<Integer, Integer> taskWithDeadline : containerWorkerWithTaskDeadline) {
+				tasksPerWorkers.add(taskWithDeadline.size());
+			}
+			Collections.sort(tasksPerWorkers);
+			for (int i = 0; i < tasksPerWorkers.size(); i++) {
+				writer.write(tasksPerWorkers.get(i) + ",");
+			}
+
+		}
+		ArrayList<Integer> workersPerTask = new ArrayList<>();
+
+		try (Writer writer = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(TimeInstance + "workersPerTask.txt"), "utf-8"))) {
+
+			for (ArrayList workers : invertedContainer.values()) {
+				workersPerTask.add(workers.size());
+			}
+			Collections.sort(workersPerTask);
+			for (int i = 0; i < workersPerTask.size(); i++) {
+				writer.write(workersPerTask.get(i) + ",");
+			}
+		}
 	}
 }

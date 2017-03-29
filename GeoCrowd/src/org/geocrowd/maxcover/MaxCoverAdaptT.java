@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import org.geocrowd.Constants;
 import org.geocrowd.datasets.params.GeocrowdConstants;
 
 /**
@@ -62,6 +63,7 @@ public class MaxCoverAdaptT extends MaxCoverTemporal {
 				HashMap<Integer, Integer> s = S.get(k);
 				WeightGain wg = weight(k, s, currentTimeInstance,
 						assignedTaskSet);
+				if(Constants.workerOverload) wg= weight2(k, s, currentTimeInstance, assignedTaskSet);
 				if (wg.weight < smallestAvgWeight) {
 					smallestAvgWeight = wg.weight;
 					bestWorkerIndex = k;

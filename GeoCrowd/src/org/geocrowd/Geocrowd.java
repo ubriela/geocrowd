@@ -109,7 +109,8 @@ public abstract class Geocrowd {
 
 	/** maintain a set of current task list, not include expired ones. */
 	public static ArrayList<GenericTask> taskList = new ArrayList<>();
-
+	public static HashMap<Integer, GenericTask> tasksMap = new HashMap<>();
+	public static HashSet<Integer> assignedTasks = new HashSet<Integer>();
 	/**
 	 * maintain tasks that participate in one time instance task assignment
 	 * (i.e., at least one worker can perform this task). The values in this
@@ -123,7 +124,7 @@ public abstract class Geocrowd {
 	 * (not in the task list)
 	 */
 	ArrayList<ArrayList> containerWorker;
-
+	public static ArrayList<HashMap<Integer, Integer>> containerWorkerWithTaskDeadline = new ArrayList<>();
 	/**
 	 * used to prune workers with no task in container. Similar to
 	 * containerWorker, containerPrune contains task index of elements in
@@ -132,7 +133,7 @@ public abstract class Geocrowd {
 	ArrayList[] containerPrune = null;
 
 	/** is used to compute average worker/task. */
-	HashMap<Integer, ArrayList> invertedContainer;
+	public HashMap<Integer, ArrayList<Integer>> invertedContainer;
 
 	/**
 	 * The task set at one time instance, to quickly find candidate tasks.

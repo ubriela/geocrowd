@@ -21,11 +21,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 import org.geocrowd.common.crowd.GenericTask;
 import org.geocrowd.common.crowd.GenericWorker;
 import org.geocrowd.common.crowd.SensingTask;
 import org.geocrowd.common.crowd.VirtualWorker;
+import org.geocrowd.common.entropy.EntropyRecord;
 import org.geocrowd.common.utils.Utils;
 import org.geocrowd.setcover.MultiSetCoverGreedy_CloseToDeadline;
 import org.geocrowd.setcover.MultiSetCoverGreedy_LargeWorkerFanout;
@@ -44,6 +46,7 @@ import com.google.common.hash.Funnel;
 import com.google.common.hash.PrimitiveSink;
 
 import org.geocrowd.datasets.params.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdSensingConstants;
 import org.geocrowd.datasets.synthetic.Parser;
 
 // TODO: Auto-generated Javadoc
@@ -81,6 +84,7 @@ public class GeocrowdSensing extends Geocrowd {
 	 */
 	public ArrayList<HashMap<Integer, Integer>> getContainerWithDeadline() {
 		ArrayList<HashMap<Integer, Integer>> containerWithDeadline = new ArrayList<>();
+		//System.out.println("Container worker size = " + containerWorker.size());
 		Iterator it = containerWorker.iterator();
 		while (it.hasNext()) {
 			ArrayList taskids = (ArrayList) it.next();
@@ -89,12 +93,53 @@ public class GeocrowdSensing extends Geocrowd {
 			while (it2.hasNext()) {
 				Integer taskid = (Integer) it2.next();
 				taskidsWithDeadline.put(taskid,
-						taskList.get(candidateTaskIndices.get(taskid))
+						taskList.get(candidateTaskIndices.indexOf(taskid)) //?
 								.getArrivalTime() + GeocrowdConstants.MAX_TASK_DURATION);
 			}
+			
+			
 			containerWithDeadline.add(taskidsWithDeadline);
 		}
 		return containerWithDeadline;
+	}
+	
+	
+	public  void matchingTaskWorkers2(){
+		//build tasksMap and containerWorkerWithTaskDealine 
+		tasksMap.clear();
+		for(int i = 0;  i < taskList.size(); i++){
+			if(!assignedTasks.contains((int) taskList.get(i).getId()))
+				tasksMap.put((int) taskList.get(i).getId(), taskList.get(i));
+		}
+		containerWorkerWithTaskDeadline = new ArrayList<>();
+		invertedContainer = new HashMap<>();
+		
+		for(int i = 0; i < workerList.size(); i++){
+			
+			HashMap<Integer, Integer> tasks_deadlines = new HashMap<>();
+			for(Integer j: tasksMap.keySet()){
+				GenericWorker w = workerList.get(i);
+				SensingTask task = (SensingTask) tasksMap.get(j);
+				if (GeocrowdTaskUtility.distanceWorkerTask(DATA_SET, w, task) <= GeocrowdSensingConstants.TASK_RADIUS
+						&&  w.getOnlineTime() < task.getArrivalTime()+ task.lifetime
+						&& w.getOnlineTime() >= task.getArrivalTime()
+						){
+					
+					tasks_deadlines.put((int) task.getId(), task.getArrivalTime()+task.lifetime);
+					if(invertedContainer.containsKey((int) task.getId())){
+						invertedContainer.get((int) task.getId()).add(i);
+					}
+					else{
+						ArrayList<Integer> workerIndices = new ArrayList<>();
+						workerIndices.add(i);
+						invertedContainer.put((int) task.getId(), workerIndices);
+					}
+				}
+			}
+			containerWorkerWithTaskDeadline.add(tasks_deadlines);
+		}
+		
+		
 	}
 
 	/**
@@ -103,18 +148,30 @@ public class GeocrowdSensing extends Geocrowd {
 	 */
 	@Override
 	public void matchingTasksWorkers() {
-		invertedContainer = new HashMap<Integer, ArrayList>();
+		invertedContainer = new HashMap<Integer, ArrayList<Integer>>();
 		candidateTaskIndices = new ArrayList();
 		taskSet = new HashSet<Integer>();
 		containerWorker = new ArrayList<>();
+		
+//		for(int taskIdx = taskList.size() -1; taskIdx >=0; taskIdx -- ){
+//			if(taskList.get(taskIdx).getArrivalTime() + 
+//					GeocrowdSensingConstants.MAX_TASK_DURATION <= OnlineMTC.TimeInstance){
+//				taskList.remove(taskIdx);
+//			}
+//		}
+		
+		
 		containerPrune = new ArrayList[workerList.size()];
 
+		
 		// remove expired task from task list
 		pruneExpiredTasks();
+
 		for (int workeridx = 0; workeridx < workerList.size(); workeridx++) {
 			reverseRangeQuery(workeridx);
 		}
 
+		
 		// remove workers with no tasks
 		for (int i = containerPrune.length - 1; i >= 0; i--) {
 			if (containerPrune[i] == null || containerPrune[i].size() == 0) {
@@ -609,6 +666,10 @@ public class GeocrowdSensing extends Geocrowd {
 		TaskCount += Parser.parseSensingTasks(fileName, startTime, taskList);
 	}
 
+	
+	public static ArrayList<GenericTask> readTasks(String filename, int startTime){
+		return Parser.parseSensingTasks2(filename, startTime);
+	}
 	/**
 	 * Read workers from file Working region of each worker is computed from his
 	 * past history.
@@ -620,6 +681,80 @@ public class GeocrowdSensing extends Geocrowd {
 	public void readWorkers(String fileName) {
 		WorkerCount += Parser.parseGenericWorkers(fileName, workerList);
 	}
+
+	public ArrayList<GenericWorker> readWorkersWithLimit(String fileName, int entryTime, int limit) {
+		ArrayList<GenericWorker> listWorkers = new ArrayList<>();
+        Parser.parseSensingWorkers(fileName, listWorkers, entryTime);
+      //  workerList.add(workerSampling(listWorkers, limit));
+//        ArrayList<GenericWorker> result = workerSampling(listWorkers, limit);
+        ArrayList<GenericWorker> result;
+        
+                if(limit < listWorkers.size())
+                	result = new ArrayList( listWorkers.subList(0, limit));
+                else result = listWorkers;
+        
+        workerList.addAll(result);
+//       
+        WorkerCount += result.size();
+        return result;
+        
+    }
+	private ArrayList<GenericWorker> workerSampling(ArrayList<GenericWorker> workerList, int limit) {
+		ArrayList<GenericWorker> result = new ArrayList<>();
+		double totalEntropy = 0;
+		Geocrowd.DATA_SET = DatasetEnum.GOWALLA;
+		GeocrowdInstance geoCrowd = new GeocrowdInstance();
+		geoCrowd.printBoundaries();
+		geoCrowd.createGrid();
+		geoCrowd.readEntropy();
+		for(EntropyRecord er: geoCrowd.entropyList){
+			totalEntropy += er.getEntropy();
+		}
+		//System.out.println("Total entropy = "+ totalEntropy);
+		Random r = new Random();
+		
+		while(result.size() < limit){
+			double randomNumber = r.nextDouble()* totalEntropy;
+			//System.out.println("Random number = "+ randomNumber);
+			for(int i = 0; i < geoCrowd.entropyList.size(); i++){
+				randomNumber -=geoCrowd.entropyList.get(i).getEntropy();
+				if(randomNumber <=0){
+					
+					int row = geoCrowd.entropyList.get(i).getCoord().getRowId();
+					int col = geoCrowd.entropyList.get(i).getCoord().getColId();
+					double startLat = geoCrowd.rowToLat(row);
+					double endLat = geoCrowd.rowToLat(row + 1);
+					double startLon = geoCrowd.colToLng(col);
+					double endLon = geoCrowd.colToLng(col+1);
+					
+					ArrayList<GenericWorker> workerInCells = getWorkerInCell(startLat, endLat, startLon, endLon, workerList);
+				//	System.out.println("#workers in cells :"+ workerInCells.size() );
+					if(workerInCells.size() >0)
+					{
+//						System.out.println("here");
+						GenericWorker w = workerInCells.get((new Random()).nextInt( workerInCells.size()));
+						result.add(w);
+						break;
+					}
+					
+				}
+				if(result.size() > limit) break;
+			}
+		}
+		return result;
+	}
+
+
+	private ArrayList<GenericWorker> getWorkerInCell(double startLat, double endLat, double startLon, double endLon, ArrayList<GenericWorker> workerList) {
+		ArrayList<GenericWorker> result = new ArrayList<>();
+		for(GenericWorker w: workerList){
+			if(w.getLat() >= startLat && w.getLat() <= endLat && w.getLng() >= startLon && w.getLng() <= endLon){
+				result.add(w);
+			}
+		}
+		return result;
+	}
+
 
 	/**
 	 * Compute input for one time instance, including container and
@@ -690,7 +825,7 @@ public class GeocrowdSensing extends Geocrowd {
 		workerList = null;
 		workerList = new ArrayList<>();
 		taskList = new ArrayList<>();
-		
+//		assignedTasks.clear();
 	}
 
 }

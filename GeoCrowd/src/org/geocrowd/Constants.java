@@ -3,6 +3,7 @@ package org.geocrowd;
 public class Constants {
 
 	public static double alpha = 0.1;
+	public static double theta = 0.5;
 
 	/** The Constant EXPERTISE_MATCH_SCORE. */
 	public static final double EXPERTISE_MATCH_SCORE = 1.5;
@@ -22,8 +23,11 @@ public class Constants {
 	 */
 	public static final double MU = 1.0;
 
-	public static String UTILITY_FUNCTION = "zipf";
+	public static String UTILITY_FUNCTION = "const";
 	public static int ZIPF_STEPS = 100;
+	
+	public static boolean workerOverload = false;
+	//public static double 
 	
 	/**
 	 * Only choose worker covers at least k tasks.

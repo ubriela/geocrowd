@@ -15,6 +15,7 @@ package org.geocrowd.maxcover;
 
 import static org.geocrowd.Geocrowd.candidateTaskIndices;
 import static org.geocrowd.Geocrowd.taskList;
+import static org.geocrowd.Geocrowd.tasksMap;
 import static org.geocrowd.Geocrowd.workerList;
 
 import java.util.ArrayList;
@@ -24,11 +25,13 @@ import java.util.HashSet;
 import org.geocrowd.Constants;
 import org.geocrowd.Geocrowd;
 import org.geocrowd.GeocrowdTaskUtility;
+import org.geocrowd.OnlineMTC;
 import org.geocrowd.common.crowd.GenericWorker;
 import org.geocrowd.common.crowd.SensingTask;
 import org.geocrowd.common.crowd.SensingWorker;
 import org.geocrowd.common.utils.Utils;
 import org.geocrowd.datasets.params.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdSensingConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -65,6 +68,7 @@ public class MaxCoverTemporal extends MaxCover {
 		 * store all assigned tasks
 		 */
 //		assignedTaskSet = new HashSet<Integer>();
+		assignedTaskSet = new HashSet<Integer>();
 		while (assignWorkers.size() < budget && !Q.isEmpty()) {
 			int bestWorkerIndex = 0;
 			double smallestAvgTimeToDead = 10000000;
@@ -93,6 +97,8 @@ public class MaxCoverTemporal extends MaxCover {
 				HashMap<Integer, Integer> s = S.get(k);
 				WeightGain wg = weight(k, s, currentTimeInstance,
 						assignedTaskSet);
+				
+				if(Constants.workerOverload) wg= weight2(k, s, currentTimeInstance, assignedTaskSet);
                                
 				if (wg.weight < smallestAvgTimeToDead) {
 					smallestAvgTimeToDead = wg.weight;
@@ -103,6 +109,7 @@ public class MaxCoverTemporal extends MaxCover {
 //                        System.out.println("weight:"+smallestAvgTimeToDead);
                         
 			assignWorkers.add(bestWorkerIndex);
+			
 			assignedUtility += maxUncoveredUtility;
 
 //			System.out.println(S.size() + " " + bestWorkerIndex);
@@ -124,8 +131,50 @@ public class MaxCoverTemporal extends MaxCover {
 			}
 		}
 		assignedTasks = assignedTaskSet.size();
+
 //		System.out.println(universe.size() + "\t" + assignedTasks  + "\t" + assignWorkers.size() + "\t"  + assignedTasks/assignWorkers.size() );
 		return assignWorkers;
+	}
+	
+	
+	public WeightGain weight2(int workeridx, HashMap<Integer, Integer> tasksWithDeadlines,
+			int currentTI, HashSet<Integer> completedTasks) {
+		/**
+		 * denotes the number of unassigned tasks covered by worker
+		 */
+		double uncoveredUtility = 0.0;
+		double totalElapsedTime = 0;
+		for (Integer t : tasksWithDeadlines.keySet()) {
+			/**
+			 * Only consider uncovered tasks
+			 */
+			if (!completedTasks.contains(t)) {
+				double elapsedTime = tasksWithDeadlines.get(t) - currentTI; // the
+																			// smaller,
+																			// the
+																			// better
+//				System.out.println(elapsedTime);
+				GenericWorker worker = workerList.get(workeridx);
+//				SensingTask task = (SensingTask) taskList
+//						.get(candidateTaskIndices.get(t));
+				SensingTask task = (SensingTask) tasksMap.get(t);
+				double utility = GeocrowdTaskUtility.utility(Geocrowd.DATA_SET, worker, task);
+				uncoveredUtility += utility;
+				if(currentTI < GeocrowdSensingConstants.TIME_INSTANCE-1)
+					
+					totalElapsedTime += utility/(1 + elapsedTime);
+				else totalElapsedTime += utility;
+			}
+		}
+		/**
+		 * average time to deadline of new covered task
+		 */
+		double weight = -totalElapsedTime;
+		int count = 0; 
+		if(OnlineMTC.workerCounts.containsKey(workeridx)) count = OnlineMTC.workerCounts.get(workeridx);
+		weight = -(totalElapsedTime * (1-Constants.theta)/taskList.size() -
+				Constants.theta*count/GeocrowdSensingConstants.TIME_INSTANCE);
+		return new WeightGain(weight, uncoveredUtility);
 	}
 
 	/**
@@ -157,11 +206,15 @@ public class MaxCoverTemporal extends MaxCover {
 																			// better
 //				System.out.println(elapsedTime);
 				GenericWorker worker = workerList.get(workeridx);
-				SensingTask task = (SensingTask) taskList
-						.get(candidateTaskIndices.get(t));
+//				SensingTask task = (SensingTask) taskList
+//						.get(candidateTaskIndices.get(t));
+				SensingTask task = (SensingTask) tasksMap.get(t);
 				double utility = GeocrowdTaskUtility.utility(Geocrowd.DATA_SET, worker, task);
 				uncoveredUtility += utility;
-				totalElapsedTime += utility/(1 + elapsedTime);
+				if(currentTI < GeocrowdSensingConstants.TIME_INSTANCE-1)
+					
+					totalElapsedTime += utility/(1 + elapsedTime);
+				else totalElapsedTime += utility;
 			}
 		}
 		/**

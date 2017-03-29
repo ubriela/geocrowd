@@ -15,6 +15,7 @@ package org.geocrowd.maxcover;
 
 import static org.geocrowd.Geocrowd.candidateTaskIndices;
 import static org.geocrowd.Geocrowd.taskList;
+import static org.geocrowd.Geocrowd.tasksMap;
 import static org.geocrowd.Geocrowd.workerList;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import org.geocrowd.common.crowd.SensingTask;
 import org.geocrowd.common.crowd.SensingWorker;
 import org.geocrowd.common.utils.Utils;
 import org.geocrowd.datasets.params.GeocrowdConstants;
+import org.geocrowd.datasets.params.GeocrowdSensingConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -41,7 +43,7 @@ public class MaxCoverSpatial extends MaxCoverTemporal {
 
 	private HashMap<Integer, Double> worker_entropies;
 	private HashMap<Integer, Double> task_entropies;
-	private ArrayList<GenericTask> taskList;
+	public ArrayList<GenericTask> taskList = new ArrayList<>();
 	public double alpha = Constants.alpha;
 	public double maxEntropy = 0.0;
 	public double totalEntropy = 0.0;
@@ -61,6 +63,12 @@ public class MaxCoverSpatial extends MaxCoverTemporal {
 		this.taskList = taskList;
 	}
 
+	public void setTaskList(HashMap<Integer, GenericTask> tasksMap) {
+		for(Integer taskId: tasksMap.keySet()){
+			this.taskList.add(tasksMap.get(taskId));
+		}
+		
+	}
 	public HashMap<Integer, Double> getWorkerEntropies() {
 		return worker_entropies;
 	}
@@ -114,23 +122,33 @@ public class MaxCoverSpatial extends MaxCoverTemporal {
 			 */
 			if (!completedTasks.contains(taskIdx)) {
 				GenericWorker worker = workerList.get(workeridx);
-				SensingTask task = (SensingTask) taskList
-						.get(candidateTaskIndices.get(taskIdx));
+//				SensingTask task = (SensingTask) taskList
+//						.get(candidateTaskIndices.get(taskIdx));
+				SensingTask task = (SensingTask) tasksMap.get(taskIdx);
 				double utility = GeocrowdTaskUtility.utility(Geocrowd.DATA_SET, worker, task);
 				uncoveredUtility += utility;
 				
-				if (task_entropies.get(taskIdx) != 0) {
+				if (task_entropies.get(taskIdx) !=null && task_entropies.get(taskIdx) != 0) {
 					// System.out.println(meanEntropy + " " + maxEntropy + " " +
 					// task_entropies.get(taskIdx));
 					
 					totalTaskEntropy += utility / (1 + task_entropies.get(taskIdx));
+//					totalTaskEntropy += task_entropies.get(taskIdx)*1.0/totalEntropy;
 				}
 			}
 		}
 		/**
 		 * average region entropy of new covered tasks
 		 */
+		
 		double weight = -totalTaskEntropy;
+//		if(totalTaskEntropy!=0){
+//			System.out.println("hsfsf");
+//		}
+		//luan add 
+		
+		if(currentTI == GeocrowdSensingConstants.TIME_INSTANCE-1) weight = -uncoveredUtility;
+		///
 		// System.out.println(regionEntropy/maxRegionEntropy + " " +
 		// uncoveredTasks/10.0);
 //		 System.out.println(uncoveredUtility);

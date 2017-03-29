@@ -252,7 +252,7 @@ public class GeocrowdInstance extends Geocrowd {
 	 */
 	@Override
 	public void matchingTasksWorkers() {
-		invertedContainer = new HashMap<Integer, ArrayList>();
+		invertedContainer = new HashMap<Integer, ArrayList<Integer>>();
 		candidateTaskIndices = new ArrayList();
 		taskSet = new HashSet<Integer>();
 		containerWorker = new ArrayList<ArrayList>();
@@ -967,6 +967,86 @@ public class GeocrowdInstance extends Geocrowd {
 				int col = 0;
 				int randomIdx = (int) UniformGenerator.randomValue(new Range(0,
 						entropyList.size() - 1), true);
+				EntropyRecord dR = entropyList.get(randomIdx);
+				row = dR.getCoord().getRowId();
+				col = dR.getCoord().getColId();
+
+				// generate a task inside this cell
+
+				double startLat = rowToLat(row);
+				double endLat = rowToLat(row + 1);
+				double lat = UniformGenerator.randomValue(new Range(startLat,
+						endLat), false);
+
+				double startLng = colToLng(col);
+				double endLng = colToLng(col + 1);
+				double lng = UniformGenerator.randomValue(new Range(startLng,
+						endLng), false);
+
+				int time = TimeInstance;
+				int taskCategory = (int) UniformGenerator.randomValue(
+						new Range(0, GeocrowdConstants.TASK_CATEGORY_NUMBER),
+						true);
+				ExpertTask t = (ExpertTask) TaskFactory.getTask(
+						TaskType.EXPERT, lat, lng);
+				t.setArrivalTime(TimeInstance);
+				t.setEntropy(dR.getEntropy());
+				t.setCategory(taskCategory);
+
+				out.write(lat + ";" + lng + ";" + time + ";" + dR.getEntropy()
+						+ ";" + taskCategory + "\n");
+				taskList.add(listCount, t);
+				listCount++;
+			}
+			TaskCount += numTask;
+			// System.out.println("#Total tasks:" + TaskCount);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	
+	
+	public void readTasksWithEntropy3(int numTask, String fileName) {
+		int listCount = taskList.size();
+		HashSet<Integer> generatedIndex = new HashSet<>();
+		try {
+			/*
+			 * calculate #tasks will be generated
+			 */
+			Random r = new Random();
+			int step = 200;
+			r.setSeed(System.nanoTime());
+			// create whole path automatically if not exist
+			Path pathToFile = Paths.get(fileName);
+			Files.createDirectories(pathToFile.getParent());
+			
+			FileWriter writer = new FileWriter(fileName);
+			BufferedWriter out = new BufferedWriter(writer);
+			int count = 0;
+			for (int i = 0; i < numTask; i++) {
+
+				//all cells are filled
+				if(generatedIndex.size() == entropyList.size()){
+					count+= generatedIndex.size();
+					if(count >= numTask){
+						break;
+					}
+					else if(count < numTask){
+						generatedIndex.clear();
+					}
+				};
+				int row = 0;
+				int col = 0;
+				int randomIdx = -1;
+				while(randomIdx == -1 || generatedIndex.contains(randomIdx)){
+					randomIdx = (int) UniformGenerator.randomValue(new Range(0,
+						entropyList.size() - 1), true);
+					
+				}
+				generatedIndex.add(randomIdx);
 				EntropyRecord dR = entropyList.get(randomIdx);
 				row = dR.getCoord().getRowId();
 				col = dR.getCoord().getColId();

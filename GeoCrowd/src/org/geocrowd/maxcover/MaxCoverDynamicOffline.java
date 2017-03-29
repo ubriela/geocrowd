@@ -15,6 +15,7 @@ import org.geocrowd.GeocrowdTaskUtility;
 
 import static org.geocrowd.Geocrowd.candidateTaskIndices;
 import static org.geocrowd.Geocrowd.taskList;
+import static org.geocrowd.Geocrowd.tasksMap;
 import static org.geocrowd.Geocrowd.workerList;
 
 import org.geocrowd.common.crowd.GenericTask;
@@ -85,8 +86,9 @@ public class MaxCoverDynamicOffline extends MaxCover {
 				for (Integer i : s.keySet()) {
 					if (!assignedTaskSet.contains(i)) {
 						// compute utility (w,task i)
-						SensingTask t = (SensingTask) taskList
-								.get(candidateTaskIndices.get(i));
+//						SensingTask t = (SensingTask) taskList
+//								.get(candidateTaskIndices.get(i));
+						SensingTask t = (SensingTask) tasksMap.get(i);
 						double utility = GeocrowdTaskUtility.utility(Geocrowd.DATA_SET, w, t);
 						uncoveredUtility += utility;
 					}

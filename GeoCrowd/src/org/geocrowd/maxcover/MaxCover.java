@@ -44,7 +44,7 @@ public abstract class MaxCover {
 	 * All the task index in the candidate tasks (not the task list).
 	 */
 	public HashSet<Integer> universe = null;
-	public HashSet<Integer> assignedTaskSet = new HashSet<Integer>();;
+	public HashSet<Integer> assignedTaskSet = new HashSet<Integer>();
 
 	public double averageDelayTime = 0;
 	/**
@@ -67,29 +67,28 @@ public abstract class MaxCover {
 		int k = 0;
 		universe = new HashSet<>();
 		currentTimeInstance = currentTI;
+		
+		for(int i =0; i < container.size(); i++){
+			mapSets.put(i, (HashMap<Integer, Integer>) container.get(i));
+			universe.addAll(((HashMap<Integer, Integer>) container.get(i)).keySet());
+			
+		}
+		/**
 		if (container.size() > 0
 				&& container.get(0).getClass().isInstance(new ArrayList())) {
 			// !!! this part may not in use
 			System.out.println("debug: without deadline info");
 			;
-//			for (int i = 0; i < container.size(); i++) {
-//
-//				ArrayList<Integer> items = (ArrayList<Integer>) container
-//						.get(i);
-//				if (items != null) {
-//					HashSet<Integer> itemSet = new HashSet<Integer>(items);
-//					mapSets.put(k++, itemSet);
-//					universe.addAll(itemSet);
-//				}
-//			}
+
 		} else {
 			/**
 			 * In case each task has a deadline
-			 */
+			 */ /**
 			for (int i = 0; i < container.size(); i++) {
 				HashMap<Integer, Integer> items = (HashMap<Integer, Integer>) container
 						.get(i);
 				if (items != null) {
+					
 					HashMap<Integer, Integer> itemSet = new HashMap<>(items);
 					mapSets.put(k++, itemSet);
 					universe.addAll(itemSet.keySet());
@@ -98,6 +97,7 @@ public abstract class MaxCover {
 				}
 			}
 		}
+		**/
 	}
 
 	/**
